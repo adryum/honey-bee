@@ -1,6 +1,11 @@
-const express = require('express');
-const mysql = require('mysql2');
-const cors = require('cors');
+import dotenv from "dotenv";
+import { testConnection } from "./services.js";
+import mysql from 'mysql2'
+import express from "express";
+import cors from "cors";
+import { catchInfo } from "../frontend/src/utils/log.js"
+
+dotenv.config()
 const app = express();
 const port = 5000;
 
@@ -11,34 +16,43 @@ app.use(cors());
 app.use(express.json());
 
 // Set up your database connection
-const db = mysql.createConnection({
-  host: 'localhost',       // Your database host
-  user: 'root',   // Your database username
-  password: '', // Your database password
-  database: 'honey_bee' // Your database name
-});
+export const db = mysql.createPool({
+  host: process.env.MYSQL_HOST, // Your database host
+  user: process.env.MYSQL_USER, // Your database username
+  password: process.env.MYSQL_PASSWORD, // Your database password
+  database: process.env.MYSQL_DATABASE, // Your database name
+}).promise()
 
-// Test the database connection
-db.connect((err) => {
-  if (err) {
-    console.error('Database connection error:', err);
-    return;
-  }
-  console.log('Connected to the database!');
-});
+testConnection()
 
-// API route to get data from your table
-app.get('/a', (req, res) => {
-  const query = 'SELECT * FROM dati';
-  db.query(query, (err, results) => {
-    if (err) {
-      console.error('Query error:', err);
-      res.status(500).send('Error querying the database');
-      return;
-    }
-    res.json(results);
-  });
-});
+app.get('/users', async (req, res) => {
+    const { column, attribute, email } = req.query
+    const query = `
+        SELECT ??
+        FROM users
+        WHERE ?? = ?`
+
+    // .then((<takes value from previous function>) => passes down)
+    db.query(query, [column, attribute, email])
+        .then((queryResult) => res.json(queryResult))
+        .catch(err => queryErr(err))
+})
+
+// // API route to get data from your table
+function getUsers() {
+    const query = 'SELECT * FROM user'
+    app.get('/a', (req, res) => {
+        db.query(query)
+		.then((results) => {res.json(results[0])})
+		.catch(err => queryErr(err))
+    })
+}
+
+function queryErr(err) {
+    catchInfo(err, 'Query error!')
+}
+
+getUsers()
 
 // Start the server
 app.listen(port, () => {
