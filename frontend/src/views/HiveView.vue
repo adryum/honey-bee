@@ -16,48 +16,59 @@ onMounted(async () => {
     <div class="header">
 
     </div>
-    <div class="content-container">
-        <div class="page">
-            <Hive v-for="hive in hives" :hive="hive"/>
-        </div>
+    <!-- <div class="content-container"> -->
+    <div class="page">
+        <Hive v-for="hive in hives" :hive="hive"/>
     </div>
+    <!-- </div> -->
 
 </div>
 </template>
 
 <style scoped lang='sass'>
+@use '../assets/colors.sass' as *
 
 .view-container
+    display: grid
     width: 100%
     min-height: 100%
+    grid-template-areas: "a header header header b" "space space space space space" "left left body right right"
+    grid-template-rows: 6rem 1rem 1fr
+    grid-auto-columns: 2rem 4rem 1fr 4rem 2rem
+    background: $base-main
 
-    .header
-        position: sticky
-        top: 0
+.header
+    position: sticky
+    top: 0
 
-        height: 6rem
-        grid-area: header
-        background-color: rgba(60, 80, 90, 1)
-        margin: 0 0 10px
+    grid-area: header
+    border-radius: 0 0 8px 8px
+    background-color: $base-dark
+    padding: 0 0 10px
+    box-sizing: border-box
+    box-shadow: 0 0 1.5px .1px black
 
-.content-container
+// .content-container
+//     display: grid
+//     // grid-area: body
+//     // grid-template-columns: 5rem 1fr 5rem
+//     // // grid-template-areas: "left body right"
+//     width: 100%
+//     height: 100% 
+
+
+.page
     display: grid
-    grid-template-columns: 5rem 1fr 5rem
-    grid-template-areas: "left body right"
-    width: 100%
+    grid-area: body
+    justify-content: center
 
-    .page
-        display: grid
-        grid-area: body
-        justify-content: center
+    grid-template-columns: repeat(auto-fit, 320px )
+    gap: 3rem
+    width: 100%
     
-        grid-template-columns: repeat(auto-fit, 320px )
-        gap: 3rem
-        width: 100%
-        
-        padding: 5px
-        box-sizing: border-box
-        background-color: aliceblue
-        box-shadow: 0px 0px 2px 0.1px black
-    
+    padding: 5px
+    box-sizing: border-box
+    background-color: $base-subtle
+    box-shadow: 0px 0px 0px 0.1px black
+
 </style>

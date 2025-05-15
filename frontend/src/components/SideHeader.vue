@@ -74,6 +74,8 @@ function toggleExtention() {
 </template>
 
 <style scoped lang='sass'>
+@use '../assets/colors.sass' as *
+
 .base 
     position: sticky
     top: 0
@@ -85,12 +87,12 @@ function toggleExtention() {
     flex-direction: column
     align-items: center
     gap: 1rem
-    box-shadow: 1px 0px 5px black
+    box-shadow: 0px 0px 2px .1px black
 
     height: 100vh
     width: 5rem
 
-    background-color: rgb(129, 127, 127)
+    background-color: $base-dark
     transition: .3s
 .base-extended
     width: 20rem

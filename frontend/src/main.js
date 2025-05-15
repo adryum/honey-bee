@@ -1,4 +1,4 @@
-import './assets/main.scss'
+import './assets/main.sass'
 import axios from 'axios'
 import { createApp } from 'vue'
 import App from './App.vue'
@@ -11,11 +11,6 @@ app.use(router)
 app.mount('#app')
 
 axios.defaults.baseURL = import.meta.env.VITE_API
-
-
-export function JsonToArr(Json, key) {
-  return Json[key]
-}
 
 export const PodiumPlace = Object.freeze({
   First: 1,
