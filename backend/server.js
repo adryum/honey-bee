@@ -3,7 +3,6 @@ import { testConnection } from "./services.js";
 import mysql from 'mysql2'
 import express from "express";
 import cors from "cors";
-import { catchInfo } from "../frontend/src/utils/log.js"
 
 dotenv.config()
 const app = express();
@@ -57,34 +56,29 @@ app.post('/login', async (req, res) => {
     }
 })
 
-app.get('/users', async (req, res) => {
-    const { column, attribute, email } = req.query
+app.post('/hives', async (req, res) => {
+    const { accountCode } = req.body
+
+    // missing credentials
+    if (!accountCode) {
+        res.status(401).send('incorrect credentials!') 
+        return
+    }
+
     const query = `
-        SELECT ??
-        FROM users
-        WHERE ?? = ?`
+        SELECT *
+        FROM hives
+        WHERE creator = ?`
 
-    // .then((<takes value from previous function>) => passes down)
-    db.query(query, [column, attribute, email])
-        .then((queryResult) => res.json(queryResult))
-        .catch(err => queryErr(err))
-})
+    const [hives] = await db.query(query, [accountCode])
 
-// // API route to get data from your table
-function getUsers() {
-    const query = 'SELECT * FROM user'
-    app.get('/a', (req, res) => {
-        db.query(query)
-		.then((results) => {res.json(results[0])})
-		.catch(err => queryErr(err))
+    console.log(hives)
+    
+    res.status(201).json({
+        message: 'all good!',
+        hives: hives
     })
-}
-
-function queryErr(err) {
-    catchInfo(err, 'Query error!')
-}
-
-getUsers()
+})
 
 // Start the server
 app.listen(port, () => {

@@ -1,21 +1,24 @@
 <script setup>
 import Hive from '@/components/Hive.vue';
+import { ref } from "vue";
+import { user, getHives } from "../core/repositories/homeRepository.js"
+import { onMounted } from 'vue';
 
+const hives = ref([])
 
+onMounted(async () => {
+    hives.value = await getHives(user.value['account_code'])
+})
 </script>
 
 <template>
-
 <div class="view-container">
     <div class="header">
 
     </div>
     <div class="content-container">
         <div class="page">
-            <Hive v-for="hive in hives"/>
-            <Hive/>
-            <Hive/>
-            <Hive/>
+            <Hive v-for="hive in hives" :hive="hive"/>
         </div>
     </div>
 
@@ -44,12 +47,17 @@ import Hive from '@/components/Hive.vue';
     width: 100%
 
     .page
-        grid-area: body
         display: grid
+        grid-area: body
+        justify-content: center
+    
+        grid-template-columns: repeat(auto-fit, 320px )
         gap: 3rem
-
+        width: 100%
+        
+        padding: 5px
+        box-sizing: border-box
         background-color: aliceblue
         box-shadow: 0px 0px 2px 0.1px black
-
     
 </style>

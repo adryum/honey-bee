@@ -13,8 +13,14 @@ export const user = ref({
 
 export async function getHives(accountCode) {
     try {
-        console.log(`em: ${email} pass: ${password}`)
+        const promise = await axios.post('/hives', {
+            accountCode: accountCode
+        })
 
+        const hives = promise.data['hives']
+        console.log(hives)
+
+        return hives
     } catch (error) {
         console.error(error);
     }

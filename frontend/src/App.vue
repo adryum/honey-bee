@@ -22,8 +22,10 @@ watch(user, (newValue) => {
 
 <template>
   <div class="flex">
-    <SideHeader v-if="!isEmpty(user)" @click="console.log(user)"/>
-    <RouterView />
+        <SideHeader v-if="isAuthenticated()" @click="console.log(user)"/>
+    <Suspense>
+        <RouterView />
+    </Suspense>
   </div> 
 </template>
 

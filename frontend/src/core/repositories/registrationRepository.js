@@ -1,13 +1,8 @@
 import axios from 'axios'
-import { ref } from 'vue'
 import { user } from "./homeRepository.js"
 import { isEmpty } from '@/utils/checks.js';
 
-export const isAuthenticated = ref({
-    get check() {
-        return !isEmpty(user)
-    }
-})
+export const isAuthenticated = () => !isEmpty(user.value)
 
 export async function login(email, password) {
     try {

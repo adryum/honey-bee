@@ -1,5 +1,5 @@
 <script setup>
-defineProps({
+let props = defineProps({
     hive: Object
 })
 </script>
