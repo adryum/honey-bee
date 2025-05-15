@@ -15,7 +15,7 @@ function onEdit() {
 </script>
 
 <template>
-<form class="input-wrapper">
+<div class="input-wrapper">
   <h1>{{ title }}</h1>
   <!-- v-model  changes value to input  -->
   <input class="local-input-field" @input="onEdit"
@@ -23,7 +23,7 @@ function onEdit() {
          v-model="value" 
          :placeholder="placeHolder"
   />
-</form>
+</div>
 </template>
 
 <style scoped>

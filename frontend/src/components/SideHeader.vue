@@ -1,11 +1,34 @@
 <script setup>
-import { pages } from "../core/data.js";
+// import { pages } from "../core/data.js";
 import { ref } from "vue";
 import Icon from "./Icon.vue";
-import { logOut } from "@/core/repositories/registration.js"
+import { logOut } from "@/core/repositories/registrationRepository.js"
 defineProps({
     
 })
+
+ const pages = [
+    { 
+        "name" : "Home",
+        "res" : "fa-solid fa-house",
+        "linkTo": "/"
+    },
+    { 
+        "name" : "Calendar",
+        "res" : "fa-solid fa-calendar-days",
+        "linkTo": "/calendar"
+    },
+    { 
+        "name" : "Apiaries",
+        "res" : "fa-solid fa-list",
+        "linkTo": "/apiaries"
+    },
+    { 
+        "name" : "Hives",
+        "res" : "fa-brands fa-hive",
+        "linkTo": "/hives"
+    }
+]
 
 const isExtended = ref(false)
 function toggleExtention() {
@@ -18,7 +41,11 @@ function toggleExtention() {
 <div class="base" :class="{'base-extended': isExtended}">
     <div class="profile-picture cube-button"></div>
     <hr class="hor-hr" >
-    <div class="page" :class="{'page-extended': isExtended}" v-for="page in pages">
+    <div v-for="page in pages"
+        class="page" 
+        :class="{'page-extended': isExtended}"
+        @click="$router.push(page.linkTo)" 
+    >
         <Icon class="cube" :res="page.res"/>
         <div class="text" v-if="isExtended">
             {{ page.name }}
@@ -34,17 +61,23 @@ function toggleExtention() {
     />
     <Icon 
         class="cube-button" 
-        res="fa-solid fa-angle-right" 
+        res="fa-solid fa-arrow-right-from-bracket" 
         :isExpanded="isExtended"
         @click="logOut()"
     />
-    <RouterLink to='/about'/>
-    <div class="cube-button">Settings</div>
+    <Icon 
+        class="cube-button" 
+        res="fa-solid fa-gear" 
+        :isExpanded="isExtended"
+    />
 </div>
 </template>
 
 <style scoped lang='sass'>
 .base 
+    position: sticky
+    top: 0
+
     margin: 0
     padding: .5rem
     box-sizing: border-box

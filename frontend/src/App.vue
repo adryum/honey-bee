@@ -1,13 +1,15 @@
 <script setup>
 import { RouterLink, RouterView } from 'vue-router'
 import SideHeader from './components/SideHeader.vue';
-import { isAuthenticated } from './core/repositories/registration';
+import { isAuthenticated } from './core/repositories/registrationRepository';
 import { watch } from 'vue';
 import router from './router';
+import { isEmpty } from './utils/checks';
+import { user } from './core/repositories/homeRepository';
 
-watch(isAuthenticated, (newValue) => {
-        console.log(newValue)
-        if (!newValue) {
+// banishes user to login realm when authentication gets false
+watch(user, (newValue) => {
+        if (isEmpty(newValue)) {
             console.log('Sent to login')
             router.push('/login')
         }
@@ -16,18 +18,17 @@ watch(isAuthenticated, (newValue) => {
         immediate: true
     }
 )
-</script>
+</script>   
 
 <template>
   <div class="flex">
-    <SideHeader v-if="isAuthenticated"/>
+    <SideHeader v-if="!isEmpty(user)" @click="console.log(user)"/>
     <RouterView />
   </div> 
 </template>
 
-<style scoped>
-.flex {
-    display: flex;
-    flex-direction: row;
-}
+<style scoped lang="sass">
+.flex 
+    display: flex
+    flex-direction: row
 </style>

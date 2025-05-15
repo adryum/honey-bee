@@ -1,16 +1,14 @@
 <script setup>
 import {BackgroundType} from "@/main.js";
 import BackgroundWidget from "@/components/BackgroundWidget.vue";
-import { isAuthenticated, login } from "../core/repositories/registration.js";
+import { login } from "../core/repositories/registrationRepository.js";
+import { user } from "../core/repositories/homeRepository.js";
 import { watch } from "vue";
 import router from '../router';
-
+import { isEmpty } from "../utils/checks.js";
 import {ref} from "vue";
 import InputField from "@/components/InputField.vue";
 import LockableButton from "@/components/buttons/LockableButton.vue";
-import { authenticate } from "@/core/repositories/registration.js";
-
-
 
 defineProps({
   email: String,
@@ -35,35 +33,45 @@ const requiredFields = [
   }
 ]
 
-watch(isAuthenticated, (newValue) => {
-    if (newValue) {
+watch(user, (newValue) => {
+    if (!isEmpty(newValue)) {
         console.log('Sent to main');
         
         router.push('/')
     }
-},
-{
-    immediate: true
-})
+    },
+    {
+        immediate: true
+    }
+    )
 </script>
 
 <template>
     <BackgroundWidget :type="BackgroundType.DimmedAndBlurred" src="/src/assets/images/honeyCombWall.jpg" alt="honey-comb-wall"/>
-    <main class="container">
-        <h1 class="login-title"><strong>Login</strong></h1>
-        <InputField class="input-field" v-for="(field, i) in requiredFields" :key="i"
-                    :title="field['title']"
-                    :place-holder="field['placeHolder']"
-                    :type="field['type']"
-                    @onEdit="inputValue => field.value.value = inputValue"
-        />
-        <LockableButton class="submit-button" :is-unlocked="false" type="submit" text="Log in" @click="login(email, password)"/>
-        <RouterLink to="/signup">Sign up</RouterLink>
-        <RouterLink to="/accountRecovery">Forgot your password?</RouterLink>
-    </main>
+    <form @submit.prevent="login(email, password)" class="center">
+        <div class="container">
+            <h1 class="login-title"><strong>Login</strong></h1>
+            <InputField class="input-field" v-for="(field, i) in requiredFields" :key="i"
+                        :title="field['title']"
+                        :place-holder="field['placeHolder']"
+                        :type="field['type']"
+                        @onEdit="inputValue => field.value.value = inputValue"
+            />
+            <LockableButton class="submit-button" :is-unlocked="false" type="submit" text="Log in"/>
+            <RouterLink to="/signup">Sign up</RouterLink>
+            <RouterLink to="/accountRecovery">Forgot your password?</RouterLink>
+        </div>
+    </form>
 </template>
 
 <style scoped lang="sass">
+.center
+    display: flex
+    align-items: center
+    justify-content: center
+    width: 100%
+    min-height: 100vh
+
 .container 
     display: flex
     flex-direction: column
@@ -76,7 +84,6 @@ watch(isAuthenticated, (newValue) => {
 
     * 
         margin: 10px 20px 10px
-    
 
 .login-title 
     align-self: center

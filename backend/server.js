@@ -25,6 +25,38 @@ export const db = mysql.createPool({
 
 testConnection()
 
+app.post('/login', async (req, res) => {
+    const { email, password } = req.body
+
+    // missing credentials
+    if (!email || !password) {
+        res.status(401).send('incorrect credentials!') 
+        return
+    }
+
+    const query = `
+        SELECT *
+        FROM users
+        WHERE e_mail = ?`
+
+    const [[user]] = await db.query(query, [email])
+
+    // user isn't registered
+    if (!user) {
+        res.status(401).send('incorrect email!') 
+        return
+    }
+
+    if (password === user['password']) {
+        res.status(201).json({
+            message: 'all good!',
+            user: user
+        })
+    } else {
+        res.status(401).send('incorrect password')
+    }
+})
+
 app.get('/users', async (req, res) => {
     const { column, attribute, email } = req.query
     const query = `
