@@ -68,7 +68,7 @@ onMounted(async () => {
     
     padding: 5px
     box-sizing: border-box
-    background-color: $base-subtle
+    background-color: $base-accent
     box-shadow: 0px 0px 0px 0.1px black
 
 </style>

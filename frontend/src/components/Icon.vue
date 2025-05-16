@@ -6,12 +6,7 @@ const a = defineProps({
 </script>
 
 <template>
-<div>
-    <i 
-    class="icon" 
-    :class="[res, {'expanded' : isExpanded}]" 
-    ></i>
-</div>
+    <i class="icon" :class="[res, {'expanded' : isExpanded}]" ></i>
 </template>
 
 <style scoped lang='sass'>
