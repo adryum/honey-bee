@@ -25,3 +25,19 @@ export async function getHives(accountCode) {
         console.error(error);
     }
 }
+
+export async function getApiaries(accountCode, startWith) {
+    try {
+        const promise = await axios.post('/apiaries', {
+            accountCode: accountCode,
+            startWith: startWith
+        })
+
+        const apiaries = promise.data['apiaries']
+        console.log(apiaries)
+
+        return apiaries
+    } catch (error) {
+        console.error(error);
+    }
+}

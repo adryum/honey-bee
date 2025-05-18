@@ -3,6 +3,7 @@ import MainView from '@/views/MainView.vue'
 import LoginView from '@/views/LoginView.vue'
 import HiveView from '@/views/HiveView.vue'
 import ApiaryView from '@/views/ApiaryView.vue'
+import SignUpView from '@/views/SignUpView.vue'
 
 const router = createRouter({
   history: createWebHistory(import.meta.env.BASE_URL),
@@ -10,12 +11,27 @@ const router = createRouter({
     {
       path: '/',
       name: 'home',
-      component: ApiaryView,
+      component: MainView,
     },
     {
         path: '/login',
         name: 'login',
         component: LoginView
+    },
+    {
+        path: '/signup',
+        name: 'signUp',
+        component: SignUpView
+    },
+    {
+        path: '/hives',
+        name: 'hives',
+        component: HiveView
+    },
+    {
+        path: '/apiaries',
+        name: 'apiaries',
+        component: ApiaryView
     }
     // {
     //   path: '/about',

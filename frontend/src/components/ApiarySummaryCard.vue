@@ -2,7 +2,6 @@
 import ApiaryHiveCount from './ApiaryHiveCount.vue';
 import Icon from './Icon.vue';
 
-
 defineProps({
   apiary: Object
 })
@@ -11,12 +10,12 @@ defineProps({
 <template>
 <div class="apiary-container">
     <div class="title">
-        <input />
+        <input :value="apiary.name" />
     </div>
     <div id="edit" class="button"><Icon res="fa-solid fa-pencil"/> </div>
     <div id="options" class="button"><Icon res="fa-solid fa-ellipsis-vertical"/></div>
     <div class="picture">
-        <img src="..\assets\images\graveyard.jpg" />
+        <img src="..\assets\images\apiary.jpg" />
     </div>
     <div class="hive-type">
         <div class="name">Hives</div>

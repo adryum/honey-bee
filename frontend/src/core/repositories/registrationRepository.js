@@ -23,6 +23,26 @@ export async function login(email, password) {
     }
 }
 
+export async function signUp(name, surename, profilePicture, email, password) {
+    try {
+        if (!email || !password || !name || !surename) return
+
+        const newUser = await axios.post(`/signup`, {
+            name: name,
+            surename: surename,
+            profilePicture: "",
+            email: email,
+            password: password
+        })
+
+        console.log(newUser.data['user'])
+
+        authenticate(newUser.data['user'])
+    } catch (error) {
+        console.error(error);
+    }
+}
+
 export function logOut() {
     console.log('loged out')
     user.value = {}

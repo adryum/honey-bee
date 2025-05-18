@@ -5,7 +5,7 @@
 <template>
 <div class="count-container">
     <div class="icon"></div>
-    <div class="background"><p>123</p></div>
+    <div class="background"><p>???</p></div>
     
 </div>
 </template>

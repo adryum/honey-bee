@@ -3,6 +3,7 @@
 import { ref } from "vue";
 import Icon from "./Icon.vue";
 import { logOut } from "@/core/repositories/registrationRepository.js"
+import { user } from "@/core/repositories/homeRepository.js"
 defineProps({
     
 })
@@ -39,7 +40,7 @@ function toggleExtention() {
 
 <template>
 <div class="base" :class="{'base-extended': isExtended}">
-    <div class="profile-picture cube-button"></div>
+    <div class="profile-picture cube-button" style="font-weight: bold; font-size: 20px;">{{ user.name }}</div>
     <hr class="hor-hr" >
     <div v-for="page in pages"
         class="page" 

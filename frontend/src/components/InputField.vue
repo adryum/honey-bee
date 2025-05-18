@@ -1,26 +1,21 @@
 <script setup>
 import {ref} from "vue";
 
+const model = defineModel()
 defineProps({
   title: String,
   type: String,
   placeHolder: String
 })
-const emits = defineEmits(['onEdit'])
-
-let value = ref("")
-function onEdit() {
-    emits('onEdit', value.value)
-}
 </script>
 
 <template>
 <div class="input-wrapper">
   <h1>{{ title }}</h1>
   <!-- v-model  changes value to input  -->
-  <input class="local-input-field" @input="onEdit"
+  <input class="local-input-field" v-model="model"
          :type="type"
-         v-model="value" 
+         
          :placeholder="placeHolder"
   />
 </div>

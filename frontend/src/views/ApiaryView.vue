@@ -1,16 +1,28 @@
 <script setup>
 import ApiarySummaryCard from '@/components/ApiarySummaryCard.vue';
+import SearchBar from '@/components/SearchBar.vue';
+import { user, getApiaries } from '@/core/repositories/homeRepository';
+import { onMounted, ref } from 'vue';
 
+const rApiaries = ref([])
+const rStartWith = ref('')
 
+async function assignApiaries() {
+    rApiaries.value = await getApiaries(user.value['account_code'], rStartWith.value)
+}
+
+onMounted(async () => {
+    rApiaries.value = await getApiaries(user.value['account_code'])
+})
 </script>
 
 <template>
 <div class="view-container">
     <div class="header">
-
+        <SearchBar id="search-bar" :onClick="assignApiaries" v-model="rStartWith"/>
     </div>
     <div class="page">
-        <ApiarySummaryCard />
+        <ApiarySummaryCard class="item" v-for="apiary in rApiaries" :apiary="apiary"/>
     </div>
 </div>
 </template>
@@ -34,8 +46,19 @@ import ApiarySummaryCard from '@/components/ApiarySummaryCard.vue';
     box-shadow: 0 6px 8px 0px rgba(0, 0, 0, .3)
     border-radius: 0 0 8px 8px
 
+    display: flex
+    align-items: center
+    justify-content: end
+    gap: 2rem
+    padding: 0 1.5rem 0 1.5rem
+
+    z-index: 1
+
     position: sticky
     top: 0
+
+    #search-bar
+        width: 12rem
 
 .page
     grid-area: page
@@ -45,6 +68,12 @@ import ApiarySummaryCard from '@/components/ApiarySummaryCard.vue';
     border-right: 6px solid $base-light
     border-left: 6px solid $base-light
 
-    padding: .5rem
+    display: grid
+    grid-template-columns: repeat(auto-fill, minmax(30rem, 1fr))
+    gap: 3rem
 
+    justify-items: center
+
+
+    padding: .5rem
 </style>

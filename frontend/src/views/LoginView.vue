@@ -43,7 +43,7 @@ watch(user, (newValue) => {
     {
         immediate: true
     }
-    )
+)
 </script>
 
 <template>
@@ -55,7 +55,8 @@ watch(user, (newValue) => {
                         :title="field['title']"
                         :place-holder="field['placeHolder']"
                         :type="field['type']"
-                        @onEdit="inputValue => field.value.value = inputValue"
+                        v-model="field.value.value"
+
             />
             <LockableButton class="submit-button" :is-unlocked="false" type="submit" text="Log in"/>
             <RouterLink to="/signup">Sign up</RouterLink>

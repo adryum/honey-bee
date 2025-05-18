@@ -1,19 +1,13 @@
 <script setup>
+const model = defineModel()
 const props = defineProps({
   text: String,
-  isOpen: Boolean
 })
-const emits = defineEmits(['onChange'])
-
-
-function checkBox() {
-  emits("onChange", !props.isOpen)
-}
 </script>
 
 <template>
 <div class="checkbox-container">
-  <input @click="checkBox" :value="props.isOpen" type="checkbox"/>
+  <input type="checkbox" v-model="model"/>
   <p>{{ text }}</p>
 </div>
 </template>
