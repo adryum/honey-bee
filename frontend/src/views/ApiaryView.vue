@@ -2,14 +2,28 @@
 import ApiarySummaryCard from '@/components/ApiarySummaryCard.vue';
 import SearchBar from '@/components/SearchBar.vue';
 import { user, getApiaries } from '@/core/repositories/homeRepository';
-import { onMounted, ref } from 'vue';
+import { onMounted, ref, useTemplateRef, watch } from 'vue';
 
 const rApiaries = ref([])
 const rStartWith = ref('')
+const rGapMultiplier = ref(50)
+const rSizeMultiplier = ref(30)
+const rPage = useTemplateRef('page')
 
 async function assignApiaries() {
     rApiaries.value = await getApiaries(user.value['account_code'], rStartWith.value)
 }
+
+function changeGap(multiplier) {
+    let multi = multiplier / 10
+    rPage.value.style.gap = `${1 * multi}rem`
+}
+
+watch(rPage, (newV) => {
+    if (newV) {
+        changeGap(rGapMultiplier.value)
+    }
+})
 
 onMounted(async () => {
     rApiaries.value = await getApiaries(user.value['account_code'])
@@ -19,10 +33,12 @@ onMounted(async () => {
 <template>
 <div class="view-container">
     <div class="header">
+        <input type="range" min="20" max="100" v-model.number="rSizeMultiplier">
+        <input type="range" min="0" max="100" v-model="rGapMultiplier" @input="changeGap(rGapMultiplier)">
         <SearchBar id="search-bar" :onClick="assignApiaries" v-model="rStartWith"/>
     </div>
-    <div class="page">
-        <ApiarySummaryCard class="item" v-for="apiary in rApiaries" :apiary="apiary"/>
+    <div class="page" ref="page">
+        <ApiarySummaryCard class="item" v-for="apiary in rApiaries" :apiary="apiary" :sizeMultiplier="rSizeMultiplier"/>
     </div>
 </div>
 </template>
@@ -62,18 +78,15 @@ onMounted(async () => {
 
 .page
     grid-area: page
-    background: $base-main
+    background: #FFEFD8
     border-radius: 4px 4px 0 0
-    border-top: 6px solid $base-light
-    border-right: 6px solid $base-light
-    border-left: 6px solid $base-light
-
-    display: grid
-    grid-template-columns: repeat(auto-fill, minmax(30rem, 1fr))
+    border-top: 6px solid  $atumn-dark
+    
+    display: flex
+    flex-wrap: wrap
+    justify-content: center
+    align-items: flex-start
     gap: 3rem
-
     justify-items: center
-
-
-    padding: .5rem
+    padding: 1rem
 </style>

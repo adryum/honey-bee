@@ -39,8 +39,15 @@ function toggleExtention() {
 </script>
 
 <template>
-<div class="base" :class="{'base-extended': isExtended}">
-    <div class="profile-picture cube-button" style="font-weight: bold; font-size: 20px;">{{ user.name }}</div>
+<div class="base" :class="{'base-un-extended': !isExtended, 'base-extended': isExtended}">
+    
+    <div class="count-container">
+        <div class="icon"></div>
+        <div class="background"><p v-if="isExtended">{{ user.name }}</p>
+    </div>
+    
+
+    </div>
     <hr class="hor-hr" >
     <div v-for="page in pages"
         class="page" 
@@ -54,36 +61,69 @@ function toggleExtention() {
     </div>
     <div style="flex: 1;"></div>
     <hr class="hor-hr" >
-    <Icon 
-        class="cube-button" 
-        res="fa-solid fa-angle-right" 
-        :isExpanded="isExtended"
-        @click="toggleExtention"
-    />
-    <Icon 
-        class="cube-button" 
-        res="fa-solid fa-arrow-right-from-bracket" 
-        :isExpanded="isExtended"
-        @click="logOut()"
-    />
-    <Icon 
-        class="cube-button" 
-        res="fa-solid fa-gear" 
-        :isExpanded="isExtended"
-    />
+    <div class="bottom-container" style="">
+        <Icon 
+            class="cube" 
+            res="fa-solid fa-angle-right" 
+            :isExpanded="isExtended"
+            @click="toggleExtention"
+        />
+        <Icon v-if="isExtended"
+            class="cube" 
+            res="fa-solid fa-arrow-right-from-bracket" 
+            :isExpanded="isExtended"
+            @click="logOut()"
+        />
+        <Icon v-if="isExtended"
+            class="cube" 
+            res="fa-solid fa-gear" 
+            :isExpanded="isExtended"
+        />
+    </div>
 </div>
 </template>
 
 <style scoped lang='sass'>
-@use '../assets/colors.sass' as *
+@use '../assets/_colors.sass' as *
+.count-container
+    display: flex
+    position: relative
+    align-items: center
+    width: 100%
+    height: 4rem
+    
+    .icon
+        position: absolute
+        background: $special-accent
+        border-radius: 50%
+        height: 100%
+        aspect-ratio: 1
+
+    .background
+        display: flex
+        justify-content: end
+        align-items: center
+        width: 100%
+        height: 70%
+        padding-right: 8px
+        margin-left: 20px
+        border-radius: 20px
+        background: $special-base
+
+        p
+            margin: 0
+            width: 100%
+            font-size: 20px
+            text-align: center
 
 .base 
     position: sticky
     top: 0
 
     margin: 0
-    padding: .5rem
+    padding: .5rem .5rem 0 .5rem
     box-sizing: border-box
+
     display: flex
     flex-direction: column
     align-items: center
@@ -93,60 +133,46 @@ function toggleExtention() {
     height: 100vh
     width: 5rem
 
-    background-color: $base-dark
+    background-color: $special-dark
     transition: .3s
+
+.base-un-extended
+    
+
 .base-extended
     width: 20rem
 
-.page 
-    display: flex
-    flex-direction: row
-    align-items: center
-    border-radius: .3rem
-    height: 4rem
-    width: 100%
-    background-color: aliceblue
+    .page
+        align-self: flex-start
+        display: flex
+        align-items: center
+        width: 95%
+        height: 4rem
 
-    transition: 0.2s
-
-    .text 
-        width: 0px
-        font-size: 2rem
-        transition-delay: 1s
-        opacity: 0
+        border-radius: 10px
+        background: $base-white
         
 
-    
-.page-extended
-    aspect-ratio: none
-    &:hover 
-        scale: 1.02
-    
-    .text
-        opacity: 1
+.bottom-container
+    display: flex
+    justify-content: space-evenly
 
-
+    width: 100%
+    border-radius: 10px 10px 0 0
+    padding: .8rem 0 
+    background: $special-accent
 .cube
-    border-radius: .3rem
     height: 4rem
     width: 4rem
-    background-color: aliceblue
-    transition: 0.2s
-
-.cube-button
-    @extend .cube
-
-    &:hover 
-        scale: 1.05
-        filter: brightness(80%)
-
-.profile-picture 
-    border-radius: 50%
+    border-radius: 4px
+    background: $base-white
 
 .hor-hr 
+    margin: 0
     border: none
-    height: 1px
+    height: 3px
+    border-radius: 10px
     background-color: white
-    min-width: 80%
+    min-width: 90%
 
 </style>
