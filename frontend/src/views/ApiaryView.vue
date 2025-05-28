@@ -1,5 +1,6 @@
 <script setup>
 import ApiarySummaryCard from '@/components/ApiarySummaryCard.vue';
+import IconButton from '@/components/buttons/IconButton.vue';
 import SearchBar from '@/components/SearchBar.vue';
 import { user, getApiaries } from '@/core/repositories/homeRepository';
 import { onMounted, ref, useTemplateRef, watch } from 'vue';
@@ -33,6 +34,7 @@ onMounted(async () => {
 <template>
 <div class="view-container">
     <div class="header">
+        <IconButton text="Add apiary"/>
         <input type="range" min="20" max="100" v-model.number="rSizeMultiplier">
         <input type="range" min="0" max="100" v-model="rGapMultiplier" @input="changeGap(rGapMultiplier)">
         <SearchBar id="search-bar" :onClick="assignApiaries" v-model="rStartWith"/>
@@ -55,6 +57,8 @@ onMounted(async () => {
     grid-template-rows: 6rem 2rem 1fr
 
     background: $base-dark
+
+   
 
 .header
     grid-area: header

@@ -1,12 +1,11 @@
 <script setup>
 const a = defineProps({
     res: String,
-    isExpanded: Boolean
 })
 </script>
 
 <template>
-    <i class="icon" :class="[res, {'expanded' : isExpanded}]" ></i>
+    <i class="icon" :class="[res]" ></i>
 </template>
 
 <style scoped lang='sass'>
@@ -15,13 +14,11 @@ const a = defineProps({
     justify-content: center
     align-items: center
 
-    padding: .2rem
     box-sizing: border-box
-    height: 100%
-    width: 100%
     
+    aspect-ratio: 1
+ 
     font-size: 2rem
     transition: .2s
-.expanded
-    transform: rotateZ(180deg)
+
 </style>
