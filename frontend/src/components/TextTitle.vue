@@ -1,23 +1,28 @@
 <script setup>
+import { useCssModule } from 'vue';
+
 let model = defineModel()
 defineProps({
     isDisabled: Boolean
 })
+
+const s = useCssModule()
 </script>
 
 <template>
-    <div class="container">
-        <div class="decor-line"></div>
-        <input class="input" v-model="model" :disabled="isDisabled"/>
+    <div :class="s.container">
+        <div :class="s['decor-line']"></div>
+        <input :class="s.input" v-model="model" :disabled="isDisabled"/>
     </div>
 </template>
 
-<style scoped lang='sass'>
+<style module lang='sass'>
+@use '@/assets/_colors.sass' as *
 .container
     position: relative
     display: flex
     flex-direction: column
-    height: 3.3rem
+    background: rgba(0, 0, 0, 0)
 
 .input 
     all: unset
@@ -31,9 +36,9 @@ defineProps({
 
 .decor-line
     position: absolute
-    bottom: 0
+    bottom: .2rem
     width: 100%
     height: 4px
     border-radius: 10px
-    background: #9A7A68
+    background: $underline-dark
 </style>

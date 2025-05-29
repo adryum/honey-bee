@@ -6,6 +6,7 @@ import { watch } from 'vue';
 import router from './router';
 import { isEmpty } from './utils/checks';
 import { user } from './core/repositories/homeRepository';
+import CreateApiaryPopup from './components/popups/CreateApiaryPopup.vue';
 
 // banishes user to login realm when authentication gets false
 watch(user, (newValue) => {
@@ -22,9 +23,11 @@ watch(user, (newValue) => {
 
 <template>
   <div class="flex">
+        <CreateApiaryPopup/>
         <SideHeader v-if="isAuthenticated()"/>
     <Suspense>
         <RouterView />
+
     </Suspense>
   </div> 
 </template>
