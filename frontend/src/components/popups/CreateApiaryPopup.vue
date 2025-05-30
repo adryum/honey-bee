@@ -2,10 +2,18 @@
 import { useCssModule } from 'vue';
 import IconCubeButton from '../buttons/IconCubeButton.vue';
 import Icon from '../Icon.vue';
-import TextTitle from '../TextTitle.vue';
+import TextTitle from '../input_fields/TextTitle.vue';
 import PopupPlate from '../utlis/PopupPlate.vue';
-
+import Field from '../input_fields/Field.vue';
+import FieldVertical from '../input_fields/FieldVertical.vue';
+import ImageField from '../input_fields/ImageField.vue';
+import Button from '../buttons/Button.vue';
+import { removePopup } from '@/core/popups';
+defineProps({
+    id: Number
+})
 const s = useCssModule()
+const asd = defineModel({default: 'asdsjahjdsahjkjhkhjkiladshudiosahuiduidugisgd'})
 </script>
 
 <template>
@@ -13,16 +21,23 @@ const s = useCssModule()
     <div :class="s.container">
         <div :class="s.header">
             <Icon :id="s.icon" res="fa-solid fa-bug"/>
-            <TextTitle :class="s.title" text="Create Apiary"/>
+            <TextTitle :shrink-width-to-text="true" :is-disabled="true" 
+            :class="s.title" text="Create Apiary "/>
             <div style="margin: auto"></div>
             <div :class="s['vertical-split']"></div>
             <IconCubeButton :id="s.other"/>
-            <IconCubeButton :id="s.close"/>
+            <IconCubeButton @click="removePopup(id)" :id="s.close"/>
         </div>
-        <div class="separator"></div>
+        <div :class="s.separator"></div>
 
-        <div class="grid">
-
+        <div :class="s.grid">
+            <Field :id="s.name" v-model="asd" :class="s.line"
+                title="Name"/>
+            <Field :id="s.location" :class="s.line"
+                title="Location"/>
+            <ImageField :id="s.image" title="Image"/>
+            <FieldVertical :id="s.description" title="Description"/>
+            <Button :id="s.submit" title="Create Apiary"/>
         </div>
 
     </div>
@@ -40,9 +55,8 @@ const s = useCssModule()
     box-shadow: 0 0 30px rgba(0, 0, 0, .5)
 
     width: 50vw
-    height: 50vh
 
-    background: #F3E8C4
+    background: $popup-base
 
     .header
         display: flex
@@ -68,12 +82,34 @@ const s = useCssModule()
             background: $button-special
         #other
             background: $button-common
+    
+    .separator
+        align-self: center
+        border-radius: 20px
+        width: 90%
+        margin-top: .5rem 
+        min-height: 6px
+        background: $dark
 
     .grid
         flex: 1
-        padding: 0 1rem
+        padding: 1rem 2rem
+        gap: 1rem
+        box-sizing: border-box
+
         display: grid
-        grid-template-areas: 'left right'
+        grid-template-areas: 'name name' 'locat locat' 'cube1 cube2' 'but but'
         grid-template-columns: 1fr 1fr
-        grid-template-rows: repeat(2rem, 2) 6rem 2rem
+        grid-template-rows: repeat(2, 4.5rem) 20rem 4.5rem
+
+        #name
+            grid-area: name
+        #location
+            grid-area: locat
+        #image
+            grid-area: cube1
+        #description
+            grid-area: cube2
+        #submit
+            grid-area: but
 </style>

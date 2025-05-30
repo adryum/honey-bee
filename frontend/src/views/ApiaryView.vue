@@ -2,8 +2,10 @@
 import ApiarySummaryCard from '@/components/ApiarySummaryCard.vue';
 import IconButton from '@/components/buttons/IconButton.vue';
 import SearchBar from '@/components/SearchBar.vue';
+import { createPopup } from '@/core/popups';
 import { user, getApiaries } from '@/core/repositories/homeRepository';
 import { onMounted, ref, useTemplateRef, watch } from 'vue';
+import CreateApiaryPopup from "@/components/popups/CreateApiaryPopup.vue";
 
 const rApiaries = ref([])
 const rStartWith = ref('')
@@ -34,7 +36,7 @@ onMounted(async () => {
 <template>
 <div class="view-container">
     <div class="header">
-        <IconButton text="Add apiary"/>
+        <IconButton @click="createPopup(CreateApiaryPopup)" text="Add apiary"/>
         <input type="range" min="20" max="100" v-model.number="rSizeMultiplier">
         <input type="range" min="0" max="100" v-model="rGapMultiplier" @input="changeGap(rGapMultiplier)">
         <SearchBar id="search-bar" :onClick="assignApiaries" v-model="rStartWith"/>

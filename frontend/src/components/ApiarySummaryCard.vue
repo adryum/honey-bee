@@ -2,7 +2,7 @@
 import { onMounted, useTemplateRef, watch } from 'vue';
 import ApiaryHiveCount from './ApiaryHiveCount.vue';
 import Icon from './Icon.vue';
-import TextTitle from './TextTitle.vue';
+import TextTitle from './input_fields/TextTitle.vue';
 
 const props = defineProps({
   apiary: Object,

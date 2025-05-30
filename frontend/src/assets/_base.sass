@@ -1,9 +1,20 @@
+
+$font: Alata
+    
 body 
     margin: 0
 
 html 
     overflow-y: scroll
-    font-family: Alata
+    font-family: $font
     color: #2D1E02
 
+@mixin input-base
+    text-overflow: ellipsis
+    white-space: nowrap
+    overflow: hidden
 
+@mixin button-base
+    &:hover
+        cursor: pointer
+        filter: brightness(90%)

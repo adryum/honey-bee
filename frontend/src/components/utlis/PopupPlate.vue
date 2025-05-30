@@ -12,7 +12,7 @@
 
 <style scoped lang="sass">
 .modal-container
-    position: absolute
+    position: fixed
     z-index: 100
     display: flex
     width: 100%

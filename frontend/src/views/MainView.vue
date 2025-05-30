@@ -1,5 +1,5 @@
 <script setup>
-import FunctionalHeader from '@/components/FunctionalHeader.vue';
+
 import Page from '@/components/Page.vue';
 
 
@@ -7,7 +7,7 @@ import Page from '@/components/Page.vue';
 
 <template>
     <main>
-        <FunctionalHeader/>
+
         <Page/>
     </main>
 </template>
