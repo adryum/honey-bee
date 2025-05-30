@@ -5,6 +5,10 @@ defineProps({
     title: {
         type: String,
         default: 'Button'
+    },
+    type: {
+        type: String,
+        default: 'button'
     }
 })
 
@@ -12,7 +16,7 @@ const s = useCssModule()
 </script>
 
 <template>
-    <button :class="s.button"><label :class="s.text">{{ title }}</label></button>
+    <button :class="s.button" :type="type"><label :class="s.text">{{ title }}</label></button>
 </template>
 
 <style module lang="sass">

@@ -99,29 +99,30 @@ app.post('/signup', async (req, res) => {
     }
 })
 
-async function generateAccountCode() {
+async function generateAccountCode(table, pkColumn) {
     const query = `
-        SELECT account_code
-        FROM users`
+        SELECT ${pkColumn}
+        FROM ${table}`
 
     const [results] = await db.query(query)
+    const sortedIds = results.map((obj) => obj['id'].substring(1)).sort((a, b) => a - b)
     
-    let firstCode = parseInt(results[0]['account_code'].substring(1))
+    let previousCode = parseInt(sortedIds[0])
     
     // check if table contains skipped value, like: 1 2 4 (3 was skipped)
-    for (let i = 1; i < results.length; i++) {
-        const code = parseInt(results[i]['account_code'].substring(1))
+    for (let i = 1; i < sortedIds.length; i++) {
+        const selectedCode = parseInt(sortedIds[i])
 
-        if (firstCode - code < -1) {
-            console.log(`first: ${firstCode}, next: ${code}`)
-            return `#${firstCode + 1}`
+        if (previousCode - selectedCode < -1) {
+            console.log(`previous: ${previousCode}, selected: ${selectedCode}`)
+            return `#${previousCode + 1}`
         }
 
-        firstCode = code
+        previousCode = selectedCode
     }
 
     // add 1 to the last value
-    return `#${parseInt(results[results.length - 1]['account_code'].substring(1)) + 1}`
+    return `#${parseInt(sortedIds[sortedIds.length - 1]) + 1}`
 }
 
 app.post('/hives', async (req, res) => {
@@ -179,6 +180,32 @@ app.post('/apiaries', async (req, res) => {
     res.status(201).json({
         message: 'all good!',
         apiaries: apiaries
+    })
+})
+
+app.post('/apiaries/create', async (req, res) => {
+    let { accountCode, name, location, description } = req.body
+    console.log(accountCode, name, location, description)
+
+    // missing credentials
+    if (!accountCode || !name || !location) {
+        res.status(401).send('incorrect information!') 
+        return
+    }
+
+    const avialableId = await generateAccountCode('apiaries', 'id')
+
+    const query = `
+        INSERT INTO apiaries (id, name, location, description, creator)
+        VALUES(?, ?, ?, ?, ?)`
+
+    const result = await db.query(query, [avialableId, name, location, description, accountCode])
+
+    console.log(result)
+    
+    res.status(201).json({
+        message: 'all good!',
+        // apiaries: apiaries
     })
 })
 

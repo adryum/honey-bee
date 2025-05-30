@@ -4,16 +4,16 @@ import { onMounted, toRef, useCssModule, useTemplateRef } from 'vue';
 const props = defineProps({
   text: {
     type: String,
-    default: 'abp'
+    default: undefined
   },
   shrinkWidthToText: Boolean,
-  isDisabled: Boolean
+  isDisabled: {
+    type: Boolean,
+    default: false
+  }
 })
 
 let model = defineModel()
-// uses static text if no model is given
-if (!model.value) model = props.text
-
 const s = useCssModule()
 const rInput = useTemplateRef('input')
 
@@ -29,17 +29,24 @@ function adjustSize() {
 
 onMounted(() => {
     adjustSize()
+    console.log(model);
 })
 </script>
 
 <template>
     <div :class="s.container">
         <div :class="s['decor-line']"></div>
-        <input ref="input" 
+        <input ref="input" v-if="!text"
             @input="adjustSize()"
             :class="s.input" 
-            :value="text" v-model="model" 
+            v-model="model"
             :disabled="isDisabled"
+            :style="{shrinkWidthToText : 'text-align: start'}"/>
+
+        <input ref="input" v-if="text"
+            :class="s.input" 
+            :value="text" 
+            disabled
             :style="{shrinkWidthToText : 'text-align: start'}"/>
     </div>
 </template>

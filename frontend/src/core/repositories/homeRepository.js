@@ -26,6 +26,22 @@ export async function getHives(accountCode) {
     }
 }
 
+export async function createApiary(accountCode, filter, name, location, description) {
+    try {
+        const promise = await axios.post('/apiaries/create', {
+            accountCode: accountCode,
+            name: name,
+            location: location,
+            description: description
+        })
+        const {status} = promise
+        
+        return status
+    } catch (error) {
+        console.error(error);
+    }
+}
+
 export async function getApiaries(accountCode, startWith) {
     try {
         const promise = await axios.post('/apiaries', {

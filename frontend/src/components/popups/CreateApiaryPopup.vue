@@ -1,19 +1,38 @@
 <script setup>
-import { useCssModule } from 'vue';
+import { ref, useCssModule } from 'vue';
 import IconCubeButton from '../buttons/IconCubeButton.vue';
 import Icon from '../Icon.vue';
 import TextTitle from '../input_fields/TextTitle.vue';
-import PopupPlate from '../utlis/PopupPlate.vue';
+import PopupPlate from './PopupPlate.vue';
 import Field from '../input_fields/Field.vue';
 import FieldVertical from '../input_fields/FieldVertical.vue';
 import ImageField from '../input_fields/ImageField.vue';
 import Button from '../buttons/Button.vue';
 import { removePopup } from '@/core/popups';
-defineProps({
-    id: Number
+import { createApiary, user } from '@/core/repositories/homeRepository';
+
+const props = defineProps({
+    id: Number,
+    currentFilter: String,
+    refreshApiaries: Function
 })
 const s = useCssModule()
-const asd = defineModel({default: 'asdsjahjdsahjkjhkhjkiladshudiosahuiduidugisgd'})
+const rName = ref('')
+const rLocation = ref('')
+const rDescription = ref('')
+
+async function onCreate(accCode, currentFilter, name, location, description) {
+    const result = await createApiary(accCode, currentFilter, name, location, description)
+ 
+    if (result === 201) {
+        // only on successful result 
+        props.refreshApiaries()
+        removePopup(props.id)
+    } else {
+        // err handling
+
+    }
+}
 </script>
 
 <template>
@@ -22,23 +41,24 @@ const asd = defineModel({default: 'asdsjahjdsahjkjhkhjkiladshudiosahuiduidugisgd
         <div :class="s.header">
             <Icon :id="s.icon" res="fa-solid fa-bug"/>
             <TextTitle :shrink-width-to-text="true" :is-disabled="true" 
-            :class="s.title" text="Create Apiary "/>
-            <div style="margin: auto"></div>
+                :class="s.title" text="Create Apiary "/>
             <div :class="s['vertical-split']"></div>
             <IconCubeButton :id="s.other"/>
             <IconCubeButton @click="removePopup(id)" :id="s.close"/>
         </div>
         <div :class="s.separator"></div>
 
-        <div :class="s.grid">
-            <Field :id="s.name" v-model="asd" :class="s.line"
-                title="Name"/>
+        <form @submit.prevent="onCreate(user.account_code, currentFilter, rName, rLocation, rDescription)" :class="s.grid">
+            <Field 
+                :id="s.name"  
+                :class="s.line"
+                title="Name" v-model="rName"/>
             <Field :id="s.location" :class="s.line"
-                title="Location"/>
+                title="Location" v-model="rLocation"/>
             <ImageField :id="s.image" title="Image"/>
-            <FieldVertical :id="s.description" title="Description"/>
-            <Button :id="s.submit" title="Create Apiary"/>
-        </div>
+            <FieldVertical :id="s.description" title="Description" v-model="rDescription"/>
+            <Button :id="s.submit" type="submit" title="Create Apiary" />
+        </form>
 
     </div>
 </PopupPlate>
@@ -70,6 +90,7 @@ const asd = defineModel({default: 'asdsjahjdsahjkjhkhjkiladshudiosahuiduidugisgd
         border-radius: 0 0 2px 2px
         background: $dark
         .vertical-split
+            margin-left: auto 
             border-radius: 20px
             height: 100%
             width: 4px

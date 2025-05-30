@@ -7,13 +7,15 @@ function focusPopup() {
     // while lowering previous ones index
 }
 
-export function createPopup(component) {
+export function createPopup(component, props) {
     const nextPopupId = rActivePopups.value.length
+
+    // adding to provided properties
+    props['popupId'] = nextPopupId
+
     rActivePopups.value.push({
         component,
-        props: {
-            popupId: nextPopupId
-        }
+        props: props
     })
 }
 

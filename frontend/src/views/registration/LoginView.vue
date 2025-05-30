@@ -1,11 +1,9 @@
 <script setup>
-import {BackgroundType} from "@/main.js";
-import BackgroundWidget from "@/components/BackgroundWidget.vue";
-import { login } from "../core/repositories/registrationRepository.js";
-import { user } from "../core/repositories/homeRepository.js";
+import { login } from "../../core/repositories/registrationRepository.js";
+import { user } from "../../core/repositories/homeRepository.js";
 import { watch } from "vue";
-import router from '../router';
-import { isEmpty } from "../utils/checks.js";
+import router from '../../router/index.js';
+import { isEmpty } from "../../utils/checks.js";
 import {ref} from "vue";
 import InputField from "@/components/InputField.vue";
 import LockableButton from "@/components/buttons/LockableButton.vue";
@@ -47,7 +45,6 @@ watch(user, (newValue) => {
 </script>
 
 <template>
-    <BackgroundWidget :type="BackgroundType.DimmedAndBlurred" src="/src/assets/images/honeyCombWall.jpg" alt="honey-comb-wall"/>
     <form @submit.prevent="login(email, password)" class="center">
         <div class="container">
             <h1 class="login-title"><strong>Login</strong></h1>

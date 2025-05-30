@@ -1,14 +1,12 @@
 <script setup>
-import BackgroundWidget from "../components/BackgroundWidget.vue";
-import {BackgroundType} from "@/main.js";
 import {ref} from "vue";
-import InputField from "../components/InputField.vue";
-import CheckboxWithText from "../components/buttons/CheckboxWithText.vue";
-import LockableButton from "../components/buttons/LockableButton.vue";
+import InputField from "@/components/input_fields/Field.vue";
+import CheckboxWithText from "@/components/buttons/CheckboxWithText.vue";
+import LockableButton from "@/components/buttons/LockableButton.vue";
 import { signUp } from "@/core/repositories/registrationRepository";
 import { watch } from "vue";
-import { user } from "../core/repositories/homeRepository.js";
-import { isEmpty } from "../utils/checks.js";
+import { user } from "../../core/repositories/homeRepository.js";
+import { isEmpty } from "../../utils/checks.js";
 
 const rName = ref("")
 const rSurename = ref("")
@@ -66,7 +64,6 @@ watch(user, (newValue) => {
 </script>
 
 <template>
-    <BackgroundWidget :type="BackgroundType.DimmedAndBlurred" src="/src/assets/images/honeyCombWall.jpg" alt="honey-comb-wall"/>
     <form @submit.prevent="signUp(rName, rSurename, rProfilePicture, rEmail, rPassword)" class="center">
         <div class="container">
             <h1 class="login-title"><strong>Sign Up</strong></h1>

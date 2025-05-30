@@ -8,7 +8,7 @@ import { isEmpty } from './utils/checks';
 import { user } from './core/repositories/homeRepository';
 import CreateApiaryPopup from './components/popups/CreateApiaryPopup.vue';
 import { rActivePopups } from './core/popups';
-import PopupPlate from './components/utlis/PopupPlate.vue';
+import PopupPlate from './components/popups/PopupPlate.vue';
 
 // banishes user to login realm when authentication gets false
 watch(user, (newValue) => {

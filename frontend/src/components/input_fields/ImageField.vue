@@ -15,7 +15,7 @@ const s = useCssModule()
 <div :class="s.container">
     <div :class="s.title">
         <TextTitle :class="s.title" 
-        is-disabled="true" shrink-width-to-text="true" 
+        :is-disabled="true" :shrink-width-to-text="true" 
         :text="title"/>
     </div>
     <div :class="s['img-container']">

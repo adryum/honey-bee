@@ -6,6 +6,10 @@ defineProps({
     title: {
         type: String,
         default: 'NO TITLE'
+    },
+    type: {
+        type: String,
+        default: 'text'
     }
 })
 const model = defineModel()
@@ -14,8 +18,8 @@ const s = useCssModule()
 
 <template>
 <div :class="s.container">
-    <TextTitle :class="s.title" is-disabled="true" :text="title"/>
-    <input :class="s.input" v-model="model"/>
+    <TextTitle :class="s.title" :text="title"/>
+    <input @keydown.enter.prevent :type="text" :class="s.input" v-model="model"/>
 </div>
 </template>
 
