@@ -1,8 +1,9 @@
 <script setup>
-import Hive from '@/components/Hive.vue';
+import Hive from '@/components/hive/Hive.vue';
 import { ref } from "vue";
 import { user, getHives } from "../core/repositories/homeRepository.js"
 import { onMounted } from 'vue';
+import TabPage from '@/components/TabPage.vue';
 
 const hives = ref([])
 
@@ -12,17 +13,10 @@ onMounted(async () => {
 </script>
 
 <template>
-<div class="view-container">
-    <div class="header">
 
-    </div>
-    <!-- <div class="content-container"> -->
-    <div class="page">
-        <Hive v-for="hive in hives" :hive="hive"/>
-    </div>
-    <!-- </div> -->
+        <TabPage/>
 
-</div>
+
 </template>
 
 <style scoped lang='sass'>

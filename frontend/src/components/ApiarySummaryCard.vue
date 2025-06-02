@@ -3,10 +3,13 @@ import { onMounted, useTemplateRef, watch } from 'vue';
 import ApiaryHiveCount from './ApiaryHiveCount.vue';
 import Icon from './Icon.vue';
 import TextTitle from './input_fields/TextTitle.vue';
+import IconCubeButton from './buttons/IconCubeButton.vue';
+import { deleteApiary, user } from '@/core/repositories/homeRepository';
 
 const props = defineProps({
   apiary: Object,
-  sizeMultiplier: Number
+  sizeMultiplier: Number,
+  onDelete: Function
 })
 const rContainer = useTemplateRef('container')
 
@@ -24,13 +27,12 @@ watch(() => props.sizeMultiplier, (newValue) => {
 
 const hiveTxt = "Hives"
 </script>
-
 <template>
 <div id="apiary-container" ref="container">
     <div class="header">
         <TextTitle class="title" v-model="apiary.name"/>
         <div class="buttons">
-            <div class="button" style="background: #FFE7A4;"><Icon res="fa-solid fa-pencil"/></div>
+            <IconCubeButton @click="deleteApiary(user.account_code, apiary['id'], onDelete)" res="fa-solid fa-trash"/>
             <div class="button" style="background: #FFBC50;"><Icon res="fa-solid fa-ellipsis-vertical"/></div> 
         </div>
     </div>

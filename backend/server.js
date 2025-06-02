@@ -193,19 +193,44 @@ app.post('/apiaries/create', async (req, res) => {
         return
     }
 
-    const avialableId = await generateAccountCode('apiaries', 'id')
-
     const query = `
-        INSERT INTO apiaries (id, name, location, description, creator)
-        VALUES(?, ?, ?, ?, ?)`
+        INSERT INTO apiaries (name, location, description, creator)
+        VALUES(?, ?, ?, ?)`
 
-    const result = await db.query(query, [avialableId, name, location, description, accountCode])
+    const result = await db.query(query, [name, location, description, accountCode])
 
     console.log(result)
     
     res.status(201).json({
         message: 'all good!',
         // apiaries: apiaries
+    })
+})
+
+app.post('/apiaries/delete', async (req, res) => {
+    let { accountCode, apiaryId } = req.body
+    console.log(accountCode, apiaryId)
+    console.log(!1)
+
+    // missing credentials
+    if (!accountCode || !apiaryId && apiaryId != 0) {
+        res.status(401).send('incorrect information!') 
+        return
+    }
+
+    const unassigningHivesQuery = `
+        UPDATE hives SET apiary = NULL WHERE apiary = ? AND creator = ?`
+    const unassigningResult = await db.query(unassigningHivesQuery, [apiaryId, accountCode])
+    
+    const deleteQuery = `
+        DELETE FROM apiaries WHERE id = ? AND creator = ?`
+    const result = await db.query(deleteQuery, [apiaryId, accountCode])
+
+    console.log(unassigningResult)
+    console.log(result)
+    
+    res.status(201).json({
+        message: 'all good!',
     })
 })
 

@@ -57,3 +57,18 @@ export async function getApiaries(accountCode, startWith) {
         console.error(error);
     }
 }
+
+export async function deleteApiary(accountCode, apiaryId, callback) {
+    try {
+        console.log(accountCode, apiaryId)
+        const promise = await axios.post('/apiaries/delete', {
+            accountCode: accountCode,
+            apiaryId: apiaryId
+        })
+
+        callback()
+        console.log(promise)
+    } catch (error) {
+        console.error(error);
+    }
+}
