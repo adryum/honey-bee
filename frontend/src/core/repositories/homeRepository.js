@@ -1,7 +1,8 @@
 import axios from 'axios'
 import { ref } from 'vue'
 
-export const user = ref({
+export const user = ref(
+{
     account_code: "#2",
     e_mail: "em@gmail.com",
     name: "Emīls",
@@ -15,6 +16,22 @@ export async function getHives(accountCode) {
     try {
         const promise = await axios.post('/hives', {
             accountCode: accountCode
+        })
+
+        const hives = promise.data['hives']
+        console.log(hives)
+
+        return hives
+    } catch (error) {
+        console.error(error);
+    }
+}
+
+export async function getApiaryHives(accountCode, apiaryId) {
+    try {
+        const promise = await axios.post('/apiary-hives', {
+            accountCode: accountCode,
+            apiaryId: apiaryId
         })
 
         const hives = promise.data['hives']

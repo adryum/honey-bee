@@ -1,13 +1,15 @@
 <script setup>
-import {ref} from "vue";
-import InputField from "@/components/input_fields/Field.vue";
-import CheckboxWithText from "@/components/buttons/CheckboxWithText.vue";
-import LockableButton from "@/components/buttons/LockableButton.vue";
+import {ref, useCssModule} from "vue";
+import RegistrationInputField from "@/components/input_fields/RegistrationInputField.vue";
+import CheckboxWText from "@/components/buttons/CheckboxWText.vue";
+import RegistrationSubmitButtons from "@/components/combinations/RegistrationSubmitButtons.vue";
 import { signUp } from "@/core/repositories/registrationRepository";
 import { watch } from "vue";
 import { user } from "../../core/repositories/homeRepository.js";
 import { isEmpty } from "../../utils/checks.js";
+import router from '../../router/index.js';
 
+const rUsername = ref("")
 const rName = ref("")
 const rSurename = ref("")
 const rEmail = ref("")
@@ -16,39 +18,6 @@ const rRepeatPassword = ref("")
 const rProfilePicture = ref("")
 const rAgreedToTerms = ref(false)
 const rAgreedToSpam = ref(false)
-
-const requiredFields = [
-  {
-    "title": "Name",
-    "placeHolder" : "...",
-    "type" : "text",
-    "rValue": rName
-  },
-  {
-    "title": "Surename",
-    "placeHolder" : "...",
-    "type" : "text",
-    "rValue": rSurename
-  },
-  {
-    "title": "E-mail",
-    "placeHolder" : "...",
-    "type" : "email",
-    "rValue": rEmail
-  },
-  {
-    "title": "Password",
-    "placeHolder" : "...",
-    "type" : "password",
-    "rValue": rPassword
-  },
-  {
-    "title": "Confirm Password",
-    "placeHolder" : "...",
-    "type" : "password",
-    "rValue": rRepeatPassword
-  }
-]
 
 watch(user, (newValue) => {
     if (!isEmpty(newValue)) {
@@ -61,63 +30,70 @@ watch(user, (newValue) => {
         immediate: true
     }
 )
+const s = useCssModule()
 </script>
 
 <template>
-    <form @submit.prevent="signUp(rName, rSurename, rProfilePicture, rEmail, rPassword)" class="center">
-        <div class="container">
-            <h1 class="login-title"><strong>Sign Up</strong></h1>
-            <InputField class="input-field" v-for="(field, i) in requiredFields" :key="i"
-                        :title="field['title']"
-                        :place-holder="field['placeHolder']"
-                        :type="field['type']"
-                        v-model="field.rValue.value"
-            />
-            <CheckboxWithText class="checkbox" text="Agree to terms and services" v-model="rAgreedToTerms"/>
-            <CheckboxWithText class="checkbox" text="Receive spam and other things" v-model="rAgreedToSpam"/>
-            <LockableButton class="submit-button" :is-unlocked="true" type="submit" text="Sign Up"/>
-            <RouterLink to="/login">Log in</RouterLink>
-        </div>
+<div :class="s.view">
+    <form @submit.prevent="signUp(rName, rSurename, rProfilePicture, rEmail, rPassword)" :class="s.container">
+        <img :class="s.logo" src="@/assets/images/BeeLogo.png" alt="logo">
+        <h1 :class="s.title">HoneyBee</h1>
+        <RegistrationInputField v-model="rUsername" hint="Username" type="text"/>
+        <RegistrationInputField v-model="rName" hint="Name" type="text"/>
+        <RegistrationInputField v-model="rSurename" hint="Surname" type="text"/>
+        <RegistrationInputField v-model="rEmail" hint="E-mail" type="email"/>
+        <RegistrationInputField v-model="rPassword" hint="Password" type="password"/>
+        <RegistrationInputField v-model="rRepeatPassword" hint="Repeat Password" type="password"/>
+        <CheckboxWText v-model="rAgreedToSpam" text="Agree to receive spam"/>
+        <CheckboxWText v-model="rAgreedToTerms" text="Agree to Terms of Service"/>
+        <CheckboxWText text="Remember me!"/>
+        <RegistrationSubmitButtons 
+            submit-text="Sign up"
+            leftText="Forgot Password!"
+            left-link="/recovery"
+            right-text="Log in"
+            right-link="/login"
+        />
     </form>
+</div>
 </template>
 
-<style scoped lang="sass">
-.center
+<style module lang="sass">
+.logo
+    position: absolute
+    top: -6.5rem
+    left: -7rem
+    rotate: -2deg
+    height: 18rem
+
+.title
+    all: unset
+    font-size: 45px
+    letter-spacing: 1px
+    margin: 0 0 .5rem 0
+    align-self: center
+    color: #2D1E02
+    
+.view
     display: flex
+    width: 100%
+    height: 100vh
     align-items: center
     justify-content: center
-    width: 100%
-    min-height: 100vh
-.container 
+
+.container
+    width: 27rem
+
+    position: relative
     display: flex
     flex-direction: column
-    width: 30rem
+    gap: 1rem
 
-    
+    box-sizing: border-box
+    border-bottom: 2px solid #B9A554
+    padding: 1rem 2.5rem
+    border-radius: 8px
+    box-shadow: 0 0 10px rgba(0, 0, 0, .2)
 
-    background: rgba(255,255,255,0.8)
-    box-shadow: 0 0 8px 2px rgba(0, 0, 0, .5)
-    border-radius: 20px
-
-.container > * 
-    margin: 10px 20px 10px
-
-.login-title 
-    align-self: center
-    font-size: 3rem
-
-.checkbox 
-    font-size: 1em
-
-.submit-button 
-    align-self: center
-    font-size: 2.5rem
-    width: calc(100% - 40px)
-    height: 2em
-
-.options 
-    align-self: center
-    justify-self: center
-    margin-top: auto
-
+    background: white
 </style>

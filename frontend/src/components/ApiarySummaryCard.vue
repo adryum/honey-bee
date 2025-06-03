@@ -28,7 +28,7 @@ watch(() => props.sizeMultiplier, (newValue) => {
 const hiveTxt = "Hives"
 </script>
 <template>
-<div id="apiary-container" ref="container">
+<div id="apiary-container" ref="container" @click="$router.push('/apiaries/' + apiary.id)">
     <div class="header">
         <TextTitle class="title" v-model="apiary.name"/>
         <div class="buttons">

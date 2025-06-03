@@ -10,14 +10,18 @@ const s = useCssModule()
 <template>
 <div :class="s.container">
     <div :class="s.header">
-        Latvia
+        <div>
+            <div>Path</div>
+            Latvia
+        </div>
         <div :class="s['vt-linebreak']"></div>
         <IconCubeButton :class="s['button-special']" res="fa-solid fa-left-long"/>
     </div>
 
     <div :class="s.grid">
-        grid
-        <Hive/>
+        <slot>
+
+        </slot>
     </div>
 </div>
 </template>
@@ -57,10 +61,12 @@ const s = useCssModule()
         margin-left: auto 
 
 .grid
-    height: 100%
-    display: grid
-    
-    box-sizing: border-box
+    display: flex
+    flex-wrap: wrap
+    justify-content: center
+    align-items: flex-start
+    gap: 3rem
+    justify-items: center
     padding: 1rem
 
 .button-special

@@ -83,7 +83,7 @@ app.post('/signup', async (req, res) => {
         (account_code, name, surename, profile_picture, e_mail, password, role)
         VALUES (?, ?, ?, ?, ?, ?, ?)`
 
-    const accountCode = await generateAccountCode()
+    const accountCode = await generateAccountCode('users', 'account_code')
 
     const insert = await db.query(insertQuery, [accountCode, name, surename, null, email, password, 'Admin'])
 
@@ -105,7 +105,8 @@ async function generateAccountCode(table, pkColumn) {
         FROM ${table}`
 
     const [results] = await db.query(query)
-    const sortedIds = results.map((obj) => obj['id'].substring(1)).sort((a, b) => a - b)
+ 
+    const sortedIds = results.map((obj) => obj[pkColumn].substring(1)).sort((a, b) => a - b)
     
     let previousCode = parseInt(sortedIds[0])
     
@@ -140,6 +141,31 @@ app.post('/hives', async (req, res) => {
         WHERE creator = ?`
 
     const [hives] = await db.query(query, [accountCode])
+
+    console.log(hives)
+    
+    res.status(201).json({
+        message: 'all good!',
+        hives: hives
+    })
+})
+
+app.post('/apiary-hives', async (req, res) => {
+    const { accountCode, apiaryId } = req.body
+    console.log(accountCode, apiaryId);
+    
+    // missing credentials
+    if (!accountCode || !apiaryId && apiaryId != 0) {
+        res.status(401).send('incorrect credentials!') 
+        return
+    }
+
+    const query = `
+        SELECT *
+        FROM hives
+        WHERE creator = ? AND apiary = ?`
+
+    const [hives] = await db.query(query, [accountCode, apiaryId])
 
     console.log(hives)
     

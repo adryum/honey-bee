@@ -60,8 +60,6 @@ onMounted(async () => {
 
     background: $base-dark
 
-   
-
 .header
     grid-area: header
     background: $special-dark
