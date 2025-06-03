@@ -27,6 +27,38 @@ export async function getHives(accountCode) {
     }
 }
 
+export async function getApiary(accountCode, apiaryId) {
+    try {
+        const promise = await axios.post('/apiary', {
+            accountCode: accountCode,
+            apiaryId: apiaryId
+        })
+
+        const [apiary] = promise.data['apiary']
+        console.log(apiary)
+
+        return apiary
+    } catch (error) {
+        console.error(error);
+    }
+}
+
+export async function assignHiveToApiary(accountCode, hiveId, apiaryId, callback) {
+    try {
+        const promise = await axios.post('/hive/assign', {
+            accountCode: accountCode,
+            hiveId: hiveId,
+            apiaryId: apiaryId
+        })
+    
+        console.log(promise)
+
+        callback()
+    } catch (error) {
+        console.error(error);
+    }
+}
+
 export async function getApiaryHives(accountCode, apiaryId) {
     try {
         const promise = await axios.post('/apiary-hives', {

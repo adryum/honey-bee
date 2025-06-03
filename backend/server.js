@@ -175,6 +175,28 @@ app.post('/apiary-hives', async (req, res) => {
     })
 })
 
+app.post('/hive/assign', async (req, res) => {
+    const { accountCode, hiveId, apiaryId } = req.body
+    console.log(accountCode, hiveId, apiaryId);
+    
+    // missing credentials
+    if (!accountCode || !hiveId && hiveId != 0 || !apiaryId && apiaryId != 0) {
+        res.status(401).send('incorrect credentials!') 
+        return
+    }
+
+    const updateQuery = `
+        UPDATE hives SET apiary = ? WHERE id = ? AND creator = ?`
+    const [hives] = await db.query(updateQuery, [apiaryId, hiveId, accountCode])
+
+    console.log(hives)
+    
+    res.status(201).json({
+        message: 'all good!',
+        hives: hives
+    })
+})
+
 app.post('/apiaries', async (req, res) => {
     let { accountCode, startWith } = req.body
     console.log(accountCode, startWith)
@@ -206,6 +228,31 @@ app.post('/apiaries', async (req, res) => {
     res.status(201).json({
         message: 'all good!',
         apiaries: apiaries
+    })
+})
+
+app.post('/apiary', async (req, res) => {
+    let { accountCode, apiaryId } = req.body
+    console.log(accountCode, apiaryId)
+
+    // missing credentials
+    if (!accountCode || !apiaryId && apiaryId != 0) {
+        res.status(401).send('incorrect credentials!') 
+        return
+    }
+
+    const query = `
+        SELECT *
+        FROM apiaries
+        WHERE creator = ? AND id = ?`
+
+    const [apiary] = await db.query(query, [accountCode, apiaryId])
+
+    console.log(apiary)
+    
+    res.status(201).json({
+        message: 'all good!',
+        apiary: apiary
     })
 })
 

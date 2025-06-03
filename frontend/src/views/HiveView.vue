@@ -1,68 +1,83 @@
 <script setup>
 import Hive from '@/components/hive/Hive.vue';
-import { ref } from "vue";
+import { ref, useCssModule } from "vue";
 import { user, getHives } from "../core/repositories/homeRepository.js"
 import { onMounted } from 'vue';
-import TabPage from '@/components/TabPage.vue';
+import IconCubeButton from '@/components/buttons/IconCubeButton.vue';
 
 const hives = ref([])
 
 onMounted(async () => {
     hives.value = await getHives(user.value['account_code'])
 })
+const s = useCssModule()
 </script>
 
 <template>
+<div :class="s.container">
+    <div :class="s.header">
+        <div>
+            <div>Path</div>
+            Hives
+        </div>
+        <div :class="s['vt-linebreak']"></div>
+        <IconCubeButton :class="s['button-special']" res="fa-solid fa-left-long"/>
+    </div>
 
-        <TabPage/>
-
-
+    <div :class="s.grid">
+        <Hive v-for="(hive, i) in hives" :key="i"
+            :name="hive.name"
+            :weight="hive.weight"
+            :frames="hive.frames"
+            :type="hive.type"
+            ></Hive>
+    </div>
+</div>
 </template>
 
-<style scoped lang='sass'>
-@use '../assets/colors.sass' as *
-
-.view-container
-    display: grid
+<style module lang='sass'>
+@use '@/assets/main.sass' as main
+.container 
+    display: flex
+    flex-direction: column
     width: 100%
-    min-height: 100%
-    grid-template-areas: "a header header header b" "space space space space space" "left left body right right"
-    grid-template-rows: 6rem 1rem 1fr
-    grid-auto-columns: 2rem 4rem 1fr 4rem 2rem
-    background: $base-main
+
+    box-sizing: border-box
+    margin: 6px
+
+    border-radius: 4px
+    box-shadow: 0px 0px 10px rgba(0, 0, 0, 0.21)
+    background: #FFECC8
 
 .header
-    position: sticky
-    top: 0
+    display: flex
+    align-items: center
+    gap: .4rem
 
-    grid-area: header
-    border-radius: 0 0 8px 8px
-    background-color: $base-dark
-    padding: 0 0 10px
+    height: 5rem
+
     box-sizing: border-box
-    box-shadow: 0 0 1.5px .1px black
+    padding: .4rem
+    border-radius: 4px
+    box-shadow: 0px 0px 10px rgba(0, 0, 0, 0.21)
+    background: #EDEDED
 
-// .content-container
-//     display: grid
-//     // grid-area: body
-//     // grid-template-columns: 5rem 1fr 5rem
-//     // // grid-template-areas: "left body right"
-//     width: 100%
-//     height: 100% 
+    .vt-linebreak
+        width: 6px
+        height: 100%
+        border-radius: 4px
+        background: #D9D9D9
+        margin-left: auto 
 
-
-.page
-    display: grid
-    grid-area: body
+.grid
+    display: flex
+    flex-wrap: wrap
     justify-content: center
-
-    grid-template-columns: repeat(auto-fit, 320px )
+    align-items: flex-start
     gap: 3rem
-    width: 100%
-    
-    padding: 5px
-    box-sizing: border-box
-    background-color: $base-accent
-    box-shadow: 0px 0px 0px 0.1px black
+    justify-items: center
+    padding: 1rem
 
+.button-special
+    background: main.$button-special
 </style>
