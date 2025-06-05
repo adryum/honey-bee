@@ -136,10 +136,11 @@ app.post('/hives', async (req, res) => {
     }
 
     const query = `
-        SELECT *
+        SELECT hives.*, api.name as apiary
         FROM hives
-        WHERE creator = ?`
-
+        LEFT JOIN apiaries AS api ON hives.apiary_id = api.id
+        WHERE hives.creator = ?
+        `
     const [hives] = await db.query(query, [accountCode])
 
     console.log(hives)
@@ -150,7 +151,7 @@ app.post('/hives', async (req, res) => {
     })
 })
 
-app.post('/apiary-hives', async (req, res) => {
+app.post('/apiary/hives', async (req, res) => {
     const { accountCode, apiaryId } = req.body
     console.log(accountCode, apiaryId);
     
@@ -163,7 +164,7 @@ app.post('/apiary-hives', async (req, res) => {
     const query = `
         SELECT *
         FROM hives
-        WHERE creator = ? AND apiary = ?`
+        WHERE creator = ? AND apiary_id = ?`
 
     const [hives] = await db.query(query, [accountCode, apiaryId])
 
@@ -186,7 +187,7 @@ app.post('/hive/assign', async (req, res) => {
     }
 
     const updateQuery = `
-        UPDATE hives SET apiary = ? WHERE id = ? AND creator = ?`
+        UPDATE hives SET apiary_id = ? WHERE id = ? AND creator = ?`
     const [hives] = await db.query(updateQuery, [apiaryId, hiveId, accountCode])
 
     console.log(hives)
@@ -194,6 +195,27 @@ app.post('/hive/assign', async (req, res) => {
     res.status(201).json({
         message: 'all good!',
         hives: hives
+    })
+})
+
+app.post('/hive/unassign', async (req, res) => {
+    const { accountCode, hiveId } = req.body
+    console.log(accountCode, hiveId);
+    
+    // missing credentials
+    if (!accountCode || !hiveId && hiveId != 0) {
+        res.status(401).send('incorrect credentials!') 
+        return
+    }
+
+    const updateQuery = `
+        UPDATE hives SET apiary_id = NULL WHERE id = ? AND creator = ?`
+    const [hives] = await db.query(updateQuery, [hiveId, accountCode])
+
+    console.log(hives)
+    
+    res.status(201).json({
+        message: 'all good!',
     })
 })
 
@@ -292,7 +314,7 @@ app.post('/apiaries/delete', async (req, res) => {
     }
 
     const unassigningHivesQuery = `
-        UPDATE hives SET apiary = NULL WHERE apiary = ? AND creator = ?`
+        UPDATE hives SET apiary_id = NULL WHERE apiary_id = ? AND creator = ?`
     const unassigningResult = await db.query(unassigningHivesQuery, [apiaryId, accountCode])
     
     const deleteQuery = `

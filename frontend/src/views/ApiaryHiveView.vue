@@ -1,27 +1,43 @@
 <script setup>
 import Hive from '@/components/hive/Hive.vue';
 import { ref, useCssModule } from "vue";
-import { user, getApiaryHives, getApiaries, getHives, getApiary } from "../core/repositories/homeRepository.js"
+import { user as rUser, getApiaryHives, getApiary, unassignHive } from "../core/repositories/homeRepository.js"
 import { onMounted } from 'vue';
 import IconCubeButton from '@/components/buttons/IconCubeButton.vue';
 import IconButton from '@/components/buttons/IconButton.vue';
 import { createPopup } from '@/core/popups.js';
 import AssignHivesPopup from '@/components/popups/AssignHivesPopup.vue';
+import PathTitle from '@/components/PathTitle.vue';
+import AreYouSurePopup from '@/components/popups/AreYouSurePopup.vue';
 
 const props = defineProps({
-    id: Number
+    id: String
 })
 
-const hives = ref([])
+const rHives = ref([])
 const rApiary = ref({})
+const rIsRemovingHives = ref(false)
 
 async function searchApiaryHives() {
-    hives.value = await getApiaryHives(user.value['account_code'], props.id)
+    rHives.value = await getApiaryHives(rUser.value['account_code'], props.id)
+}
+
+function handleHiveClick(hive) {
+    if (rIsRemovingHives.value) {
+        createPopup(AreYouSurePopup, {
+            title: 'Remove Hive',
+            description: `Are you sure you want to remove ${hive.name}?`,
+            onAsyncYes: async () => { 
+                await unassignHive(rUser.value['account_code'], hive.id)
+                await searchApiaryHives()
+            }
+        })
+    }
 }
 
 onMounted(async () => {
-    rApiary.value = await getApiary(user.value['account_code'], props.id)
-    hives.value = await getApiaryHives(user.value['account_code'], props.id)
+    rApiary.value = await getApiary(rUser.value['account_code'], props.id)
+    rHives.value = await getApiaryHives(rUser.value['account_code'], props.id)
 })
 const s = useCssModule()
 </script>
@@ -29,22 +45,21 @@ const s = useCssModule()
 <template>
 <div :class="s.container">
     <div :class="s.header">
-        <div>
-            <div>Path</div>
-            {{ rApiary.name }}
-        </div>
+        <PathTitle :title="rApiary.name"/>
         <div :class="s['vt-linebreak']"></div>
+        <IconButton @click="rIsRemovingHives = !rIsRemovingHives" text="Remove hives"/>
         <IconButton @click="createPopup(AssignHivesPopup, {apiaryId: id, currentFilter: rSearchFilter, refreshHives: searchApiaryHives})" text="Add hive"/>
-        <IconCubeButton :class="s['button-special']" res="fa-solid fa-left-long"/>
+        <IconCubeButton @click="$router.back()" :class="s['button-special']" res="fa-solid fa-left-long"/>
     </div>
 
     <div :class="s.grid">
-        <Hive v-for="(hive, i) in hives" :key="i"
+        <Hive v-for="(hive, i) in rHives" :key="i"
+            @click="handleHiveClick(hive)"
             :name="hive.name"
             :weight="hive.weight"
             :frames="hive.frames"
             :type="hive.type"
-            ></Hive>
+        />
     </div>
 </div>
 </template>

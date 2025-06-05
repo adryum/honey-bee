@@ -9,7 +9,8 @@ defineProps({
     type: {
         type: String,
         default: 'text'
-    }
+    },
+    isRequired: Boolean
 })
 
 const input = useTemplateRef('input')
@@ -18,9 +19,9 @@ const s = useCssModule()
 </script>
 
 <template>
-<div @click="input.focus()" :class='s.container'>
-    <p :class="[model ? s['not-empty'] : '', s.hint]">{{ hint }}</p>
-    <input ref="input" :type="type" :class="[model ? s['not-empty-input'] : '', s.input]" v-model="model">
+<div @click="input.focus()" :class="[!model && isRequired && s['input-empty'], s.container]">
+    <p :class="[model && s['not-empty'], s.hint]">{{ hint }}</p>
+    <input ref="input" :type="type" :class="[model && s['not-empty-input'], s.input]" v-model="model">
 </div>
 </template>
 
@@ -40,12 +41,18 @@ const s = useCssModule()
     box-shadow: 0 0 4px rgba(0, 0, 0, .2)
     cursor: text
 
+    transition: .2s
+
     &:focus-within
         .hint
             font-size: 10px
             
         .input
             font-size: 18px
+
+.input-empty
+    border-bottom: 3px solid rgba(255, 61, 61, .7)
+
 .hint
     opacity: .7
     font-size: 14px
@@ -61,7 +68,7 @@ const s = useCssModule()
     font-size: 14px
     background: white
     transition: .1s
-   
+
 .not-empty-input
     font-size: 18px
 </style>

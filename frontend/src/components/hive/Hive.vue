@@ -17,7 +17,10 @@ defineProps({
     type: {
         type: String,
         default: 'NONE'
-    }
+    },
+    apiary: {
+        type: String,
+    },
 })
 
 const s = useCssModule()
@@ -25,26 +28,33 @@ const s = useCssModule()
 
 <template>
 <div :class="s.container">
-   <div :class="s.header">
+    <div v-if="apiary" :class="s.location">
         <img :class="s.wood" src="@/assets/images/Wood2.jpg">
-        <p>{{ name }}</p>
+        <p>{{ apiary }}</p>
    </div>
 
-   <div :class="s.body">
-        <img :class="s.wood" src="@/assets/images/Wood1.png">
-        <img :class="s['hive-img']" src="@/assets/images/Hive1.jpg">
-        <div :class="s.list">
-            <div :class="s.drawer">
-                <img :class="s.wood" src="@/assets/images/Wood2.jpg">
-                <p>Frames: {{ frames }}</p>
-            </div>
-            <div :class="s.drawer">
-                <img :class="s.wood" src="@/assets/images/Wood2.jpg">
-                <p>Weight: {{ weight }}kg</p>
-            </div>
-            <div :class="s.drawer">
-                <img :class="s.wood" src="@/assets/images/Wood2.jpg">
-                <p>Type: {{ type }}</p>
+   <div :class="s.hive">
+        <div :class="s.header">
+            <img :class="s.wood" src="@/assets/images/Wood2.jpg">
+            <p>{{ name }}</p>
+        </div>
+
+        <div :class="s.body">
+            <img :class="s.wood" src="@/assets/images/Wood1.png">
+            <img :class="s['hive-img']" src="@/assets/images/Hive1.jpg">
+            <div :class="s.list">
+                <div :class="s.drawer">
+                    <img :class="s.wood" src="@/assets/images/Wood2.jpg">
+                    <p>Frames: {{ frames }}</p>
+                </div>
+                <div :class="s.drawer">
+                    <img :class="s.wood" src="@/assets/images/Wood2.jpg">
+                    <p>Weight: {{ weight }}kg</p>
+                </div>
+                <div :class="s.drawer">
+                    <img :class="s.wood" src="@/assets/images/Wood2.jpg">
+                    <p>Type: {{ type }}</p>
+                </div>
             </div>
         </div>
    </div>
@@ -53,6 +63,29 @@ const s = useCssModule()
 
 <style module lang='sass'>
 .container
+    display: flex
+    flex-direction: column
+    align-items: flex-start
+
+    gap: .5rem
+
+    .location
+        position: relative
+
+        display: flex
+        align-items: center
+        justify-content: center
+
+        padding: .1rem .4rem .2rem .4rem
+
+        font-size: 15px
+        color: white
+        background: #633A00
+        border-radius: 4px
+        overflow: hidden
+        box-shadow: 0px 0px 10px rgba(0, 0, 0, 0.21)
+
+.hive
     display: grid
     grid-template-areas: 'center center center' 'ls2 body rs2'
     grid-template-columns: 0.07fr 1fr 0.07fr
@@ -81,7 +114,6 @@ const s = useCssModule()
     display: grid
     grid-template-areas: 'left right'
     grid-template-columns: 1fr 1fr
-    grid-template-rows: 1fr
 
     box-sizing: border-box
     padding: .4rem

@@ -4,11 +4,18 @@ import { ref, useCssModule } from "vue";
 import { user, getHives } from "../core/repositories/homeRepository.js"
 import { onMounted } from 'vue';
 import IconCubeButton from '@/components/buttons/IconCubeButton.vue';
+import PathTitle from '@/components/PathTitle.vue';
+import HorizontalHr from '@/components/HorizontalHr.vue';
 
 const hives = ref([])
+const assignedHives = ref([])
+const unassignedHives = ref([])
 
 onMounted(async () => {
     hives.value = await getHives(user.value['account_code'])
+    
+    assignedHives.value = hives.value.filter((item) => item['apiary_id'])
+    unassignedHives.value = hives.value.filter((item) => !item['apiary_id'])
 })
 const s = useCssModule()
 </script>
@@ -16,21 +23,27 @@ const s = useCssModule()
 <template>
 <div :class="s.container">
     <div :class="s.header">
-        <div>
-            <div>Path</div>
-            Hives
-        </div>
+        <PathTitle title="Hives"/>
         <div :class="s['vt-linebreak']"></div>
         <IconCubeButton :class="s['button-special']" res="fa-solid fa-left-long"/>
     </div>
 
     <div :class="s.grid">
-        <Hive v-for="(hive, i) in hives" :key="i"
+        <Hive v-for="(hive, i) in assignedHives" :key="i"
+            :apiary="hive.apiary"
             :name="hive.name"
             :weight="hive.weight"
             :frames="hive.frames"
             :type="hive.type"
-            ></Hive>
+        />
+        <HorizontalHr v-if="unassignedHives.length > 0" text="Unassigned hives"/>
+        <Hive v-for="(hive, i) in unassignedHives" :key="i"
+            :apiary="hive.apiary"
+            :name="hive.name"
+            :weight="hive.weight"
+            :frames="hive.frames"
+            :type="hive.type"
+        />
     </div>
 </div>
 </template>
@@ -41,6 +54,8 @@ const s = useCssModule()
     display: flex
     flex-direction: column
     width: 100%
+    height: calc( 100vh - 12px )
+    overflow: hidden
 
     box-sizing: border-box
     margin: 6px
@@ -49,7 +64,11 @@ const s = useCssModule()
     box-shadow: 0px 0px 10px rgba(0, 0, 0, 0.21)
     background: #FFECC8
 
+hr
+    width: 100%
 .header
+    // top: 0
+    // position: sticky
     display: flex
     align-items: center
     gap: .4rem
@@ -77,7 +96,7 @@ const s = useCssModule()
     gap: 3rem
     justify-items: center
     padding: 1rem
-
+    overflow-y: scroll
 .button-special
     background: main.$button-special
 </style>

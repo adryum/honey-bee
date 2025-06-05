@@ -11,64 +11,65 @@ import Button from '../buttons/Button.vue';
 import { removePopup } from '@/core/popups';
 import { assignHiveToApiary, getHives, user } from '@/core/repositories/homeRepository';
 import Hive from '../hive/Hive.vue';
+import PathTitle from '../PathTitle.vue';
+import HorizontalHr from '../HorizontalHr.vue';
 
 const props = defineProps({
-    id: Number,
-    apiaryId: Number,
+    id: String,
+    apiaryId: String,
     currentFilter: String,
     refreshHives: Function
 })
 
 const hives = ref([])
+const assignedHives = ref([])
+const unassignedHives = ref([])
 
-onMounted(async () => {
+function onAssignment() {
+    props.refreshHives()
+    refreshPopup()
+}
+
+async function refreshPopup() {
     hives.value = await getHives(user.value['account_code'])
-})
+
+    assignedHives.value = hives.value.filter((item) => item['apiary_id'] && item['apiary_id'] != props.apiaryId)
+    unassignedHives.value = hives.value.filter((item) => !item['apiary_id'])
+}
 
 const s = useCssModule()
+onMounted(async () => refreshPopup())
 </script>
 
 
 <template>
     <div :class="s.container">
     <div :class="s.header">
-        <div>
-            <div>Path</div>
-            Hives 
-        </div>
+        <PathTitle title="Hives"/>
         <div :class="s['vt-linebreak']"></div>
         <IconCubeButton @click="removePopup(id)" :class="s['button-special']" res="fa-solid fa-xmark"/>
     </div>
 
     <div :class="s.grid">
-        <slot>
-            <Hive v-for="(hive, i) in hives" :key="i"
-            @click="assignHiveToApiary(user.account_code, hive.id, apiaryId, refreshHives)"
+        <Hive v-for="(hive, i) in assignedHives" :key="i"
+            @click="assignHiveToApiary(user.account_code, hive.id, apiaryId, onAssignment)"
+            :apiary="hive.apiary"
             :name="hive.name"
             :weight="hive.weight"
             :frames="hive.frames"
             :type="hive.type"
-            ></Hive>
-        </slot>
+        />
+        <HorizontalHr v-if="unassignedHives.length > 0" text="Unassigned hives"/>
+        <Hive v-for="(hive, i) in unassignedHives" :key="i"
+            @click="assignHiveToApiary(user.account_code, hive.id, apiaryId, onAssignment)"
+            :apiary="hive.apiary"
+            :name="hive.name"
+            :weight="hive.weight"
+            :frames="hive.frames"
+            :type="hive.type"
+        />
     </div>
 </div>
-
-    <!-- <div :class="s.container">
-        <div :class="s.header">
-            <Icon :id="s.icon" res="fa-solid fa-bug"/>
-            <TextTitle :shrink-width-to-text="true" :is-disabled="true" 
-                :class="s.title" text="Create Apiary "/>
-            <div :class="s['vertical-split']"></div>
-            <IconCubeButton :id="s.other"/>
-            <IconCubeButton @click="removePopup(id)" :id="s.close"/>
-        </div> -->
-
-        <!-- <form @submit.prevent="onCreate(user.account_code, currentFilter, rName, rLocation, rDescription)" :class="s.grid">
-            
-        </form> -->
-
-    <!-- </div> -->
-
 </template>
 
 <style module lang='sass'>
@@ -77,6 +78,7 @@ const s = useCssModule()
     display: flex
     flex-direction: column
     width: 80vw
+    height: 80vh
 
     box-sizing: border-box
     margin: 6px
@@ -113,6 +115,8 @@ const s = useCssModule()
     gap: 3rem
     justify-items: center
     padding: 1rem
+
+    overflow-y: scroll
 
 .button-special
     background: main.$button-special

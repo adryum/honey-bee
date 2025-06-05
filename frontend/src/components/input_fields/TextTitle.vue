@@ -29,7 +29,6 @@ function adjustSize() {
 
 onMounted(() => {
     adjustSize()
-    console.log(model);
 })
 </script>
 

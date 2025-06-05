@@ -1,7 +1,7 @@
 <script setup>
 import {ref, useCssModule} from "vue";
 import RegistrationInputField from "@/components/input_fields/RegistrationInputField.vue";
-import CheckboxWText from "@/components/buttons/CheckboxWText.vue";
+import CheckboxWText from "@/components/input_fields/CheckboxWText.vue";
 import RegistrationSubmitButtons from "@/components/combinations/RegistrationSubmitButtons.vue";
 import { signUp } from "@/core/repositories/registrationRepository";
 import { watch } from "vue";
@@ -38,14 +38,14 @@ const s = useCssModule()
     <form @submit.prevent="signUp(rName, rSurename, rProfilePicture, rEmail, rPassword)" :class="s.container">
         <img :class="s.logo" src="@/assets/images/BeeLogo.png" alt="logo">
         <h1 :class="s.title">HoneyBee</h1>
-        <RegistrationInputField v-model="rUsername" hint="Username" type="text"/>
-        <RegistrationInputField v-model="rName" hint="Name" type="text"/>
-        <RegistrationInputField v-model="rSurename" hint="Surname" type="text"/>
-        <RegistrationInputField v-model="rEmail" hint="E-mail" type="email"/>
-        <RegistrationInputField v-model="rPassword" hint="Password" type="password"/>
-        <RegistrationInputField v-model="rRepeatPassword" hint="Repeat Password" type="password"/>
-        <CheckboxWText v-model="rAgreedToSpam" text="Agree to receive spam"/>
-        <CheckboxWText v-model="rAgreedToTerms" text="Agree to Terms of Service"/>
+        <RegistrationInputField v-model="rUsername" hint="Username" type="text" :is-required="true"/>
+        <RegistrationInputField v-model="rName" hint="Name" type="text" :is-required="true"/>
+        <RegistrationInputField v-model="rSurename" hint="Surname" type="text" :is-required="true"/>
+        <RegistrationInputField v-model="rEmail" hint="E-mail" type="email" :is-required="true"/>
+        <RegistrationInputField v-model="rPassword" hint="Password" type="password" :is-required="true"/>
+        <RegistrationInputField v-model="rRepeatPassword" hint="Repeat Password" type="password" :is-required="true"/>
+        <CheckboxWText v-model="rAgreedToSpam" text="Agree to receive spam" :isRequired="true"/>
+        <CheckboxWText v-model="rAgreedToTerms" text="Agree to Terms of Service" :isRequired="true"/>
         <CheckboxWText text="Remember me!"/>
         <RegistrationSubmitButtons 
             submit-text="Sign up"

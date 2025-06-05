@@ -43,7 +43,7 @@ export async function getApiary(accountCode, apiaryId) {
     }
 }
 
-export async function assignHiveToApiary(accountCode, hiveId, apiaryId, callback) {
+export async function assignHiveToApiary(accountCode, hiveId, apiaryId, callback = () => {}) {
     try {
         const promise = await axios.post('/hive/assign', {
             accountCode: accountCode,
@@ -59,9 +59,24 @@ export async function assignHiveToApiary(accountCode, hiveId, apiaryId, callback
     }
 }
 
+export async function unassignHive(accountCode, hiveId, callback = () => {}) {
+    try {
+        const promise = await axios.post('/hive/unassign', {
+            accountCode: accountCode,
+            hiveId: hiveId,
+        })
+    
+        console.log(promise)
+
+        callback()
+    } catch (error) {
+        console.error(error);
+    }
+}
+
 export async function getApiaryHives(accountCode, apiaryId) {
     try {
-        const promise = await axios.post('/apiary-hives', {
+        const promise = await axios.post('/apiary/hives', {
             accountCode: accountCode,
             apiaryId: apiaryId
         })
@@ -107,16 +122,17 @@ export async function getApiaries(accountCode, startWith) {
     }
 }
 
-export async function deleteApiary(accountCode, apiaryId, callback) {
+export async function deleteApiary(accountCode, apiaryId, callback = () => {}) {
     try {
         console.log(accountCode, apiaryId)
         const promise = await axios.post('/apiaries/delete', {
             accountCode: accountCode,
             apiaryId: apiaryId
         })
+        
+        console.log(promise)
 
         callback()
-        console.log(promise)
     } catch (error) {
         console.error(error);
     }

@@ -1,4 +1,4 @@
-import { ref } from 'vue';
+import { markRaw, ref } from 'vue';
 
 export const rActivePopups = ref([])
 
@@ -14,7 +14,7 @@ export function createPopup(component, props) {
     props['popupId'] = nextPopupId
 
     rActivePopups.value.push({
-        component,
+        component: markRaw(component),
         props: props
     })
 }
@@ -23,5 +23,4 @@ export function removePopup(popupId) {
     rActivePopups.value.splice(popupId, 1)
     console.log('removed popup id: ' + popupId);
     console.log(rActivePopups.value);
-    
 }

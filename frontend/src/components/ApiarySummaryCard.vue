@@ -32,7 +32,7 @@ const hiveTxt = "Hives"
     <div class="header">
         <TextTitle class="title" v-model="apiary.name"/>
         <div class="buttons">
-            <IconCubeButton @click="deleteApiary(user.account_code, apiary['id'], onDelete)" res="fa-solid fa-trash"/>
+            <IconCubeButton @click.stop="deleteApiary(user.account_code, apiary['id'], onDelete)" res="fa-solid fa-trash"/>
             <div class="button" style="background: #FFBC50;"><Icon res="fa-solid fa-ellipsis-vertical"/></div> 
         </div>
     </div>

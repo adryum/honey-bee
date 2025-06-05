@@ -6,11 +6,12 @@ import router from '../../router/index.js';
 import { isEmpty } from "../../utils/checks.js";
 import {ref} from "vue";
 import RegistrationInputField from "@/components/input_fields/RegistrationInputField.vue";
-import CheckboxWText from "@/components/buttons/CheckboxWText.vue";
+import CheckboxWText from "@/components/input_fields/CheckboxWText.vue";
 import RegistrationSubmitButtons from "@/components/combinations/RegistrationSubmitButtons.vue";
 
 let rEmail = ref('')
 let rPassword = ref('') 
+let rRememberMe = ref(false) 
 const s = useCssModule()
 
 watch(user, (newValue) => {
@@ -31,9 +32,9 @@ watch(user, (newValue) => {
     <form @submit.prevent="login(rEmail, rPassword)" :class="s.container">
         <img :class="s.logo" src="@/assets/images/BeeLogo.png" alt="logo">
         <h1 :class="s.title">HoneyBee</h1>
-        <RegistrationInputField v-model="rEmail" hint="E-mail" type="email"/>
-        <RegistrationInputField v-model="rPassword" hint="Password" type="password"/>
-        <CheckboxWText text="Remember me!"/>
+        <RegistrationInputField v-model="rEmail" hint="E-mail" type="email" :is-required="true"/>
+        <RegistrationInputField v-model="rPassword" hint="Password" type="password" :is-required="true"/>
+        <CheckboxWText v-model="rRememberMe" text="Remember me!"/>
         <RegistrationSubmitButtons 
             submit-text="Login"
             leftText="Forgot Password!"

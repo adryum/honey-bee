@@ -12,7 +12,7 @@ import { removePopup } from '@/core/popups';
 import { createApiary, user } from '@/core/repositories/homeRepository';
 
 const props = defineProps({
-    id: Number,
+    id: String,
     currentFilter: String,
     refreshApiaries: Function
 })

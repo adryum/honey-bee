@@ -27,10 +27,11 @@ const s = useCssModule()
 <template>
   <div :class="s.flex">
     <PopupPlate v-if="rActivePopups.length != 0">
-        <component v-for="({component, props}, i) in rActivePopups" :key="i" :is="component" v-bind="props"/>
+        <component v-for="({component, props}, i) in rActivePopups" :key="i" 
+            :is="component" v-bind="props"/>
     </PopupPlate>
 
-        <SideHeader v-if="isAuthenticated()"/>
+    <SideHeader v-if="isAuthenticated()"/>
     <Suspense>
         <RouterView />
     </Suspense>
