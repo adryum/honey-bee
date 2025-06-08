@@ -2,6 +2,7 @@
 import { useCssModule } from 'vue';
 
 defineProps({
+    id: String,
     name: {
         type: String,
         default: 'No Name'
@@ -27,7 +28,7 @@ const s = useCssModule()
 </script>
 
 <template>
-<div :class="s.container">
+<div @click="$router.push('/hives/' + id)" :class="s.container">
     <div v-if="apiary" :class="s.location">
         <img :class="s.wood" src="@/assets/images/Wood2.jpg">
         <p>{{ apiary }}</p>

@@ -74,6 +74,22 @@ export async function unassignHive(accountCode, hiveId, callback = () => {}) {
     }
 }
 
+export async function getHive(accountCode, hiveId) {
+    try {
+        const promise = await axios.post('/hive', {
+            accountCode: accountCode,
+            hiveId: hiveId
+        })
+
+        const hive = promise.data['hive']
+        console.log(hive)
+
+        return hive
+    } catch (error) {
+        console.error(error);
+    }
+}
+
 export async function getApiaryHives(accountCode, apiaryId) {
     try {
         const promise = await axios.post('/apiary/hives', {

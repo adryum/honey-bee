@@ -1,10 +1,11 @@
 import { createRouter, createWebHistory } from 'vue-router'
 import MainView from '@/views/MainView.vue'
 import LoginView from '@/views/registration/LoginView.vue'
-import HiveView from '@/views/HiveView.vue'
+import AllHiveView from '@/views/AllHiveView.vue'
 import ApiaryView from '@/views/ApiaryView.vue'
 import SignUpView from '@/views/registration/SignUpView.vue'
 import ApiaryHiveView from '@/views/ApiaryHiveView.vue'
+import HiveView from '@/views/HiveView.vue'
 
 const router = createRouter({
   history: createWebHistory(import.meta.env.BASE_URL),
@@ -27,7 +28,13 @@ const router = createRouter({
     {
         path: '/hives',
         name: 'hives',
-        component: HiveView
+        component: AllHiveView
+    },
+    {
+        path: '/hives/:id',
+        name: 'Hive',
+        component: HiveView,
+        props: true
     },
     {
         path: '/apiaries',

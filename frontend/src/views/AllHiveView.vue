@@ -1,29 +1,21 @@
 <script setup>
-import HiveWidgetGeneral from '@/components/hive/HiveWidgetGeneral.vue';
+import Hive from '@/components/hive/Hive.vue';
 import { ref, useCssModule } from "vue";
 import { user, getHives } from "../core/repositories/homeRepository.js"
 import { onMounted } from 'vue';
 import IconCubeButton from '@/components/buttons/IconCubeButton.vue';
 import PathTitle from '@/components/PathTitle.vue';
 import HorizontalHr from '@/components/HorizontalHr.vue';
-import HiveWidgetNotes from '@/components/hive/HiveWidgetNotes.vue';
-import Note from '@/components/Note.vue';
 
-const props = defineProps({
-    hiveId: String,
-})
-
-const rHive = ref([])
-const rNotes = ref([])
-const rQueen = ref([])
-const rActivityFeed = ref([])
-const rStimulants = ref([])
-const rSuppers = ref([])
+const hives = ref([])
+const assignedHives = ref([])
+const unassignedHives = ref([])
 
 onMounted(async () => {
-    rHive.value = await getHive(user.value['account_code'], props.hiveId)
+    hives.value = await getHives(user.value['account_code'])
     
-    
+    assignedHives.value = hives.value.filter((item) => item['apiary_id'])
+    unassignedHives.value = hives.value.filter((item) => !item['apiary_id'])
 })
 const s = useCssModule()
 </script>
@@ -31,20 +23,29 @@ const s = useCssModule()
 <template>
 <div :class="s.container">
     <div :class="s.header">
-        <PathTitle :title="rHive.name"/>
+        <PathTitle title="Hives"/>
         <div :class="s['vt-linebreak']"></div>
         <IconCubeButton :class="s['button-special']" res="fa-solid fa-left-long"/>
     </div>
 
     <div :class="s.grid">
-        <HiveWidgetGeneral :class="s.general"/>
-        <HiveWidgetNotes :class="s.notes">
-            <Note 
-                title="About something" 
-                creator="Maria Greenberg"
-                content="Notes notes daasesa adsa dkasjdhdsahdiohasduiohasduiaghsuihdaushduashudhadsahdus"
-                creation-date="21 March 2018"/>
-        </HiveWidgetNotes>
+        <Hive v-for="(hive, i) in assignedHives" :key="i"
+            :id="hive.id"
+            :apiary="hive.apiary"
+            :name="hive.name"
+            :weight="hive.weight"
+            :frames="hive.frames"
+            :type="hive.type"
+        />
+        <HorizontalHr v-if="unassignedHives.length > 0" text="Unassigned hives"/>
+        <Hive v-for="(hive, i) in unassignedHives" :key="i"
+            :id="hive.id"
+            :apiary="hive.apiary"
+            :name="hive.name"
+            :weight="hive.weight"
+            :frames="hive.frames"
+            :type="hive.type"
+        />
     </div>
 </div>
 </template>
@@ -68,6 +69,8 @@ const s = useCssModule()
 hr
     width: 100%
 .header
+    // top: 0
+    // position: sticky
     display: flex
     align-items: center
     gap: .4rem
@@ -87,31 +90,15 @@ hr
         background: #D9D9D9
         margin-left: auto 
 
+.grid
+    display: flex
+    flex-wrap: wrap
+    justify-content: center
+    align-items: flex-start
+    gap: 3rem
+    justify-items: center
+    padding: 1rem
+    overflow-y: scroll
 .button-special
     background: main.$button-special
-
-.grid
-    flex: 1
-    display: grid
-    grid-template-areas: 'general general suppers notes' 'general general suppers notes' 'activity queen stimulants notes'
-    grid-template-columns: 1fr 1fr 1fr 1fr
-    grid-template-rows: 1fr 1fr 1fr
-    gap: 1rem
-
-    box-sizing: border-box
-    padding: 1rem
-
-    > *
-        min-width: 0
-        min-height: 0
-        max-width: 100%
-        max-height: 100%
-        box-sizing: border-box
-
-    .general
-        grid-area: general
-
-    .notes
-        grid-area: notes
-
 </style>

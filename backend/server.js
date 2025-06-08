@@ -176,6 +176,30 @@ app.post('/apiary/hives', async (req, res) => {
     })
 })
 
+app.post('/hive', async (req, res) => {
+    const { accountCode, hiveId } = req.body
+    console.log(accountCode, hiveId);
+    
+    // missing credentials
+    if (!accountCode || !hiveId && hiveId != 0) {
+        res.status(401).send('incorrect credentials!') 
+        return
+    }
+
+    const query = `
+        SELECT *
+        FROM hives AS h
+        WHERE h.creator = ? AND h.id = ?`
+    const [hive] = await db.query(query, [accountCode, hiveId])
+
+    console.log(hive)
+    
+    res.status(201).json({
+        message: 'all good!',
+        hive: hive
+    })
+})
+
 app.post('/hive/assign', async (req, res) => {
     const { accountCode, hiveId, apiaryId } = req.body
     console.log(accountCode, hiveId, apiaryId);
