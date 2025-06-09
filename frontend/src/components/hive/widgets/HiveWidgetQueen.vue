@@ -24,8 +24,8 @@ const s = useCssModule()
             <img :class="s.img" src="@/assets/images/Hive1.jpg">
             <h1 :class="s.name">{{ queen.name }}</h1>
             <div :class="s.tags">
-                <TagContentBox :class="s.tag" label="Age" content="2m 14d"/>
-                <TagContentBox :class="s.tag" label="Here Since" :content="queen.assignDate"/>
+                <TagContentBox :class="s.tag" label="Age" content="2asd"/>
+                <TagContentBox :class="s.tag" label="Here Since" content="qweqwe"/>
             </div>
         </div>
     </template>
@@ -53,20 +53,21 @@ const s = useCssModule()
         height: 100%
         box-shadow: 0 0 10px rgba(0, 0, 0, .2)
         border-radius: 4px
-
-    
         
     .name
         all: unset
+        display: flex
+        align-items: center
+        justify-content: center
         font-size: main.$font-size-huge
         grid-area: name
 
     .tags
         display: flex
+        align-items: center
+        justify-content: center
         gap: 1rem
+        grid-area: tags
 
-        .tag
-            flex: 1
-            grid-area: tags
 
 </style>

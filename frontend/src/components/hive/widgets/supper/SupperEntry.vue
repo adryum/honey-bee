@@ -58,7 +58,7 @@ const s = useCssModule()
             font-size: main.$font-size-text
         h1
             all: unset
-            font-size: main.$font-size-header
+            font-size: main.$font-size-heading
 
         .button
             position: absolute

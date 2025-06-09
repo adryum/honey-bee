@@ -2,7 +2,10 @@
 import { useCssModule } from 'vue';
 defineProps({
     title: String,
-    content: String
+    content: {
+        type: String,
+        default: 'Not Provided',
+    }
 })
 
 const s = useCssModule()

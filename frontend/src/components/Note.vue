@@ -2,10 +2,7 @@
 import { useCssModule } from 'vue';
 import CubeButtonTranspparent from './buttons/CubeButtonTranspparent.vue';
 defineProps({
-    title: String,
-    creator: String,
-    content: String,
-    creationDate: String
+    note: Object
 })
 
 const s = useCssModule()
@@ -14,12 +11,12 @@ const s = useCssModule()
 <template>
 <div :class='s.container'>
     <div :class="s.header">
-        <h1>{{ title }}</h1>
-        <h2>Created by {{ creator }}</h2>
+        <h1>{{ note.title }}</h1>
+        <h2>Created by {{ note.author }}</h2>
         <CubeButtonTranspparent :class="s.more" res="fa-solid fa-ellipsis-vertical"/>
     </div>
-    <p>{{ content }}</p>
-    <h3 :class="s.date">{{ creationDate }}</h3>
+    <p>{{ note.content }}</p>
+    <h3 :class="s.date">{{ note['creation_date'] }}</h3>
 </div>
 </template>
 
@@ -28,7 +25,6 @@ const s = useCssModule()
 .container
     display: flex
     flex-direction: column
-    // justify-content: space-evenly
     gap: 1.5rem
 
     box-sizing: border-box

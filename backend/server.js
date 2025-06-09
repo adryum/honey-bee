@@ -176,7 +176,7 @@ app.post('/apiary/hives', async (req, res) => {
     })
 })
 
-app.post('/hive', async (req, res) => {
+app.post('/hive/overview', async (req, res) => {
     const { accountCode, hiveId } = req.body
     console.log(accountCode, hiveId);
     
@@ -187,16 +187,76 @@ app.post('/hive', async (req, res) => {
     }
 
     const query = `
-        SELECT *
-        FROM hives AS h
-        WHERE h.creator = ? AND h.id = ?`
-    const [hive] = await db.query(query, [accountCode, hiveId])
+        SELECT 
+            h.id AS h_id, 
+            h.name AS h_name,
+            h.location AS h_location,
+            h.type AS h_type,
+            h.frames AS h_frames,
+            h.weight AS h_height,
 
-    console.log(hive)
+            n.id AS n_id,
+            CONCAT(u.name, ' ', u.surname) AS n_author,
+            n.title AS n_title,
+            n.content AS n_content,
+            n.creation_date AS n_creation_date,
+            n.color AS n_color,
+
+            q.id AS q_id,
+            q.name AS q_name,
+            q.registration_date AS q_registration_date,
+            qs.name_latin AS q_specie
+        FROM hives AS h
+        LEFT JOIN note_place__hive AS note_place ON note_place.hive_id = h.id
+        LEFT JOIN notes AS n ON n.id = note_place.note_id
+        LEFT JOIN users AS u ON u.account_code = n.author
+        LEFT JOIN queen_bees AS q ON q.id = h.queen_bee_id
+        LEFT JOIN queen_bee_species AS qs ON q.specie_id = qs.id
+        WHERE h.creator = ? AND h.id = ?`
+    const [overviewResults] = await db.query(query, [accountCode, hiveId])
+    const overviewObj = overviewResults[0]
+
+    console.log(overviewResults);
+
+    // group notes
+    const notes = overviewResults.filter(row => row.n_id).map(row => ({ 
+        id: row.n_id,
+        author: row.n_author, 
+        title: row.n_title, 
+        content: row.n_content, 
+        creation_date: row.n_creation_date, 
+        color: row.n_color 
+    }))
+
+    const queen = (overviewObj.q_id) ? getQueenObj() : undefined
+    const hive = getHiveObj()
+   
+    console.log('hive: '); console.log(hive);
+    console.log('notes: '); console.log(notes);
+    console.log('queen: '); console.log(queen);
+
+    function getHiveObj() {
+        const obj = {}
+        for (let key in overviewObj) {
+            if (key.startsWith('h_')) 
+                obj[key.slice(2)] = (overviewObj[key] === null) ? undefined : overviewObj[key]
+        }
+        return obj
+    }
+    
+    function getQueenObj() {
+        const obj = {}
+        for (let key in overviewObj) {
+            if (key.startsWith('q_')) obj[key.slice(2)] = overviewObj[key]
+        }
+        return obj
+    }
     
     res.status(201).json({
         message: 'all good!',
-        hive: hive
+        hive: hive,
+        notes: notes,
+        queen: queen
     })
 })
 
@@ -357,3 +417,17 @@ app.post('/apiaries/delete', async (req, res) => {
 app.listen(port, () => {
   console.log(`Server running at http://localhost:${port}`);
 });
+
+function convertNULLToUndefinedOrRemove(obj) {
+    let newObj = structuredClone(obj)
+    let hasAValue = false
+    for (let key in newObj) {
+        if (newObj[key] === null) {
+            newObj[key] = undefined
+        } else {
+            hasAValue = true
+        }
+    }
+
+    return (hasAValue) ? newObj : undefined
+}

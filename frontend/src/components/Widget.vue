@@ -12,7 +12,7 @@ const s = useCssModule()
         </slot>
     </div>
     <slot :class="s.body" name="body">
-
+        <div :class="s.empty">Empty</div>
     </slot>
 </div>
 </template>
@@ -39,8 +39,13 @@ const s = useCssModule()
             all: unset
             font-size: main.$font-size-big
 
-    // .body
-    //     flex: 1
-    //     box-sizing: border-box
-    //     padding: 1rem
+.empty
+    flex: 1
+    display: flex
+    align-items: center
+    justify-content: center
+
+    font-size: main.$font-size-special
+    box-sizing: border-box
+    padding: 1rem
 </style>

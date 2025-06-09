@@ -23,7 +23,7 @@ const s = useCssModule()
     </template>
 
     <template #body>
-        <div :class="s.grid">
+        <div :class="s.column">
             <slot></slot>
         </div>
     </template>
@@ -31,7 +31,7 @@ const s = useCssModule()
 </template>
 
 <style module lang='sass'>
-.grid
+.column
     width: 100%
     height: 100%
     display: flex

@@ -4,14 +4,7 @@ import Widget from '@/components/Widget.vue';
 import WidgetParagraph from '@/components/WidgetParagraph.vue';
 
 const props = defineProps({
-    location: {
-        type: String,
-        default: 'NO LOCATION'
-    },
-    description: {
-        type: String,
-        default: 'NO Description'
-    } 
+    hive: Object
 })
 
 const s = useCssModule()
@@ -26,9 +19,9 @@ const s = useCssModule()
     <template #body>
         <div :class="s.grid">
             <img :class="s.img" src="@/assets/images/Hive1.jpg">
-            <WidgetParagraph title="Type" content="Pārnēsājamais"/>
-            <WidgetParagraph title="Location" content="LV-0123 Sarkandaugava 92-124"/>
-            <WidgetParagraph :class="s.description" title="Description" content="LV-0123 Sarkandaugava 92-124"/>
+            <WidgetParagraph title="Type" :content="hive.type"/>
+            <WidgetParagraph title="Location" :content="hive.location"/>
+            <WidgetParagraph :class="s.description" title="Description" :content="hive.description"/>
         </div>
     </template>
 </Widget>

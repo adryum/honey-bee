@@ -55,6 +55,7 @@ const s = useCssModule()
     <div :class="s.grid">
         <Hive v-for="(hive, i) in rHives" :key="i"
             @click="handleHiveClick(hive)"
+            :id="hive.id"
             :name="hive.name"
             :weight="hive.weight"
             :frames="hive.frames"

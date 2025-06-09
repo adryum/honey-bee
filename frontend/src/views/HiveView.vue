@@ -1,7 +1,7 @@
 <script setup>
 import HiveWidgetGeneral from '@/components/hive/widgets/HiveWidgetGeneral.vue';
 import { ref, useCssModule } from "vue";
-import { user, getHives } from "../core/repositories/homeRepository.js"
+import { user, getHiveOverview } from "../core/repositories/homeRepository.js"
 import { onMounted } from 'vue';
 import IconCubeButton from '@/components/buttons/IconCubeButton.vue';
 import PathTitle from '@/components/PathTitle.vue';
@@ -17,16 +17,19 @@ const props = defineProps({
     hiveId: String,
 })
 
-const rHive = ref([])
+const rHive = ref({})
 const rNotes = ref([])
-const rQueen = ref([])
+const rQueen = ref({})
 const rActivityFeed = ref([])
 const rStimulants = ref([])
 const rSuppers = ref([])
 
 onMounted(async () => {
-    rHive.value = await getHive(user.value['account_code'], props.hiveId)
-    
+    const overview = await getHiveOverview(user.value['account_code'], props.hiveId)
+    console.log(overview);
+    rHive.value = overview.hive
+    rNotes.value = overview.notes
+    rQueen.value = overview.queen
     
 })
 const s = useCssModule()
@@ -41,19 +44,20 @@ const s = useCssModule()
     </div>
 
     <div :class="s.grid">
-        <HiveWidgetGeneral :class="s.general"/>
+        <HiveWidgetGeneral :class="s.general" :hive="rHive"/>
+
         <HiveWidgetNotes :class="s.notes">
-            <Note 
-                title="About something" 
-                creator="Maria Greenberg"
-                content="Notes notes daasesa adsa dkasjdhdsahdiohasduiohasduiaghsuihdaushduashudhadsahdus"
-                creation-date="21 March 2018"/>
+            <Note v-for="note in rNotes" :note="note"/>
         </HiveWidgetNotes>
+
         <HiveWidgetActivityFeed :class="s.feed"/>
-        <HiveWidgetQueen :class="s.queen"/>
+
+        <HiveWidgetQueen :class="s.queen" :queen="rQueen"/>
+
         <HiveWidgetStimulants :class="s.stimulants"/>
+
         <HiveWidgetSupper :class="s.suppers">
-            <SupperEntry v-for="supper in suppers" :supper="supper"/>
+            <SupperEntry v-for="supper in rSuppers" :supper="supper"/>
         </HiveWidgetSupper>
     </div>
 </div>

@@ -2,7 +2,7 @@
 import { useCssModule } from 'vue';
 
 defineProps({
-    id: String,
+    id: Number,
     name: {
         type: String,
         default: 'No Name'

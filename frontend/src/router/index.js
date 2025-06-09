@@ -31,7 +31,7 @@ const router = createRouter({
         component: AllHiveView
     },
     {
-        path: '/hives/:id',
+        path: '/hives/:hiveId',
         name: 'Hive',
         component: HiveView,
         props: true

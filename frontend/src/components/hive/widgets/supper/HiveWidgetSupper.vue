@@ -1,5 +1,5 @@
 <script setup>
-import { useCssModule } from 'vue';
+import { useCssModule, useSlots } from 'vue';
 import Widget from '@/components/Widget.vue';
 
 const props = defineProps({
@@ -23,9 +23,7 @@ const s = useCssModule()
     </template>
 
     <template #body>
-        <div :class="s.column">
-            <slot></slot>
-        </div>
+        <slot :class="s.column"></slot>
     </template>
 </Widget>
 </template>

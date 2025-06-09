@@ -30,7 +30,7 @@ const s = useCssModule()
     gap: .1rem
 
     box-sizing: border-box
-    padding: 0 .5rem
+    padding: .1rem 1rem
 
     color: white
     background: #C2A774
