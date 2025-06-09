@@ -1,7 +1,7 @@
 <script setup>
 import { useCssModule } from 'vue';
-import Widget from '../Widget.vue';
-import WidgetParagraph from '../WidgetParagraph.vue';
+import Widget from '@/components/Widget.vue';
+import WidgetParagraph from '@/components/WidgetParagraph.vue';
 
 const props = defineProps({
     location: {

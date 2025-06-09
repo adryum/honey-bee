@@ -1,16 +1,21 @@
 <script setup>
 import { useCssModule } from 'vue';
-defineProps({
-    title: String,
-    content: String
+const props = defineProps({
+    label: {
+        type: String,
+        defaut: 'TAG'
+    },
+    content: {
+        type: String,
+        defaut: 'Centent'
+    }
 })
-
 const s = useCssModule()
 </script>
 
 <template>
 <div :class='s.container'>
-    <h1>{{ title }}</h1>
+    <h1>{{ label }}</h1>
     <p>{{ content }}</p>
 </div>
 </template>
@@ -20,22 +25,21 @@ const s = useCssModule()
 .container
     display: flex
     flex-direction: column
-    // justify-content: space-evenly
-    gap: .3rem
+    justify-content: center
+    align-items: center
+    gap: .1rem
 
     box-sizing: border-box
-    padding: .5rem
-    border-left: 4px solid #FFD426
-    box-shadow: 0 0 10px rgba(0, 0, 0, .2)
+    padding: 0 .5rem
+
+    color: white
+    background: #C2A774
     border-radius: 4px
 
     > *
         all: unset
-    
     h1
-        font-size: main.$font-size-heading
-
-    p
         font-size: main.$font-size-text
-        color: #707070
+    p
+        font-size: main.$font-size-heading
 </style>

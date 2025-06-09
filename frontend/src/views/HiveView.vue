@@ -1,13 +1,17 @@
 <script setup>
-import HiveWidgetGeneral from '@/components/hive/HiveWidgetGeneral.vue';
+import HiveWidgetGeneral from '@/components/hive/widgets/HiveWidgetGeneral.vue';
 import { ref, useCssModule } from "vue";
 import { user, getHives } from "../core/repositories/homeRepository.js"
 import { onMounted } from 'vue';
 import IconCubeButton from '@/components/buttons/IconCubeButton.vue';
 import PathTitle from '@/components/PathTitle.vue';
-import HorizontalHr from '@/components/HorizontalHr.vue';
-import HiveWidgetNotes from '@/components/hive/HiveWidgetNotes.vue';
+import HiveWidgetNotes from '@/components/hive/widgets/HiveWidgetNotes.vue';
 import Note from '@/components/Note.vue';
+import HiveWidgetActivityFeed from '@/components/hive/widgets/activity_feed/HiveWidgetActivityFeed.vue';
+import HiveWidgetQueen from '@/components/hive/widgets/HiveWidgetQueen.vue';
+import HiveWidgetStimulants from '@/components/hive/widgets/stimulant/HiveWidgetStimulants.vue';
+import HiveWidgetSupper from '@/components/hive/widgets/supper/HiveWidgetSupper.vue';
+import SupperEntry from '@/components/hive/widgets/supper/SupperEntry.vue';
 
 const props = defineProps({
     hiveId: String,
@@ -45,6 +49,12 @@ const s = useCssModule()
                 content="Notes notes daasesa adsa dkasjdhdsahdiohasduiohasduiaghsuihdaushduashudhadsahdus"
                 creation-date="21 March 2018"/>
         </HiveWidgetNotes>
+        <HiveWidgetActivityFeed :class="s.feed"/>
+        <HiveWidgetQueen :class="s.queen"/>
+        <HiveWidgetStimulants :class="s.stimulants"/>
+        <HiveWidgetSupper :class="s.suppers">
+            <SupperEntry v-for="supper in suppers" :supper="supper"/>
+        </HiveWidgetSupper>
     </div>
 </div>
 </template>
@@ -93,7 +103,7 @@ hr
 .grid
     flex: 1
     display: grid
-    grid-template-areas: 'general general suppers notes' 'general general suppers notes' 'activity queen stimulants notes'
+    grid-template-areas: 'general general suppers notes' 'general general suppers notes' 'feed queen stimulants notes'
     grid-template-columns: 1fr 1fr 1fr 1fr
     grid-template-rows: 1fr 1fr 1fr
     gap: 1rem
@@ -113,5 +123,17 @@ hr
 
     .notes
         grid-area: notes
+
+    .feed
+        grid-area: feed
+
+    .queen
+        grid-area: queen
+
+    .stimulants
+        grid-area: stimulants
+
+    .suppers
+        grid-area: suppers
 
 </style>

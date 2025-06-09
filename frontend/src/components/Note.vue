@@ -24,6 +24,7 @@ const s = useCssModule()
 </template>
 
 <style module lang='sass'>
+@use '@/assets/main.sass' as main
 .container
     display: flex
     flex-direction: column
@@ -50,21 +51,21 @@ const s = useCssModule()
 
         h1
             all: unset    
-            font-size: 20px
+            font-size: main.$font-size-heading
         h2
             all: unset    
-            font-size: 16px
+            font-size: main.$font-size-text
             color: #707070
 
         .more
             right: 0
             position: absolute
     p
-        font-size: 16px
+        font-size: main.$font-size-text
         color: #707070
         overflow-wrap: break-word
 
     .date
         all: unset    
-        font-size: 18px
+        font-size: main.$font-size-special
 </style>

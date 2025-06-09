@@ -18,6 +18,7 @@ const s = useCssModule()
 </template>
 
 <style module lang='sass'>
+@use '@/assets/main.sass' as main
 .container
     display: flex
     flex-direction: column
@@ -27,7 +28,7 @@ const s = useCssModule()
     .header
         display: flex
         align-items: center
-        height: 4rem
+        min-height: 3.5rem
         border-radius: 4px
 
         box-sizing: border-box
@@ -36,7 +37,7 @@ const s = useCssModule()
 
         > h1
             all: unset
-            font-size: 30px
+            font-size: main.$font-size-big
 
     // .body
     //     flex: 1
