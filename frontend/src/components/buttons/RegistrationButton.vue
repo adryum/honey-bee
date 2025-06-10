@@ -5,6 +5,10 @@ defineProps({
     text: {
         type: String,
         default: 'button'
+    },
+    isEnabled: {
+        type: Boolean,
+        default: true
     }
 })
 
@@ -12,7 +16,7 @@ const s = useCssModule()
 </script>
 
 <template>
-<button :class='s.container'>
+<button :class="[!isEnabled && s['not-enabled'], s.container]">
     {{ text }}
 </button>
 </template>
@@ -39,4 +43,11 @@ const s = useCssModule()
 
     &:hover
         filter: brightness(90%)
+
+.not-enabled
+    background: #A1A1A1
+    border-bottom: 3px solid #707070
+    &:hover
+        filter: brightness(100%)
+
 </style>

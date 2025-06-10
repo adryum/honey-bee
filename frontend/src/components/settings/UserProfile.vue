@@ -1,17 +1,11 @@
 <script setup>
-import { onMounted, useCssModule, ref } from 'vue';
-import ProfileIcon from '../ProfileIcon.vue';
+import { onMounted, useCssModule, ref, watch } from 'vue';
 import RegistrationInputField from '../input_fields/RegistrationInputField.vue';
 import RegistrationButton from '../buttons/RegistrationButton.vue';
-import TagContentBox from '../TagContentBox.vue';
 import { updateUserData, rUser } from '@/core/repositories/homeRepository';
-import VerticalTextArea from '../hive/widgets/stimulant/VerticalTextArea.vue';
 import HorizontalTextArea from '../hive/widgets/stimulant/HorizontalTextArea.vue';
 import CircleImage from '../CircleImage.vue';
 
-const props = defineProps({
-    
-})
 const rUsername = ref("")
 const rName = ref("")
 const rSurname = ref("")
@@ -19,55 +13,77 @@ const rEmail = ref("")
 const rPassword = ref("")
 const rProfilePicture = ref("")
 
-// export const user = ref(
-// {
-//     account_code: "#2",
-//     e_mail: "em@gmail.com",
-//     name: "Emīls",
-//     password: "emils",
-//     profile_picture: null,
-//     role: "Admin",
-//     surname: "Griņečovs"
-// })
+const isUsernameValid = ref(false)
+const isNameValid = ref(false)
+const isSurnameValid = ref(false)
+const isEmailValid = ref(false)
+const isPasswordValid = ref(false)
+
+function areValid() {
+    return isUsernameValid.value 
+    && isNameValid.value
+    && isSurnameValid.value
+    && isEmailValid.value
+    && isPasswordValid.value
+}
+
+function areThereAnyChanges() {
+    return (rUsername.value != rUser.value.username) 
+    || (rName.value != rUser.value.name) 
+    || (rSurname.value != rUser.value.surname)
+    // || (rProfilePicture.value != rUser.value.profile_picture)
+    || (rEmail.value != rUser.value['e_mail']) 
+    || (rPassword.value != rUser.value.password)
+}
 
 function compressToUser() {
     return {
         account_code: "#2",
-        username: rSurname.value,
-        name: rName.value,
-        surname: rSurname.value,
-        profile_picture: rProfilePicture.value,
-        e_mail: rEmail.value,
-        password: rPassword.value,
-        role: "Admin",
+        username: (rUsername.value != rUser.value.username) ? rUsername.value : undefined,
+        name: (rName.value != rUser.value.name) ? rName.value : undefined,
+        surname: (rSurname.value != rUser.value.surname) ? rSurname.value : undefined,
+        profile_picture: (rProfilePicture.value != rUser.value.profile_picture) ? rProfilePicture.value : undefined,
+        e_mail: (rEmail.value != rUser.value.e_mail) ? rEmail.value : undefined,
+        password: (rPassword.value != rUser.value.password) ? rPassword.value : undefined,
     }
 }
-
-const s = useCssModule()
-onMounted(() => {
+function updateValues() {
+    console.log('updated');
+    console.log(rUser.value.username);
+    
     rUsername.value = rUser.value.username
     rName.value = rUser.value.name
     rSurname.value = rUser.value.surname
     rEmail.value = rUser.value['e_mail']
     rPassword.value = rUser.value.password
+}
+const s = useCssModule()
+watch(() => rUser.value, (nValue) => {
+    console.log('new');
+    
+    console.log(nValue.value);
+    updateValues()
+})
+onMounted(() => {
+    updateValues()
 })
 </script>
 
 <template>
 <div :class='s.container'>
     <h1>User Profile</h1>
-    <form @submit.prevent="updateUserData(rUser.account_code, compressToUser())" :class="s.content">
+    <form @submit.prevent="(areValid() && areThereAnyChanges()) ? updateUserData(compressToUser()) : () => {}" :class="s.content">
         <div :class="s.left">
             <CircleImage :class="s.icon" :res="rProfilePicture"/>
             <HorizontalTextArea :class="s.role" title="Role" :content="rUser.role"/>
         </div>
         <div :class="s.right">
-            <RegistrationInputField v-model="rUsername" hint="Username" type="text" :is-required="true"/>
-            <RegistrationInputField v-model="rName" hint="Name" type="text" :is-required="true"/>
-            <RegistrationInputField v-model="rSurname" hint="Surname" type="text" :is-required="true"/>
-            <RegistrationInputField v-model="rEmail" hint="E-mail" type="email" :is-required="true"/>
-            <RegistrationInputField v-model="rPassword" hint="Password" type="password" :is-required="true"/>
-            <RegistrationButton text="Save changes"/>
+            <RegistrationInputField v-model:isValid="isUsernameValid" v-model="rUsername" hint="Username" type="text" :is-required="true"/>
+            <RegistrationInputField v-model:isValid="isNameValid" :no-numbers="true" :at-least-one-uppercase="true" v-model="rName" hint="Name" type="text" :is-required="true"/>
+            <RegistrationInputField v-model:isValid="isSurnameValid":no-numbers="true" :at-least-one-uppercase="true" v-model="rSurname" hint="Surname" type="text" :is-required="true"/>
+            <RegistrationInputField v-model:isValid="isEmailValid"v-model="rEmail" hint="E-mail" type="email" :is-required="true"/>
+            <RegistrationInputField v-model:isValid="isPasswordValid":min-length="6" v-model="rPassword" hint="Password" type="password" :is-required="true"/>
+            <RegistrationButton :is-enabled="areValid() && areThereAnyChanges()" text="Save changes"/>
         </div>
     </form>
 </div>

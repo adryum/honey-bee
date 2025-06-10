@@ -24,13 +24,13 @@ export const db = mysql.createPool({
 
 testConnection()
 app.post('/user', async (req, res) => {
-    const { account_code, username, name, surname, image, email, password } = req.body
+    const { identification, username, name, surname, image, email, password } = req.body
 
-    console.log(account_code, username, name, surname, image, email, password );
+    console.log(identification, username, name, surname, image, email, password );
     
     const promises = []
     let userId
-    await db.query('SELECT id FROM users WHERE account_code = ?', [account_code]).then((result) => {
+    await db.query('SELECT id FROM users WHERE account_code = ?', [identification.code]).then((result) => {
         [[{ id: userId }]] = result
     })
     console.log('userId : ' + userId);
@@ -52,7 +52,7 @@ app.post('/user', async (req, res) => {
 
     await Promise.all(promises)
 
-    const [user] = await db.query('SELECT * FROM users ' + wherePart)
+    const [[user]] = await db.query('SELECT * FROM users ' + wherePart)
 
     console.log(user);
     

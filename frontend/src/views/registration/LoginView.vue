@@ -1,7 +1,7 @@
 <script setup>
 import { login } from "../../core/repositories/registrationRepository.js";
 import { rUser } from "../../core/repositories/homeRepository.js";
-import { useCssModule, watch } from "vue";
+import { onMounted, useCssModule, watch } from "vue";
 import router from '../../router/index.js';
 import { isEmpty } from "../../utils/checks.js";
 import {ref} from "vue";
@@ -15,16 +15,22 @@ let rRememberMe = ref(false)
 const s = useCssModule()
 
 watch(rUser, (newValue) => {
-    if (!isEmpty(newValue)) {
-        console.log('Sent to main');
-        
-        router.push('/')
-    }
+        if (!isEmpty(newValue)) {
+            console.log('Sent to main');
+            
+            router.push('/')
+        }
+
     },
     {
         immediate: true
     }
 )
+
+onMounted(async () => {
+    // await login('em@gmail.com', 'emils1')
+    console.log(rUser.value);
+})
 </script>
 
 <template>

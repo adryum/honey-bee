@@ -2,22 +2,23 @@ import axios from 'axios'
 import { ref } from 'vue'
 import { authenticate } from './registrationRepository'
 
-export const rUser = ref(
-{
-    id: '2',
-    account_code: "#2",
-    e_mail: "em@gmail.com",
-    name: "Emīls",
-    surname: "Griņečovs",
-    password: "emils",
-    profile_picture: null,
-    role: "Admin"
-})
+export const rUser = ref({})
+// {
+//     id: '2',
+//     account_code: "#2",
+//     username: 'asd',
+//     name: "Emīls",
+//     surname: "Griņečovs",
+//     e_mail: "em@gmail.com",
+//     password: "emils",
+//     profile_picture: null,
+//     role: "Admin"
+// })
 
 export function getUserIdentification() {
     return {
         id: rUser.value.id,
-        account_code: rUser.value.account_code
+        code: rUser.value.account_code
     }
 }
 
@@ -27,15 +28,14 @@ export async function updateUserData(userObj, identification = getUserIdentifica
             identification: identification,
             username: userObj.username,
             name: userObj.name,
-            surname: userObj.surename,
-            email: userObj.email,
+            surname: userObj.surname,
+            image: userObj.profile_picture,
+            email: userObj.e_mail,
             password: userObj.password,
-            image: userObj.image
         })
 
         const user = promise.data['user']
-        console.log(user)
-
+        
         authenticate(user)
     } catch (error) {
         console.error(error);

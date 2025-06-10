@@ -1,7 +1,7 @@
 <script setup>
-import { useCssModule, useTemplateRef } from 'vue';
+import { useCssModule, useTemplateRef, ref, onMounted, watch } from 'vue';
 
-defineProps({
+const props = defineProps({
     hint: {
         type: String,
         default: 'Field'
@@ -10,18 +10,73 @@ defineProps({
         type: String,
         default: 'text'
     },
-    isRequired: Boolean
+    isRequired: Boolean,
+    minLength: Number,
+    noNumbers: Boolean,
+    atLeastOneUppercase: Boolean
 })
+const errMessage = ref('')
+
+function checkIfValid() {
+    let validLength = false
+    let validNumbers = false
+    let validUppercases = false
+    let reqired = false
+    
+    if (props.minLength) {
+        if (model.value.length >= props.minLength) {
+            // on true
+            validLength = true
+        } else {
+            errMessage.value = ` - Must be ${props.minLength} simbols long!`
+        }
+    } 
+    if (props.noNumbers) {
+        if(/^([^0-9]*)$/.test(model.value)) {
+            // on true
+            validNumbers = true
+        } else {
+            errMessage.value = ` - Must NOT contain numbers!`
+        }
+    }
+    if (props.atLeastOneUppercase) {
+        if (/[A-Z]/.test(model.value)) {
+            // on true
+            validUppercases = true
+        } else {
+            errMessage.value = ` - Must contain an Uppercase!`
+        }
+    }
+    if (props.isRequired) {
+        if (model.value.length != 0) {
+            reqired = true
+        }
+    }
+
+    isValid.value = 
+        (props.isRequired === reqired)
+        && ((props.minLength != undefined && props.minLength != null) === validLength)
+        && (props.noNumbers === validNumbers) 
+        && (props.atLeastOneUppercase === validUppercases)
+}
 
 const input = useTemplateRef('input')
 const model = defineModel()
+const isValid = defineModel('isValid')
 const s = useCssModule()
+
+watch(model, () => {
+    checkIfValid()
+})
 </script>
 
 <template>
-<div @click="input.focus()" :class="[!model && isRequired && s['input-empty'], s.container]">
-    <p :class="[model && s['not-empty'], s.hint]">{{ hint }}</p>
-    <input ref="input" :type="type" :class="[model && s['not-empty-input'], s.input]" v-model="model">
+<div @click="input.focus()" :class="[!isValid && s['input-empty'], s.container]">
+    <div :class="[model && s['not-empty'], s.hint]">
+        <p>{{ hint }}</p>
+        <p :class="s.warning" v-if="!isValid">{{ errMessage }}</p>
+    </div>
+    <input @input="checkIfValid()" ref="input" :type="type" :class="[model && s['not-empty-input'], s.input]" v-model="model">
 </div>
 </template>
 
@@ -45,13 +100,16 @@ const s = useCssModule()
 
     &:focus-within
         .hint
-            font-size: 10px
+            font-size: 12px
             
         .input
-            font-size: 18px
+            font-size: 16px
 
 .input-empty
     border-bottom: 3px solid rgba(255, 61, 61, .7)
+
+.warning
+    color: red
 
 .hint
     opacity: .7
@@ -59,7 +117,7 @@ const s = useCssModule()
     transition: .1s
 
 .not-empty
-    font-size: 10px
+    font-size: 12px
 
 .input
     all: unset
@@ -70,5 +128,5 @@ const s = useCssModule()
     transition: .1s
 
 .not-empty-input
-    font-size: 18px
+    font-size: 16px
 </style>

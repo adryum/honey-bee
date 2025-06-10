@@ -91,6 +91,8 @@ hr
     justify-items: center
     padding: 1rem
 
+    overflow-y: auto
+
 .button-special
     background: main.$button-special
 </style>
