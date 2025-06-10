@@ -1,17 +1,16 @@
 <script setup>
-import { useCssModule } from 'vue';
+import { useCssModule, ref } from 'vue';
 import Widget from '@/components/Widget.vue';
-import TagContentBox from '@/components/TagContentBox.vue';
 import HorizontalTextArea from './HorizontalTextArea.vue';
 import VerticalTextArea from './VerticalTextArea.vue';
+import { getImageRes } from '@/core/imageHandler';
 
 const props = defineProps({
-    queen: {
+    stimulant: {
         type: Object,
-        default: {}
     }
 })
-
+const img = ref(await getImageRes())
 const s = useCssModule()
 </script>
 
@@ -22,8 +21,8 @@ const s = useCssModule()
     </template>
 
     <template #body>
-        <div :class="s.grid">
-            <img :class="s.img" src="@/assets/images/Hive1.jpg">
+        <div v-if="stimulant" :class="s.grid">
+            <img :class="s.img" :src="img">
             <HorizontalTextArea :class="s.given"/>
             <HorizontalTextArea :class="s.next"/>
             <VerticalTextArea :class="s.reason"/>

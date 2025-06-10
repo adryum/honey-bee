@@ -1,16 +1,10 @@
 <script setup>
 import { useCssModule } from 'vue';
 import Widget from '@/components/Widget.vue';
+import Note from '@/components/Note.vue';
 
 const props = defineProps({
-    location: {
-        type: String,
-        default: 'NO LOCATION'
-    },
-    description: {
-        type: String,
-        default: 'NO Description'
-    } 
+    notes: Array
 })
 
 const s = useCssModule()
@@ -23,8 +17,8 @@ const s = useCssModule()
     </template>
 
     <template #body>
-        <div :class="s.column">
-            <slot></slot>
+        <div v-if="notes.length" :class="s.column">
+            <Note v-for="note in notes" :note="note"/>
         </div>
     </template>
 </Widget>

@@ -31,6 +31,7 @@ const s = useCssModule()
     <div :class="s.grid">
         <Hive v-for="(hive, i) in assignedHives" :key="i"
             :id="hive.id"
+            :img-id="hive.image"
             :apiary="hive.apiary"
             :name="hive.name"
             :weight="hive.weight"
@@ -40,6 +41,7 @@ const s = useCssModule()
         <HorizontalHr v-if="unassignedHives.length > 0" text="Unassigned hives"/>
         <Hive v-for="(hive, i) in unassignedHives" :key="i"
             :id="hive.id"
+            :img-id="hive.image"
             :apiary="hive.apiary"
             :name="hive.name"
             :weight="hive.weight"

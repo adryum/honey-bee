@@ -1,16 +1,19 @@
 <script setup>
-import { onMounted, useTemplateRef, watch } from 'vue';
+import { onMounted, useTemplateRef, watch, ref } from 'vue';
 import ApiaryHiveCount from './ApiaryHiveCount.vue';
 import Icon from './Icon.vue';
 import TextTitle from './input_fields/TextTitle.vue';
 import IconCubeButton from './buttons/IconCubeButton.vue';
 import { deleteApiary, user } from '@/core/repositories/homeRepository';
+import { getImageRes } from '@/core/imageHandler';
 
 const props = defineProps({
   apiary: Object,
   sizeMultiplier: Number,
   onDelete: Function
 })
+
+const img = ref(await getImageRes(props.apiary.image))
 const rContainer = useTemplateRef('container')
 
 watch(rContainer, (newV) => {
@@ -39,7 +42,7 @@ const hiveTxt = "Hives"
     <div class="content">
 
         <div class="picture">
-            <img src="..\assets\images\apiary.jpg" />
+            <img :src="img" />
         </div> 
         <div class="hive-type">
             <div class="content">

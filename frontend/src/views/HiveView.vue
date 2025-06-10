@@ -46,9 +46,7 @@ const s = useCssModule()
     <div :class="s.grid">
         <HiveWidgetGeneral :class="s.general" :hive="rHive"/>
 
-        <HiveWidgetNotes :class="s.notes">
-            <Note v-for="note in rNotes" :note="note"/>
-        </HiveWidgetNotes>
+        <HiveWidgetNotes :class="s.notes" :notes="rNotes"/>
 
         <HiveWidgetActivityFeed :class="s.feed"/>
 
@@ -108,8 +106,8 @@ hr
     flex: 1
     display: grid
     grid-template-areas: 'general general suppers notes' 'general general suppers notes' 'feed queen stimulants notes'
-    grid-template-columns: 1fr 1fr 1fr 1fr
-    grid-template-rows: 1fr 1fr 1fr
+    grid-template-columns: repeat(4, minmax(0, 1fr))
+    grid-template-rows: repeat(3, calc((100% - 2rem) / 3))
     gap: 1rem
 
     box-sizing: border-box

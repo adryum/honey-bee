@@ -190,6 +190,7 @@ app.post('/hive/overview', async (req, res) => {
         SELECT 
             h.id AS h_id, 
             h.name AS h_name,
+            h.image AS h_image,
             h.location AS h_location,
             h.type AS h_type,
             h.frames AS h_frames,

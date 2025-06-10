@@ -1,7 +1,8 @@
 <script setup>
-import { useCssModule } from 'vue';
+import { getImageRes } from '@/core/imageHandler';
+import { useCssModule, ref } from 'vue';
 
-defineProps({
+const props = defineProps({
     id: Number,
     name: {
         type: String,
@@ -22,7 +23,10 @@ defineProps({
     apiary: {
         type: String,
     },
+    imgId: String
 })
+
+const img = ref(await getImageRes(props.imgId))
 
 const s = useCssModule()
 </script>
@@ -42,7 +46,7 @@ const s = useCssModule()
 
         <div :class="s.body">
             <img :class="s.wood" src="@/assets/images/Wood1.png">
-            <img :class="s['hive-img']" src="@/assets/images/Hive1.jpg">
+            <img :class="s['hive-img']" :src="img">
             <div :class="s.list">
                 <div :class="s.drawer">
                     <img :class="s.wood" src="@/assets/images/Wood2.jpg">
@@ -136,6 +140,7 @@ const s = useCssModule()
         border-radius: 4px
         z-index: 1
         box-shadow: 0px 0px 10px rgba(0, 0, 0, 0.21)
+        overflow: hidden
 
     .list
         height: 100%

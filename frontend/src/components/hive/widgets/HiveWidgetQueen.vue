@@ -1,15 +1,15 @@
 <script setup>
-import { useCssModule } from 'vue';
+import { useCssModule, ref } from 'vue';
 import Widget from '@/components/Widget.vue';
 import TagContentBox from '@/components/TagContentBox.vue';
+import { getImageRes } from '@/core/imageHandler';
 
 const props = defineProps({
     queen: {
         type: Object,
-        default: {}
     }
 })
-
+const img = ref(await getImageRes(props.queen.image))
 const s = useCssModule()
 </script>
 
@@ -20,8 +20,8 @@ const s = useCssModule()
     </template>
 
     <template #body>
-        <div :class="s.grid">
-            <img :class="s.img" src="@/assets/images/Hive1.jpg">
+        <div v-if="queen" :class="s.grid">
+            <img :class="s.img" :src="img">
             <h1 :class="s.name">{{ queen.name }}</h1>
             <div :class="s.tags">
                 <TagContentBox :class="s.tag" label="Age" content="2asd"/>
