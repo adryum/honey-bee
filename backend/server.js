@@ -23,6 +23,45 @@ export const db = mysql.createPool({
 }).promise()
 
 testConnection()
+app.post('/user', async (req, res) => {
+    const { account_code, username, name, surname, image, email, password } = req.body
+
+    console.log(account_code, username, name, surname, image, email, password );
+    
+    const promises = []
+    let userId
+    await db.query('SELECT id FROM users WHERE account_code = ?', [account_code]).then((result) => {
+        [[{ id: userId }]] = result
+    })
+    console.log('userId : ' + userId);
+    
+    const wherePart = 'WHERE id = ' + userId
+
+    if (username) 
+        promises.push(db.query('UPDATE users SET username = ? ' + wherePart, [username]))
+    if (name) 
+        promises.push(db.query('UPDATE users SET name = ? ' + wherePart, [name]))
+    if (surname) 
+        promises.push(db.query('UPDATE users SET surname = ? ' + wherePart, [surname]))
+    if (image) 
+        promises.push(db.query('UPDATE users SET image = ? ' + wherePart, [image]))
+    if (email) 
+        promises.push(db.query('UPDATE users SET e_mail = ? ' + wherePart, [email]))
+    if (password) 
+        promises.push(db.query('UPDATE users SET password = ? ' + wherePart, [password]))
+
+    await Promise.all(promises)
+
+    const [user] = await db.query('SELECT * FROM users ' + wherePart)
+
+    console.log(user);
+    
+
+    res.status(201).json({
+        message: 'all good!',
+        user: user
+    })
+})
 
 app.post('/login', async (req, res) => {
     const { email, password } = req.body
@@ -127,10 +166,12 @@ async function generateAccountCode(table, pkColumn) {
 }
 
 app.post('/hives', async (req, res) => {
-    const { accountCode } = req.body
+    const { identification } = req.body
 
+    console.log(identification);
+    
     // missing credentials
-    if (!accountCode) {
+    if (!identification) {
         res.status(401).send('incorrect credentials!') 
         return
     }
@@ -139,9 +180,9 @@ app.post('/hives', async (req, res) => {
         SELECT hives.*, api.name as apiary
         FROM hives
         LEFT JOIN apiaries AS api ON hives.apiary_id = api.id
-        WHERE hives.creator = ?
+        WHERE hives.user_id = ?
         `
-    const [hives] = await db.query(query, [accountCode])
+    const [hives] = await db.query(query, [identification.id])
 
     console.log(hives)
     
@@ -152,11 +193,11 @@ app.post('/hives', async (req, res) => {
 })
 
 app.post('/apiary/hives', async (req, res) => {
-    const { accountCode, apiaryId } = req.body
-    console.log(accountCode, apiaryId);
+    const { identification, apiaryId } = req.body
+    console.log(identification, apiaryId);
     
     // missing credentials
-    if (!accountCode || !apiaryId && apiaryId != 0) {
+    if (!identification || !apiaryId && apiaryId != 0) {
         res.status(401).send('incorrect credentials!') 
         return
     }
@@ -164,9 +205,9 @@ app.post('/apiary/hives', async (req, res) => {
     const query = `
         SELECT *
         FROM hives
-        WHERE creator = ? AND apiary_id = ?`
+        WHERE user_id = ? AND apiary_id = ?`
 
-    const [hives] = await db.query(query, [accountCode, apiaryId])
+    const [hives] = await db.query(query, [identification.id, apiaryId])
 
     console.log(hives)
     
@@ -177,11 +218,11 @@ app.post('/apiary/hives', async (req, res) => {
 })
 
 app.post('/hive/overview', async (req, res) => {
-    const { accountCode, hiveId } = req.body
-    console.log(accountCode, hiveId);
+    const { identification, hiveId } = req.body
+    console.log(identification, hiveId);
     
     // missing credentials
-    if (!accountCode || !hiveId && hiveId != 0) {
+    if (!identification || !hiveId && hiveId != 0) {
         res.status(401).send('incorrect credentials!') 
         return
     }
@@ -205,16 +246,17 @@ app.post('/hive/overview', async (req, res) => {
 
             q.id AS q_id,
             q.name AS q_name,
+            q.image AS q_image,
             q.registration_date AS q_registration_date,
             qs.name_latin AS q_specie
         FROM hives AS h
         LEFT JOIN note_place__hive AS note_place ON note_place.hive_id = h.id
         LEFT JOIN notes AS n ON n.id = note_place.note_id
-        LEFT JOIN users AS u ON u.account_code = n.author
+        LEFT JOIN users AS u ON u.id = n.user_id
         LEFT JOIN queen_bees AS q ON q.id = h.queen_bee_id
         LEFT JOIN queen_bee_species AS qs ON q.specie_id = qs.id
-        WHERE h.creator = ? AND h.id = ?`
-    const [overviewResults] = await db.query(query, [accountCode, hiveId])
+        WHERE h.user_id = ? AND h.id = ?`
+    const [overviewResults] = await db.query(query, [identification.id, hiveId])
     const overviewObj = overviewResults[0]
 
     console.log(overviewResults);
@@ -262,18 +304,18 @@ app.post('/hive/overview', async (req, res) => {
 })
 
 app.post('/hive/assign', async (req, res) => {
-    const { accountCode, hiveId, apiaryId } = req.body
-    console.log(accountCode, hiveId, apiaryId);
+    const { identification, hiveId, apiaryId } = req.body
+    console.log(identification, hiveId, apiaryId);
     
     // missing credentials
-    if (!accountCode || !hiveId && hiveId != 0 || !apiaryId && apiaryId != 0) {
+    if (!identification || !hiveId && hiveId != 0 || !apiaryId && apiaryId != 0) {
         res.status(401).send('incorrect credentials!') 
         return
     }
 
     const updateQuery = `
-        UPDATE hives SET apiary_id = ? WHERE id = ? AND creator = ?`
-    const [hives] = await db.query(updateQuery, [apiaryId, hiveId, accountCode])
+        UPDATE hives SET apiary_id = ? WHERE id = ? AND user_id = ?`
+    const [hives] = await db.query(updateQuery, [apiaryId, hiveId, identification.id])
 
     console.log(hives)
     
@@ -284,18 +326,18 @@ app.post('/hive/assign', async (req, res) => {
 })
 
 app.post('/hive/unassign', async (req, res) => {
-    const { accountCode, hiveId } = req.body
-    console.log(accountCode, hiveId);
+    const { identification, hiveId } = req.body
+    console.log(identification, hiveId);
     
     // missing credentials
-    if (!accountCode || !hiveId && hiveId != 0) {
+    if (!identification || !hiveId && hiveId != 0) {
         res.status(401).send('incorrect credentials!') 
         return
     }
 
     const updateQuery = `
-        UPDATE hives SET apiary_id = NULL WHERE id = ? AND creator = ?`
-    const [hives] = await db.query(updateQuery, [hiveId, accountCode])
+        UPDATE hives SET apiary_id = NULL WHERE id = ? AND user_id = ?`
+    const [hives] = await db.query(updateQuery, [hiveId, identification.id])
 
     console.log(hives)
     
@@ -305,11 +347,11 @@ app.post('/hive/unassign', async (req, res) => {
 })
 
 app.post('/apiaries', async (req, res) => {
-    let { accountCode, startWith } = req.body
-    console.log(accountCode, startWith)
+    let { identification, startWith } = req.body
+    console.log(identification, startWith)
 
     // missing credentials
-    if (!accountCode) {
+    if (!identification) {
         res.status(401).send('incorrect credentials!') 
         return
     }
@@ -326,9 +368,9 @@ app.post('/apiaries', async (req, res) => {
     const query = `
         SELECT *
         FROM apiaries
-        WHERE creator = ? AND name LIKE ?`
+        WHERE user_id = ? AND name LIKE ?`
 
-    const [apiaries] = await db.query(query, [accountCode, startWith])
+    const [apiaries] = await db.query(query, [identification.id, startWith])
 
     console.log(apiaries)
     
@@ -339,11 +381,11 @@ app.post('/apiaries', async (req, res) => {
 })
 
 app.post('/apiary', async (req, res) => {
-    let { accountCode, apiaryId } = req.body
-    console.log(accountCode, apiaryId)
+    let { identification, apiaryId } = req.body
+    console.log(identification, apiaryId)
 
     // missing credentials
-    if (!accountCode || !apiaryId && apiaryId != 0) {
+    if (!identification || !apiaryId && apiaryId != 0) {
         res.status(401).send('incorrect credentials!') 
         return
     }
@@ -351,9 +393,9 @@ app.post('/apiary', async (req, res) => {
     const query = `
         SELECT *
         FROM apiaries
-        WHERE creator = ? AND id = ?`
+        WHERE user_id = ? AND id = ?`
 
-    const [apiary] = await db.query(query, [accountCode, apiaryId])
+    const [apiary] = await db.query(query, [identification.id, apiaryId])
 
     console.log(apiary)
     
@@ -364,20 +406,20 @@ app.post('/apiary', async (req, res) => {
 })
 
 app.post('/apiaries/create', async (req, res) => {
-    let { accountCode, name, location, description } = req.body
-    console.log(accountCode, name, location, description)
+    let { identification, name, location, description } = req.body
+    console.log(identification, name, location, description)
 
     // missing credentials
-    if (!accountCode || !name || !location) {
+    if (!identification || !name || !location) {
         res.status(401).send('incorrect information!') 
         return
     }
 
     const query = `
-        INSERT INTO apiaries (name, location, description, creator)
+        INSERT INTO apiaries (name, location, description, user_id)
         VALUES(?, ?, ?, ?)`
 
-    const result = await db.query(query, [name, location, description, accountCode])
+    const result = await db.query(query, [name, location, description, identification.id])
 
     console.log(result)
     
@@ -388,23 +430,23 @@ app.post('/apiaries/create', async (req, res) => {
 })
 
 app.post('/apiaries/delete', async (req, res) => {
-    let { accountCode, apiaryId } = req.body
-    console.log(accountCode, apiaryId)
+    let { identification, apiaryId } = req.body
+    console.log(identification, apiaryId)
     console.log(!1)
 
     // missing credentials
-    if (!accountCode || !apiaryId && apiaryId != 0) {
+    if (!identification || !apiaryId && apiaryId != 0) {
         res.status(401).send('incorrect information!') 
         return
     }
 
     const unassigningHivesQuery = `
-        UPDATE hives SET apiary_id = NULL WHERE apiary_id = ? AND creator = ?`
-    const unassigningResult = await db.query(unassigningHivesQuery, [apiaryId, accountCode])
+        UPDATE hives SET apiary_id = NULL WHERE apiary_id = ? AND user_id = ?`
+    const unassigningResult = await db.query(unassigningHivesQuery, [apiaryId, identification.id])
     
     const deleteQuery = `
-        DELETE FROM apiaries WHERE id = ? AND creator = ?`
-    const result = await db.query(deleteQuery, [apiaryId, accountCode])
+        DELETE FROM apiaries WHERE id = ? AND user_id = ?`
+    const result = await db.query(deleteQuery, [apiaryId, identification.id])
 
     console.log(unassigningResult)
     console.log(result)

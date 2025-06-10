@@ -9,7 +9,7 @@ import FieldVertical from '../input_fields/FieldVertical.vue';
 import ImageField from '../input_fields/ImageField.vue';
 import Button from '../buttons/Button.vue';
 import { removePopup } from '@/core/popups';
-import { assignHiveToApiary, getHives, user } from '@/core/repositories/homeRepository';
+import { assignHiveToApiary, getHives, rUser } from '@/core/repositories/homeRepository';
 import Hive from '../hive/Hive.vue';
 import PathTitle from '../PathTitle.vue';
 import HorizontalHr from '../HorizontalHr.vue';

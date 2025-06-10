@@ -1,47 +1,36 @@
 <script setup>
 import { getImageRes } from '@/core/imageHandler';
-import { useCssModule, ref } from 'vue';
+import { useCssModule, ref, onMounted, watch } from 'vue';
 
 const props = defineProps({
-    id: Number,
-    name: {
-        type: String,
-        default: 'No Name'
-    },
-    frames: {
-        type: Number,
-        default: 4
-    },
-    weight: {
-        type: Number,
-        default: 34
-    },
-    type: {
-        type: String,
-        default: 'NONE'
-    },
-    apiary: {
-        type: String,
-    },
-    imgId: String
+    hive: Object,
 })
 
-const img = ref(await getImageRes(props.imgId))
+const img = ref('')
 
 const s = useCssModule()
+onMounted(async () => {
+    if (props.hive.image) img.value = await getImageRes(props.hive.image)
+})
+
+watch(() => props.hive.image, async (newImg) => {
+    console.log("newImg: " + newImg);
+
+    img.value = await getImageRes(newImg)
+})
 </script>
 
 <template>
-<div @click="$router.push('/hives/' + id)" :class="s.container">
-    <div v-if="apiary" :class="s.location">
+<div :class="s.container">
+    <div v-if="hive.apiary" :class="s.location">
         <img :class="s.wood" src="@/assets/images/Wood2.jpg">
-        <p>{{ apiary }}</p>
+        <p>{{ hive.apiary }}</p>
    </div>
 
    <div :class="s.hive">
         <div :class="s.header">
             <img :class="s.wood" src="@/assets/images/Wood2.jpg">
-            <p>{{ name }}</p>
+            <p>{{ hive.name }}</p>
         </div>
 
         <div :class="s.body">
@@ -50,15 +39,15 @@ const s = useCssModule()
             <div :class="s.list">
                 <div :class="s.drawer">
                     <img :class="s.wood" src="@/assets/images/Wood2.jpg">
-                    <p>Frames: {{ frames }}</p>
+                    <p>Frames: {{ hive.frames }}</p>
                 </div>
                 <div :class="s.drawer">
                     <img :class="s.wood" src="@/assets/images/Wood2.jpg">
-                    <p>Weight: {{ weight }}kg</p>
+                    <p>Weight: {{ hive.weight }}kg</p>
                 </div>
                 <div :class="s.drawer">
                     <img :class="s.wood" src="@/assets/images/Wood2.jpg">
-                    <p>Type: {{ type }}</p>
+                    <p>Type: {{ hive.type }}</p>
                 </div>
             </div>
         </div>

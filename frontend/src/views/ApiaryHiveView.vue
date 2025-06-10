@@ -1,7 +1,7 @@
 <script setup>
 import Hive from '@/components/hive/Hive.vue';
 import { ref, useCssModule } from "vue";
-import { user as rUser, getApiaryHives, getApiary, unassignHive } from "../core/repositories/homeRepository.js"
+import { rUser as rUser, getApiaryHives, getApiary, unassignHive } from "../core/repositories/homeRepository.js"
 import { onMounted } from 'vue';
 import IconCubeButton from '@/components/buttons/IconCubeButton.vue';
 import IconButton from '@/components/buttons/IconButton.vue';
@@ -9,6 +9,7 @@ import { createPopup } from '@/core/popups.js';
 import AssignHivesPopup from '@/components/popups/AssignHivesPopup.vue';
 import PathTitle from '@/components/PathTitle.vue';
 import AreYouSurePopup from '@/components/popups/AreYouSurePopup.vue';
+import router from '@/router/index.js';
 
 const props = defineProps({
     id: String
@@ -19,7 +20,7 @@ const rApiary = ref({})
 const rIsRemovingHives = ref(false)
 
 async function searchApiaryHives() {
-    rHives.value = await getApiaryHives(rUser.value['account_code'], props.id)
+    rHives.value = await getApiaryHives(props.id)
 }
 
 function handleHiveClick(hive) {
@@ -28,16 +29,18 @@ function handleHiveClick(hive) {
             title: 'Remove Hive',
             description: `Are you sure you want to remove ${hive.name}?`,
             onAsyncYes: async () => { 
-                await unassignHive(rUser.value['account_code'], hive.id)
+                await unassignHive(hive.id)
                 await searchApiaryHives()
             }
         })
+    } else {
+        router.push('/hives/' + hive.id)
     }
 }
 
 onMounted(async () => {
-    rApiary.value = await getApiary(rUser.value['account_code'], props.id)
-    rHives.value = await getApiaryHives(rUser.value['account_code'], props.id)
+    rApiary.value = await getApiary(props.id)
+    rHives.value = await getApiaryHives(props.id)
 })
 const s = useCssModule()
 </script>
@@ -55,11 +58,7 @@ const s = useCssModule()
     <div :class="s.grid">
         <Hive v-for="(hive, i) in rHives" :key="i"
             @click="handleHiveClick(hive)"
-            :id="hive.id"
-            :name="hive.name"
-            :weight="hive.weight"
-            :frames="hive.frames"
-            :type="hive.type"
+            :hive="hive"
         />
     </div>
 </div>

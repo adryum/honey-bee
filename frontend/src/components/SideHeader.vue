@@ -3,7 +3,7 @@
 import { ref } from "vue";
 import Icon from "./Icon.vue";
 import { logOut } from "@/core/repositories/registrationRepository.js"
-import { user } from "@/core/repositories/homeRepository.js"
+import { rUser } from "@/core/repositories/homeRepository.js"
 defineProps({
     
 })
@@ -43,7 +43,7 @@ function toggleExtention() {
     
     <div class="count-container">
         <div class="icon"></div>
-        <div class="background"><p v-if="isExtended">{{ user.name }}</p>
+        <div class="background"><p v-if="isExtended">{{ rUser.name }}</p>
     </div>
     
 
@@ -78,6 +78,7 @@ function toggleExtention() {
             class="cube" 
             res="fa-solid fa-gear" 
             :isExpanded="isExtended"
+            @click="$router.push('/settings')"
         />
     </div>
 </div>

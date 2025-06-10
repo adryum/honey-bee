@@ -6,6 +6,7 @@ import ApiaryView from '@/views/ApiaryView.vue'
 import SignUpView from '@/views/registration/SignUpView.vue'
 import ApiaryHiveView from '@/views/ApiaryHiveView.vue'
 import HiveView from '@/views/HiveView.vue'
+import SettingsView from '@/views/SettingsView.vue'
 
 const router = createRouter({
   history: createWebHistory(import.meta.env.BASE_URL),
@@ -46,7 +47,12 @@ const router = createRouter({
         name: 'apiary hives',
         component: ApiaryHiveView,
         props: true
-    }
+    },
+    {
+        path: '/settings',
+        name: 'settings',
+        component: SettingsView
+    },
     // {
     //   path: '/about',
     //   name: 'about',

@@ -11,7 +11,7 @@ const img = ref('')
 
 const s = useCssModule()
 onMounted(async () => {
-    if (props.hive.image) img.value = await getImageRes(newImg)
+    img.value = await getImageRes(props.hive.image)
 })
 
 watch(() => props.hive.image, async (newImg) => {
@@ -40,26 +40,24 @@ watch(() => props.hive.image, async (newImg) => {
 
 <style module lang='sass'>
 .grid
-    width: 100%
-    height: 100%
     display: grid
     grid-template-areas: "img type" "img location" "img desc" "img desc" "img desc"
     grid-template-columns: 1fr 1fr
-    grid-template-rows: 1fr 1fr 1fr 1fr 1fr
+    grid-template-rows: repeat(5, 1fr)
     gap: 1rem
 
     box-sizing: border-box
     padding: 1rem
 
-    overflow-y: scroll
+    width: 100%
 
     .img
         grid-area: img
-        object-fit: cover
-        width: 100%
         height: 100%
+        width: 100%
         box-shadow: 0 0 10px rgba(0, 0, 0, .2)
         border-radius: 4px
+        object-fit: cover
         overflow: hidden
 
     .location

@@ -3,7 +3,7 @@ import ApiarySummaryCard from '@/components/ApiarySummaryCard.vue';
 import IconButton from '@/components/buttons/IconButton.vue';
 import SearchBar from '@/components/SearchBar.vue';
 import { createPopup } from '@/core/popups';
-import { user, getApiaries } from '@/core/repositories/homeRepository';
+import { rUser, getApiaries } from '@/core/repositories/homeRepository';
 import { onMounted, ref, useTemplateRef, watch } from 'vue';
 import CreateApiaryPopup from "@/components/popups/CreateApiaryPopup.vue";
 
@@ -14,7 +14,7 @@ const rSizeMultiplier = ref(30)
 const rPage = useTemplateRef('page')
 
 async function searchApiaries() {
-    rApiaries.value = await getApiaries(user.value['account_code'], rSearchFilter.value)
+    rApiaries.value = await getApiaries(rSearchFilter.value)
 }
 
 function changeGap(multiplier) {
@@ -29,7 +29,7 @@ watch(rPage, (newV) => {
 })
 
 onMounted(async () => {
-    rApiaries.value = await getApiaries(user.value['account_code'])
+    rApiaries.value = await getApiaries()
 })
 </script>
 

@@ -1,8 +1,8 @@
 import axios from 'axios'
-import { user } from "./homeRepository.js"
+import { rUser } from "./homeRepository.js"
 import { isEmpty } from '@/utils/checks.js';
 
-export const isAuthenticated = () => !isEmpty(user.value)
+export const isAuthenticated = () => !isEmpty(rUser.value)
 
 export async function login(email, password) {
     try {
@@ -45,10 +45,10 @@ export async function signUp(name, surename, profilePicture, email, password) {
 
 export function logOut() {
     console.log('loged out')
-    user.value = {}
+    rUser.value = {}
 }
 
 export function authenticate(userObj) {
     console.log('authenticated')
-    user.value = userObj
+    rUser.value = userObj
 }

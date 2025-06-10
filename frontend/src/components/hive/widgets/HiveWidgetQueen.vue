@@ -1,5 +1,5 @@
 <script setup>
-import { useCssModule, ref } from 'vue';
+import { useCssModule, ref, watch, onMounted } from 'vue';
 import Widget from '@/components/Widget.vue';
 import TagContentBox from '@/components/TagContentBox.vue';
 import { getImageRes } from '@/core/imageHandler';
@@ -9,8 +9,17 @@ const props = defineProps({
         type: Object,
     }
 })
-const img = ref(await getImageRes(props.queen.image))
+const img = ref('')
 const s = useCssModule()
+onMounted(async () => {
+    img.value = await getImageRes(props.queen.image)
+})
+
+watch(() => (props.queen) ? props.queen.image : props.queen, async (newImg) => {
+    console.log("newImg: " + newImg);
+
+    img.value = await getImageRes(newImg)
+})
 </script>
 
 <template>

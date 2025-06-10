@@ -5,7 +5,7 @@ import CheckboxWText from "@/components/input_fields/CheckboxWText.vue";
 import RegistrationSubmitButtons from "@/components/combinations/RegistrationSubmitButtons.vue";
 import { signUp } from "@/core/repositories/registrationRepository";
 import { watch } from "vue";
-import { user } from "../../core/repositories/homeRepository.js";
+import { rUser } from "../../core/repositories/homeRepository.js";
 import { isEmpty } from "../../utils/checks.js";
 import router from '../../router/index.js';
 
@@ -19,7 +19,7 @@ const rProfilePicture = ref("")
 const rAgreedToTerms = ref(false)
 const rAgreedToSpam = ref(false)
 
-watch(user, (newValue) => {
+watch(rUser, (newValue) => {
     if (!isEmpty(newValue)) {
         console.log('Sent to main');
         

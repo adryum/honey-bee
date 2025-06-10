@@ -11,9 +11,11 @@ const s = useCssModule()
 
         </slot>
     </div>
-    <slot :class="s.body" name="body">
-        <div :class="s.empty">Empty</div>
-    </slot>
+    <div :class="s.body">
+        <slot name="body">
+            <div :class="s.empty">Empty</div>
+        </slot>
+    </div>
 </div>
 </template>
 
@@ -38,6 +40,10 @@ const s = useCssModule()
         > h1
             all: unset
             font-size: main.$font-size-big
+
+    .body
+        display: flex
+        height: calc(100% - 3.5rem)
 
 .empty
     flex: 1

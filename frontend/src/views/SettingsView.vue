@@ -1,43 +1,24 @@
 <script setup>
-import Hive from '@/components/hive/Hive.vue';
 import { ref, useCssModule } from "vue";
-import { rUser, getHives } from "../core/repositories/homeRepository.js"
+
 import { onMounted } from 'vue';
 import IconCubeButton from '@/components/buttons/IconCubeButton.vue';
 import PathTitle from '@/components/PathTitle.vue';
-import HorizontalHr from '@/components/HorizontalHr.vue';
+import UserProfile from "@/components/settings/UserProfile.vue";
 
-const hives = ref([])
-const assignedHives = ref([])
-const unassignedHives = ref([])
-
-onMounted(async () => {
-    hives.value = await getHives()
-    
-    assignedHives.value = hives.value.filter((item) => item['apiary_id'])
-    unassignedHives.value = hives.value.filter((item) => !item['apiary_id'])
-})
 const s = useCssModule()
 </script>
 
 <template>
 <div :class="s.container">
     <div :class="s.header">
-        <PathTitle title="Hives"/>
+        <PathTitle title="Settings"/>
         <div :class="s['vt-linebreak']"></div>
         <IconCubeButton :class="s['button-special']" res="fa-solid fa-left-long"/>
     </div>
 
-    <div :class="s.grid">
-        <Hive v-for="(hive, i) in assignedHives" :key="i"
-            @click="$router.push('/hives/' + hive.id)"    
-            :hive="hive"
-        />
-        <HorizontalHr v-if="unassignedHives.length > 0" text="Unassigned hives"/>
-        <Hive v-for="(hive, i) in unassignedHives" :key="i"
-            @click="$router.push('/hives/' + hive.id)" 
-            :hive="hive"
-        />
+    <div :class="s.content">
+        <UserProfile />
     </div>
 </div>
 </template>
@@ -58,11 +39,7 @@ const s = useCssModule()
     box-shadow: 0px 0px 10px rgba(0, 0, 0, 0.21)
     background: #FFECC8
 
-hr
-    width: 100%
 .header
-    // top: 0
-    // position: sticky
     display: flex
     align-items: center
     gap: .4rem
@@ -82,15 +59,13 @@ hr
         background: #D9D9D9
         margin-left: auto 
 
-.grid
-    display: flex
-    flex-wrap: wrap
-    justify-content: center
-    align-items: flex-start
-    gap: 3rem
-    justify-items: center
-    padding: 1rem
-
 .button-special
     background: main.$button-special
+
+.content
+    flex: 1
+    display: flex
+    align-items: center
+    justify-content: center
+    
 </style>

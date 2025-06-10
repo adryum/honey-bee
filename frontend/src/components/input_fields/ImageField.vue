@@ -19,7 +19,7 @@ const s = useCssModule()
         :text="title"/>
     </div>
     <div :class="s['img-container']">
-        <img src="@\assets\images\Texas-Bee-Apiary.jpg" alt="api">
+        <img src="" alt="api">
     </div>
 </div>
 </template>

@@ -1,15 +1,8 @@
 <script setup>
 import { onMounted, ref, useCssModule } from 'vue';
 import IconCubeButton from '../buttons/IconCubeButton.vue';
-import Icon from '../Icon.vue';
-import TextTitle from '../input_fields/TextTitle.vue';
-import PopupPlate from './PopupPlate.vue';
-import Field from '../input_fields/Field.vue';
-import FieldVertical from '../input_fields/FieldVertical.vue';
-import ImageField from '../input_fields/ImageField.vue';
-import Button from '../buttons/Button.vue';
 import { removePopup } from '@/core/popups';
-import { assignHiveToApiary, getHives, user } from '@/core/repositories/homeRepository';
+import { assignHiveToApiary, getHives, rUser } from '@/core/repositories/homeRepository';
 import Hive from '../hive/Hive.vue';
 import PathTitle from '../PathTitle.vue';
 import HorizontalHr from '../HorizontalHr.vue';
@@ -21,7 +14,6 @@ const props = defineProps({
     refreshHives: Function
 })
 
-const hives = ref([])
 const assignedHives = ref([])
 const unassignedHives = ref([])
 
@@ -31,10 +23,10 @@ function onAssignment() {
 }
 
 async function refreshPopup() {
-    hives.value = await getHives(user.value['account_code'])
+    const hives = await getHives()
 
-    assignedHives.value = hives.value.filter((item) => item['apiary_id'] && item['apiary_id'] != props.apiaryId)
-    unassignedHives.value = hives.value.filter((item) => !item['apiary_id'])
+    assignedHives.value = hives.filter((item) => item['apiary_id'] && item['apiary_id'] != props.apiaryId)
+    unassignedHives.value = hives.filter((item) => !item['apiary_id'])
 }
 
 const s = useCssModule()
@@ -50,25 +42,20 @@ onMounted(async () => refreshPopup())
         <IconCubeButton @click="removePopup(id)" :class="s['button-special']" res="fa-solid fa-xmark"/>
     </div>
 
+    <Suspense>
     <div :class="s.grid">
+        <HorizontalHr v-if="assignedHives.length > 0" text="Assigned hives"/>
         <Hive v-for="(hive, i) in assignedHives" :key="i"
-            @click="assignHiveToApiary(user.account_code, hive.id, apiaryId, onAssignment)"
-            :apiary="hive.apiary"
-            :name="hive.name"
-            :weight="hive.weight"
-            :frames="hive.frames"
-            :type="hive.type"
+            @click="assignHiveToApiary(hive.id, apiaryId, onAssignment)"
+            :hive="hive"
         />
         <HorizontalHr v-if="unassignedHives.length > 0" text="Unassigned hives"/>
         <Hive v-for="(hive, i) in unassignedHives" :key="i"
-            @click="assignHiveToApiary(user.account_code, hive.id, apiaryId, onAssignment)"
-            :apiary="hive.apiary"
-            :name="hive.name"
-            :weight="hive.weight"
-            :frames="hive.frames"
-            :type="hive.type"
+            @click="assignHiveToApiary(hive.id, apiaryId, onAssignment)"
+            :hive="hive"
         />
     </div>
+</Suspense>
 </div>
 </template>
 

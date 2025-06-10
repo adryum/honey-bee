@@ -1,21 +1,51 @@
 import axios from 'axios'
 import { ref } from 'vue'
+import { authenticate } from './registrationRepository'
 
-export const user = ref(
+export const rUser = ref(
 {
+    id: '2',
     account_code: "#2",
     e_mail: "em@gmail.com",
     name: "Emīls",
+    surname: "Griņečovs",
     password: "emils",
     profile_picture: null,
-    role: "Admin",
-    surename: "Griņečovs"
+    role: "Admin"
 })
 
-export async function getHives(accountCode) {
+export function getUserIdentification() {
+    return {
+        id: rUser.value.id,
+        account_code: rUser.value.account_code
+    }
+}
+
+export async function updateUserData(userObj, identification = getUserIdentification()) {
+    try {
+        const promise = await axios.post('/user', {
+            identification: identification,
+            username: userObj.username,
+            name: userObj.name,
+            surname: userObj.surename,
+            email: userObj.email,
+            password: userObj.password,
+            image: userObj.image
+        })
+
+        const user = promise.data['user']
+        console.log(user)
+
+        authenticate(user)
+    } catch (error) {
+        console.error(error);
+    }
+}
+
+export async function getHives(identification = getUserIdentification()) {
     try {
         const promise = await axios.post('/hives', {
-            accountCode: accountCode
+            identification: identification,
         })
 
         const hives = promise.data['hives']
@@ -27,10 +57,10 @@ export async function getHives(accountCode) {
     }
 }
 
-export async function getApiary(accountCode, apiaryId) {
+export async function getApiary(apiaryId, identification = getUserIdentification()) {
     try {
         const promise = await axios.post('/apiary', {
-            accountCode: accountCode,
+            identification: identification,
             apiaryId: apiaryId
         })
 
@@ -43,10 +73,10 @@ export async function getApiary(accountCode, apiaryId) {
     }
 }
 
-export async function assignHiveToApiary(accountCode, hiveId, apiaryId, callback = () => {}) {
+export async function assignHiveToApiary(hiveId, apiaryId, callback = () => {}, identification = getUserIdentification()) {
     try {
         const promise = await axios.post('/hive/assign', {
-            accountCode: accountCode,
+            identification: identification,
             hiveId: hiveId,
             apiaryId: apiaryId
         })
@@ -59,10 +89,10 @@ export async function assignHiveToApiary(accountCode, hiveId, apiaryId, callback
     }
 }
 
-export async function unassignHive(accountCode, hiveId, callback = () => {}) {
+export async function unassignHive(hiveId, callback = () => {}, identification = getUserIdentification()) {
     try {        
         const promise = await axios.post('/hive/unassign', {
-            accountCode: accountCode,
+            identification: identification,
             hiveId: hiveId,
         })
     
@@ -74,12 +104,12 @@ export async function unassignHive(accountCode, hiveId, callback = () => {}) {
     }
 }
 
-export async function getHiveOverview(accountCode, hiveId) {
+export async function getHiveOverview(hiveId, identification = getUserIdentification()) {
     try {
-        console.log(accountCode, hiveId);
+        console.log(hiveId);
 
         const promise = await axios.post('/hive/overview', {
-            accountCode: accountCode,
+            identification: identification,
             hiveId: hiveId
         })
 
@@ -96,10 +126,10 @@ export async function getHiveOverview(accountCode, hiveId) {
     }
 }
 
-export async function getApiaryHives(accountCode, apiaryId) {
+export async function getApiaryHives(apiaryId, identification = getUserIdentification()) {
     try {
         const promise = await axios.post('/apiary/hives', {
-            accountCode: accountCode,
+            identification: identification,
             apiaryId: apiaryId
         })
 
@@ -112,10 +142,10 @@ export async function getApiaryHives(accountCode, apiaryId) {
     }
 }
 
-export async function createApiary(accountCode, filter, name, location, description) {
+export async function createApiary(filter, name, location, description, identification = getUserIdentification()) {
     try {
         const promise = await axios.post('/apiaries/create', {
-            accountCode: accountCode,
+            identification: identification,
             name: name,
             location: location,
             description: description
@@ -128,10 +158,10 @@ export async function createApiary(accountCode, filter, name, location, descript
     }
 }
 
-export async function getApiaries(accountCode, startWith) {
+export async function getApiaries(startWith, identification = getUserIdentification()) {
     try {
         const promise = await axios.post('/apiaries', {
-            accountCode: accountCode,
+            identification: identification,
             startWith: startWith
         })
 
@@ -144,11 +174,11 @@ export async function getApiaries(accountCode, startWith) {
     }
 }
 
-export async function deleteApiary(accountCode, apiaryId, callback = () => {}) {
+export async function deleteApiary(apiaryId, callback = () => {}, identification = getUserIdentification()) {
     try {
-        console.log(accountCode, apiaryId)
+        console.log(apiaryId)
         const promise = await axios.post('/apiaries/delete', {
-            accountCode: accountCode,
+            identification: identification,
             apiaryId: apiaryId
         })
         

@@ -1,7 +1,7 @@
 <script setup>
 import HiveWidgetGeneral from '@/components/hive/widgets/HiveWidgetGeneral.vue';
 import { ref, useCssModule } from "vue";
-import { user, getHiveOverview } from "../core/repositories/homeRepository.js"
+import { rUser, getHiveOverview } from "../core/repositories/homeRepository.js"
 import { onMounted } from 'vue';
 import IconCubeButton from '@/components/buttons/IconCubeButton.vue';
 import PathTitle from '@/components/PathTitle.vue';
@@ -25,12 +25,11 @@ const rStimulants = ref([])
 const rSuppers = ref([])
 
 onMounted(async () => {
-    const overview = await getHiveOverview(user.value['account_code'], props.hiveId)
+    const overview = await getHiveOverview(props.hiveId)
     console.log(overview);
     rHive.value = overview.hive
     rNotes.value = overview.notes
     rQueen.value = overview.queen
-    
 })
 const s = useCssModule()
 </script>
@@ -77,8 +76,6 @@ const s = useCssModule()
     box-shadow: 0px 0px 10px rgba(0, 0, 0, 0.21)
     background: #FFECC8
 
-hr
-    width: 100%
 .header
     display: flex
     align-items: center
@@ -107,17 +104,17 @@ hr
     display: grid
     grid-template-areas: 'general general suppers notes' 'general general suppers notes' 'feed queen stimulants notes'
     grid-template-columns: repeat(4, minmax(0, 1fr))
-    grid-template-rows: repeat(3, calc((100% - 2rem) / 3))
+    grid-template-rows: repeat(3, minmax(0, 1fr))
     gap: 1rem
 
     box-sizing: border-box
     padding: 1rem
 
+    overflow-y: auto
+
     > *
-        min-width: 0
-        min-height: 0
-        max-width: 100%
-        max-height: 100%
+        width: 100%
+        height: 100%
         box-sizing: border-box
 
     .general

@@ -1,6 +1,6 @@
 <script setup>
 import { login } from "../../core/repositories/registrationRepository.js";
-import { user } from "../../core/repositories/homeRepository.js";
+import { rUser } from "../../core/repositories/homeRepository.js";
 import { useCssModule, watch } from "vue";
 import router from '../../router/index.js';
 import { isEmpty } from "../../utils/checks.js";
@@ -14,7 +14,7 @@ let rPassword = ref('')
 let rRememberMe = ref(false) 
 const s = useCssModule()
 
-watch(user, (newValue) => {
+watch(rUser, (newValue) => {
     if (!isEmpty(newValue)) {
         console.log('Sent to main');
         

@@ -9,7 +9,7 @@ import FieldVertical from '../input_fields/FieldVertical.vue';
 import ImageField from '../input_fields/ImageField.vue';
 import Button from '../buttons/Button.vue';
 import { removePopup } from '@/core/popups';
-import { createApiary, user } from '@/core/repositories/homeRepository';
+import { createApiary, rUser } from '@/core/repositories/homeRepository';
 
 const props = defineProps({
     id: String,
@@ -21,8 +21,8 @@ const rName = ref('')
 const rLocation = ref('')
 const rDescription = ref('')
 
-async function onCreate(accCode, currentFilter, name, location, description) {
-    const result = await createApiary(accCode, currentFilter, name, location, description)
+async function onCreate(currentFilter, name, location, description) {
+    const result = await createApiary(currentFilter, name, location, description)
  
     if (result === 201) {
         // only on successful result 
@@ -48,7 +48,7 @@ async function onCreate(accCode, currentFilter, name, location, description) {
         </div>
         <div :class="s.separator"></div>
 
-        <form @submit.prevent="onCreate(user.account_code, currentFilter, rName, rLocation, rDescription)" :class="s.grid">
+        <form @submit.prevent="onCreate(currentFilter, rName, rLocation, rDescription)" :class="s.grid">
             <Field 
                 :id="s.name"  
                 :class="s.line"
