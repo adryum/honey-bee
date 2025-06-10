@@ -57,6 +57,25 @@ export async function getHives(identification = getUserIdentification()) {
     }
 }
 
+export async function createHive(name, location, description, image, type, identification = getUserIdentification()) {
+    try {
+        const promise = await axios.post('/hive/create', {
+            identification: identification,
+            name: name,
+            location: location,
+            description: description,
+            image: image,
+            type: type
+        })
+
+        console.log(promise.status)
+
+        return promise.status
+    } catch (error) {
+        console.error(error);
+    }
+}
+
 export async function getApiary(apiaryId, identification = getUserIdentification()) {
     try {
         const promise = await axios.post('/apiary', {

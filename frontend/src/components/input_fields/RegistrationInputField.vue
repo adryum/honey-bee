@@ -67,6 +67,8 @@ const s = useCssModule()
 
 watch(model, () => {
     checkIfValid()
+},{
+    immediate: true
 })
 </script>
 
@@ -97,6 +99,7 @@ watch(model, () => {
     cursor: text
 
     transition: .2s
+    background: white
 
     &:focus-within
         .hint

@@ -6,16 +6,23 @@ import { onMounted } from 'vue';
 import IconCubeButton from '@/components/buttons/IconCubeButton.vue';
 import PathTitle from '@/components/PathTitle.vue';
 import HorizontalHr from '@/components/HorizontalHr.vue';
+import IconButton from '@/components/buttons/IconButton.vue';
+import CreateHivePopup from '@/components/popups/CreateHivePopup.vue';
+import { createPopup } from '@/core/popups.js';
 
 const hives = ref([])
 const assignedHives = ref([])
 const unassignedHives = ref([])
 
-onMounted(async () => {
+async function refreshHives() {
     hives.value = await getHives()
     
     assignedHives.value = hives.value.filter((item) => item['apiary_id'])
     unassignedHives.value = hives.value.filter((item) => !item['apiary_id'])
+}
+
+onMounted(async () => {
+    refreshHives()
 })
 const s = useCssModule()
 </script>
@@ -25,6 +32,7 @@ const s = useCssModule()
     <div :class="s.header">
         <PathTitle title="Hives"/>
         <div :class="s['vt-linebreak']"></div>
+        <IconButton @click="createPopup(CreateHivePopup, {refreshHives: refreshHives})" text="Create Hive"/>
         <IconCubeButton :class="s['button-special']" res="fa-solid fa-left-long"/>
     </div>
 

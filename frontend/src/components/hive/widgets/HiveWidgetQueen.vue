@@ -1,25 +1,18 @@
 <script setup>
-import { useCssModule, ref, watch, onMounted } from 'vue';
+import { useCssModule, ref, watch, onMounted, toRef } from 'vue';
 import Widget from '@/components/Widget.vue';
 import TagContentBox from '@/components/TagContentBox.vue';
-import { getImageRes } from '@/core/imageHandler';
+import { getImageRes, useReactiveImage } from '@/core/imageHandler';
 
 const props = defineProps({
     queen: {
         type: Object,
     }
 })
-const img = ref('')
 const s = useCssModule()
-onMounted(async () => {
-    img.value = await getImageRes(props.queen.image)
-})
 
-watch(() => (props.queen) ? props.queen.image : props.queen, async (newImg) => {
-    console.log("newImg: " + newImg);
-
-    img.value = await getImageRes(newImg)
-})
+const rQueen = toRef(props, 'queen')
+const { img } = useReactiveImage(rQueen, (obj) => obj?.image)
 </script>
 
 <template>

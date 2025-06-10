@@ -405,6 +405,30 @@ app.post('/apiary', async (req, res) => {
     })
 })
 
+app.post('/hive/create', async (req, res) => {
+    let { identification, name, location, description, type, image } = req.body
+    console.log(identification, name, location, description,  type, image)
+
+    // missing credentials
+    if (!identification || !name || !type) {
+        res.status(401).send('incorrect information!') 
+        return
+    }
+
+    const query = `
+        INSERT INTO hives (name, location, description, type, image, user_id)
+        VALUES(?, ?, ?, ?, ?, ?)`
+
+    const [hive] = await db.query(query, [name, location, description, type, image, identification.id])
+
+    console.log(hive)
+    
+    res.status(201).json({
+        message: 'all good!',
+        hive: hive
+    })
+})
+
 app.post('/apiaries/create', async (req, res) => {
     let { identification, name, location, description } = req.body
     console.log(identification, name, location, description)
