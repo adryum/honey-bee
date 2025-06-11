@@ -321,7 +321,7 @@ app.post('/hive/overview', async (req, res) => {
     console.log(overviewResults);
 
     // group notes
-    const notes = overviewResults.filter(row => row.n_id).map(row => ({ 
+    const notes = overviewResults.filter(row => typeof row.n_id === 'number').map(row => ({ 
         id: row.n_id,
         author: row.n_author, 
         title: row.n_title, 

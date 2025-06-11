@@ -28,7 +28,7 @@ watch(rUser, (newValue) => {
 )
 
 onMounted(async () => {
-    // await login('em@gmail.com', 'emils1')
+    await login('em@gmail.com', 'emils1')
     console.log(rUser.value);
 })
 </script>
