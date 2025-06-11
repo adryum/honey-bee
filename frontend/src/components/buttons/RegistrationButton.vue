@@ -49,5 +49,6 @@ const s = useCssModule()
     border-bottom: 3px solid #707070
     &:hover
         filter: brightness(100%)
+        cursor: default
 
 </style>

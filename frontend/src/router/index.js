@@ -7,6 +7,7 @@ import SignUpView from '@/views/registration/SignUpView.vue'
 import ApiaryHiveView from '@/views/ApiaryHiveView.vue'
 import HiveView from '@/views/HiveView.vue'
 import SettingsView from '@/views/SettingsView.vue'
+import UsersView from '@/views/UsersView.vue'
 
 const router = createRouter({
   history: createWebHistory(import.meta.env.BASE_URL),
@@ -52,6 +53,11 @@ const router = createRouter({
         path: '/settings',
         name: 'settings',
         component: SettingsView
+    },
+    {
+        path: '/users',
+        name: 'admin users',
+        component: UsersView
     },
     // {
     //   path: '/about',

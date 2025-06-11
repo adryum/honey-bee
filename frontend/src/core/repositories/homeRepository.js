@@ -22,6 +22,34 @@ export function getUserIdentification() {
     }
 }
 
+export async function deleteUser(userId, identification = getUserIdentification()) {
+    try {
+        const promise = await axios.post('/admin/user/delete', {
+            identification: identification,
+            userId: userId
+        })
+        
+        return promise.status
+    } catch (error) {
+        console.error(error);
+    }
+}
+
+export async function getUsers(identification = getUserIdentification()) {
+    try {
+        const promise = await axios.post('/admin/users', {
+            identification: identification
+        })
+
+        const users = promise.data['users']
+        console.log(users);
+        
+        return users
+    } catch (error) {
+        console.error(error);
+    }
+}
+
 export async function updateUserData(userObj, identification = getUserIdentification()) {
     try {
         const promise = await axios.post('/user', {

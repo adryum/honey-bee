@@ -13,13 +13,13 @@ const s = useCssModule()
 <template>
 <div :class="s.container">
     <div :class="s.header">
-        <PathTitle title="Settings"/>
+        <PathTitle title="Admin powers"/>
         <div :class="s['vt-linebreak']"></div>
         <IconCubeButton :class="s['button-special']" res="fa-solid fa-left-long"/>
     </div>
 
     <div :class="s.content">
-        <UserProfile />
+        <UserTable />
     </div>
 </div>
 </template>

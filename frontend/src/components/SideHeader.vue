@@ -12,30 +12,34 @@ defineProps({
     { 
         "name" : "Home",
         "res" : "fa-solid fa-house",
-        "linkTo": "/"
+        "linkTo": "/",
+        "adminOnly": false
     },
     { 
         "name" : "Calendar",
         "res" : "fa-solid fa-calendar-days",
-        "linkTo": "/calendar"
+        "linkTo": "/calendar",
+        "adminOnly": false
     },
     { 
         "name" : "Apiaries",
         "res" : "fa-solid fa-list",
-        "linkTo": "/apiaries"
+        "linkTo": "/apiaries",
+        "adminOnly": false
+
     },
     { 
         "name" : "Hives",
         "res" : "fa-brands fa-hive",
-        "linkTo": "/hives"
-    }
+        "linkTo": "/hives",
+        "adminOnly": false
+    },
 ]
 
 const isExtended = ref(false)
 function toggleExtention() {
     isExtended.value = !isExtended.value
 }
-
 </script>
 
 <template>
@@ -57,6 +61,15 @@ function toggleExtention() {
         <Icon class="cube" :res="page.res"/>
         <div class="text" v-if="isExtended">
             {{ page.name }}
+        </div>
+    </div>
+    <div v-if="rUser.role === 'Admin'" class="page" 
+        :class="{'page-extended': isExtended}"
+        @click="$router.push('/users')" 
+    >
+        <Icon class="cube" res="fa-solid fa-crown"/>
+        <div class="text" v-if="isExtended">
+            Admin Powers
         </div>
     </div>
     <div style="flex: 1;"></div>

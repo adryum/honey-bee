@@ -23,6 +23,65 @@ export const db = mysql.createPool({
 }).promise()
 
 testConnection()
+
+app.post('/admin/users', async (req, res) => {
+    const { identification } = req.body
+    console.log(identification);
+    
+    // missing credentials
+    if (!identification) {
+        res.status(401).send('incorrect credentials!') 
+        return
+    }
+
+    const query = `
+        SELECT u.*, COUNT(DISTINCT h.id) AS hive_count
+        FROM users AS u
+        LEFT JOIN hives AS h ON h.user_id = u.id
+        GROUP BY u.id
+    `
+
+    const [users] = await db.query(query)
+
+    console.log(users)
+    
+    res.status(201).json({
+        message: 'all good!',
+        users: users
+    })
+})
+
+app.post('/admin/user/delete', async (req, res) => {
+    const { identification, userId } = req.body
+    console.log(identification, userId);
+    
+    // missing credentials
+    if (!identification || (!userId && userId != 0)) {
+        res.status(401).send('incorrect credentials!') 
+        return
+    }
+    // const noteQuery = `
+    //     UPDATE notes SET user_id = NULL WHERE user_id = ?`
+    // const queenQuery = `
+    //     UPDATE queen_bees SET user_id = NULL WHERE user_id = ?`
+    // const apiaryQuery = `
+    //     UPDATE apiaries SET user_id = NULL WHERE user_id = ?`
+    // const hiveQuery = `
+    //     UPDATE hives SET user_id = NULL WHERE user_id = ?`
+    
+    // unassign
+    // const unassignRes = Promise.all[noteQuery, queenQuery, apiaryQuery, hiveQuery]
+    
+    const deleteQuery = `
+        DELETE FROM users WHERE id = ?
+    `
+    const delRes = await db.query(deleteQuery, [userId])
+    
+    res.status(201).json({
+        message: 'all good!',
+    })
+})
+
 app.post('/user', async (req, res) => {
     const { identification, username, name, surname, image, email, password } = req.body
 

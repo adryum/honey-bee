@@ -22,7 +22,13 @@ function checkIfValid() {
     let validNumbers = false
     let validUppercases = false
     let reqired = false
-    
+
+    // if no model is provided then fail
+    if (!model.value) {
+        isValid.value = false
+        return
+    }
+
     if (props.minLength) {
         if (model.value.length >= props.minLength) {
             // on true
