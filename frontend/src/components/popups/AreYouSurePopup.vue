@@ -59,7 +59,6 @@ const s = useCssModule()
     box-sizing: border-box
     margin: 6px
 
-    max-width: 20vw
 
     border-radius: 4px
     box-shadow: 0px 0px 10px rgba(0, 0, 0, 0.21)
@@ -104,5 +103,7 @@ const s = useCssModule()
 
     .button-special
         background: main.$button-special
-
+@media (max-width: 600px) 
+    .container
+        width: 100%
 </style>

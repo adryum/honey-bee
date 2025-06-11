@@ -135,4 +135,11 @@ const s = useCssModule()
     .suppers
         grid-area: suppers
 
+@media (max-width: 600px) 
+    .container
+        width: auto
+    
+    .grid
+        display: flex
+        flex-direction: column
 </style>

@@ -58,18 +58,18 @@ const s = useCssModule()
     <div :class="s.grid">
         <img :class="s.image" :src="img" alt="hive img">
         <RegistrationInputField :class="s.name"
-        :is-required="true" hint="Name" 
-        v-model="rName" v-model:isValid="isNameValid"/>
+            :is-required="true" hint="Name" 
+            v-model="rName" v-model:isValid="isNameValid"/>
         <RegistrationInputField  :class="s.location"
-        hint="Location" v-model="rLocation"/>
+            hint="Location" v-model="rLocation"/>
         <RegistrationInputField :class="s.description"
-        hint="Description" v-model="rDescription"/>
+            hint="Description" v-model="rDescription"/>
         <RegistrationInputField :class="s.tag"
-        :is-required="true" hint="Type" 
-        v-model="rType" v-model:isValid="isTypeValid"/>
+            :is-required="true" hint="Type" 
+            v-model="rType" v-model:isValid="isTypeValid"/>
         <RegistrationButton :class="s.button"
-        @click="(isEverythingValid()) ? onCreate(rName, rLocation, rDescription, rImage, rType) : {}" 
-        :is-enabled="isEverythingValid()" text="Create"/>
+            @click="(isEverythingValid()) ? onCreate(rName, rLocation, rDescription, rImage, rType) : {}" 
+            :is-enabled="isEverythingValid()" text="Create"/>
     </div>
     </Suspense>
 </div>
@@ -140,4 +140,8 @@ const s = useCssModule()
 .button-special
     background: main.$button-special
 
+@media (max-width: 600px) 
+    .grid
+        display: flex !important
+        flex-direction: column
 </style>

@@ -1,24 +1,16 @@
 <script setup>
-import { useCssModule, ref, onMounted, watch } from 'vue';
+import { useCssModule, ref, onMounted, watch, toRef } from 'vue';
 import Widget from '@/components/Widget.vue';
 import WidgetParagraph from '@/components/WidgetParagraph.vue';
-import { getImageRes } from '@/core/imageHandler';
+import { getImageRes, useReactiveImage } from '@/core/imageHandler';
 
 const props = defineProps({
     hive: Object
 })
-const img = ref('')
+const rHive = toRef(props, 'hive')
+const { img }= useReactiveImage(rHive, obj => obj?.image)
 
 const s = useCssModule()
-onMounted(async () => {
-    img.value = await getImageRes(props.hive.image)
-})
-
-watch(() => props.hive.image, async (newImg) => {
-    console.log("newImg: " + newImg);
-
-    img.value = await getImageRes(newImg)
-})
 </script>
 
 <template>
@@ -66,4 +58,8 @@ watch(() => props.hive.image, async (newImg) => {
     .description
         grid-area: desc
 
+@media (max-width: 600px) 
+    .grid
+        display: flex
+        flex-direction: column
 </style>

@@ -107,73 +107,7 @@ onMounted(async () => refreshPopup())
 
 .button-special
     background: main.$button-special
-
-
-// .container
-//     display: flex
-//     flex-direction: column
-        
-//     border-radius: 2px
-//     overflow: hidden
-//     box-shadow: 0 0 30px rgba(0, 0, 0, .5)
-
-//     width: 50vw
-
-//     background: main.$popup-base
-
-//     .header
-//         display: flex
-//         align-items: center
-
-//         box-sizing: border-box
-//         padding: .6rem
-//         gap: .6rem
-
-//         height: 5rem
-//         border-radius: 0 0 2px 2px
-//         background: $dark
-//         .vertical-split
-//             margin-left: auto 
-//             border-radius: 20px
-//             height: 100%
-//             width: 4px
-//             background: $underline-dark
-
-//         #icon
-//             aspect-ratio: 1
-//             height: 100%
-//         #close
-//             background: $button-special
-//         #other
-//             background: $button-common
-    
-//     .separator
-//         align-self: center
-//         border-radius: 20px
-//         width: 90%
-//         margin-top: .5rem 
-//         min-height: 6px
-//         background: $dark
-
-//     .grid
-//         flex: 1
-//         padding: 1rem 2rem
-//         gap: 1rem
-//         box-sizing: border-box
-
-//         display: grid
-//         grid-template-areas: 'name name' 'locat locat' 'cube1 cube2' 'but but'
-//         grid-template-columns: 1fr 1fr
-//         grid-template-rows: repeat(2, 4.5rem) 20rem 4.5rem
-
-//         #name
-//             grid-area: name
-//         #location
-//             grid-area: locat
-//         #image
-//             grid-area: cube1
-//         #description
-//             grid-area: cube2
-//         #submit
-//             grid-area: but
+@media (max-width: 600px) 
+    .container
+        width: 100%
 </style>

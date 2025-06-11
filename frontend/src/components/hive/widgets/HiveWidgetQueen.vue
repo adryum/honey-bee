@@ -71,5 +71,8 @@ const { img } = useReactiveImage(rQueen, (obj) => obj?.image)
         gap: 1rem
         grid-area: tags
 
-
+@media (max-width: 600px) 
+    .grid
+        display: flex
+        flex-direction: column
 </style>

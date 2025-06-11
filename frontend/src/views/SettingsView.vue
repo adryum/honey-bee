@@ -31,7 +31,6 @@ const s = useCssModule()
     flex-direction: column
     width: 100%
     height: calc( 100vh - 12px )
-    overflow: hidden
 
     box-sizing: border-box
     margin: 6px
@@ -68,5 +67,10 @@ const s = useCssModule()
     display: flex
     align-items: center
     justify-content: center
+    overflow-y: auto
+
     
+@media (max-width: 600px) 
+    .container
+        width: auto
 </style>

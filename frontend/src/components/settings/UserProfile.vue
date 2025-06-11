@@ -72,7 +72,7 @@ onMounted(() => {
 <template>
 <div :class='s.container'>
     <h1>User Profile</h1>
-    <form @submit.prevent="(areValid() && areThereAnyChanges()) ? updateUserData(compressToUser()) : () => {}" :class="s.content">
+    <form :class="s.content" @submit.prevent="(areValid() && areThereAnyChanges()) ? updateUserData(compressToUser()) : () => {}">
         <div :class="s.left">
             <CircleImage :class="s.icon" :res="rProfilePicture"/>
             <HorizontalTextArea :class="s.role" title="Role" :content="rUser.role"/>
@@ -127,5 +127,15 @@ onMounted(() => {
             gap: 1rem
             flex: 1
 
+@media (max-width: 600px) 
+    .container
+        // display: flex
+        // flex-direction: column
+        max-height: 100%
 
+        overflow-y: scroll
+
+        .content
+            display: flex
+            flex-direction: column
 </style>

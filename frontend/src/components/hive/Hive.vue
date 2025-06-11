@@ -1,23 +1,15 @@
 <script setup>
-import { getImageRes } from '@/core/imageHandler';
-import { useCssModule, ref, onMounted, watch } from 'vue';
+import { getImageRes, useReactiveImage } from '@/core/imageHandler';
+import { useCssModule, ref, onMounted, watch, toRef } from 'vue';
 
 const props = defineProps({
     hive: Object,
 })
 
-const img = ref('')
+const rHive = toRef(props, 'hive')
+const { img }= useReactiveImage(rHive, obj => obj?.image)
 
 const s = useCssModule()
-onMounted(async () => {
-    if (props.hive.image) img.value = await getImageRes(props.hive.image)
-})
-
-watch(() => props.hive.image, async (newImg) => {
-    console.log("newImg: " + newImg);
-
-    img.value = await getImageRes(newImg)
-})
 </script>
 
 <template>

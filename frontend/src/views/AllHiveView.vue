@@ -103,4 +103,8 @@ hr
 
 .button-special
     background: main.$button-special
+
+@media (max-width: 600px) 
+    .container
+        width: auto
 </style>

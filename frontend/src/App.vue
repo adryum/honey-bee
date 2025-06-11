@@ -2,13 +2,22 @@
 import { RouterLink, RouterView } from 'vue-router'
 import SideHeader from './components/SideHeader.vue';
 import { isAuthenticated } from './core/repositories/registrationRepository';
-import { useCssModule, watch } from 'vue';
+import { onMounted, ref, useCssModule, watch } from 'vue';
 import router from './router';
 import { isEmpty } from './utils/checks';
 import { rUser } from './core/repositories/homeRepository';
 import CreateApiaryPopup from './components/popups/CreateApiaryPopup.vue';
 import { rActivePopups } from './core/popups';
 import PopupPlate from './components/popups/PopupPlate.vue';
+import NewHeader from './components/NewHeader.vue';
+
+const mediaQuery = window.matchMedia('(max-width: 600px)')
+const isMobile = ref(false)
+
+function updateIsMobile(event) {
+    isMobile.value = event.matches
+    console.log('Media query changed:', event.matches)
+}
 
 // banishes user to login realm when authentication gets false
 watch(rUser, (newValue) => {
@@ -21,6 +30,10 @@ watch(rUser, (newValue) => {
         immediate: true
     }
 )
+onMounted(() => {
+    isMobile.value = mediaQuery.matches
+    mediaQuery.addEventListener('change', updateIsMobile)
+})
 const s = useCssModule()
 </script>   
 
@@ -31,7 +44,8 @@ const s = useCssModule()
             :is="component" v-bind="props"/>
     </PopupPlate>
 
-    <SideHeader v-if="isAuthenticated()"/>
+    <NewHeader v-if="isAuthenticated() && isMobile"/>
+    <SideHeader v-if="isAuthenticated() && !isMobile"/>
     <Suspense>
         <RouterView />
     </Suspense>
@@ -39,7 +53,14 @@ const s = useCssModule()
 </template>
 
 <style module lang="sass">
-.flex 
-    display: flex
-    flex-direction: row
+@media (min-width: 600px)
+    .flex 
+        display: flex
+        flex-direction: row
+
+@media (max-width: 600px) 
+    .flex 
+        display: flex
+        flex-direction: column
+
 </style>

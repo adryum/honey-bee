@@ -90,4 +90,13 @@ onMounted(async () => {
     box-shadow: 0 0 10px rgba(0, 0, 0, .2)
 
     background: white
+
+@media (max-width: 600px) 
+    .container
+        padding: 1rem 1rem
+        margin: 0 2rem
+
+    .logo
+        display: none
+
 </style>
