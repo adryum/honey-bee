@@ -1,5 +1,5 @@
 <script setup>
-import { ref, useCssModule } from 'vue';
+import { reactive, ref, useCssModule } from 'vue';
 import IconCubeButton from '../buttons/IconCubeButton.vue';
 import Icon from '../Icon.vue';
 import TextTitle from '../input_fields/TextTitle.vue';
@@ -10,6 +10,10 @@ import ImageField from '../input_fields/ImageField.vue';
 import Button from '../buttons/Button.vue';
 import { removePopup } from '@/core/popups';
 import { createApiary, rUser } from '@/core/repositories/homeRepository';
+import RegistrationInputField from '../input_fields/RegistrationInputField.vue';
+import RegistrationButton from '../buttons/RegistrationButton.vue';
+import PathTitle from '../PathTitle.vue';
+import { useReactiveImage } from '@/core/imageHandler';
 
 const props = defineProps({
     id: String,
@@ -21,8 +25,20 @@ const rName = ref('')
 const rLocation = ref('')
 const rDescription = ref('')
 
-async function onCreate(currentFilter, name, location, description) {
-    const result = await createApiary(currentFilter, name, location, description)
+const rImage = ref('')
+const { img } = useReactiveImage(rImage, obj => obj?.value)
+
+const isValid = reactive({
+    name: false,
+    location: false
+})
+
+function isEverythingValid() {
+    return isValid.name && isValid.location
+}
+
+async function onCreate(name, location, description) {
+    const result = await createApiary(props.currentFilter, name, location, description)
  
     if (result === 201) {
         // only on successful result 
@@ -36,101 +52,99 @@ async function onCreate(currentFilter, name, location, description) {
 </script>
 
 <template>
-<PopupPlate>
-    <div :class="s.container">
-        <div :class="s.header">
-            <Icon :id="s.icon" res="fa-solid fa-bug"/>
-            <TextTitle :shrink-width-to-text="true" :is-disabled="true" 
-                :class="s.title" text="Create Apiary "/>
-            <div :class="s['vertical-split']"></div>
-            <IconCubeButton :id="s.other"/>
-            <IconCubeButton @click="removePopup(id)" :id="s.close"/>
-        </div>
-        <div :class="s.separator"></div>
-
-        <form @submit.prevent="onCreate(currentFilter, rName, rLocation, rDescription)" :class="s.grid">
-            <Field 
-                :id="s.name"  
-                :class="s.line"
-                title="Name" v-model="rName"/>
-            <Field :id="s.location" :class="s.line"
-                title="Location" v-model="rLocation"/>
-            <ImageField :id="s.image" title="Image"/>
-            <FieldVertical :id="s.description" title="Description" v-model="rDescription"/>
-            <Button :id="s.submit" type="submit" title="Create Apiary" />
-        </form>
-
+<div :class="s.container">
+    <div :class="s.header">
+        <PathTitle title="Create Apiary"/>
+        <div :class="s['vt-linebreak']"></div>
+        <IconCubeButton @click="removePopup(id)" :class="s['button-special']" res="fa-solid fa-xmark"/>
     </div>
-</PopupPlate>
+
+    <Suspense>
+    <div :class="s.grid">
+        <img :class="s.image" :src="img" alt="hive img">
+        <RegistrationInputField :class="s.name"
+            :is-required="true" hint="Name" 
+            v-model="rName" v-model:isValid="isValid.name"/>
+        <RegistrationInputField :class="s.location"
+            :is-required="true" hint="Location" 
+            v-model="rLocation" v-model:isValid="isValid.location"/>
+        <RegistrationInputField :class="s.description"
+            hint="Description" v-model="rDescription"/>
+        <RegistrationButton :class="s.button"
+            @click="(isEverythingValid()) ? onCreate(rName, rLocation, rDescription) : {}" 
+            :is-enabled="isEverythingValid()" text="Create"/>
+    </div>
+    </Suspense>
+</div>
 </template>
 
 <style module lang='sass'>
-@use '@/assets/_colors.sass' as *
-.container
+@use '@/assets/_colors.sass' as main
+.container 
     display: flex
     flex-direction: column
-        
-    border-radius: 2px
-    overflow: hidden
-    box-shadow: 0 0 30px rgba(0, 0, 0, .5)
 
-    width: 50vw
+    box-sizing: border-box
+    margin: 6px
 
-    background: $popup-base
+    width: 40rem
+
+    border-radius: 4px
+    box-shadow: 0px 0px 10px rgba(0, 0, 0, 0.21)
+    background: #EDEDED
 
     .header
         display: flex
         align-items: center
-
-        box-sizing: border-box
-        padding: .6rem
-        gap: .6rem
+        gap: .4rem
 
         height: 5rem
-        border-radius: 0 0 2px 2px
-        background: $dark
-        .vertical-split
-            margin-left: auto 
-            border-radius: 20px
-            height: 100%
-            width: 4px
-            background: $underline-dark
 
-        #icon
-            aspect-ratio: 1
+        box-sizing: border-box
+        padding: .4rem
+        border-radius: 4px
+        box-shadow: 0px 0px 10px rgba(0, 0, 0, 0.21)
+        background: #EDEDED
+
+        .vt-linebreak
+            width: 6px
             height: 100%
-        #close
-            background: $button-special
-        #other
-            background: $button-common
-    
-    .separator
-        align-self: center
-        border-radius: 20px
-        width: 90%
-        margin-top: .5rem 
-        min-height: 6px
-        background: $dark
+            border-radius: 4px
+            background: #D9D9D9
+            margin-left: auto 
 
     .grid
-        flex: 1
-        padding: 1rem 2rem
-        gap: 1rem
-        box-sizing: border-box
-
         display: grid
-        grid-template-areas: 'name name' 'locat locat' 'cube1 cube2' 'but but'
-        grid-template-columns: 1fr 1fr
-        grid-template-rows: repeat(2, 4.5rem) 20rem 4.5rem
+        grid-template-areas: 'img name' 'img location' 'img description' 'img button' 
+        grid-template-columns: 1fr 1.5fr
+        grid-template-rows: repeat(2, 1fr) 2fr 1fr
+        gap: 1rem
+        
+        padding: 1rem
 
-        #name
+        .image
+            grid-area: img
+            width: 100%
+            height: 100%
+            object-fit: cover
+            border-radius: 8px
+            box-shadow: 0 0 10px rgba(0, 0, 0, .2)
+        .name
             grid-area: name
-        #location
-            grid-area: locat
-        #image
-            grid-area: cube1
-        #description
-            grid-area: cube2
-        #submit
-            grid-area: but
+        .location
+            grid-area: location
+        .description
+            grid-area: description
+        .type
+            grid-area: type
+        .button
+            grid-area: button
+
+.button-special
+    background: main.$button-special
+
+@media (max-width: 600px) 
+    .grid
+        display: flex !important
+        flex-direction: column
 </style>

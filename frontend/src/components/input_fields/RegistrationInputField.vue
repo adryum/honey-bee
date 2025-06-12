@@ -23,14 +23,8 @@ function checkIfValid() {
     let validUppercases = false
     let reqired = false
 
-    // if no model is provided then fail
-    if (!model.value) {
-        isValid.value = false
-        return
-    }
-
     if (props.minLength) {
-        if (model.value.length >= props.minLength) {
+        if (model.value?.length >= props.minLength) {
             // on true
             validLength = true
         } else {
@@ -54,7 +48,7 @@ function checkIfValid() {
         }
     }
     if (props.isRequired) {
-        if (model.value.length != 0) {
+        if (model.value?.length != 0) {
             reqired = true
         }
     }

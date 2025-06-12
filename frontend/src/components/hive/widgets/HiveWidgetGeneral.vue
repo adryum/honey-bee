@@ -22,9 +22,9 @@ const s = useCssModule()
     <template #body>
         <div :class="s.grid">
             <img :class="s.img" :src="img">
-            <WidgetParagraph title="Type" :content="hive.type"/>
-            <WidgetParagraph title="Location" :content="hive.location"/>
-            <WidgetParagraph :class="s.description" title="Description" :content="hive.description"/>
+            <WidgetParagraph title="Type" :content="hive?.type"/>
+            <WidgetParagraph title="Location" :content="hive?.location"/>
+            <WidgetParagraph :class="s.description" title="Description" :content="hive?.description"/>
         </div>
     </template>
 </Widget>

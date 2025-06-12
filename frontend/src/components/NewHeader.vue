@@ -3,6 +3,7 @@ import { ref, useCssModule } from 'vue';
 import CubeButtonTranspparent from './buttons/CubeButtonTranspparent.vue';
 import Icon from './Icon.vue';
 import { rUser } from '@/core/repositories/homeRepository';
+import { logOut } from '@/core/repositories/registrationRepository';
 const currentView = ref()
 const isExtended = ref(false)
 const s = useCssModule()

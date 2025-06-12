@@ -1,18 +1,34 @@
 <script setup>
 import { login } from "../../core/repositories/registrationRepository.js";
 import { rUser } from "../../core/repositories/homeRepository.js";
-import { onMounted, useCssModule, watch } from "vue";
+import { onMounted, reactive, useCssModule, watch } from "vue";
 import router from '../../router/index.js';
 import { isEmpty } from "../../utils/checks.js";
 import {ref} from "vue";
 import RegistrationInputField from "@/components/input_fields/RegistrationInputField.vue";
 import CheckboxWText from "@/components/input_fields/CheckboxWText.vue";
 import RegistrationSubmitButtons from "@/components/combinations/RegistrationSubmitButtons.vue";
+import RegistrationButton from "@/components/buttons/RegistrationButton.vue";
+import FaintButton from "@/components/buttons/FaintButton.vue";
 
 let rEmail = ref('')
 let rPassword = ref('') 
 let rRememberMe = ref(false) 
 const s = useCssModule()
+
+const isValid = reactive({
+    email: false,
+    password: false,
+})
+
+function isEverythingValid() {
+    // check if validation is true
+    for (let key in isValid) {
+        if (!isValid[key]) return false
+    }
+
+    return true
+}
 
 watch(rUser, (newValue) => {
         if (!isEmpty(newValue)) {
@@ -35,24 +51,37 @@ onMounted(async () => {
 
 <template>
 <div :class="s.view">
-    <form @submit.prevent="login(rEmail, rPassword)" :class="s.container">
+    <form @submit.prevent="isEverythingValid() ? login(rEmail, rPassword) : ()=>{}" :class="s.container">
         <img :class="s.logo" src="@/assets/images/BeeLogo.png" alt="logo">
         <h1 :class="s.title">HoneyBee</h1>
-        <RegistrationInputField v-model="rEmail" hint="E-mail" type="email" :is-required="true"/>
-        <RegistrationInputField v-model="rPassword" hint="Password" type="password" :is-required="true"/>
+        <RegistrationInputField v-model="rEmail" v-model:isValid="isValid.email" 
+        hint="E-mail" type="email" :is-required="true"/>
+        <RegistrationInputField v-model="rPassword" v-model:isValid="isValid.password"
+         hint="Password" type="password" :is-required="true"/>
         <CheckboxWText v-model="rRememberMe" text="Remember me!"/>
-        <RegistrationSubmitButtons 
-            submit-text="Login"
-            leftText="Forgot Password!"
-            left-link="/recovery"
-            right-text="Create an account"
-            right-link="/signup"
-        />
+        <div :class='s.container_bottom'>
+            <RegistrationButton  :is-enabled="isEverythingValid()" type="submit" :class="s.submit" text="Login"/>
+            <FaintButton @click="$router.push('/recovery')" :class="s.left" text="Forgot Password!"/>
+            <FaintButton @click="$router.push('/signup')" :class="s.right" text="Create an account"/>
+        </div>
     </form>
 </div>
 </template>
 
 <style module lang="sass">
+.container_bottom
+    display: grid
+    grid-template-areas: 'button button' 'left right'
+    grid-template-rows: 1fr 1.5rem
+    grid-auto-columns: 1fr 1fr
+    gap: .6rem
+
+    .submit
+        grid-area: button
+    .left
+        grid-area: left
+    .right
+        grid-area: right
 .logo
     position: absolute
     top: -6.5rem

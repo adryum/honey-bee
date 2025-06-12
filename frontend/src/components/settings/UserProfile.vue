@@ -59,10 +59,12 @@ function updateValues() {
 }
 const s = useCssModule()
 watch(() => rUser.value, (nValue) => {
-    console.log('new');
-    
-    console.log(nValue.value);
-    updateValues()
+    if (nValue) {
+        console.log('new');
+        
+        console.log(nValue.value);
+        updateValues()
+    }
 })
 onMounted(() => {
     updateValues()

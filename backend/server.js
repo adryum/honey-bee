@@ -155,10 +155,12 @@ app.post('/login', async (req, res) => {
 })
 
 app.post('/signup', async (req, res) => {
-    const { name, surename, profilePicture, email, password } = req.body
+    const { username, name, surname, profilePicture, email, password } = req.body
 
+    console.log(username, name, surname, profilePicture, email, password);
+    
     // missing credentials
-    if (!email || !password || !name || !surename) {
+    if (!username || !email || !password || !name || !surname) {
         res.status(401).send('missing credentials!') 
         return
     }
@@ -178,12 +180,12 @@ app.post('/signup', async (req, res) => {
 
     const insertQuery = `
         INSERT INTO users
-        (account_code, name, surename, profile_picture, e_mail, password, role)
-        VALUES (?, ?, ?, ?, ?, ?, ?)`
+        (account_code, username, name, surname, profile_picture, e_mail, password, role)
+        VALUES (?, ?, ?, ?, ?, ?, ?, ?)`
 
     const accountCode = await generateAccountCode('users', 'account_code')
 
-    const insert = await db.query(insertQuery, [accountCode, name, surename, null, email, password, 'Admin'])
+    const insert = await db.query(insertQuery, [accountCode, username, name, surname, null, email, password, 'Free User'])
 
     const [[newUser]] = await db.query(checkQuery, [email])
 
@@ -291,6 +293,7 @@ app.post('/hive/overview', async (req, res) => {
             h.id AS h_id, 
             h.name AS h_name,
             h.image AS h_image,
+            h.description AS h_description,
             h.location AS h_location,
             h.type AS h_type,
             h.frames AS h_frames,

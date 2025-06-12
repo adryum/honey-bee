@@ -36,7 +36,7 @@ onMounted(async () => {
 <template>
 <div class="view-container">
     <div class="header">
-        <IconButton @click="createPopup(CreateApiaryPopup, {currentFilter: rSearchFilter, refreshApiaries: searchApiaries})" text="Add apiary"/>
+        <IconButton @click="createPopup(CreateApiaryPopup, {currentFilter: rSearchFilter, refreshApiaries: searchApiaries})" text="Create apiary"/>
         <input type="range" min="20" max="100" v-model.number="rSizeMultiplier">
         <input type="range" min="0" max="100" v-model="rGapMultiplier" @input="changeGap(rGapMultiplier)">
         <SearchBar id="search-bar" :onClick="searchApiaries" v-model="rSearchFilter"/>

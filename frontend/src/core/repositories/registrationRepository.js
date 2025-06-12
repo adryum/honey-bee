@@ -23,13 +23,19 @@ export async function login(email, password) {
     }
 }
 
-export async function signUp(name, surename, profilePicture, email, password) {
+export async function signUp(username, name, surname, profilePicture, email, password) {
     try {
-        if (!email || !password || !name || !surename) return
+        console.log(name);
+        console.log(email);
+        console.log(password);
+        console.log(surname);
+        
+        if (!email || !password || !name || !surname) return
 
         const newUser = await axios.post(`/signup`, {
+            username: username,
             name: name,
-            surename: surename,
+            surname: surname,
             profilePicture: "",
             email: email,
             password: password
