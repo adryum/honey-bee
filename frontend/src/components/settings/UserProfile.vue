@@ -97,7 +97,7 @@ onMounted(() => {
     display: flex
     flex-direction: column
     align-items: center
-
+    // margin: .5rem
     width: 40rem
 
     background: white

@@ -9,6 +9,7 @@ import HorizontalHr from '../HorizontalHr.vue';
 import RegistrationInputField from '../input_fields/RegistrationInputField.vue';
 import RegistrationButton from '../buttons/RegistrationButton.vue';
 import { useReactiveImage } from '@/core/imageHandler';
+import Dropdown from '../dropdowns/Dropdown.vue';
 
 const props = defineProps({
     id: String,
@@ -64,9 +65,10 @@ const s = useCssModule()
             hint="Location" v-model="rLocation"/>
         <RegistrationInputField :class="s.description"
             hint="Description" v-model="rDescription"/>
-        <RegistrationInputField :class="s.tag"
+        <Dropdown :class="s.tag" :choices="['Stationary', 'Tower', 'Movable']"
             :is-required="true" hint="Type" 
-            v-model="rType" v-model:isValid="isTypeValid"/>
+            v-model="rType" v-model:isValid="isTypeValid"
+        />
         <RegistrationButton :class="s.button"
             @click="(isEverythingValid()) ? onCreate(rName, rLocation, rDescription, rImage, rType) : {}" 
             :is-enabled="isEverythingValid()" text="Create"/>

@@ -47,7 +47,7 @@ function toggleExtention() {
     
     <div class="count-container">
         <div class="icon"></div>
-        <div class="background"><p v-if="isExtended">{{ rUser.name }}</p>
+        <div class="background"><p v-if="isExtended">{{ rUser.username }}</p>
     </div>
     
 
