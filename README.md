@@ -1,29 +1,69 @@
-# magic-chess
+# Honey-bee
+Mājaslapa biškopjiem, kas atvieglo darbu ar bišu saistītu datu - dravu, stropu, inventāra - meklēšanu, pierakstu/piezīmju veidošanu, apstrādi un apkopošanu.
 
-This template should help get you started developing with Vue 3 in Vite.
+# Sistēmas izstrādes rīki
+### vue 3 vite
+Progresīvs 'single page' mājaslapu veidošanas freimworks, kas atvieglo darbu ar mājaslapu veidošanu.
 
-## Recommended IDE Setup
+### SASS
+CSS pārveidotājs, kurš būtiski atvieglo elementu stila/dizaina veidošanu.
 
-[VSCode](https://code.visualstudio.com/) + [Volar](https://marketplace.visualstudio.com/items?itemName=Vue.volar) (and disable Vetur).
+### dotenv
+dotenv palīdz nodrošināt projektu. Katram lietotājam ir jāuzstāda sava 'datu vide', lai palaistu backendu un frontendu.
 
-## Customize configuration
+### nodemon
+Komandlīniju instruments, kas ātri restartē serveri uz katras servera koda izmaiņas.
 
-See [Vite Configuration Reference](https://vite.dev/config/).
+# Kā uzstādīt sistēmu.
+Pirms projekta palaišanas, uz sistēmas ir jābūt uzinstalētam Node.js
 
-## Project Setup
+## Uzstādīt vue 3 vite
 
 ```sh
 npm install
 ```
 
-### Compile and Hot-Reload for Development
+## Uzinstalēt SASS priekš frontenda (Vieglāk saprotamāks un rakstāms CSS)
 
 ```sh
-npm run dev
+npm install -g sass
+```
+## Uzstādīt dotenv
+Šis ir jāinstalē gan backendā, gan frontendā, vai tikai kopējā modulī, kuru izmanto abi divi. 
+
+### Instalēt dotenv
+```sh
+npm install dotenv
 ```
 
-### Compile and Minify for Production
+### Aizpildīt backend (servera) vidi jeb .env failu
+<> - šinīs vietās bez '<>' ir jāizpilda ar vajadzīgajiem datiem
+
+MYSQL_HOST='<Datubāzes IP>' <br>
+MYSQL_USER='<Datubāzes users, piemēram, root>'<br>
+MYSQL_PASSWORD='<Datubāzes Parole>'<br>
+MYSQL_DATABASE='<Datubāzes nosaukums>'<br>
+
+### Aizpildīt frontend vidi jeb .env failu
+VITE_API=<Datubāzes API pieprasījumu links ar serverpusē norādīto portu '5000', bija: http://localhost:5000>
+
+# Kā palaist sistēmu
+
+## Ieslēgt serveru
+1. terminālī ir jāatver mape/direktorijs ' backend '<br>
+2. Jāpalaiž serveris ar komandu 'node server.js'
 
 ```sh
-npm run build
+cd backend
+node server.js
+```
+
+## Ieslēgt frontendu
+1. terminālī ir jāatver mape/direktorijs ' frontend '<br>
+2. Jāpalaiž mājaslapa ar komandu 'npm run dev'<br>
+3. Jāatver terminālī parādītais local http links.
+
+```sh
+cd frontend
+npm run dev
 ```
