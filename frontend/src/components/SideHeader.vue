@@ -144,7 +144,6 @@ function toggleExtention() {
     gap: 1rem
     box-shadow: 0px 0px 2px .1px black
 
-    height: 100vh
     width: 5rem
 
     background-color: $special-dark

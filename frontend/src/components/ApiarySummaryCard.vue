@@ -1,11 +1,6 @@
-<script setup>
-import { onMounted, useTemplateRef, watch, ref } from 'vue';
-import ApiaryHiveCount from './ApiaryHiveCount.vue';
-import Icon from './Icon.vue';
-import TextTitle from './input_fields/TextTitle.vue';
-import IconCubeButton from './buttons/IconCubeButton.vue';
-import { deleteApiary, rUser } from '@/core/repositories/homeRepository';
-import { getImageRes } from '@/core/imageHandler';
+<script setup lang="ts">
+import { useCssModule } from "vue"
+const s = useCssModule()
 
 const props = defineProps({
   apiary: Object,
@@ -13,141 +8,96 @@ const props = defineProps({
   onDelete: Function
 })
 
-const img = ref(await getImageRes(props.apiary.image))
-const rContainer = useTemplateRef('container')
-
-watch(rContainer, (newV) => {
-    if (newV) {
-        newV.style.width = `${props.sizeMultiplier}rem`
-    }
-})
-
-watch(() => props.sizeMultiplier, (newValue) => {
-    if (newValue && rContainer.value) {
-        rContainer.value.style.width = `${newValue}rem`
-    }
-})
-
-const hiveTxt = "Hives"
 </script>
 <template>
-<div id="apiary-container" ref="container" @click="$router.push('/apiaries/' + apiary.id)">
-    <div class="header">
-        <TextTitle class="title" v-model="apiary.name"/>
-        <div class="buttons">
-            <IconCubeButton @click.stop="deleteApiary(apiary['id'], onDelete)" res="fa-solid fa-trash"/>
-            <div class="button" style="background: #FFBC50;"><Icon res="fa-solid fa-ellipsis-vertical"/></div> 
-        </div>
-    </div>
-    <div class="content">
-
-        <div class="picture">
-            <img :src="img" />
-        </div> 
-        <div class="hive-type">
-            <div class="content">
-                <TextTitle v-model="hiveTxt" :isDisabled="true"/>
-                <ApiaryHiveCount />
-                <ApiaryHiveCount />
-                <ApiaryHiveCount />
-            </div>
-        </div> 
-    </div>
+<div :class="s.container" ref="container" @click="$router.push('/apiaries/' + apiary!.id)">
     
-     
+    <img :class="s.image" src="/src/assets/images/apiary1.jpg" alt="apiary image">
+    <hr :class="s.linearDim">
+    <div :class="[s.options, s.entry]"></div>
+    <h1 :class="[s.name]">{{ apiary!.name }}</h1>
+    <ul :class="s.info">
+        <div :class="s.entry"></div>
+        <div :class="s.entry"></div>
+        <div :class="s.entry"></div>
+    </ul>
+
 </div>
 </template>
 
-<style scoped lang="sass">
-@use '../assets/_colors.sass' as *
-#apiary-container
-    display: grid
-    grid-template-areas: 'header header header' 'l content r'
-    grid-template-columns: .4rem 1fr .4rem 
-    grid-template-rows: 4.5rem 1fr 
-   
-    aspect-ratio: 1.5 / 1.0 
-    
-    border-radius: 4px
-
-    // box-shadow: 0 0 7px rgba(0, 0, 0, .2)
-.header
-    // @extend .hover-select
-    grid-area: header
-    display: flex
-    gap: .4rem
-    background: #BCA89E
-    border-radius: 4px
-    padding: 6px .8rem 6px .8rem
-    box-shadow: 0 0 2px rgba(0, 0, 0, .2)
-
-    .title
-        flex: 2
-    .buttons
-        display: flex
-        flex: .8
-        justify-content: space-between
-
-    .button 
-        // @extend .hover-select
-        background: $base-accent
-        height: 100%
-        aspect-ratio: 1
-        border-radius: 4px
-        box-sizing: border-box
-        // box-shadow: 0 0 2px rgba(0, 0, 0, .2)
-        transition: filter .3s 
-
-.content
-    grid-area: content
-    background: $base-light
-
-    display: flex
-    gap: .4rem
-    border-radius: 0 0 4px 4px
-    padding: .4rem
-    box-shadow: 0 1px 2px rgba(0, 0, 0, .1)
-
-.hive-type
-    flex: .8
+<style module lang="sass">
+@use '../assets/_colors.sass' as colors
+@use '../assets/main.sass' as main
+.container
+    position: relative
     display: flex
     flex-direction: column
-    gap: 4px
-    grid-area: hive-type
+    justify-content: flex-end
 
-    .content
-        display: flex
-        flex-direction: column
-        justify-content: space-between
-        height: 100%
-        padding: 0 10px 10px 10px
-        border-radius: 2px
-        background: $base-second
-        box-shadow: 0 0 2px rgba(0, 0, 0, .2)
-
-
-.picture
-    flex: 2
-    background: $base-second
-    border-radius: 6px
+    width: 550px
+    height: 450px
+    box-sizing: border-box
     overflow: hidden
-    // border: 2px solid $base-dark
-    box-shadow: 0 0 2px rgba(0, 0, 0, .2)
+    border-radius: 5px
+    transition: .3s ease-out
+    box-shadow: 0 2px 5px rgba(0, 0, 0, .5)
+    cursor: pointer
+        
+    &:hover .image
+        scale: 1.1
+    &:hover .options
+        opacity: 1
 
-    img
-        width: 100%
+    .options
+        z-index: 0
+        top: 0
+        right: 0
+        position: absolute
+        margin: 1em
+        background: rgba(0, 0, 0, .3)
+        opacity: 0
+        transition: .3s
+
+    .name
+        @include main.jetbrains-mono
+        font-size: 3.5em
+        font-weight: 800
+        
+        margin: 0
+        z-index: 0
+        padding: 0 2rem
+
+    .info
+        all: unset
+        z-index: 0
+
+        display: flex
+        justify-content: flex-end
+        gap: 1em
+        padding: 1em
+
+    .entry
+        width: 50px
+        height: 50px
+
+        border: 2px solid rgba(255, 255, 255, .5)
+        border-radius: 5px
+
+    .image
+        position: absolute
         height: 100%
+        width: 100%
         object-fit: cover
-        transition: .8s
+        transition: .3s ease-out
+        outline: 6px solid rgba(255, 255, 255, .2)
 
-        &:hover
-            scale: 1.1
-            filter: brightness(90%)
+    .linearDim
+        all: unset
+        position: absolute
+        bottom: 0
+        height: 40%
+        width: 100%
 
-// .hover-select
-//     transition: filter .3s
-//     &:hover
-//         filter: brightness(90%)
-//         border: 2px solid $special-dark
+        background: linear-gradient( rgba(0, 0, 0, 0) 0%, rgba(0, 0, 0, .65) 100%)
 </style>
         

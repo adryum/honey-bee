@@ -1,8 +1,10 @@
 {
-  "extends": "@vue/tsconfig/tsconfig.web.json",
+  "extends": "@vue/tsconfig/tsconfig.dom.json",
   "include": ["src/**/*.ts", "src/**/*.d.ts", "src/**/*.vue"],
   "exclude": ["node_modules"],
   "compilerOptions": {
+    "target": "es2017",
+    "module": "esnext",
     "strict": true,
     "noImplicitAny": true,
     "moduleResolution": "node",

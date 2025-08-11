@@ -9,7 +9,7 @@ import { rUser } from './core/repositories/homeRepository';
 import CreateApiaryPopup from './components/popups/CreateApiaryPopup.vue';
 import { rActivePopups } from './core/popups';
 import PopupPlate from './components/popups/PopupPlate.vue';
-import NewHeader from './components/NewHeader.vue';
+import TopHeader from './components/TopHeader.vue';
 
 const mediaQuery = window.matchMedia('(max-width: 600px)')
 const isMobile = ref(false)
@@ -38,21 +38,26 @@ const s = useCssModule()
 </script>   
 
 <template>
-  <div :class="s.flex">
-    <PopupPlate v-if="rActivePopups.length != 0">
-        <component v-for="({component, props}, i) in rActivePopups" :key="i" 
-            :is="component" v-bind="props"/>
-    </PopupPlate>
+    <div :class="s.skelet">
+        <TopHeader/>
+        <div :class="s.flex">
+            <PopupPlate v-if="rActivePopups.length != 0">
+                <component v-for="({component, props}, i) in rActivePopups" :key="i" 
+                    :is="component" v-bind="props"/>
+            </PopupPlate>
 
-    <NewHeader v-if="isAuthenticated() && isMobile"/>
-    <SideHeader v-if="isAuthenticated() && !isMobile"/>
-    <Suspense>
-        <RouterView />
-    </Suspense>
-  </div> 
+            <SideHeader v-if="isAuthenticated() && !isMobile"/>
+            <Suspense>
+                <RouterView />
+            </Suspense>
+        </div> 
+    </div>
 </template>
 
 <style module lang="sass">
+.skelet
+    display: flex
+    flex-direction: column
 @media (min-width: 600px)
     .flex 
         display: flex
