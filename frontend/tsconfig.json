@@ -1,0 +1,12 @@
+{
+  "extends": "@vue/tsconfig/tsconfig.web.json",
+  "include": ["src/**/*.ts", "src/**/*.d.ts", "src/**/*.vue"],
+  "exclude": ["node_modules"],
+  "compilerOptions": {
+    "strict": true,
+    "noImplicitAny": true,
+    "moduleResolution": "node",
+    "isolatedModules": true,
+    "esModuleInterop": true
+  }
+}
