@@ -32,13 +32,11 @@ const s = useCssModule()
     padding: .4rem
     border-radius: 2px
     box-sizing: border-box
-    background: main.$base-dark
 
     .title
         display: flex
     .input
         all: unset
-        background: main.$popup-base
         font-size: 28px
         box-sizing: border-box
         padding: 0 .4rem 

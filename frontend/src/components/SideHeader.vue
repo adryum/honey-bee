@@ -1,191 +1,153 @@
-<script setup>
-// import { pages } from "../core/data.js";
-import { ref } from "vue";
-import Icon from "./Icon.vue";
-import { logOut } from "@/core/repositories/registrationRepository.js"
-import { rUser } from "@/core/repositories/homeRepository.js"
-defineProps({
-    
-})
+<script setup lang="ts">
+import { useToggle } from "@vueuse/core";
+import { computed, ref, useCssModule, type CSSProperties } from "vue";
+import { easeInOut, motion, type Variants, type VariantType } from "motion-v"
 
- const pages = [
-    { 
-        "name" : "Home",
-        "res" : "fa-solid fa-house",
-        "linkTo": "/",
-        "adminOnly": false
-    },
-    { 
-        "name" : "Calendar",
-        "res" : "fa-solid fa-calendar-days",
-        "linkTo": "/calendar",
-        "adminOnly": false
-    },
-    { 
-        "name" : "Apiaries",
-        "res" : "fa-solid fa-list",
-        "linkTo": "/apiaries",
-        "adminOnly": false
+const [isExtended, toggleExtension] = useToggle() 
+const toggleStyle = computed(() => ({
+    transform: `rotateZ(${isExtended.value ? 0 : 180 }deg)`
+} satisfies CSSProperties))
 
-    },
-    { 
-        "name" : "Hives",
-        "res" : "fa-brands fa-hive",
-        "linkTo": "/hives",
-        "adminOnly": false
-    },
-]
+const tabs = ['home', 'apiaries', 'hives', 'a', 'ab', 'ac', 'ad', 'ae', 'af']
+const selectedTab = ref(tabs[0])
 
-const isExtended = ref(false)
-function toggleExtention() {
-    isExtended.value = !isExtended.value
+const containerVariants: Record<string, VariantType> = {
+    expanded: { width: '15rem' },
+    collapsed: { width: '4rem', transition: { delay: .1 }}
 }
+
+const tabVariants: Record<string, VariantType> = {
+    expanded:  { opacity: 1, y: 0, transition: { delay: .2, duration: .3  } },
+    collapsed: { opacity: 0, y: 5, transition: {  duration: .15 } }
+}
+
+const s = useCssModule()
 </script>
-
 <template>
-<div class="base" :class="{'base-un-extended': !isExtended, 'base-extended': isExtended}">
-    
-    <div class="count-container">
-        <div class="icon"></div>
-        <div class="background"><p v-if="isExtended">{{ rUser.username }}</p>
-    </div>
-    
+  <motion.div
+    :class="s.container"
+    :variants="containerVariants"
+    :animate="isExtended ? 'expanded' : 'collapsed'"
+  >
+    <button :class="s.extender" :style="toggleStyle" @click="toggleExtension()">></button>
 
-    </div>
-    <hr class="hor-hr" >
-    <div v-for="page in pages"
-        class="page" 
-        :class="{'page-extended': isExtended}"
-        @click="$router.push(page.linkTo)" 
-    >
-        <Icon class="cube" :res="page.res"/>
-        <div class="text" v-if="isExtended">
-            {{ page.name }}
-        </div>
-    </div>
-    <div v-if="rUser.role === 'Admin'" class="page" 
-        :class="{'page-extended': isExtended}"
-        @click="$router.push('/users')" 
-    >
-        <Icon class="cube" res="fa-solid fa-crown"/>
-        <div class="text" v-if="isExtended">
-            Admin Powers
-        </div>
-    </div>
-    <div style="flex: 1;"></div>
-    <hr class="hor-hr" >
-    <div class="bottom-container" style="">
-        <Icon 
-            class="cube" 
-            res="fa-solid fa-angle-right" 
-            :isExpanded="isExtended"
-            @click="toggleExtention"
+    <ul :class="s.list">
+      <motion.li
+        v-for="tab in tabs"
+        :key="tab"  
+        :class="s.tab"
+        :while-press="{ scale: 0.9, transition: { duration: 0.1 } }"
+        @click="selectedTab = tab"
+      >
+        <svg
+          :class="s.icon"
+          xmlns="http://www.w3.org/2000/svg"
+          viewBox="0 0 512 512"
+        >
+          <path
+            fill="#855400"
+            d="M277.8 8.6c-12.3-11.4-31.3-11.4-43.5 0l-224 208c-9.6 9-12.8 22.9-8 35.1S18.8 272 32 272l16 0 0 176c0 35.3 28.7 64 64 64l288 0c35.3 0 64-28.7 64-64l0-176 16 0c13.2 0 25-8.1 29.8-20.3s1.6-26.2-8-35.1l-224-208zM240 320l32 0c26.5 0 48 21.5 48 48l0 96-128 0 0-96c0-26.5 21.5-48 48-48z"
+          />
+        </svg>
+
+        <motion.h2
+          :class="s.text"
+          :variants="tabVariants"
+          :initial="'collapsed'"
+          :animate="isExtended ? 'expanded' : 'collapsed'"
+          style="display: inline-block;"
+        >
+          Page name
+        </motion.h2>
+
+        <motion.div
+          v-if="selectedTab === tab"
+          :class="s.selected"
+          layoutId="selected"
+          :transition="{ duration: 0.4, ease: [0, 0.71, 0.2, 1.01], type: 'spring' }"
         />
-        <Icon v-if="isExtended"
-            class="cube" 
-            res="fa-solid fa-arrow-right-from-bracket" 
-            :isExpanded="isExtended"
-            @click="logOut()"
-        />
-        <Icon v-if="isExtended"
-            class="cube" 
-            res="fa-solid fa-gear" 
-            :isExpanded="isExtended"
-            @click="$router.push('/settings')"
-        />
-    </div>
-</div>
+      </motion.li>
+    </ul>
+  </motion.div>
 </template>
 
-<style scoped lang='sass'>
-@use '../assets/_colors.sass' as *
-.count-container
-    display: flex
+<style module lang='sass'>
+@use '../assets/_colors.sass' as colors
+.container
     position: relative
-    align-items: center
-    width: 100%
-    height: 4rem
-    
-    .icon
-        position: absolute
-        background: $special-accent
-        border-radius: 50%
-        height: 100%
-        aspect-ratio: 1
-
-    .background
-        display: flex
-        justify-content: end
-        align-items: center
-        width: 100%
-        height: 70%
-        padding-right: 8px
-        margin-left: 20px
-        border-radius: 20px
-        background: $special-base
-
-        p
-            margin: 0
-            width: 100%
-            font-size: 20px
-            text-align: center
-
-.base 
-    position: sticky
-    top: 0
-
-    margin: 0
-    padding: .5rem .5rem 0 .5rem
-    box-sizing: border-box
-
     display: flex
     flex-direction: column
-    align-items: center
-    gap: 1rem
-    box-shadow: 0px 0px 2px .1px black
-
-    width: 5rem
-
-    background-color: $special-dark
-    transition: .3s
-
-.base-un-extended
-    
-
-.base-extended
-    width: 20rem
-
-    .page
-        align-self: flex-start
-        display: flex
-        align-items: center
-        width: 95%
-        height: 4rem
-
-        border-radius: 10px
-        background: $base-white
-        
-
-.bottom-container
-    display: flex
-    justify-content: space-evenly
-
-    width: 100%
-    border-radius: 10px 10px 0 0
-    padding: .8rem 0 
-    background: $special-accent
-.cube
-    height: 4rem
     width: 4rem
-    border-radius: 4px
-    background: $base-white
+    height: calc(100vh - 4rem)
+    background: colors.$accent
 
-.hor-hr 
-    margin: 0
-    border: none
-    height: 3px
-    border-radius: 10px
-    background-color: white
-    min-width: 90%
+    .list
+        all: unset
+        display: flex
+        flex-direction: column
+        padding: 1rem .4rem
+        gap: 1rem
+        width: auto
+
+        .tab
+            z-index: 0
+            all: unset
+            position: relative
+
+            display: flex
+            align-items: center
+            
+            width: 100%
+            height: 50px
+            padding: .5rem
+            box-sizing: border-box
+            background-color: transparent
+            border-radius: 5px
+            cursor: pointer
+            transition: .1s ease-out
+
+            &:hover
+                background-color: colors.$base
+
+
+            .icon
+                z-index: 2
+                height: 100%
+                aspect-ratio: 1
+
+            .text
+                z-index: 2
+                position: absolute
+                margin-left: 3rem
+           
+            .selected
+                z-index: 1
+                position: absolute
+                right: 0
+                height: 100%
+                width: 100%
+
+                border-radius: 5px
+                background: colors.$light
+
+
+    .extender
+        all: unset
+        display: flex
+        justify-content: center
+        align-items: center
+        position: absolute
+        background: colors.$light
+        width: 2rem
+        height: 2rem
+
+        border-radius: 50px
+        bottom: 1rem
+        right: -1rem
+
+        cursor: pointer
+        transition: .2s
+        &:hover
+            scale: 1.2
 
 </style>

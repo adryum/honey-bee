@@ -28,7 +28,6 @@ defineProps({
     gap: 8px
 
     box-sizing: border-box
-    background: $base-white
     border: 2px solid white
     box-shadow: 0 0 4px rgba(0, 0, 0, .2)
     transition: .3s

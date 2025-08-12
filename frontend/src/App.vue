@@ -58,6 +58,12 @@ const s = useCssModule()
 .skelet
     display: flex
     flex-direction: column
+
+.flex
+    flex: 1
+    display: flex
+    flex-direction: row
+
 @media (min-width: 600px)
     .flex 
         display: flex

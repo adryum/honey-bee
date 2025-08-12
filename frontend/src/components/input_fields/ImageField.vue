@@ -33,7 +33,6 @@ const s = useCssModule()
     padding: .4rem
     border-radius: 2px
     box-sizing: border-box
-    background: main.$base-dark
 
     .title
         display: flex
