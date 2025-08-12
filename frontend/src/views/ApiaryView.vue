@@ -45,10 +45,7 @@ const s = useCssModule()
 
     .appiaries
         display: grid
-        grid-template-columns: repeat(3, 550px)
-        justify-content: space-between
+        grid-template-columns: repeat(auto-fill, 550px)
+        justify-content: space-evenly
         gap: 4rem
-
-    
-
 </style>

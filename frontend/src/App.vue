@@ -39,14 +39,15 @@ const s = useCssModule()
 
 <template>
     <div :class="s.skelet">
-        <TopHeader/>
+        <SideHeader v-if="isAuthenticated() && !isMobile"/>
         <div :class="s.flex">
             <PopupPlate v-if="rActivePopups.length != 0">
                 <component v-for="({component, props}, i) in rActivePopups" :key="i" 
                     :is="component" v-bind="props"/>
             </PopupPlate>
+            
+            <TopHeader/>
 
-            <SideHeader v-if="isAuthenticated() && !isMobile"/>
             <Suspense>
                 <RouterView />
             </Suspense>
@@ -57,21 +58,12 @@ const s = useCssModule()
 <style module lang="sass">
 .skelet
     display: flex
-    flex-direction: column
+    flex-direction: row
 
 .flex
     flex: 1
     display: flex
-    flex-direction: row
+    flex-direction: column
 
-@media (min-width: 600px)
-    .flex 
-        display: flex
-        flex-direction: row
-
-@media (max-width: 600px) 
-    .flex 
-        display: flex
-        flex-direction: column
 
 </style>

@@ -1,4 +1,5 @@
 import './assets/main.sass'
+import '/src/core/LightDarkMode.ts'
 import axios from 'axios'
 import { createApp } from 'vue'
 import App from './App.vue'
@@ -12,18 +13,11 @@ app.mount('#app')
 
 axios.defaults.baseURL = import.meta.env.VITE_API
 
-export const PodiumPlace = Object.freeze({
-  First: 1,
-  Second: 2,
-  Third: 3
-});
-
 export const BackgroundType = Object.freeze({
   Dim: 1,
   Blurred: 2,
   DimmedAndBlurred: 3
 });
-
 
 export const TabNumber = Object.freeze({
   Home : 0,
