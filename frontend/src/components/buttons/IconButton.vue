@@ -1,46 +1,50 @@
-<script setup>
-import Icon from '../Icon.vue';
+<script setup lang="ts">
+import { useCssModule } from 'vue';
+import type { SVGIcon } from '../../core/Interfaces';
+import SVGComponent from '../SVGComponent.vue';
+import { motion } from 'motion-v';
 
-defineProps({
-    text: {
-        type: String,
-        default: 'asd'
-    }
+const props = withDefaults(defineProps<{
+    svg: SVGIcon
+    text: string,
+    onClick?: () => void
+}>(), {
+    text: 'button'
 })
+const s = useCssModule()
 </script>
 
 <template>
-<div class="b-container">
-    <Icon class="icon" res="fa-solid fa-plus"/>
-    <p class="text">{{ text }}</p>
-</div>
+<motion.button :class="s.container" @click="onClick"
+    :while-press="{scale: 0.9}"
+>
+    <SVGComponent :class="s.icon" :svg="svg"/>
+    <p :class="s.text">{{ text }}</p>
+</motion.button>
 </template>
 
-<style scoped lang='sass'>
-@use '@/assets/_colors.sass' as *
-.b-container
+<style module lang='sass'>
+@use '@/assets/_colors.sass' as colors
+@use '@/assets/main.sass' as main
+.container
+    all: unset
     display: flex
-    flex-direction: row
     align-items: center
+    cursor: pointer
 
-    padding: 4px 16px 4px 4px
-    border-radius: 4px
-    gap: 8px
+    padding: .5rem 1rem 
+    gap: 1rem
 
-    box-sizing: border-box
-    border: 2px solid white
-    box-shadow: 0 0 4px rgba(0, 0, 0, .2)
-    transition: .3s
-
-    &:hover
-        cursor: pointer
-        background: rgba(225, 225, 225, 1)
+    background: #D8A435
+    border-radius: 3px
+    box-shadow: inset 0 -2px rgba(0,0,0, .3)
+    
+    .icon
+        width: 1rem
+        aspect-ratio: 1
 
     .text
-        min-width: 3rem
-        margin: 0
-    
-        font-size: 24px
-        // padding-bottom: 1px 
-        
+        @include main.font
+        font-weight: 600
+        color: var(--button-text)
 </style>

@@ -34,14 +34,17 @@ const props = defineProps({
     flex-direction: column
     justify-content: flex-end
 
-    width: 550px
     height: 450px
     box-sizing: border-box
     overflow: hidden
     border-radius: 5px
     transition: .3s ease-out
-    box-shadow: 0 2px 5px rgba(0, 0, 0, .5)
     cursor: pointer
+
+    &:hover
+        box-shadow: 2px 2px 10px rgba(0, 0, 0, .3)
+        transform: translateY(-3px)
+
         
     &:hover .image
         scale: 1.1
@@ -59,13 +62,14 @@ const props = defineProps({
         transition: .3s
 
     .name
-        @include main.jetbrains-mono
+        @include main.font
         font-size: 3.5em
         font-weight: 800
         
         margin: 0
         z-index: 0
         padding: 0 2rem
+        color: white
 
     .info
         all: unset

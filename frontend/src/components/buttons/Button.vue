@@ -1,50 +1,39 @@
-<script setup>
+<script setup lang="ts">
 import { useCssModule } from 'vue';
+import { motion } from 'motion-v';
 
-defineProps({
-    title: {
-        type: String,
-        default: 'Button'
-    },
-    type: {
-        type: String,
-        default: 'button'
-    }
+const props = withDefaults(defineProps<{
+    text?: string
+}>(), {
+    text: 'button'
 })
-
 const s = useCssModule()
 </script>
 
 <template>
-    <button :class="s.button" :type="type"><label :class="s.text">{{ title }}</label></button>
+<motion.button :class="s.container"
+    :while-press="{scale: 0.9}"
+>
+    <p :class="s.text">{{ text }}</p>
+</motion.button>
 </template>
 
-<style module lang="sass">
+<style module lang='sass'>
+@use '@/assets/_colors.sass' as colors
 @use '@/assets/main.sass' as main
-.button 
-    @include main.button-base
+.container
     all: unset
     display: flex
-    justify-content: center
     align-items: center
+    cursor: pointer
 
-    font-size: 30px
-    border-radius: 2px
+    padding: .5rem 1rem 
 
-    border: 2px solid Orange
-    box-sizing: border-box
-
-    background: main.$button-special
-    transition: .2s
+    background: #D8A435
+    border-radius: 3px
+    border-bottom: 2px solid rgba(0,0,0,.2)
     
-    &:hover
-        border: 2px solid
-        
-        .text
-            scale: 1.05
-
     .text
-        @include main.button-base
-        transition: .2s
-        
+        @include main.font
+        font-weight: 700
 </style>

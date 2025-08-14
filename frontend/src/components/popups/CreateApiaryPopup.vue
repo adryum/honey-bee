@@ -1,85 +1,75 @@
-<script setup>
-import { reactive, ref, useCssModule } from 'vue';
+<script setup lang="ts">
+import { computed, reactive, ref, useCssModule } from 'vue';
 import IconCubeButton from '../buttons/IconCubeButton.vue';
-import Icon from '../Icon.vue';
-import TextTitle from '../input_fields/TextTitle.vue';
-import PopupPlate from './PopupPlate.vue';
-import Field from '../input_fields/Field.vue';
-import FieldVertical from '../input_fields/FieldVertical.vue';
-import ImageField from '../input_fields/ImageField.vue';
-import Button from '../buttons/Button.vue';
-import { removePopup } from '@/core/popups';
 import { createApiary, rUser } from '@/core/repositories/homeRepository';
 import RegistrationInputField from '../input_fields/RegistrationInputField.vue';
 import RegistrationButton from '../buttons/RegistrationButton.vue';
 import PathTitle from '../PathTitle.vue';
-import { useReactiveImage } from '@/core/imageHandler';
+import { useDraggable } from '@vueuse/core';
 
-const props = defineProps({
-    id: String,
-    currentFilter: String,
-    refreshApiaries: Function
-})
 const s = useCssModule()
+const props = defineProps<{
+    unmount?: () => {}
+}>()
+const container = ref()
+const handle = ref()
+const dragable = useDraggable(container, 
+    {
+        handle: handle,
+        initialValue: { x:0, y:0 }
+    }
+)
+
 const rName = ref('')
 const rLocation = ref('')
 const rDescription = ref('')
 
-const rImage = ref('')
-const { img } = useReactiveImage(rImage, obj => obj?.value)
-
-const isValid = reactive({
-    name: false,
-    location: false
-})
-
-function isEverythingValid() {
-    return isValid.name && isValid.location
-}
-
-async function onCreate(name, location, description) {
-    const result = await createApiary(props.currentFilter, name, location, description)
+async function onCreate(name: string, location: string, description: string): Promise<void> {
+    // const result = await createApiary(props.currentFilter, name, location, description)
  
-    if (result === 201) {
-        // only on successful result 
-        props.refreshApiaries()
-        removePopup(props.id)
-    } else {
-        // err handling
+    // if (result === 201) {
+    //     // only on successful result 
+    //     props.refreshApiaries()
+    //     removePopup(props.id)
+    // } else {
+    //     // err handling
 
-    }
+    // }
 }
+
+
+const isValid = computed(() => {
+    return rName.value && rLocation.value
+})
 </script>
 
 <template>
-<div :class="s.container">
-    <div :class="s.header">
+<div ref="container" :class="s.container">
+    <div ref="handle" :class="s.header">
         <PathTitle title="Create Apiary"/>
         <div :class="s['vt-linebreak']"></div>
-        <IconCubeButton @click="removePopup(id)" :class="s['button-special']" res="fa-solid fa-xmark"/>
+        <IconCubeButton @click="unmount" :class="s['button-special']" res="fa-solid fa-xmark"/>
     </div>
 
-    <Suspense>
     <div :class="s.grid">
-        <img :class="s.image" :src="img" alt="hive img">
+        <!-- <img :class="s.image" :src="img" alt="hive img"> -->
         <RegistrationInputField :class="s.name"
             :is-required="true" hint="Name" 
-            v-model="rName" v-model:isValid="isValid.name"/>
+            v-model="rName" v-model:isValid="rName"/>
         <RegistrationInputField :class="s.location"
             :is-required="true" hint="Location" 
-            v-model="rLocation" v-model:isValid="isValid.location"/>
+            v-model="rLocation" v-model:isValid="rLocation"/>
         <RegistrationInputField :class="s.description"
             hint="Description" v-model="rDescription"/>
         <RegistrationButton :class="s.button"
-            @click="(isEverythingValid()) ? onCreate(rName, rLocation, rDescription) : {}" 
-            :is-enabled="isEverythingValid()" text="Create"/>
+            @click="isValid ? onCreate(rName, rLocation, rDescription) : {}" 
+            :is-enabled="isValid" text="Create"/>
     </div>
-    </Suspense>
 </div>
 </template>
 
 <style module lang='sass'>
-@use '@/assets/_colors.sass' as main
+@use '@/assets/_colors.sass' as colors
 .container 
     display: flex
     flex-direction: column
@@ -141,7 +131,7 @@ async function onCreate(name, location, description) {
             grid-area: button
 
 .button-special
-    background: main.$button-special
+    background: colors.$button-special
 
 @media (max-width: 600px) 
     .grid

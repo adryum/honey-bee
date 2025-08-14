@@ -2,7 +2,7 @@
 import { useToggle } from "@vueuse/core";
 import { computed, ref, useCssModule, type CSSProperties } from "vue";
 import { easeInOut, motion, type Variants, type VariantType } from "motion-v"
-import type { SVG } from "../core/Interfaces";
+import type { SVGIcon } from "../core/Interfaces";
 import SVGComponent from "./SVGComponent.vue";
 
 const [isExtended, toggleExtension] = useToggle() 
@@ -13,7 +13,7 @@ const toggleStyle = computed(() => ({
 interface Tab {
     name: string,
     pagePath: string,
-    svg: SVG
+    svg: SVGIcon
 }
 
 const tabs: Tab[] = [

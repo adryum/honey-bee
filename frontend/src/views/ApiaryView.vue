@@ -1,17 +1,20 @@
-<script setup>
+<script setup lang="ts">
 import ApiarySummaryCard from '@/components/ApiarySummaryCard.vue';
-import { rUser, getApiaries } from '@/core/repositories/homeRepository';
-import { onMounted, ref, useCssModule, useTemplateRef, watch } from 'vue';
+import { getApiaries } from '@/core/repositories/homeRepository';
+import { onMounted, ref, useCssModule} from "vue"
 import ToolBar from '../components/ToolBar.vue';
+import SmallSearchbar from '../components/input_fields/SmallSearchbar.vue';
+import IconButton from '../components/buttons/IconButton.vue';
+import { createComponentInstance, createComponentWithProps } from '../utils/components';
+import CreateApiaryPopup from '../components/popups/CreateApiaryPopup.vue';
 
 const rApiaries = ref([])
-const rSearchFilter = ref('')
-const rGapMultiplier = ref(50)
 const rSizeMultiplier = ref(30)
-const rPage = useTemplateRef('page')
 
-async function searchApiaries() {
-    rApiaries.value = await getApiaries(rSearchFilter.value)
+async function searchApiaries(filter: string) {
+    console.log(filter);
+    
+    rApiaries.value = await getApiaries(filter)
 }
 
 onMounted(async () => {
@@ -19,11 +22,26 @@ onMounted(async () => {
 })
 
 const s = useCssModule()
+const components = [
+    createComponentWithProps(IconButton, { 
+        text: 'add apiary',
+        svg: {
+            path: "M352 128C352 110.3 337.7 96 320 96C302.3 96 288 110.3 288 128L288 288L128 288C110.3 288 96 302.3 96 320C96 337.7 110.3 352 128 352L288 352L288 512C288 529.7 302.3 544 320 544C337.7 544 352 529.7 352 512L352 352L512 352C529.7 352 544 337.7 544 320C544 302.3 529.7 288 512 288L352 288L352 128z",
+            viewBox: "0 0 540 540",
+            color: "#FFFFFF"
+        },
+        onClick: () => {
+            createComponentInstance(CreateApiaryPopup)
+        }
+    }),
+    createComponentWithProps(SmallSearchbar, { onClick: (value: string) => searchApiaries(value) }),
+]
+
 </script>
 
 <template>
     <div :class="s.container">
-        <ToolBar />
+        <ToolBar name="Apiaries" :components="components"/>
         <div :class="s.appiaries" ref="page">
             <ApiarySummaryCard class="item" 
             v-for="apiary in rApiaries" 
@@ -45,7 +63,7 @@ const s = useCssModule()
 
     .appiaries
         display: grid
-        grid-template-columns: repeat(auto-fill, 550px)
-        justify-content: space-evenly
-        gap: 4rem
+        grid-template-columns: repeat(auto-fit, 520px)
+        justify-content: center
+        gap: 2rem
 </style>

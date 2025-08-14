@@ -4,80 +4,47 @@
 @forward './colors.sass'
 @forward './base.sass'
 
-@mixin jetbrains-mono-d
+@mixin font
   font-family: "Roboto", sans-serif
   font-optical-sizing: auto
   font-style: normal
-
-@mixin jetbrains-mono
-  font-family: "Roboto", sans-serif
-  font-optical-sizing: auto
-  font-style: normal
-  color: white
 
 .h1
-    @include jetbrains-mono
+    @include font
     font-size: 7em
     font-weight: 900
 
 .h2
-    @include jetbrains-mono
+    @include font
     font-size: 6em
     font-weight: 700
 
 .h3
-    @include jetbrains-mono
+    @include font
     font-size: 5em
 
 .h4
-    @include jetbrains-mono
+    @include font
     font-size: 3em
     font-weight: 600
     margin-bottom: .3em
 
 .h5
-    @include jetbrains-mono
+    @include font
     font-size: 1.5em
     font-weight: 600
     margin-bottom: .3em
 
 .p
-    @include jetbrains-mono
+    @include font
     font-size: 1.5em
     font-weight: 300
     letter-spacing: .1px
     margin: 0
 
 
-.h1-d
-    @include jetbrains-mono-d
-    font-size: 7em
-    font-weight: 900
-
-.h2-d
-    @include jetbrains-mono-d
-    font-size: 6em
-    font-weight: 700
-
-.h3-d
-    @include jetbrains-mono-d
-    font-size: 5em
-
-.h4-d
-    @include jetbrains-mono-d
-    font-size: 3em
-    font-weight: 600
-    margin-bottom: .3em
-
-.p-d
-    @include jetbrains-mono-d
-    font-size: 1.5em
-    font-weight: 400
-    letter-spacing: .1px
-    margin: 0
-
 .button-text
-    @include jetbrains-mono-d
+    @include font
     font-size: 16px
     font-weight: 900
     margin: 0
@@ -92,3 +59,4 @@ html
     // overflow-y: scroll
     font-family: $font
     color: #2D1E02
+    overflow-y: scroll
