@@ -1,7 +1,6 @@
 <script setup lang="ts">
-import { computed, reactive, ref, useCssModule } from 'vue';
+import { computed, onMounted, reactive, ref, useCssModule } from 'vue';
 import IconCubeButton from '../buttons/IconCubeButton.vue';
-import { createApiary, rUser } from '@/core/repositories/homeRepository';
 import RegistrationInputField from '../input_fields/RegistrationInputField.vue';
 import RegistrationButton from '../buttons/RegistrationButton.vue';
 import PathTitle from '../PathTitle.vue';
@@ -13,12 +12,11 @@ const props = defineProps<{
 }>()
 const container = ref()
 const handle = ref()
-const dragable = useDraggable(container, 
-    {
-        handle: handle,
-        initialValue: { x:0, y:0 }
-    }
-)
+const draggable = useDraggable(container, {
+    handle: handle,
+    initialValue: { x: 0, y: 0 }
+})
+
 
 const rName = ref('')
 const rLocation = ref('')
@@ -44,7 +42,7 @@ const isValid = computed(() => {
 </script>
 
 <template>
-<div ref="container" :class="s.container">
+<div ref="container" :style="draggable.style.value" :class="s.container" >
     <div ref="handle" :class="s.header">
         <PathTitle title="Create Apiary"/>
         <div :class="s['vt-linebreak']"></div>
@@ -71,6 +69,7 @@ const isValid = computed(() => {
 <style module lang='sass'>
 @use '@/assets/_colors.sass' as colors
 .container 
+    position: fixed
     display: flex
     flex-direction: column
 
