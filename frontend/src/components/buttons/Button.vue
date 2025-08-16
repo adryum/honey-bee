@@ -23,12 +23,11 @@ const s = useCssModule()
 @use '@/assets/main.sass' as main
 .container
     all: unset
-    display: flex
-    align-items: center
+    display: inline-flex
     cursor: pointer
+    justify-content: center
 
-    padding: .5rem 1rem 
-
+    padding: .5rem 1rem
     background: #D8A435
     border-radius: 3px
     border-bottom: 2px solid rgba(0,0,0,.2)

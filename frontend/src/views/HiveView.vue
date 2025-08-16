@@ -6,7 +6,6 @@ import { onMounted } from 'vue';
 import IconCubeButton from '@/components/buttons/IconCubeButton.vue';
 import PathTitle from '@/components/PathTitle.vue';
 import HiveWidgetNotes from '@/components/hive/widgets/HiveWidgetNotes.vue';
-import Note from '@/components/Note.vue';
 import HiveWidgetActivityFeed from '@/components/hive/widgets/activity_feed/HiveWidgetActivityFeed.vue';
 import HiveWidgetQueen from '@/components/hive/widgets/HiveWidgetQueen.vue';
 import HiveWidgetStimulants from '@/components/hive/widgets/stimulant/HiveWidgetStimulants.vue';

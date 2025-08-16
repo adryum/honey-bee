@@ -4,7 +4,6 @@ import { ref, useCssModule } from "vue";
 import { rUser as rUser, getApiaryHives, getApiary, unassignHive } from "../core/repositories/homeRepository.js"
 import { onMounted } from 'vue';
 import IconCubeButton from '@/components/buttons/IconCubeButton.vue';
-import IconButton from '@/components/buttons/IconButton.vue';
 import { createPopup } from '@/core/popups.js';
 import AssignHivesPopup from '@/components/popups/AssignHivesPopup.vue';
 import PathTitle from '@/components/PathTitle.vue';

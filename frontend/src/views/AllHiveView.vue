@@ -6,7 +6,6 @@ import { onMounted } from 'vue';
 import IconCubeButton from '@/components/buttons/IconCubeButton.vue';
 import PathTitle from '@/components/PathTitle.vue';
 import HorizontalHr from '@/components/HorizontalHr.vue';
-import IconButton from '@/components/buttons/IconButton.vue';
 import CreateHivePopup from '@/components/popups/CreateHivePopup.vue';
 import { createPopup } from '@/core/popups.js';
 

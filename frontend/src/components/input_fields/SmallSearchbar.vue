@@ -22,8 +22,9 @@ const s = useCssModule()
 <template>
 <div :class="s.container">
     <input :class="s.text"
-     v-model="text"
-     @keyup.enter="() => onClick(text)"
+        :placeholder="hint"
+        v-model="text"
+        @keyup.enter="() => onClick(text)"
     ></input>
 
     <motion.button 

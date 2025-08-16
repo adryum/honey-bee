@@ -1,48 +1,38 @@
-<script setup>
-import { useCssModule } from 'vue';
-import TextTitle from './TextTitle.vue';
+<script setup lang="ts">
+import { ref, useCssModule } from "vue";
+import { motion } from 'motion-v';
 
-defineProps({
-    title: {
-        type: String,
-        default: 'NO TITLE'
-    },
-    type: {
-        type: String,
-        default: 'text'
-    }
-})
-const model = defineModel()
 const s = useCssModule()
+const text = defineModel<string>({ default: ''})
+const props = withDefaults(defineProps<{
+    hint?: string
+}>(),
+{
+    hint: '...',
+})
 </script>
 
 <template>
 <div :class="s.container">
-    <TextTitle :class="s.title" :text="title"/>
-    <input @keydown.enter.prevent :type="text" :class="s.input" v-model="model"/>
+    <input :class="s.text" :placeholder="hint" v-model="text"/>
 </div>
 </template>
 
 <style module lang='sass'>
 @use '@/assets/main.sass' as main
 .container
-    display: grid
-    grid-template-columns: 1fr 1fr
-    gap: 1.5rem
-    padding: .4rem
-    border-radius: 2px
+    display: flex
+    align-items: center
+    background: white
+    border-radius: 3px
+    box-shadow: inset 0 -2px rgba(0,0,0, .3)
     box-sizing: border-box
 
-    .title
-        flex: 1
-    .input
+    .text
         all: unset
-        @include main.input-base
-        flex: 1
-        font-size: 28px
-        box-sizing: border-box
-        padding: 0 .4rem 
-        border-radius: 2px
-
-
+        @include main.font
+        padding: 0 .5rem
+        height: 100%
+        width: 100%
+        color: black
 </style>

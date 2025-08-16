@@ -4,7 +4,7 @@ import { getApiaries } from '@/core/repositories/homeRepository';
 import { onMounted, ref, useCssModule} from "vue"
 import ToolBar from '../components/ToolBar.vue';
 import SmallSearchbar from '../components/input_fields/SmallSearchbar.vue';
-import IconButton from '../components/buttons/IconButton.vue';
+import IconButton from '../components/buttons/IconTextButton.vue';
 import { createComponentInstance, createComponentWithProps } from '../utils/components';
 import CreateApiaryPopup from '../components/popups/CreateApiaryPopup.vue';
 
