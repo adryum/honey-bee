@@ -131,12 +131,11 @@ const isValid = computed(() => {
             all: unset
             @include main.font
             @include main.f-size-very-small
-            font-weight: 800
+            font-weight: 500
+
 
         .button
             margin-left: auto
-
-
 
     .grid
         display: grid

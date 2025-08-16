@@ -33,6 +33,7 @@ const props = withDefaults(defineProps<{
     .title
         all: unset
         @include main.font
+        @include main.f-size-very-small
         font-weight: 500
 
     .field

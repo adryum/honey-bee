@@ -12,7 +12,6 @@ import { removePopup } from '@/core/popups';
 import { assignHiveToApiary, getHives, rUser } from '@/core/repositories/homeRepository';
 import Hive from '../hive/Hive.vue';
 import PathTitle from '../PathTitle.vue';
-import HorizontalHr from '../HorizontalHr.vue';
 import RegistrationButton from '../buttons/RegistrationButton.vue';
 
 const props = defineProps({

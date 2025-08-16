@@ -7,7 +7,6 @@ import { isEmpty } from "../../utils/checks.js";
 import {ref} from "vue";
 import RegistrationInputField from "@/components/input_fields/RegistrationInputField.vue";
 import CheckboxWText from "@/components/input_fields/CheckboxWText.vue";
-import RegistrationSubmitButtons from "@/components/combinations/RegistrationSubmitButtons.vue";
 import RegistrationButton from "@/components/buttons/RegistrationButton.vue";
 import FaintButton from "@/components/buttons/FaintButton.vue";
 
