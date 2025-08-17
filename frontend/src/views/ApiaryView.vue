@@ -7,6 +7,7 @@ import SmallSearchbar from '../components/input_fields/SmallSearchbar.vue';
 import IconButton from '../components/buttons/IconTextButton.vue';
 import { createComponentInstance, createComponentWithProps } from '../utils/components';
 import CreateApiaryPopup from '../components/popups/CreateApiaryPopup.vue';
+import { getSVG, SVGIconRes } from '../core/SVGLoader';
 
 const rApiaries = ref([])
 const rSizeMultiplier = ref(30)
@@ -25,13 +26,9 @@ const s = useCssModule()
 const components = [
     createComponentWithProps(IconButton, { 
         text: 'add apiary',
-        svg: {
-            path: "M352 128C352 110.3 337.7 96 320 96C302.3 96 288 110.3 288 128L288 288L128 288C110.3 288 96 302.3 96 320C96 337.7 110.3 352 128 352L288 352L288 512C288 529.7 302.3 544 320 544C337.7 544 352 529.7 352 512L352 352L512 352C529.7 352 544 337.7 544 320C544 302.3 529.7 288 512 288L352 288L352 128z",
-            viewBox: "0 0 540 540",
-            color: "#FFFFFF"
-        },
+        svg: getSVG(SVGIconRes.Pluss),
         onClick: () => {
-            createComponentInstance(CreateApiaryPopup)
+            createComponentInstance(CreateApiaryPopup, {}, true)
         }
     }),
     createComponentWithProps(SmallSearchbar, { onClick: (value: string) => searchApiaries(value) }),

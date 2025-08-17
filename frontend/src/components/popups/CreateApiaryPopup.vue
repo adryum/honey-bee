@@ -1,5 +1,5 @@
 <script setup lang="ts">
-import { computed, ref, useCssModule } from 'vue';
+import { computed, getCurrentInstance, onMounted, ref, useCssModule } from 'vue';
 import { useDraggable } from '@vueuse/core';
 import TitledField from '../input_fields/TitledField.vue';
 import Button from '../buttons/Button.vue';
@@ -8,7 +8,8 @@ import { AnimatePresence, motion } from 'motion-v';
 import TransparentIconButton from '../buttons/TransparentIconButton.vue';
 const s = useCssModule()
 const props = defineProps<{
-    unmount?: () => {}
+    unmount?: () => {},
+    focusHandler?: (el: HTMLElement) => {}
 }>()
 const container = ref()
 const handle = ref()
@@ -45,6 +46,13 @@ async function onCreate(name: string, location: string, description: string): Pr
     // }
 }
 
+const parentEl = ref<HTMLElement>()
+
+onMounted(() => {
+    const instance = getCurrentInstance();
+    parentEl.value = instance?.proxy?.$el.parentElement as HTMLElement;
+})
+
 const isValid = computed(() => {
     return rName.value && rLocation.value
 })
@@ -52,15 +60,15 @@ const isValid = computed(() => {
 </script>
 
 <template>
-<AnimatePresence>
-<motion.div v-if="isExiting"
+<AnimatePresence  >
+<motion.div v-if="isExiting" 
     :class="s.wrapper"
     :initial="{y: 5 , opacity: 0, }"
     :animate="{y: 0, opacity: 1, transition: {duration: .1}}"
     :exit="{y: 200 , opacity: 0}"
     @motioncomplete="exit"
   >
-<div ref="container" :style="style" :class="s.container" >
+<div @mousedown="() => focusHandler?.(parentEl!)" ref="container" :style="style" :class="s.container" >
     <div ref="handle" :class="s.handle">
         <h1 :class="s.popupName">Add appiary</h1>
         <TransparentIconButton @click="startExiting" :class="s.button"/>
@@ -94,7 +102,6 @@ const isValid = computed(() => {
 </div>
 </motion.div>
 </AnimatePresence>
-
 </template>
 
 <style module lang='sass'>
