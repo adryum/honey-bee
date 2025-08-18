@@ -1,5 +1,10 @@
 <script setup lang="ts">
-import { useCssModule } from "vue"
+import { ref, useCssModule } from "vue"
+import IconCubeButton from "../buttons/IconCubeButton.vue";
+import { getSVG, SVGIconRes } from "../../core/SVGLoader";
+import { motion } from "motion-v"
+import { useToggle } from "@vueuse/core";
+import IconCubeDropdown from "../buttons/IconCubeDropdown.vue";
 const s = useCssModule()
 
 const props = defineProps({
@@ -8,13 +13,19 @@ const props = defineProps({
   onDelete: Function
 })
 
+const MotionIconCubeButton = motion.create(IconCubeDropdown)
+const [ isOver ] = useToggle()
+const isDropdownOpen = ref(false)
+
 </script>
 <template>
 <div :class="s.container" ref="container" @click="$router.push('/apiaries/' + apiary!.id)">
-    
     <img :class="s.image" src="/src/assets/images/apiary1.jpg" alt="apiary image">
     <hr :class="s.linearDim">
-    <div :class="[s.options, s.entry]"></div>
+    <MotionIconCubeButton 
+        :svg="getSVG(SVGIconRes.MoreDots)" :class="[s.options]"
+   
+         />
     <h1 :class="[s.name]">{{ apiary!.name }}</h1>
     <ul :class="s.info">
         <div :class="s.entry"></div>
@@ -26,8 +37,8 @@ const props = defineProps({
 </template>
 
 <style module lang="sass">
-@use '../assets/_colors.sass' as colors
-@use '../assets/main.sass' as main
+@use '@/assets/_colors.sass' as colors
+@use '@/assets/main.sass' as main
 .container
     position: relative
     display: flex
@@ -52,14 +63,12 @@ const props = defineProps({
         opacity: 1
 
     .options
+        position: absolute
         z-index: 0
         top: 0
         right: 0
-        position: absolute
         margin: 1em
-        background: rgba(0, 0, 0, .3)
-        opacity: 0
-        transition: .3s
+        
 
     .name
         @include main.font

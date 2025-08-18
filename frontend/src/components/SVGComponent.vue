@@ -1,6 +1,6 @@
 <script setup lang="ts">
 import { useCssModule } from "vue";
-import type { SVGIcon as SVGIcon } from "../core/Interfaces";
+import type { SVGIcon } from "../core/SVGLoader";
 withDefaults(defineProps<{
     svg?: SVGIcon
 }>(),

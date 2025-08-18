@@ -1,5 +1,5 @@
 <script setup lang="ts">
-import ApiarySummaryCard from '@/components/ApiarySummaryCard.vue';
+import ApiarySummaryCard from '@/components/apiary/ApiarySummaryCard.vue';
 import { getApiaries } from '@/core/repositories/homeRepository';
 import { onMounted, ref, useCssModule} from "vue"
 import ToolBar from '../components/ToolBar.vue';
@@ -8,6 +8,7 @@ import IconButton from '../components/buttons/IconTextButton.vue';
 import { createComponentInstance, createComponentWithProps } from '../utils/components';
 import CreateApiaryPopup from '../components/popups/CreateApiaryPopup.vue';
 import { getSVG, SVGIconRes } from '../core/SVGLoader';
+import IconCubeDropdown from '../components/buttons/IconCubeDropdown.vue';
 
 const rApiaries = ref([])
 const rSizeMultiplier = ref(30)
@@ -60,7 +61,7 @@ const components = [
 
     .appiaries
         display: grid
-        grid-template-columns: repeat(auto-fit, 520px)
+        grid-template-columns: repeat(auto-fit, minmax(500px, 1fr))
         justify-content: center
-        gap: 2rem
+        gap: 1rem
 </style>

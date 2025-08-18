@@ -14,7 +14,7 @@ const s = useCssModule()
 </script>
 
 <template>
-<motion.button :class="s.container" @click="onClick"
+<motion.button :class="s.container" @click="(e: Event) => { e.stopPropagation(); onClick?.() } "
     :while-press="{scale: 0.9}"
 >
     <SVGComponent :class="s.icon" :svg="svg"/>
@@ -22,21 +22,21 @@ const s = useCssModule()
 </template>
 
 <style module lang='sass'>
-@use '@/assets/_colors.sass' as colors
-@use '@/assets/main.sass' as main
+@use '/src/assets/_colors.sass' as colors
+@use '/src/assets/main.sass' as main
 .container
     all: unset
     display: flex
     align-items: center
     cursor: pointer
 
-    padding: .5rem 1rem
+    padding: .5rem
 
     background: #D8A435
     border-radius: 3px
     box-shadow: inset 0 -2px rgba(0,0,0, .3)
     
     .icon
-        width: 1rem
+        width: 1.5rem
         aspect-ratio: 1
 </style>
