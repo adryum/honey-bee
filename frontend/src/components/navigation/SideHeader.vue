@@ -29,7 +29,7 @@ const tabs: Tab[] = [
     },
     {
         name: 'calendar',
-        pagePath: '/',
+        pagePath: '/calendar',
         svg: getSVG(SVGIconRes.Calendar, 'black')
     },
     {
