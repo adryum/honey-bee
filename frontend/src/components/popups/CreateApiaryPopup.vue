@@ -6,6 +6,7 @@ import Button from '../buttons/Button.vue';
 import ImageDropZone from '../input_fields/ImageDropZone.vue';
 import { AnimatePresence, motion } from 'motion-v';
 import TransparentIconButton from '../buttons/TransparentIconButton.vue';
+import { getSVG, SVGIconRes } from '../../core/SVGLoader';
 const s = useCssModule()
 const props = defineProps<{
     unmount?: () => {},
@@ -71,7 +72,7 @@ const isValid = computed(() => {
 <div @mousedown="() => focusHandler?.(parentEl!)" ref="container" :style="style" :class="s.container" >
     <div ref="handle" :class="s.handle">
         <h1 :class="s.popupName">Add appiary</h1>
-        <TransparentIconButton @click="startExiting" :class="s.button"/>
+        <TransparentIconButton :svg="getSVG(SVGIconRes.Cross)" @click="startExiting" :class="s.button"/>
     </div>
 
     <div :class="s.grid">

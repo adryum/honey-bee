@@ -1,8 +1,8 @@
 <script setup lang="ts">
 import { useCssModule } from 'vue';
-import type { SVGIcon } from '../../core/Interfaces';
 import SVGComponent from '../SVGComponent.vue';
 import { motion } from 'motion-v';
+import type { SVGIcon } from '../../core/SVGLoader';
 
 const props = withDefaults(defineProps<{
     svg?: SVGIcon
@@ -49,7 +49,6 @@ const s = useCssModule()
         aspect-ratio: 1
 
     .text
-        @include main.font
-        font-weight: 600
+        @include main.button-font
         color: var(--button-text)
 </style>

@@ -3,14 +3,9 @@ import { ref, useCssModule, watch } from 'vue';
 import { AnimatePresence, motion } from 'motion-v';
 import { getSVG, SVGIconRes, type SVGIcon } from '../../core/SVGLoader';
 import { onClickOutside, useToggle } from '@vueuse/core';
-import IconCubeButton from './IconCubeButton.vue';
 import SVGComponent from '../SVGComponent.vue';
-
-export interface IDropdownButton {
-    text: string,
-    svg: SVGIcon,
-    onClick?: () => void
-}
+import type { IDropdownButton } from '../../core/Interfaces';
+import IconCubeButton from '../buttons/IconCubeButton.vue';
 
 const s = useCssModule()
 const props = withDefaults(defineProps<{
@@ -87,7 +82,7 @@ watch(isShown, () => {
     display: inline-block
 
     .dropdown
-        @include main.font
+        @include main.button-font
         position: absolute
         display: inline-flex
         flex-direction: column

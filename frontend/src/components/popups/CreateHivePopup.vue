@@ -7,7 +7,6 @@ import PathTitle from '../PathTitle.vue';
 import RegistrationInputField from '../input_fields/RegistrationInputField.vue';
 import RegistrationButton from '../buttons/RegistrationButton.vue';
 import { useReactiveImage } from '@/core/imageHandler';
-import Dropdown from '../dropdowns/Dropdown.vue';
 
 const props = defineProps({
     id: String,

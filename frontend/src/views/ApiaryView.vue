@@ -8,7 +8,6 @@ import IconButton from '../components/buttons/IconTextButton.vue';
 import { createComponentInstance, createComponentWithProps } from '../utils/components';
 import CreateApiaryPopup from '../components/popups/CreateApiaryPopup.vue';
 import { getSVG, SVGIconRes } from '../core/SVGLoader';
-import IconCubeDropdown from '../components/buttons/IconCubeDropdown.vue';
 
 const rApiaries = ref([])
 const rSizeMultiplier = ref(30)

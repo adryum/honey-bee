@@ -1,142 +1,206 @@
-<script setup>
-import { useTemplateRef} from "vue";
+<script setup lang="ts">
+import { useToggle } from "@vueuse/core";
+import { computed, ref, useCssModule, type CSSProperties } from "vue";
+import { motion, type VariantType } from "motion-v"
+import { getSVG, SVGIconRes, type SVGIcon } from '../../core/SVGLoader';
+import SVGComponent from "../SVGComponent.vue";
 
-const props = defineProps({
-  selectedTab: Number,
-  topTabs : Array,
-  bottomTabs : Array,
-  isSidebarExtended : Boolean
-})
-const emits = defineEmits(['onClick'])
-function selectTab(tabNumber) {
-  console.log(tabNumber)
-  emits('onClick', tabNumber)
+const [isExtended, toggleExtension] = useToggle() 
+const toggleStyle = computed(() => ({
+    transform: `rotateZ(${isExtended.value ? 180 : 0 }deg)`
+} satisfies CSSProperties))
+
+interface Tab {
+    name: string,
+    pagePath: string,
+    svg: SVGIcon
 }
 
-function toggleSidebar() {
-  emits('onSidebarToggle', !props.isSidebarExtended)
+const tabs: Tab[] = [
+    {
+        name: 'home',
+        pagePath: '/',
+        svg: getSVG(SVGIconRes.House, 'black')
+    },
+    {
+        name: 'apiaries',
+        pagePath: '/apiaries',
+        svg: getSVG(SVGIconRes.Apiaries, 'black')
+    },
+    {
+        name: 'calendar',
+        pagePath: '/',
+        svg: getSVG(SVGIconRes.Calendar, 'black')
+    },
+    {
+        name: 'c',
+        pagePath: '/',
+        svg: getSVG(SVGIconRes.House)
+    },
+    {
+        name: 'd',
+        pagePath: '/',
+        svg: getSVG(SVGIconRes.House)
+    },
+    {
+        name: 'e',
+        pagePath: '/',
+        svg: getSVG(SVGIconRes.House)
+    },
+    {
+        name: 'f',
+        pagePath: '/',
+        svg: getSVG(SVGIconRes.House)
+    },
+    {
+        name: 'g',
+        pagePath: '/',
+        svg: getSVG(SVGIconRes.House)
+    }
+]
+const selectedTab = ref(tabs[0])
+
+const containerVariants: Record<string, VariantType> = {
+    expanded: { minWidth: '15rem' },
+    collapsed: { minWidth: '4rem', transition: { delay: .1 }}
 }
 
-const sidebar = useTemplateRef('sidebar')
+const tabVariants: Record<string, VariantType> = {
+    expanded:  { opacity: 1, y: 0, transition: { delay: .2, duration: .3  } },
+    collapsed: { opacity: 0, y: 5, transition: {  duration: .15 } }
+}
+
+const s = useCssModule()
 </script>
-
 <template>
-<div ref="sidebar" :class="isSidebarExtended ? 'slide-in' : 'slide-out'" class="container">
-  <h1>Honey Bee</h1>
-
-<!--  <div class="image-div"><img src="/src/ui/assets/images/gas.jpg" alt="asd"/></div>-->
-  <ul v-for="(tab, index) in topTabs" :key="index"
-      :class="{'selected' : (topTabs[index].tabNumber === selectedTab)}"
-      @click="selectTab(topTabs[index].tabNumber)"
+  <motion.div
+    :class="s.container"
+    :variants="containerVariants"
+    :animate="isExtended ? 'expanded' : 'collapsed'"
   >
-    <i :class="topTabs[index].iconClass"></i>
-    {{ tab.name }}
-  </ul>
+    <div :class="s.tip"></div>
+    <button :class="s.extender" :style="toggleStyle" @click="toggleExtension()"><SVGComponent :svg="getSVG(SVGIconRes.ArrowHead, 'black')"/></button>
 
-  <hr class="bottom-pusher">
-  <div class="view-links">
-    <router-link to="about">About</router-link>
-    <router-link to="contact">Contact</router-link>
-    <router-link to="settings">Settings</router-link>
-  </div>
-  <button class="toggle-button" @click="toggleSidebar">{{ (isSidebarExtended) ? "Close" : "Open" }}</button>
-</div>
+    <ul :class="s.list">
+      <motion.li
+        v-for="(tab, i) in tabs"
+        :key="i"  
+        :class="s.tab"
+        :while-press="{ scale: 0.9, transition: { duration: 0.1 } }"
+        @click="selectedTab = tab; $router.push(tab.pagePath)"
+      >
+        <SVGComponent :class="s.icon" :svg="tab.svg" />
+
+        <motion.h2
+          :class="[s.text, 'button-text']"
+          :variants="tabVariants"
+          :initial="'collapsed'"
+          :animate="isExtended ? 'expanded' : 'collapsed'"
+          style="display: inline-block;"
+        >
+          {{ tab.name }}
+        </motion.h2>
+
+        <motion.div
+          v-if="selectedTab.name === tab.name"
+          :class="s.selected"
+          layoutId="selected"
+          :transition="{ duration: 0.4, ease: [0, 0.71, 0.2, 1.01], type: 'spring' }"
+        />
+      </motion.li>
+    </ul>
+  </motion.div>
 </template>
 
-<style scoped>
-.slide-in {
-  animation: slide-in-the-view;
-  animation-duration: .3s;
-  animation-fill-mode: forwards;
-}
-.slide-out {
-  animation: slide-out-of-view;
-  animation-duration: .3s;
-  animation-fill-mode: forwards;
-}
-@keyframes slide-out-of-view {
-  from {
-    transform: translateX(0);
-  }
-  to {
-    transform: translateX(-100%);
+<style module lang='sass'>
+@use '@/assets/_colors.sass' as colors
+@use '@/assets/main.sass' as main
+.container
+    top: 0
+    position: sticky
+    display: flex
+    flex-direction: column
+    width: 4rem
+    height: 100vh
+    background: colors.$accent
 
-  }
-}
-@keyframes slide-in-the-view {
-  from {
-    transform: translateX(-100%);
-  }
-  to {
-    transform: translateX(0);
-  }
-}
-h1 {
-  display: flex;
-  align-items: center;
-  margin: 0;
-  height: 5rem;
-  padding-left: 30px;
-}
-.container {
+    .tip
+        height: 4rem
+        width: 100%
+        background: colors.$light
 
-  position: relative;
-  display: flex;
-  flex-direction: column;
-  padding-right: 10px;
-  box-sizing: border-box;
+    .list
+        all: unset
+        display: flex
+        flex-direction: column
+        padding: 1rem .5rem
+        gap: .3rem
+        width: auto
 
-  height: 100%;
-  background: linear-gradient( #ffe0bc, #ffd3a6);
-}
-.image-div {
-  object-fit: cover;
-}
-.image-div > img {
-  width: 100%;
-  height: 100%;
-}
-.view-links > * {
-  color: black;
-  text-decoration: none;
-  padding-left: 40px;
-}
-ul, .view-links > * {
-  gap: 10px;
-  font-family: Ebrima;
-  font-weight: bold;
-  display: flex;
-  align-items: center;
-  margin: 0;
-  font-size: 20px;
-  height: 4rem;
-  border-radius: 0 50px 50px 0;
-}
-ul:hover:not(.selected), .view-links > *:hover {
-  background: rgba(180, 180, 0, .3);
-}
-.bottom-pusher {
-  margin-top: auto;
-}
-.selected {
-  background: linear-gradient(90deg, coral, orange);
-}
-.toggle-button {
-  display: flex;
-  align-items: center;
-  justify-content: center;
+        .tab
+            z-index: 0
+            all: unset
+            position: relative
 
-  font-size: 20px;
+            display: flex
+            align-items: center
+            
+            width: 100%
+            height: 40px
+            padding: .5rem
+            box-sizing: border-box
+            background-color: transparent
+            border-radius: 5px
+            cursor: pointer
+            transition: .1s ease-out
 
-  position: absolute;
-  right: -4rem;
+            &:hover
+                background-color: colors.$base
 
-  height: 5rem;
-  width: 4.5rem;
+            .icon
+                display: flex
+                align-items: center
+                justify-content: center
+                z-index: 2
+                height: 100%
+                aspect-ratio: 1
+                margin-left: .25rem 
 
-  border-radius: 30px 50% 50% 20px;
-  border: none;
-  background: linear-gradient(30deg, #9e7373, #bf6161);
-  cursor: pointer;
-}
+            .text
+                z-index: 2
+                position: absolute
+                margin-left: 3rem
+           
+            .selected
+                z-index: 1
+                position: absolute
+                right: 0
+                height: 100%
+                width: 100%
+
+                border-radius: 5px
+                background: colors.$light
+
+    .extender
+        all: unset
+        position: absolute
+        display: flex
+        justify-content: center
+        align-items: center
+        background: colors.$light
+        width: 2rem
+        height: 2rem
+
+        border-radius: 50px
+        bottom: 1rem
+        right: -.5rem
+
+        padding: .5rem
+        box-sizing: border-box
+
+        cursor: pointer
+        transition: .2s
+        &:hover
+            scale: 1.2
+
 </style>

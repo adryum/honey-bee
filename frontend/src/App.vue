@@ -1,15 +1,13 @@
 <script setup>
 import { RouterLink, RouterView } from 'vue-router'
-import SideHeader from './components/SideHeader.vue';
 import { isAuthenticated } from './core/repositories/registrationRepository';
 import { onMounted, ref, useCssModule, watch } from 'vue';
 import router from './router';
 import { isEmpty } from './utils/checks';
 import { rUser } from './core/repositories/homeRepository';
-import CreateApiaryPopup from './components/popups/CreateApiaryPopup.vue';
-import { rActivePopups } from './core/popups';
 import PopupPlate from './components/popups/PopupPlate.vue';
-import TopHeader from './components/TopHeader.vue';
+import TopHeader from './components/navigation/TopHeader.vue';
+import SideHeader from './components/navigation/SideHeader.vue';
 
 const mediaQuery = window.matchMedia('(max-width: 600px)')
 const isMobile = ref(false)
@@ -41,11 +39,6 @@ const s = useCssModule()
     <div :class="s.skelet">
         <SideHeader v-if="isAuthenticated() && !isMobile"/>
         <div :class="s.flex">
-            <PopupPlate v-if="rActivePopups.length != 0">
-                <component v-for="({component, props}, i) in rActivePopups" :key="i" 
-                    :is="component" v-bind="props"/>
-            </PopupPlate>
-            
             <TopHeader/>
 
             <Suspense>

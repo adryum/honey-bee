@@ -8,7 +8,7 @@ const props = withDefaults(defineProps<{
     svg?: SVGIcon
     onClick?: () => void
 }>(), {
-    svg: () => getSVG(SVGIconRes.Pluss)
+    svg: () => getSVG(SVGIconRes.House)
 })
 const s = useCssModule()
 </script>

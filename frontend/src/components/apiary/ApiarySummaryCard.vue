@@ -3,8 +3,8 @@ import { ref, useCssModule } from "vue"
 import IconCubeButton from "../buttons/IconCubeButton.vue";
 import { getSVG, SVGIconRes } from "../../core/SVGLoader";
 import { motion } from "motion-v"
-import { useToggle } from "@vueuse/core";
-import IconCubeDropdown from "../buttons/IconCubeDropdown.vue";
+import type { IDropdownButton } from "../../core/Interfaces";
+import CubeDropdown from "../dropdowns/CubeDropdown.vue";
 const s = useCssModule()
 
 const props = defineProps({
@@ -13,18 +13,28 @@ const props = defineProps({
   onDelete: Function
 })
 
-const MotionIconCubeButton = motion.create(IconCubeDropdown)
-const [ isOver ] = useToggle()
-const isDropdownOpen = ref(false)
+const MotionIconCubeDropdown = motion.create(CubeDropdown)
+const dropdownActions: IDropdownButton[] = [
+    {
+        text: 'Overview',
+        svg: getSVG(SVGIconRes.OpenWindow, 'black'),
+        onClick: () => {}
+    },
+    {
+        text: 'Delete',
+        svg: getSVG(SVGIconRes.Cross, 'black'),
+        onClick: () => {}
+    },
+]
 
 </script>
 <template>
 <div :class="s.container" ref="container" @click="$router.push('/apiaries/' + apiary!.id)">
     <img :class="s.image" src="/src/assets/images/apiary1.jpg" alt="apiary image">
     <hr :class="s.linearDim">
-    <MotionIconCubeButton 
+    <MotionIconCubeDropdown 
         :svg="getSVG(SVGIconRes.MoreDots)" :class="[s.options]"
-   
+        :buttons="dropdownActions"
          />
     <h1 :class="[s.name]">{{ apiary!.name }}</h1>
     <ul :class="s.info">
