@@ -1,23 +1,16 @@
 <script setup lang="ts">
-import { reactive, ref, useCssModule } from "vue";
-import { Days, getMonthCalendar, type CalendarEntry } from "../../core/Calendar";
-import CalendarDate from "./CalendarDate.vue";
+import { computed, reactive, useCssModule } from "vue";
+import { CalendarDate, Days, getMonthCalendar } from "../../core/Calendar";
+import CalendarDayComponent from "./CalendarDayComponent.vue";
 
 const s = useCssModule()
-const date = new Date()
-const selectedDate = ref<CalendarEntry>({
-    year:  2025,
-    month: 8,
-    day: 23,
-    dayName: 'asdasda'
+const props = defineProps<{
+    searchDate: CalendarDate
+}>()
+
+const currentCalendar = computed(() => {
+    return getMonthCalendar(props.searchDate.year, props.searchDate.getHumanMonth()).flat()
 })
-const today: CalendarEntry = {
-    day: date.getDate(),
-    month: date.getMonth() + 1,
-    year: date.getFullYear(),
-    dayName: ''
-}
-const monthDays = reactive(getMonthCalendar(selectedDate.value.year, selectedDate.value.month).flat())
 </script>
 
 <template>
@@ -26,10 +19,9 @@ const monthDays = reactive(getMonthCalendar(selectedDate.value.year, selectedDat
         <p v-for="day in Days">{{ day }}</p>
     </div>
     <div ref="grid" :class="s.grid">
-        <CalendarDate v-for="day in monthDays"
-            :currentDate="selectedDate"
+        <CalendarDayComponent v-for="day in currentCalendar"
+            :searchDate="searchDate"
             :this-date="day"
-            :today="today"
         />
     </div>
 </div>

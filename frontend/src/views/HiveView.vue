@@ -3,7 +3,7 @@ import HiveWidgetGeneral from '@/components/hive/widgets/HiveWidgetGeneral.vue';
 import { ref, useCssModule } from "vue";
 import { rUser, getHiveOverview } from "../core/repositories/homeRepository.js"
 import { onMounted } from 'vue';
-import IconCubeButton from '@/components/buttons/IconCubeButton.vue';
+import IconCubeButton from '@/components/input/buttons/IconCubeButton.vue';
 import PathTitle from '@/components/PathTitle.vue';
 import HiveWidgetNotes from '@/components/hive/widgets/HiveWidgetNotes.vue';
 import HiveWidgetActivityFeed from '@/components/hive/widgets/activity_feed/HiveWidgetActivityFeed.vue';

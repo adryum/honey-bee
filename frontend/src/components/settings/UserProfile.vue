@@ -1,7 +1,7 @@
 <script setup>
 import { onMounted, useCssModule, ref, watch } from 'vue';
-import RegistrationInputField from '../input_fields/RegistrationInputField.vue';
-import RegistrationButton from '../buttons/RegistrationButton.vue';
+import RegistrationInputField from '../input/fields/RegistrationInputField.vue';
+import RegistrationButton from '../input/buttons/RegistrationButton.vue';
 import { updateUserData, rUser } from '@/core/repositories/homeRepository';
 import HorizontalTextArea from '../hive/widgets/stimulant/HorizontalTextArea.vue';
 import CircleImage from '../CircleImage.vue';

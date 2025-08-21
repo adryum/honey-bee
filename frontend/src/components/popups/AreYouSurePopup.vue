@@ -1,18 +1,9 @@
 <script setup>
 import { onMounted, ref, useCssModule } from 'vue';
-import IconCubeButton from '../buttons/IconCubeButton.vue';
-import Icon from '../Icon.vue';
-import TextTitle from '../input_fields/TextTitle.vue';
-import PopupPlate from './PopupPlate.vue';
-import Field from '../input_fields/Field.vue';
-import FieldVertical from '../input_fields/FieldVertical.vue';
-import ImageField from '../input_fields/ImageField.vue';
-import Button from '../buttons/Button.vue';
+import IconCubeButton from '../input/buttons/IconCubeButton.vue';
 import { removePopup } from '@/core/popups';
-import { assignHiveToApiary, getHives, rUser } from '@/core/repositories/homeRepository';
-import Hive from '../hive/Hive.vue';
 import PathTitle from '../PathTitle.vue';
-import RegistrationButton from '../buttons/RegistrationButton.vue';
+import RegistrationButton from '../input/buttons/RegistrationButton.vue';
 
 const props = defineProps({
     id: String,

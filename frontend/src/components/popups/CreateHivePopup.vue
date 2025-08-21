@@ -1,11 +1,11 @@
 <script setup>
 import { onMounted, ref, useCssModule } from 'vue';
-import IconCubeButton from '../buttons/IconCubeButton.vue';
+import IconCubeButton from '../input/buttons/IconCubeButton.vue';
 import { removePopup } from '@/core/popups';
 import { assignHiveToApiary, createHive, getHives, rUser } from '@/core/repositories/homeRepository';
 import PathTitle from '../PathTitle.vue';
-import RegistrationInputField from '../input_fields/RegistrationInputField.vue';
-import RegistrationButton from '../buttons/RegistrationButton.vue';
+import RegistrationInputField from '../input/fields/RegistrationInputField.vue';
+import RegistrationButton from '../input/buttons/RegistrationButton.vue';
 import { useReactiveImage } from '@/core/imageHandler';
 
 const props = defineProps({

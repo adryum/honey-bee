@@ -1,10 +1,9 @@
 <script setup lang="ts">
 import { ref, useCssModule } from "vue"
-import IconCubeButton from "../buttons/IconCubeButton.vue";
 import { getSVG, SVGIconRes } from "../../core/SVGLoader";
 import { motion } from "motion-v"
 import type { IDropdownButton } from "../../core/Interfaces";
-import CubeDropdown from "../dropdowns/CubeDropdown.vue";
+import CubeDropdown from "../input/dropdowns/CubeDropdown.vue";
 const s = useCssModule()
 
 const props = defineProps({

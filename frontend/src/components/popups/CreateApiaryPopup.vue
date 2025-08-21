@@ -1,11 +1,11 @@
 <script setup lang="ts">
 import { computed, getCurrentInstance, onMounted, ref, useCssModule } from 'vue';
 import { useDraggable } from '@vueuse/core';
-import TitledField from '../input_fields/TitledField.vue';
-import Button from '../buttons/Button.vue';
-import ImageDropZone from '../input_fields/ImageDropZone.vue';
+import TitledField from '../input/fields/TitledField.vue';
+import Button from '../input/buttons/Button.vue';
+import ImageDropZone from '../input/fields/ImageDropZone.vue';
 import { AnimatePresence, motion } from 'motion-v';
-import TransparentIconButton from '../buttons/TransparentIconButton.vue';
+import TransparentIconButton from '../input/buttons/TransparentIconButton.vue';
 import { getSVG, SVGIconRes } from '../../core/SVGLoader';
 const s = useCssModule()
 const props = defineProps<{

@@ -1,7 +1,7 @@
 <script setup>
 import { useCssModule } from 'vue';
-import RegistrationButton from '../buttons/RegistrationButton.vue';
-import FaintButton from '../buttons/FaintButton.vue';
+import RegistrationButton from '../input/buttons/RegistrationButton.vue';
+import FaintButton from '../input/buttons/FaintButton.vue';
 
 defineProps({
     submitText: {

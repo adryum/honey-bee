@@ -1,11 +1,8 @@
 <script setup>
 import { ref, useCssModule } from "vue";
-
-import { onMounted } from 'vue';
-import IconCubeButton from '@/components/buttons/IconCubeButton.vue';
+import IconCubeButton from '@/components/input/buttons/IconCubeButton.vue';
 import PathTitle from '@/components/PathTitle.vue';
 import UserProfile from "@/components/settings/UserProfile.vue";
-import UserTable from "@/components/UserTable.vue";
 
 const s = useCssModule()
 </script>

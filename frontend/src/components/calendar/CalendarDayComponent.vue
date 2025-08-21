@@ -1,13 +1,12 @@
 <script setup lang="ts">
-import { computed, onMounted, reactive, ref, useCssModule, watch } from "vue";
-import { Days, getMonthCalendar, type CalendarEntry } from "../../core/Calendar";
+import { computed, onMounted, ref, useCssModule, watch } from "vue";
+import { CalendarDate } from "../../core/Calendar";
 import { useWindowSize } from "@vueuse/core";
 
 const s = useCssModule()
 const props = withDefaults(defineProps<{
-    thisDate: CalendarEntry,
-    currentDate: CalendarEntry
-    today: CalendarEntry
+    thisDate: CalendarDate,
+    searchDate: CalendarDate
 }>(), {
 
 })
@@ -45,47 +44,53 @@ watch([width, height], ([w, h]) => {
 onMounted(() => {
     calculatePossibleListItemCount()
 })
-
-const isToday = computed(() => {
-    return props.today.day === props.thisDate.day 
-    && props.today.month === props.thisDate.month
-    && props.today.year === props.thisDate.year
-})
-const isWeekend = computed(() => {
-    return props.thisDate.dayName === Days.Sunday
-    || props.thisDate.dayName === Days.Saturday
-})
 </script>
 
 <template>
 <div ref="container" 
     :class="[
         s.container, 
-        isToday ? s.today : '',
-        isWeekend ? s.weekend : '',
-        thisDate.month === currentDate.month ? s.thisMonthDate : s.notThisMonthDate
-    ]">
-    <p :class="s.day">{{ thisDate.day }}</p>
+        thisDate.isToday() ? s.today : '',
+        thisDate.isWeekend() && thisDate.isThisMonth(searchDate.month ) ? s.weekend : '',
+        thisDate.isThisMonth(searchDate.month ) ? s.thisMonthDate : s.notThisMonthDate
+    ]"> 
+    <p :class="s.day">{{ thisDate.day }}{{ thisDate.isToday() ? " Today" : "" }} </p>
     <ul :class="s.taskList">
         <li v-for="i in availableRows" :class="s.task">
             {{ tasks[i - 1] }}
         </li>
     </ul>
     <p :class="s.hint" v-if="tasks.length > availableRows">{{ tasks.length - availableRows }} more</p>
+
+    <div v-if="!thisDate.isThisMonth(searchDate.month)" :class="s.patern"></div>
 </div>
 </template>
 
 <style module lang='sass'>
 @use '@/assets/main.sass' as main
 .container
+    position: relative
     display: flex
     flex-direction: column
     padding: 1rem
     box-sizing: border-box
-    background: var(--accent)
+    background: var(--light)
 
     transition: .1s
     overflow: hidden
+
+    .patern
+        z-index: auto
+        position: absolute
+        top: 0
+        left: 0
+        width: 100%
+        height: 100%
+
+        opacity: 0.6
+        background: repeating-linear-gradient( -45deg, var(--base) 1px, var(--base) 5px, transparent 5px, transparent 35px )
+
+
 
     &:hover
         z-index: 1
@@ -98,6 +103,8 @@ const isWeekend = computed(() => {
 
     .taskList
         all: unset
+        position: relative
+        z-index: 1
         display: flex
         flex-direction: column
         margin-top: auto
@@ -119,14 +126,13 @@ const isWeekend = computed(() => {
 .thisMonthDate
 
 .notThisMonthDate
-    opacity: .8
-    filter: brightness(80%)
+    opacity: 0.3
+    background: var(--accent)
 
 .today
     background: var(--light)
+    border: 2px solid green
 
 .weekend
-    background: main.$atumn-dark
-
-
+    background: var(--accent)
 </style>

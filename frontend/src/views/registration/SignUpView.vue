@@ -1,15 +1,14 @@
 <script setup>
 import {onMounted, reactive, ref, useCssModule} from "vue";
-import RegistrationInputField from "@/components/input_fields/RegistrationInputField.vue";
-import CheckboxWText from "@/components/input_fields/CheckboxWText.vue";
-import RegistrationSubmitButtons from "@/components/combinations/RegistrationSubmitButtons.vue";
+import RegistrationInputField from "@/components/input/fields/RegistrationInputField.vue";
+import CheckboxWText from "@/components/input/fields/CheckboxWText.vue";
 import { signUp } from "@/core/repositories/registrationRepository";
 import { watch } from "vue";
 import { rUser } from "../../core/repositories/homeRepository.js";
 import { isEmpty } from "../../utils/checks.js";
 import router from '../../router/index.js';
-import RegistrationButton from "@/components/buttons/RegistrationButton.vue";
-import FaintButton from "@/components/buttons/FaintButton.vue";
+import RegistrationButton from "@/components/input/buttons/RegistrationButton.vue";
+import FaintButton from "@/components/input/buttons/FaintButton.vue";
 
 const rUsername = ref("")
 const rName = ref("")

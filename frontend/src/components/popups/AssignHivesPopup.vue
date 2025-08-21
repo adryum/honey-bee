@@ -1,6 +1,6 @@
 <script setup>
 import { onMounted, ref, useCssModule } from 'vue';
-import IconCubeButton from '../buttons/IconCubeButton.vue';
+import IconCubeButton from '../input/buttons/IconCubeButton.vue';
 import { removePopup } from '@/core/popups';
 import { assignHiveToApiary, getHives, rUser } from '@/core/repositories/homeRepository';
 import Hive from '../hive/Hive.vue';

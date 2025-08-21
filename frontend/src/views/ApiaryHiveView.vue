@@ -3,7 +3,7 @@ import Hive from '@/components/hive/Hive.vue';
 import { ref, useCssModule } from "vue";
 import { rUser as rUser, getApiaryHives, getApiary, unassignHive } from "../core/repositories/homeRepository.js"
 import { onMounted } from 'vue';
-import IconCubeButton from '@/components/buttons/IconCubeButton.vue';
+import IconCubeButton from '@/components/input/buttons/IconCubeButton.vue';
 import { createPopup } from '@/core/popups.js';
 import AssignHivesPopup from '@/components/popups/AssignHivesPopup.vue';
 import PathTitle from '@/components/PathTitle.vue';

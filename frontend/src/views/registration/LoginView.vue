@@ -5,10 +5,10 @@ import { onMounted, reactive, useCssModule, watch } from "vue";
 import router from '../../router/index.js';
 import { isEmpty } from "../../utils/checks.js";
 import {ref} from "vue";
-import RegistrationInputField from "@/components/input_fields/RegistrationInputField.vue";
-import CheckboxWText from "@/components/input_fields/CheckboxWText.vue";
-import RegistrationButton from "@/components/buttons/RegistrationButton.vue";
-import FaintButton from "@/components/buttons/FaintButton.vue";
+import RegistrationInputField from "@/components/input/fields/RegistrationInputField.vue";
+import CheckboxWText from "@/components/input/fields/CheckboxWText.vue";
+import RegistrationButton from "@/components/input/buttons/RegistrationButton.vue";
+import FaintButton from "@/components/input/buttons/FaintButton.vue";
 
 let rEmail = ref('')
 let rPassword = ref('') 

@@ -1,8 +1,8 @@
 <script setup lang="ts">
 import { useCssModule } from 'vue';
-import SVGComponent from '../SVGComponent.vue';
+import SVGComponent from '../../SVGComponent.vue';
 import { motion } from 'motion-v';
-import { type SVGIcon, getSVG, SVGIconRes } from '../../core/SVGLoader';
+import { type SVGIcon, getSVG, SVGIconRes } from '../../../core/SVGLoader';
 
 const props = withDefaults(defineProps<{
     svg?: SVGIcon

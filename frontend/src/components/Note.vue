@@ -1,6 +1,6 @@
 <script setup>
 import { useCssModule } from 'vue';
-import CubeButtonTranspparent from './buttons/CubeButtonTranspparent.vue';
+import CubeButtonTranspparent from './input/buttons/CubeButtonTranspparent.vue';
 defineProps({
     note: Object
 })

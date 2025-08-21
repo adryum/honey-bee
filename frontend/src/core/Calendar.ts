@@ -14,27 +14,101 @@ export enum CalendarType {
     Europian = 1
 }
 
-export type CalendarEntry = {
-    year: number
-    month: number
-    day: number
-    dayName: string
+export enum CalendarDirection {
+    Forward,
+    Backward
+}
+
+export class CalendarDate {
+    date!: Date
+    year!: number
+    month!: number
+    day!: number
+
+    constructor(year: number, month: number, day: number) {
+        this.setDate(year, month, day)
+    }
+
+    copy(): CalendarDate {
+        return new CalendarDate(this.year, this.getHumanMonth(), this.day)
+    }
+
+    getDayName() {
+        const dayNames = ["Sunday", "Monday", "Tuesday", "Wednesday", "Thursday", "Friday", "Saturday"]
+        return dayNames[this.date.getDay()]
+    }
+
+    getMonthName() {
+        return this.date.toLocaleString('default', { month: 'long' });
+    }
+
+    getHumanMonth() {
+        return this.month + 1
+    }
+
+    isWeekend(): boolean {
+        return this.getDayName() === Days.Sunday
+        || this.getDayName() === Days.Saturday
+    }
+
+    isToday(): boolean {
+        const today = new Date()
+
+        return this.day === today.getDate() 
+        && this.month === today.getMonth()
+        && this.year === today.getFullYear()
+    }
+
+    isThisMonth(month: number): boolean {
+        return this.month === month
+    }
+
+    setDate(year: number, month: number, day: number) {
+        this.date = new Date(year, month - 1, day)
+        this.year = year
+        this.month = month - 1
+        this.day = day
+    }
+
+    moveMonth(by: number): void {
+        // +1 bc Date() months start from 0
+        var newMonth = this.month + 1 + by
+        console.log('month: ' + newMonth + ' year: ' + this.year );
+        
+        if (newMonth > 12) {
+            this.setDate(
+                this.year + 1, 
+                newMonth - 12, 
+                this.day
+            )
+        } else if (newMonth < 1) {
+            this.setDate(
+                this.year - 1, 
+                newMonth + 12, 
+                this.day
+            )
+        } else {
+            this.setDate(
+                this.year, 
+                newMonth, 
+                this.day
+            )
+        }
+    }
 }
 
 export function getMonthCalendar(
     year: number,
     month: number,
     weekStartsOn: 0 | 1 = 0 // 0 = Sunday, 1 = Monday
-): CalendarEntry[][] {
-    const weeks: CalendarEntry[][] = []
+): CalendarDate[][] {
+    const weeks: CalendarDate[][] = []
 
     const monthsFirstDay = new Date(year, month - 1, 1)
     const monthsLastDay = new Date(year, month, 0)
     const daysInMonth = monthsLastDay.getDate()
 
-    let currentWeek: CalendarEntry[] = []
-
-    const dayNames = ["Sunday", "Monday", "Tuesday", "Wednesday", "Thursday", "Friday", "Saturday"]
+    let currentWeek: CalendarDate[] = []
 
     // --- Fill days from previous month ---
     const prevMonthLastDay = new Date(year, month - 1, 0).getDate()
@@ -50,15 +124,7 @@ export function getMonthCalendar(
         const prevMonth = month - 1 === 0 ? 12 : month - 1
         const prevYear = month - 1 === 0 ? year - 1 : year
 
-        // Find real weekday index
-        const weekdayIndex = (i + (weekStartsOn === 1 ? 1 : 0)) % 7
-
-        currentWeek.push({
-            year: prevYear,
-            month: prevMonth,
-            day,
-            dayName: dayNames[weekdayIndex]
-        })
+        currentWeek.push(new CalendarDate(prevYear, prevMonth, day))
     }
 
     // --- Fill current month days ---
@@ -66,17 +132,11 @@ export function getMonthCalendar(
         const date = new Date(year, month - 1, day)
         let weekdayIndex = date.getDay()
 
-        // Adjust weekday index if Monday-first
         if (weekStartsOn === 1) {
             weekdayIndex = (weekdayIndex - 1 + 7) % 7
         }
 
-            currentWeek.push({
-            year,
-            month,
-            day,
-            dayName: dayNames[weekdayIndex]
-        })
+        currentWeek.push(new CalendarDate(year, month, day))
 
         if (currentWeek.length === 7) {
             weeks.push(currentWeek)
@@ -90,18 +150,7 @@ export function getMonthCalendar(
         const nextYear = month + 1 === 13 ? year + 1 : year
         let nextDay = 1
         while (currentWeek.length < 7) {
-            const date = new Date(nextYear, nextMonth - 1, nextDay)
-            let weekdayIndex = date.getDay()
-            if (weekStartsOn === 1) {
-                weekdayIndex = (weekdayIndex - 1 + 7) % 7
-            }
-
-            currentWeek.push({
-                year: nextYear,
-                month: nextMonth,
-                day: nextDay,
-                dayName: dayNames[weekdayIndex]
-            })
+            currentWeek.push(new CalendarDate(nextYear, nextMonth, nextDay))
             nextDay++
         }
         weeks.push(currentWeek)

@@ -1,10 +1,10 @@
 <script setup lang="ts">
 import { ref, useCssModule, watch } from 'vue';
 import { AnimatePresence, motion } from 'motion-v';
-import { getSVG, SVGIconRes, type SVGIcon } from '../../core/SVGLoader';
+import { getSVG, SVGIconRes, type SVGIcon } from '../../../core/SVGLoader';
 import { onClickOutside, useToggle } from '@vueuse/core';
-import SVGComponent from '../SVGComponent.vue';
-import type { IDropdownButton } from '../../core/Interfaces';
+import SVGComponent from '../../SVGComponent.vue';
+import type { IDropdownButton } from '../../../core/Interfaces';
 import IconCubeButton from '../buttons/IconCubeButton.vue';
 
 const s = useCssModule()

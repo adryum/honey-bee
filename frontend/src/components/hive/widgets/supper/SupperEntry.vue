@@ -1,5 +1,5 @@
 <script setup>
-import CubeButtonTranspparent from '@/components/buttons/CubeButtonTranspparent.vue';
+import CubeButtonTranspparent from '@/components/input/buttons/CubeButtonTranspparent.vue';
 import TagContentBox from '@/components/TagContentBox.vue';
 import { useCssModule } from 'vue';
 defineProps({

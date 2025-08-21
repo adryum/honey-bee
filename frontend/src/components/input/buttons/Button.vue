@@ -26,6 +26,7 @@ const s = useCssModule()
     display: inline-flex
     cursor: pointer
     justify-content: center
+    align-items: center
 
     padding: .5rem 1rem
     background: #D8A435
