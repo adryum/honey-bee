@@ -1,5 +1,5 @@
 <script setup lang="ts">
-import { computed, reactive, useCssModule } from "vue";
+import { computed, useCssModule } from "vue";
 import { CalendarDate, Days, getMonthCalendar } from "../../core/Calendar";
 import CalendarDayComponent from "./CalendarDayComponent.vue";
 

@@ -191,7 +191,7 @@ export async function getApiaryHives(apiaryId, identification = getUserIdentific
 
 export async function createApiary(filter, name, location, description, identification = getUserIdentification()) {
     try {
-        const promise = await axios.post('/apiaries/create', {
+        const promise = await axios.post('/apiary/create', {
             identification: identification,
             name: name,
             location: location,
@@ -207,7 +207,7 @@ export async function createApiary(filter, name, location, description, identifi
 
 export async function getApiaries(startWith, identification = getUserIdentification()) {
     try {
-        const promise = await axios.post('/apiaries', {
+        const promise = await axios.post('/apiary/apiaries', {
             identification: identification,
             startWith: startWith
         })
@@ -224,7 +224,7 @@ export async function getApiaries(startWith, identification = getUserIdentificat
 export async function deleteApiary(apiaryId, callback = () => {}, identification = getUserIdentification()) {
     try {
         console.log(apiaryId)
-        const promise = await axios.post('/apiaries/delete', {
+        const promise = await axios.post('/apiary/delete', {
             identification: identification,
             apiaryId: apiaryId
         })

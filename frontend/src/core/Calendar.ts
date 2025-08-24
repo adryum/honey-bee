@@ -1,4 +1,3 @@
-
 export enum Days {
   Sunday = "Sunday",
   Monday = "Monday",
@@ -12,11 +11,6 @@ export enum Days {
 export enum CalendarType {
     American = 0,
     Europian = 1
-}
-
-export enum CalendarDirection {
-    Forward,
-    Backward
 }
 
 export class CalendarDate {

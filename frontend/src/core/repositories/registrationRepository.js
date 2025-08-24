@@ -10,7 +10,7 @@ export async function login(email, password) {
 
         if (!email || !password) return
 
-        const registeredUser = await axios.post(`/login`, {
+        const registeredUser = await axios.post(`/registration/login`, {
             email: email,
             password: password
         })
@@ -32,7 +32,7 @@ export async function signUp(username, name, surname, profilePicture, email, pas
         
         if (!email || !password || !name || !surname) return
 
-        const newUser = await axios.post(`/signup`, {
+        const newUser = await axios.post(`/registration/signup`, {
             username: username,
             name: name,
             surname: surname,
