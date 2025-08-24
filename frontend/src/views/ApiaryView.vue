@@ -1,6 +1,5 @@
 <script setup lang="ts">
 import ApiarySummaryCard from '@/components/apiary/ApiarySummaryCard.vue';
-import { getApiaries } from '@/core/repositories/homeRepository';
 import { onMounted, ref, useCssModule} from "vue"
 import ToolBar from '../components/ToolBar.vue';
 import SmallSearchbar from '../components/input/fields/SmallSearchbar.vue';
@@ -8,18 +7,20 @@ import IconButton from '../components/input/buttons/IconTextButton.vue';
 import { createComponentInstance, createComponentWithProps } from '../utils/components';
 import CreateApiaryPopup from '../components/popups/CreateApiaryPopup.vue';
 import { getSVG, SVGIconRes } from '../core/SVGLoader';
+import { getApiaries } from '../core/server/ApiaryRequests';
+import type { IGetApiaryResponseModel } from '../core/server/ResponseModels';
 
-const rApiaries = ref([])
-const rSizeMultiplier = ref(30)
+const apiaries = ref<IGetApiaryResponseModel[]>([])
 
 async function searchApiaries(filter: string) {
     console.log(filter);
-    
-    rApiaries.value = await getApiaries(filter)
+    const promise = await getApiaries()
+    apiaries.value = (promise) ? promise : []
 }
 
 onMounted(async () => {
-    rApiaries.value = await getApiaries()
+    const promise = await getApiaries()
+    apiaries.value = (promise) ? promise : []
 })
 
 const s = useCssModule()
@@ -41,8 +42,8 @@ const components = [
         <ToolBar name="Apiaries" :components="components"/>
         <div :class="s.appiaries" ref="page">
             <ApiarySummaryCard class="item" 
-            v-for="apiary in rApiaries" 
-            :apiary="apiary" :sizeMultiplier="rSizeMultiplier" :onDelete="searchApiaries"/>
+            v-for="apiary in apiaries" 
+            :apiary="apiary":onDelete="searchApiaries"/>
         </div>
     </div>
 </template>

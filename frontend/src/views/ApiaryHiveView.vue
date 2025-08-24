@@ -1,111 +1,68 @@
-<script setup>
+<script setup lang="ts">
 import Hive from '@/components/hive/Hive.vue';
 import { ref, useCssModule } from "vue";
-import { rUser as rUser, getApiaryHives, getApiary, unassignHive } from "../core/repositories/homeRepository.js"
 import { onMounted } from 'vue';
-import IconCubeButton from '@/components/input/buttons/IconCubeButton.vue';
-import { createPopup } from '@/core/popups.js';
-import AssignHivesPopup from '@/components/popups/AssignHivesPopup.vue';
-import PathTitle from '@/components/PathTitle.vue';
-import AreYouSurePopup from '@/components/popups/AreYouSurePopup.vue';
-import router from '@/router/index.js';
+import ToolBar from '../components/ToolBar.vue';
+import { getSVG, SVGIconRes } from '../core/SVGLoader.js';
+import { createComponentWithProps, createComponentInstance } from '../utils/components.js';
+import IconTextButton from '../components/input/buttons/IconTextButton.vue';
+import CreateHivePopup from '../components/popups/CreateHivePopup.vue';
+import SmallSearchbar from '../components/input/fields/SmallSearchbar.vue';
+import { getApiary, getApiaryHives } from '../core/server/ApiaryRequests.js';
+import type {  IGetApiaryResponseModel, IGetHiveResponseModel } from '../core/server/ResponseModels.js';
 
-const props = defineProps({
-    id: String
-})
+const s = useCssModule()
+const hives = ref<IGetHiveResponseModel[] | null>()
+const thisApiary = ref<IGetApiaryResponseModel | null>()
+const props = defineProps<{
+    id: number
+}>()
 
-const rHives = ref([])
-const rApiary = ref({})
-const rIsRemovingHives = ref(false)
-
-async function searchApiaryHives() {
-    rHives.value = await getApiaryHives(props.id)
+async function searchHives(searchText: string) {
+    hives.value = await getApiaryHives(props.id, searchText)
 }
 
-function handleHiveClick(hive) {
-    if (rIsRemovingHives.value) {
-        createPopup(AreYouSurePopup, {
-            title: 'Remove Hive',
-            description: `Are you sure you want to remove ${hive.name}?`,
-            onAsyncYes: async () => { 
-                await unassignHive(hive.id)
-                await searchApiaryHives()
-            }
-        })
-    } else {
-        router.push('/hives/' + hive.id)
-    }
-}
+const components = [
+    createComponentWithProps(IconTextButton, { 
+        text: 'add apiary',
+        svg: getSVG(SVGIconRes.Pluss),
+        onClick: () => {
+            createComponentInstance(CreateHivePopup, {}, true)
+        }
+    }),
+    createComponentWithProps(SmallSearchbar, { onClick: (searchText: string) => searchHives(searchText) }),
+]
 
 onMounted(async () => {
-    rApiary.value = await getApiary(props.id)
-    rHives.value = await getApiaryHives(props.id)
+    thisApiary.value = await getApiary(props.id)
+    hives.value = await getApiaryHives(props.id)
 })
-const s = useCssModule()
 </script>
 
 <template>
 <div :class="s.container">
-    <div :class="s.header">
-        <PathTitle :title="rApiary.name"/>
-        <div :class="s['vt-linebreak']"></div>
-        <IconButton @click="rIsRemovingHives = !rIsRemovingHives" text="Remove hives"/>
-        <IconButton @click="createPopup(AssignHivesPopup, {apiaryId: id, currentFilter: rSearchFilter, refreshHives: searchApiaryHives})" text="Add hive"/>
-        <IconCubeButton @click="$router.back()" :class="s['button-special']" res="fa-solid fa-left-long"/>
-    </div>
-
-    <div :class="s.grid">
-        <Hive v-for="(hive, i) in rHives" :key="i"
-            @click="handleHiveClick(hive)"
-            :hive="hive"
-        />
-    </div>
+        <ToolBar name="Apiaries" :components="components"/>
+        <div :class="s.appiaries" ref="page">
+            <Hive class="item" 
+            v-for="i in 3"/>
+        </div>
 </div>
 </template>
 
 <style module lang='sass'>
-@use '@/assets/main.sass' as main
-.container 
+@use '../assets/_colors.sass' as colors
+.container
     display: flex
     flex-direction: column
+    gap: 1rem
     width: 100%
 
-    box-sizing: border-box
-    margin: 6px
-
-    border-radius: 4px
-    box-shadow: 0px 0px 10px rgba(0, 0, 0, 0.21)
-    background: #FFECC8
-
-.header
-    display: flex
-    align-items: center
-    gap: .4rem
-
-    height: 5rem
-
-    box-sizing: border-box
-    padding: .4rem
-    border-radius: 4px
-    box-shadow: 0px 0px 10px rgba(0, 0, 0, 0.21)
-    background: #EDEDED
-
-    .vt-linebreak
-        width: 6px
-        height: 100%
-        border-radius: 4px
-        background: #D9D9D9
-        margin-left: auto 
-
-.grid
-    display: flex
-    flex-wrap: wrap
-    justify-content: center
-    align-items: flex-start
-    gap: 3rem
-    justify-items: center
     padding: 1rem
+    box-sizing: border-box
 
-.button-special
-    background: main.$button-special
+    .appiaries
+        display: grid
+        grid-template-columns: repeat(auto-fit, minmax(500px, 1fr))
+        justify-content: center
+        gap: 1rem
 </style>

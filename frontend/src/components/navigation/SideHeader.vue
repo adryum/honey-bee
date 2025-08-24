@@ -33,9 +33,9 @@ const tabs: Tab[] = [
         svg: getSVG(SVGIconRes.Calendar, 'black')
     },
     {
-        name: 'c',
-        pagePath: '/',
-        svg: getSVG(SVGIconRes.House)
+        name: 'bees',
+        pagePath: '/bees',
+        svg: getSVG(SVGIconRes.Bee, 'black')
     },
     {
         name: 'd',
