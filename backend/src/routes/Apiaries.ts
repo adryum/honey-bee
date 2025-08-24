@@ -69,7 +69,7 @@ router.post('/', async (req: Request<{},{},{
     try {
         const [apiary] = await db.query(`
             SELECT *
-            FROM ${ApiaryT.name}
+            FROM ${ApiaryT.tableName}
             WHERE ${ApiaryT.userId} = ? AND ${ApiaryT.id} = ?`, 
             [identification.id, apiaryId]
         )
@@ -125,7 +125,7 @@ router.post('/delete', async (req: Request<{},{},{
     
     try {
         const unassigningResult = await db.query( `
-            UPDATE ${HiveT.name} 
+            UPDATE ${HiveT.tableName} 
             SET ${HiveT.apiaryId} = NULL 
             WHERE ${HiveT.apiaryId} = ? AND ${HiveT.userId} = ?`, 
             [apiaryId, identification.id]
