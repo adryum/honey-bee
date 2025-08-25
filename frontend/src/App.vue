@@ -1,49 +1,30 @@
-<script setup>
-import { RouterLink, RouterView } from 'vue-router'
-import { isAuthenticated } from './core/repositories/registrationRepository';
-import { onMounted, ref, useCssModule, watch } from 'vue';
+<script setup lang="ts">
+import { RouterView } from 'vue-router'
+import { useCssModule, watch } from 'vue';
 import router from './router';
-import { isEmpty } from './utils/checks';
-import { rUser } from './core/repositories/homeRepository';
-import PopupPlate from './components/popups/PopupPlate.vue';
 import TopHeader from './components/navigation/TopHeader.vue';
 import SideHeader from './components/navigation/SideHeader.vue';
+import { RegistrationRepository } from './core/repositories/RegistrationRepository';
 
-const mediaQuery = window.matchMedia('(max-width: 600px)')
-const isMobile = ref(false)
-
-function updateIsMobile(event) {
-    isMobile.value = event.matches
-    console.log('Media query changed:', event.matches)
-}
-
-// banishes user to login realm when authentication gets false
-watch(rUser, (newValue) => {
-        if (isEmpty(newValue)) {
-            console.log('Sent to login')
-            router.push('/login')
-        }
-    },
-    {
-        immediate: true
-    }
-)
-onMounted(() => {
-    isMobile.value = mediaQuery.matches
-    mediaQuery.addEventListener('change', updateIsMobile)
-})
 const s = useCssModule()
+const isAuthenticated = RegistrationRepository.isAuthenticated
+
+watch(isAuthenticated, (newVal) => {
+    console.log(`new auth value : ${newVal}`);
+    
+    if (!newVal) {
+        console.log('Pushed to login');
+        router.push('/login')
+    }
+}, { immediate: true })
 </script>   
 
 <template>
     <div :class="s.skelet">
-        <SideHeader v-if="isAuthenticated() && !isMobile"/>
+        <SideHeader v-if="isAuthenticated"/>
         <div :class="s.flex">
-            <TopHeader/>
-
-            <Suspense>
-                <RouterView />
-            </Suspense>
+            <TopHeader v-if="isAuthenticated"/>
+            <RouterView />
         </div> 
     </div>
 </template>

@@ -1,16 +1,5 @@
-<script setup>
-import HiveWidgetGeneral from '@/components/hive/widgets/HiveWidgetGeneral.vue';
+<script setup lang="ts">
 import { ref, useCssModule } from "vue";
-import { rUser, getHiveOverview } from "../core/repositories/homeRepository.js"
-import { onMounted } from 'vue';
-import IconCubeButton from '@/components/input/buttons/IconCubeButton.vue';
-import PathTitle from '@/components/PathTitle.vue';
-import HiveWidgetNotes from '@/components/hive/widgets/HiveWidgetNotes.vue';
-import HiveWidgetActivityFeed from '@/components/hive/widgets/activity_feed/HiveWidgetActivityFeed.vue';
-import HiveWidgetQueen from '@/components/hive/widgets/HiveWidgetQueen.vue';
-import HiveWidgetStimulants from '@/components/hive/widgets/stimulant/HiveWidgetStimulants.vue';
-import HiveWidgetSupper from '@/components/hive/widgets/supper/HiveWidgetSupper.vue';
-import SupperEntry from '@/components/hive/widgets/supper/SupperEntry.vue';
 
 const props = defineProps({
     hiveId: String,
@@ -23,19 +12,19 @@ const rActivityFeed = ref([])
 const rStimulants = ref([])
 const rSuppers = ref([])
 
-onMounted(async () => {
-    const overview = await getHiveOverview(props.hiveId)
-    console.log(overview);
-    rHive.value = overview.hive
-    rNotes.value = overview.notes
-    rQueen.value = overview.queen
-})
+// onMounted(async () => {
+//     const overview = await getHiveOverview(props.hiveId)
+//     console.log(overview);
+//     rHive.value = overview.hive
+//     rNotes.value = overview.notes
+//     rQueen.value = overview.queen
+// })
 const s = useCssModule()
 </script>
 
 <template>
 <div :class="s.container">
-    <div :class="s.header">
+    <!-- <div :class="s.header">
         <PathTitle :title="rHive.name"/>
         <div :class="s['vt-linebreak']"></div>
         <IconCubeButton :class="s['button-special']" res="fa-solid fa-left-long"/>
@@ -55,7 +44,7 @@ const s = useCssModule()
         <HiveWidgetSupper :class="s.suppers">
             <SupperEntry v-for="supper in rSuppers" :supper="supper"/>
         </HiveWidgetSupper>
-    </div>
+    </div> -->
 </div>
 </template>
 

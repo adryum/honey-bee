@@ -1,13 +1,12 @@
 <script setup>
 import { onMounted, ref, useCssModule } from 'vue';
 import TableEntry from './TableEntry.vue';
-import { getUsers } from '@/core/repositories/homeRepository';
 
 const rUsers = ref([])
 const s = useCssModule()
 
 async function refresUsers() {
-    rUsers.value = await getUsers()
+    // rUsers.value = await getUsers()
 }
 
 onMounted(async () => {

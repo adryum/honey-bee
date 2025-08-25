@@ -1,65 +1,51 @@
-<script setup>
-import { login } from "../../core/repositories/registrationRepository.js";
-import { rUser } from "../../core/repositories/homeRepository.js";
-import { onMounted, reactive, useCssModule, watch } from "vue";
-import router from '../../router/index.js';
-import { isEmpty } from "../../utils/checks.js";
+<script setup lang="ts">
+import { computed, onMounted, useCssModule } from "vue";
 import {ref} from "vue";
 import RegistrationInputField from "@/components/input/fields/RegistrationInputField.vue";
 import CheckboxWText from "@/components/input/fields/CheckboxWText.vue";
 import RegistrationButton from "@/components/input/buttons/RegistrationButton.vue";
 import FaintButton from "@/components/input/buttons/FaintButton.vue";
+import { RegistrationRepository } from "../../core/repositories/RegistrationRepository.js";
 
-let rEmail = ref('')
-let rPassword = ref('') 
-let rRememberMe = ref(false) 
 const s = useCssModule()
+const email = ref('')
+const password = ref('') 
+const rememberMe = ref(false) 
 
-const isValid = reactive({
-    email: false,
-    password: false,
+const isEverythingValid = computed(() => {
+    return email.value && password.value
 })
 
-function isEverythingValid() {
-    // check if validation is true
-    for (let key in isValid) {
-        if (!isValid[key]) return false
-    }
+async function login() {
+    if (!isEverythingValid.value) return
 
-    return true
+    await RegistrationRepository.login({
+        email: email.value,
+        password: password.value
+    })
 }
 
-watch(rUser, (newValue) => {
-        if (!isEmpty(newValue)) {
-            console.log('Sent to main');
-            
-            router.push('/')
-        }
-
-    },
-    {
-        immediate: true
-    }
-)
-
+// auto login
 onMounted(async () => {
-    await login('admin@gmail.com', 'Admin1')
-    console.log(rUser.value);
+    await RegistrationRepository.login({
+        email: 'admin@gmail.com',
+        password: 'Admin1'
+    })
 })
 </script>
 
 <template>
 <div :class="s.view">
-    <form @submit.prevent="isEverythingValid() ? login(rEmail, rPassword) : ()=>{}" :class="s.container">
+    <form @submit.prevent="login" :class="s.container">
         <img :class="s.logo" src="@/assets/images/BeeLogo.png" alt="logo">
         <h1 :class="s.title">HoneyBee</h1>
-        <RegistrationInputField v-model="rEmail" v-model:isValid="isValid.email" 
-        hint="E-mail" type="email" :is-required="true"/>
-        <RegistrationInputField v-model="rPassword" v-model:isValid="isValid.password"
-         hint="Password" type="password" :is-required="true"/>
-        <CheckboxWText v-model="rRememberMe" text="Remember me!"/>
+        <RegistrationInputField v-model="email"
+            hint="E-mail" type="email" :is-required="true"/>
+        <RegistrationInputField v-model="password"
+            hint="Password" type="password" :is-required="true"/>
+        <CheckboxWText v-model="rememberMe" text="Remember me!"/>
         <div :class='s.container_bottom'>
-            <RegistrationButton  :is-enabled="isEverythingValid()" type="submit" :class="s.submit" text="Login"/>
+            <RegistrationButton  :is-enabled="isEverythingValid" type="submit" :class="s.submit" text="Login"/>
             <FaintButton @click="$router.push('/recovery')" :class="s.left" text="Forgot Password!"/>
             <FaintButton @click="$router.push('/signup')" :class="s.right" text="Create an account"/>
         </div>

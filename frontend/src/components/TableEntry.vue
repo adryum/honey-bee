@@ -1,5 +1,4 @@
 <script setup>
-import { deleteUser } from '@/core/repositories/homeRepository';
 import { useCssModule } from 'vue';
 const props = defineProps({
     entry: Object,
@@ -8,7 +7,7 @@ const props = defineProps({
 const s = useCssModule()
 
 async function onUserDelete() {
-    await deleteUser(props.entry.id)
+    // await deleteUser(props.entry.id)
     await props.onDelete()
 }
 </script>

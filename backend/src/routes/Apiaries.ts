@@ -2,6 +2,8 @@ import { Router, type Request, type Response } from "express";
 import { db } from "../server";
 import { type IUserIdentification } from "../Enums";
 import { ApiaryT, HiveT } from "../TableColumnTitles";
+import { RowDataPacket } from "mysql2";
+import { col } from "../utils";
 
 const router = Router()
 
@@ -34,9 +36,11 @@ router.post('/apiaries', async (req: Request<{},{},{
     identification: IUserIdentification
     searchFilter: string
 }>, res: Response) => {
+    console.log(req.body);
+    
     let { identification, searchFilter } = req.body
 
-    if (!identification) 
+    if (!identification.id) 
         return res.status(401).send('incorrect credentials!') 
 
     // sets default value
@@ -44,9 +48,20 @@ router.post('/apiaries', async (req: Request<{},{},{
 
     try {
         const [apiaries] = await db.query(`
-            SELECT *
+            SELECT 
+                ${col(ApiaryT.tableName, ApiaryT.id)} AS id, 
+                ${col(ApiaryT.tableName, ApiaryT.name)} AS name,
+                ${col(ApiaryT.tableName, ApiaryT.description)} AS description,
+                ${col(ApiaryT.tableName, ApiaryT.imagePath)} AS imagePath,
+                COUNT(${col(HiveT.tableName, HiveT.id)}) AS hiveCount
             FROM ${ApiaryT.tableName}
-            WHERE ${ApiaryT.userId} = ? AND ${ApiaryT.name} LIKE ?`, [identification.id, searchFilter])
+            LEFT JOIN ${HiveT.tableName} ON ${col(HiveT.tableName, HiveT.apiaryId)} = ${col(ApiaryT.tableName, ApiaryT.id)}
+            WHERE ${col(ApiaryT.tableName, ApiaryT.userId)} = ? AND ${col(ApiaryT.tableName, ApiaryT.name)} LIKE ?
+            GROUP BY ${col(ApiaryT.tableName, ApiaryT.id)}
+            `,
+            [identification.id, searchFilter])
+        
+        console.log(apiaries);
         
         res.status(200).json({ apiaries })
     } catch (err) {

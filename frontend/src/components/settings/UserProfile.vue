@@ -1,11 +1,8 @@
-<script setup>
+<script setup lang="ts">
 import { onMounted, useCssModule, ref, watch } from 'vue';
-import RegistrationInputField from '../input/fields/RegistrationInputField.vue';
-import RegistrationButton from '../input/buttons/RegistrationButton.vue';
-import { updateUserData, rUser } from '@/core/repositories/homeRepository';
-import HorizontalTextArea from '../hive/widgets/stimulant/HorizontalTextArea.vue';
-import CircleImage from '../CircleImage.vue';
+import { RegistrationRepository } from '../../core/repositories/RegistrationRepository';
 
+const s = useCssModule()
 const rUsername = ref("")
 const rName = ref("")
 const rSurname = ref("")
@@ -28,52 +25,17 @@ function areValid() {
 }
 
 function areThereAnyChanges() {
-    return (rUsername.value != rUser.value.username) 
-    || (rName.value != rUser.value.name) 
-    || (rSurname.value != rUser.value.surname)
+    const user = RegistrationRepository.user.value!
+    return (rUsername.value != user.username) 
     // || (rProfilePicture.value != rUser.value.profile_picture)
-    || (rEmail.value != rUser.value['e_mail']) 
-    || (rPassword.value != rUser.value.password)
+    || (rEmail.value != user.email)
 }
 
-function compressToUser() {
-    return {
-        account_code: "#2",
-        username: (rUsername.value != rUser.value.username) ? rUsername.value : undefined,
-        name: (rName.value != rUser.value.name) ? rName.value : undefined,
-        surname: (rSurname.value != rUser.value.surname) ? rSurname.value : undefined,
-        profile_picture: (rProfilePicture.value != rUser.value.profile_picture) ? rProfilePicture.value : undefined,
-        e_mail: (rEmail.value != rUser.value.e_mail) ? rEmail.value : undefined,
-        password: (rPassword.value != rUser.value.password) ? rPassword.value : undefined,
-    }
-}
-function updateValues() {
-    console.log('updated');
-    console.log(rUser.value.username);
-    
-    rUsername.value = rUser.value.username
-    rName.value = rUser.value.name
-    rSurname.value = rUser.value.surname
-    rEmail.value = rUser.value['e_mail']
-    rPassword.value = rUser.value.password
-}
-const s = useCssModule()
-watch(() => rUser.value, (nValue) => {
-    if (nValue) {
-        console.log('new');
-        
-        console.log(nValue.value);
-        updateValues()
-    }
-})
-onMounted(() => {
-    updateValues()
-})
 </script>
 
 <template>
-<div :class='s.container'>
-    <h1>User Profile</h1>
+<div :class="s.container">
+    <!-- <h1>User Profile</h1>
     <form :class="s.content" @submit.prevent="(areValid() && areThereAnyChanges()) ? updateUserData(compressToUser()) : () => {}">
         <div :class="s.left">
             <CircleImage :class="s.icon" :res="rProfilePicture"/>
@@ -87,7 +49,7 @@ onMounted(() => {
             <RegistrationInputField v-model:isValid="isPasswordValid":min-length="6" v-model="rPassword" hint="Password" type="password" :is-required="true"/>
             <RegistrationButton :is-enabled="areValid() && areThereAnyChanges()" text="Save changes"/>
         </div>
-    </form>
+    </form> -->
 </div>
 </template>
 

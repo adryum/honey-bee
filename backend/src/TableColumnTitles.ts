@@ -5,6 +5,7 @@ export enum UserT {
     id = "id",
 
     username = "username",
+    picturePath = "profile_picture",
     email = "e_mail",
     password = "password",
     paidTier = "paid_tier",

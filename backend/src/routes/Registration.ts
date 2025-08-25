@@ -12,7 +12,6 @@ router.post('/login', async (req: Request<{},{}, {
     password: string
 }>, res) => {
     console.log(req.body);
-    
     const { email, password } = req.body
     // missing credentials
     if (!email || !password) 
@@ -26,17 +25,20 @@ router.post('/login', async (req: Request<{},{}, {
             LIMIT 1`, 
             [email]
         )
-
+        
         const user = rows[0]
 
         // user isn't registered
         if (!user) {
-            res.status(401).send('incorrect email!') 
+            res.status(401).send('incorrect email!')
+            console.error("Incorrect email!");
+            
             return
         }
 
         if (password === user[UserT.password]) {
-            res.status(201).json({ user })
+            console.log(user);
+            return res.status(201).json(user)
         } else {
             res.status(401).send('incorrect password')
         }
@@ -55,8 +57,11 @@ router.post('/signup', async (req: Request<{},{}, {
     const { username, email, password } = req.body
 
     // missing credentials
-    if (!username || !email || !password) 
+    if (!username || !email || !password) {
+        console.error("Missing credentials!");
+        
         return res.status(401).send('missing credentials!') 
+    }
 
     try {
         const [[alreadyRegisteredUser]] = await db.query<RowDataPacket[]>(`
@@ -90,8 +95,10 @@ router.post('/signup', async (req: Request<{},{}, {
             [response.insertId]
         )
 
+        console.log(user);
+
         if (user) {
-            res.status(201).json({ user: user })
+            res.status(201).json(user)
         } else {
             res.status(401).send('could not get registered user!')
         }

@@ -23,15 +23,16 @@ export const db = mysql.createPool({
     database: process.env.MYSQL_DATABASE as string,
 }).promise()
 
+app.use((req, res, next) => {
+  console.log('Incoming request:', req.method, req.url);
+  next();
+});
 app.use("/registration", registrationRoute)
 app.use("/admin", adminRoute)
 app.use("/hive", hiveRoute)
 app.use("/apiary", apiaryRoute)
 
-app.use((req, res, next) => {
-  console.log('Incoming request:', req.method, req.url);
-  next();
-});
+
 
 app.listen(port, () => {
     console.log(`Server running at http://localhost:${port}`);

@@ -7,23 +7,20 @@ import IconButton from '../components/input/buttons/IconTextButton.vue';
 import { createComponentInstance, createComponentWithProps } from '../utils/components';
 import CreateApiaryPopup from '../components/popups/CreateApiaryPopup.vue';
 import { getSVG, SVGIconRes } from '../core/SVGLoader';
-import { getApiaries } from '../core/server/ApiaryRequests';
-import type { IGetApiaryResponseModel } from '../core/server/ResponseModels';
-
-const apiaries = ref<IGetApiaryResponseModel[]>([])
-
-async function searchApiaries(filter: string) {
-    console.log(filter);
-    const promise = await getApiaries()
-    apiaries.value = (promise) ? promise : []
-}
-
-onMounted(async () => {
-    const promise = await getApiaries()
-    apiaries.value = (promise) ? promise : []
-})
+import type { ApiaryResponseModel } from '../core/server/models/ResponseModels';
+import { ApiaryRepository } from '../core/repositories/ApiaryRepository';
 
 const s = useCssModule()
+const apiaries = ref<ApiaryResponseModel[]>([])
+
+onMounted(async () => {
+    apiaries.value = await ApiaryRepository.getApiaries()
+})
+
+async function searchApiaries(filter: string) {
+    apiaries.value = await ApiaryRepository.getApiaries(filter)
+}
+
 const components = [
     createComponentWithProps(IconButton, { 
         text: 'add apiary',

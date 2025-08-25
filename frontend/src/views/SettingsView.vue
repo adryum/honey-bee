@@ -1,7 +1,6 @@
 <script setup>
 import { ref, useCssModule } from "vue";
 import IconCubeButton from '@/components/input/buttons/IconCubeButton.vue';
-import PathTitle from '@/components/PathTitle.vue';
 import UserProfile from "@/components/settings/UserProfile.vue";
 
 const s = useCssModule()

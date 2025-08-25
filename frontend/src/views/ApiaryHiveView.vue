@@ -8,18 +8,17 @@ import { createComponentWithProps, createComponentInstance } from '../utils/comp
 import IconTextButton from '../components/input/buttons/IconTextButton.vue';
 import CreateHivePopup from '../components/popups/CreateHivePopup.vue';
 import SmallSearchbar from '../components/input/fields/SmallSearchbar.vue';
-import { getApiary, getApiaryHives } from '../core/server/ApiaryRequests.js';
-import type {  IGetApiaryResponseModel, IGetHiveResponseModel } from '../core/server/ResponseModels.js';
+import type {  ApiaryResponseModel, HiveResponseModel } from '../core/server/models/ResponseModels.js';
 
 const s = useCssModule()
-const hives = ref<IGetHiveResponseModel[] | null>()
-const thisApiary = ref<IGetApiaryResponseModel | null>()
+const hives = ref<HiveResponseModel[] | null>()
+const thisApiary = ref<ApiaryResponseModel | null>()
 const props = defineProps<{
     id: number
 }>()
 
 async function searchHives(searchText: string) {
-    hives.value = await getApiaryHives(props.id, searchText)
+    // hives.value = await getApiaryHives(props.id, searchText)
 }
 
 const components = [
@@ -34,8 +33,8 @@ const components = [
 ]
 
 onMounted(async () => {
-    thisApiary.value = await getApiary(props.id)
-    hives.value = await getApiaryHives(props.id)
+    // thisApiary.value = await getApiary(props.id)
+    // hives.value = await getApiaryHives(props.id)
 })
 </script>
 

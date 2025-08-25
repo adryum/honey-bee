@@ -1,33 +1,26 @@
-<script setup>
-import Hive from '@/components/hive/Hive.vue';
+<script setup lang="ts">
 import { ref, useCssModule } from "vue";
-import { rUser, getHives } from "../core/repositories/homeRepository.js"
-import { onMounted } from 'vue';
-import IconCubeButton from '@/components/input/buttons/IconCubeButton.vue';
-import PathTitle from '@/components/PathTitle.vue';
-import CreateHivePopup from '@/components/popups/CreateHivePopup.vue';
-import { createPopup } from '@/core/popups.js';
 
+const s = useCssModule()
 const hives = ref([])
 const assignedHives = ref([])
 const unassignedHives = ref([])
 
-async function refreshHives() {
-    hives.value = await getHives()
+// async function refreshHives() {
+//     hives.value = await getHives()
     
-    assignedHives.value = hives.value.filter((item) => item['apiary_id'])
-    unassignedHives.value = hives.value.filter((item) => !item['apiary_id'])
-}
+//     assignedHives.value = hives.value.filter((item) => item['apiary_id'])
+//     unassignedHives.value = hives.value.filter((item) => !item['apiary_id'])
+// }
 
-onMounted(async () => {
-    refreshHives()
-})
-const s = useCssModule()
+// onMounted(async () => {
+//     refreshHives()
+// })
 </script>
 
 <template>
 <div :class="s.container">
-    <div :class="s.header">
+    <!-- <div :class="s.header">
         <PathTitle title="Hives"/>
         <div :class="s['vt-linebreak']"></div>
         <IconButton @click="createPopup(CreateHivePopup, {refreshHives: refreshHives})" text="Create Hive"/>
@@ -44,7 +37,7 @@ const s = useCssModule()
             @click="$router.push('/hives/' + hive.id)" 
             :hive="hive"
         />
-    </div>
+    </div> -->
 </div>
 </template>
 

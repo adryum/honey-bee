@@ -1,14 +1,16 @@
-<script setup>
+<script setup lang="ts">
+import { useCssModule } from "vue";
 
+const s = useCssModule()
 </script>
 
 <template>
-    <main>
+<div :class="s.container">
 
-       
-    </main>
+</div>
 </template>
 
-<style scoped lang='scss'>
-
+<style module lang='sass'>
+@use '@/assets/main.sass' as main
+.container
 </style>

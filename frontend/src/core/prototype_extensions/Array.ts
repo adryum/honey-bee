@@ -10,7 +10,13 @@ declare global {
         readonly lastIndex: number;
         /** Removes item from array. */
         remove(item: T): T[]
+        /** Returns true if contains no items. */
+        isEmpty(): boolean
     }
+}
+
+Array.prototype.isEmpty = function () {
+    return this.length < 1
 }
 
 Array.prototype.last = function () {

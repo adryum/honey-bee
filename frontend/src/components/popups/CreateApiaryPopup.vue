@@ -7,6 +7,7 @@ import ImageDropZone from '../input/fields/ImageDropZone.vue';
 import { AnimatePresence, motion } from 'motion-v';
 import TransparentIconButton from '../input/buttons/TransparentIconButton.vue';
 import { getSVG, SVGIconRes } from '../../core/SVGLoader';
+
 const s = useCssModule()
 const props = defineProps<{
     unmount?: () => {},

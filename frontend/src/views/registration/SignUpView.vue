@@ -1,83 +1,56 @@
-<script setup>
-import {onMounted, reactive, ref, useCssModule} from "vue";
+<script setup lang="ts">
+import {computed, onMounted, ref, useCssModule} from "vue";
 import RegistrationInputField from "@/components/input/fields/RegistrationInputField.vue";
 import CheckboxWText from "@/components/input/fields/CheckboxWText.vue";
-import { signUp } from "@/core/repositories/registrationRepository";
-import { watch } from "vue";
-import { rUser } from "../../core/repositories/homeRepository.js";
-import { isEmpty } from "../../utils/checks.js";
-import router from '../../router/index.js';
 import RegistrationButton from "@/components/input/buttons/RegistrationButton.vue";
 import FaintButton from "@/components/input/buttons/FaintButton.vue";
+import { RegistrationRepository } from "../../core/repositories/RegistrationRepository";
 
-const rUsername = ref("")
-const rName = ref("")
-const rSurname = ref("")
-const rEmail = ref("")
-const rPassword = ref("")
-const rRepeatPassword = ref("")
-const rProfilePicture = ref("")
-const rAgreedToTerms = ref(false)
-const rAgreedToSpam = ref(false)
+const s = useCssModule()
+const username = ref("")
+const email = ref("")
+const password = ref("")
+const repeatPassword = ref("")
+const hasAgreedToTerms = ref(false)
+const hasAgreedToSpam = ref(false)
 
-const isValid = reactive({
-    username: false,
-    name: false,
-    surname: false,
-    email: false,
-    password: false,
-})
+async function signUp() {
+    if (!isEverythingValid.value) return 
 
-function isEverythingValid() {
-    // check if validation is true
-    for (let key in isValid) {
-        if (!isValid[key]) return false
-    }
-
-    // if passwords dont match
-    if (rPassword.value != rRepeatPassword.value) return false
-
-    return true
+    await RegistrationRepository.signUp({
+        username: username.value,
+        email: email.value,
+        password: password.value,
+    })
 }
 
-watch(rUser, (newValue) => {
-    if (!isEmpty(newValue)) {
-        console.log('Sent to main');
-        
-        router.push('/')
-    }
-},
-{
-    immediate: true
+const isEverythingValid = computed(() => {
+    return email.value 
+    && password.value 
+    && username.value 
+    && hasAgreedToTerms.value 
+    && password.value === repeatPassword.value
 })
-onMounted(() => {
-    isEverythingValid()
-})
-const s = useCssModule()
 </script>
 
 <template>
 <div :class="s.view">
-    <form @submit.prevent="isEverythingValid() ? signUp(rUsername, rName, rSurname, rProfilePicture, rEmail, rPassword) : () => {}" :class="s.container">
+    <form @submit.prevent="signUp" :class="s.container">
         <img :class="s.logo" src="@/assets/images/BeeLogo.png" alt="logo">
         <h1 :class="s.title">HoneyBee</h1>
         <RegistrationInputField
-            v-model="rUsername" v-model:isValid="isValid.username"
+            v-model="username" 
             hint="Username" type="text" :is-required="true"/>
-        <RegistrationInputField :no-numbers="true" :at-least-one-uppercase="true" v-model="rName" v-model:isValid="isValid.name"
-            hint="Name" type="text" :is-required="true"/>
-        <RegistrationInputField :no-numbers="true" :at-least-one-uppercase="true" v-model="rSurname" v-model:isValid="isValid.surname"
-            hint="Surname" type="text" :is-required="true"/>
-        <RegistrationInputField v-model="rEmail" v-model:isValid="isValid.email"
+        <RegistrationInputField v-model="email"
             hint="E-mail" type="email" :is-required="true"/>
-        <RegistrationInputField :at-least-one-uppercase="true" :min-length="6" v-model="rPassword" v-model:isValid="isValid.password"
+        <RegistrationInputField :at-least-one-uppercase="true" :min-length="6" v-model="password"
             hint="Password" type="password" :is-required="true"/>
-        <RegistrationInputField v-model="rRepeatPassword" hint="Repeat Password" type="password" :is-required="true"/>
-        <CheckboxWText v-model="rAgreedToSpam" text="Agree to receive spam" :isRequired="true"/>
-        <CheckboxWText v-model="rAgreedToTerms" text="Agree to Terms of Service" :isRequired="true"/>
+        <RegistrationInputField v-model="repeatPassword" hint="Repeat Password" type="password" :is-required="true"/>
+        <CheckboxWText v-model="hasAgreedToSpam" text="Agree to receive spam" :isRequired="true"/>
+        <CheckboxWText v-model="hasAgreedToTerms" text="Agree to Terms of Service" :isRequired="true"/>
         <CheckboxWText text="Remember me!"/>
         <div :class='s.container_bottom'>
-            <RegistrationButton :is-enabled="isEverythingValid()" type="submit" :class="s.submit" text="Sign up"/>
+            <RegistrationButton :is-enabled="isEverythingValid" type="submit" :class="s.submit" text="Sign up"/>
             <FaintButton @click="$router.push('/recovery')" :class="s.left" text="Forgot Password!"/>
             <FaintButton @click="$router.push('/login')" :class="s.right" text="Log in"/>
         </div>
