@@ -1,165 +1,71 @@
-<script setup>
-import { getImageRes, useReactiveImage } from '@/core/imageHandler';
+<script setup lang="ts">
 import { useCssModule, ref, onMounted, watch, toRef } from 'vue';
-
-const props = defineProps({
-    hive: Object,
-})
-
-const rHive = toRef(props, 'hive')
-const { img }= useReactiveImage(rHive, obj => obj?.image)
+import type { HiveModel } from '../../core/models/Models';
 
 const s = useCssModule()
+const props = withDefaults(defineProps<{
+    hive: HiveModel,
+    showApiary?: boolean
+}>(), {
+    showApiary: false
+})
 </script>
 
 <template>
 <div :class="s.container">
-    <div v-if="hive.apiary" :class="s.location">
-        <img :class="s.wood" src="@/assets/images/Wood2.jpg">
-        <p>{{ hive.apiary }}</p>
+    <div v-if="showApiary" :class="s.location">
+        <img :class="s.wood" :src="hive.apiaryImagePath">
+        <p>{{ hive.apiaryName }}</p>
    </div>
 
    <div :class="s.hive">
         <div :class="s.header">
-            <img :class="s.wood" src="@/assets/images/Wood2.jpg">
-            <p>{{ hive.name }}</p>
+            <p :class="s.name">{{ hive.name }}</p>
         </div>
 
         <div :class="s.body">
-            <img :class="s.wood" src="@/assets/images/Wood1.png">
-            <img :class="s['hive-img']" :src="img">
-            <div :class="s.list">
-                <div :class="s.drawer">
-                    <img :class="s.wood" src="@/assets/images/Wood2.jpg">
-                    <p>Frames: {{ hive.frames }}</p>
-                </div>
-                <div :class="s.drawer">
-                    <img :class="s.wood" src="@/assets/images/Wood2.jpg">
-                    <p>Weight: {{ hive.weight }}kg</p>
-                </div>
-                <div :class="s.drawer">
-                    <img :class="s.wood" src="@/assets/images/Wood2.jpg">
-                    <p>Type: {{ hive.type }}</p>
-                </div>
-            </div>
+            <img :class="s.hiveImage" :src="hive.imagePath" alt="hive image">
         </div>
    </div>
 </div>
 </template>
 
 <style module lang='sass'>
+@use '@/assets/main.sass' as main
 .container
+    @include main.font
     display: flex
     flex-direction: column
-    align-items: flex-start
 
-    gap: .5rem
-
-    .location
-        position: relative
-
-        display: flex
-        align-items: center
-        justify-content: center
-
-        padding: .1rem .4rem .2rem .4rem
-
-        font-size: 15px
-        color: white
-        background: #633A00
-        border-radius: 4px
-        overflow: hidden
-        box-shadow: 0px 0px 10px rgba(0, 0, 0, 0.21)
-
-.hive
-    display: grid
-    grid-template-areas: 'center center center' 'ls2 body rs2'
-    grid-template-columns: 0.07fr 1fr 0.07fr
-    grid-template-rows: .3fr .6fr
-
-    width: 20rem
-    height: 15rem
-
-.header
-    position: relative
-    grid-area: center
-    display: flex
-    align-items: center
-    justify-content: center
-
-    font-size: 35px
-    color: white
-    background: #633A00
-    border-radius: 4px
-    overflow: hidden
-    box-shadow: 0px 0px 10px rgba(0, 0, 0, 0.21)
-
-.body
-    position: relative
-    grid-area: body
-    display: grid
-    grid-template-areas: 'left right'
-    grid-template-columns: 1fr 1fr
-
-    box-sizing: border-box
-    padding: .4rem
-    gap: .4rem
-
-    font-size: 15px
-    color: white
-    background: #31230A
-
-    border-radius: 0 0 4px 4px
-    box-shadow: 0px 0px 10px rgba(0, 0, 0, 0.21)
-    overflow: hidden
-
-    .hive-img
-        grid-area: left
-        width: 100%
-        height: 100%
-        object-fit: cover
-        border-radius: 4px
-        z-index: 1
-        box-shadow: 0px 0px 10px rgba(0, 0, 0, 0.21)
-        overflow: hidden
-
-    .list
-        height: 100%
-        grid-area: right
+    .hive
         display: flex
         flex-direction: column
-        justify-content: space-between
-        align-items: center
 
-        box-sizing: border-box
-        padding: .4rem 0
-        z-index: 1
-
-        .drawer
-            position: relative
+        .header
             display: flex
-            width: 95%
-            height: 25%
             align-items: center
+            height: 3rem
 
             box-sizing: border-box
-            padding: 0 .4rem 
+            padding-left: .5rem 
+            background: var(--light)
+            .name
+                all: unset
+                @include main.f-size-small
+                font-weight: 700
 
-            border-radius: 4px
-            overflow: hidden
+        .body
+            height: 20rem
+            background: var(--accent)
 
-            z-index: 1
-            background: #633A00
-    
-p
-    all: unset
-    z-index: 1
+            .hiveImage
+                width: 100%
+                height: 100%
+                display: block
+                object-fit: cover
 
 .wood
-    position: absolute
     width: 100%
     height: 100%
     object-fit: cover
-    opacity: .2
-    left: 0
 </style>

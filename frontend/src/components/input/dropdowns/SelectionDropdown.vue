@@ -1,20 +1,21 @@
 <script setup lang="ts">
-import { ref, useCssModule, , watch } from 'vue';
+import { computed, ref, useCssModule, watch } from 'vue';
 import { AnimatePresence, motion } from 'motion-v';
 import { getSVG, SVGIconRes, type SVGIcon } from '../../../core/SVGLoader';
 import { onClickOutside, useToggle } from '@vueuse/core';
 import SVGComponent from '../../SVGComponent.vue';
-import type { IDropdownButton } from '../../../core/Interfaces';
+import type { DropdownOptions } from '../../../core/Interfaces';
 
 const s = useCssModule()
-const model = defineModel()
+const selection = defineModel('selection')
 const props = withDefaults(defineProps<{
+    title: string
     svg?: SVGIcon
     onClick?: () => void
-    options: []
+    options: DropdownOptions[]
 }>(), {
     svg: () => getSVG(SVGIconRes.House),
-    buttons: () => [{
+    options: () => [{
             text: 'option1',
             svg: getSVG(SVGIconRes.House)
         },
@@ -24,47 +25,58 @@ const props = withDefaults(defineProps<{
         },
     ]
 })
-
 const dropdown = ref()
-const button = ref()
+const field = ref()
 const selectedChoice = ref<Number>()
 const [isShown] = useToggle()
-onClickOutside(dropdown, () => isShown.value = false, { ignore: [button]})
+const allOptions = computed(() => [
+    { text: "None" },
+    ...props.options,
+])
+const MotionSVG = motion.create(SVGComponent)
 
-function onItemClick(button: IDropdownButton) {
-    isShown.value = false
-    button.onClick?.()
-}
+onClickOutside(dropdown, () => isShown.value = false, { ignore: [field]})
 
 watch(isShown, () => {
     selectedChoice.value = -1
 })
+
+function onItemClick(button: DropdownOptions) {
+    isShown.value = false
+    selection.value = button.text
+}
 </script>
 
 <template>
     <div :class="s.container">
-        <input :class="s.text"
-            placeholder="..."
-            v-model="model"
-        ></input>
+        <h2 :class="s.title">{{ title }}</h2>
+
+        <div :class="s.field"
+            ref="field"
+            @click="isShown = !isShown"
+            :style="isShown ? 'border-radius: 3px 3px 0 0' : ''"
+        >
+            <p :class="s.selection">{{ selection }}</p>
+            <MotionSVG 
+                :initial="{ rotateZ: 270 }" 
+                :animate="isShown ? { rotateZ: 270 } : { rotateZ: 90 }" :class="s.icon" :svg="getSVG(SVGIconRes.ArrowHead, 'black')"/>
+        </div>
         
-
-
         <AnimatePresence>
-        <motion.ol ref="dropdown" @click.stop
-            v-if="isShown"
+        <motion.ol ref="dropdown" v-if="isShown"
             :class="s.dropdown"
-            :initial="{ opacity: 0, x: '5px' }"
-            :animate="{ opacity: 1, x: '0px'  }"
-            :exit="{ opacity: 0, x: '5px' }"
+            :initial="{ opacity: 0, y: '-5px' }"
+            :animate="{ opacity: 1, y: '0px'  }"
+            :exit="{ opacity: 0, y: '-5px' }"
+            @click.stop
             >
-            <motion.li v-for="(button, i) in options" :key="i" 
+            <motion.li v-for="(option, i) in allOptions" :key="i" 
                 :class="s.li" 
-                @click="() => onItemClick(button)" 
+                @click="() => onItemClick(option)" 
                 @mouseover="selectedChoice = i"
                 :while-press="{ scale: 0.9 }">
-                <SVGComponent :class="s.icon" :svg="button.svg" />
-                <p :class="s.text">{{ button.text }}</p> 
+                <SVGComponent :class="s.icon" :svg="option.svg" />
+                <p :class="s.text">{{ option.text }}</p> 
 
                 <motion.div
                     v-if="i === selectedChoice"
@@ -84,20 +96,52 @@ watch(isShown, () => {
 @use '/src/assets/_colors.sass' as colors
 @use '/src/assets/main.sass' as main
 .container
+    @include main.font
     position: relative
-    display: inline-block
+    display: flex
+    flex-direction: column
+    gap: .2rem
+
+    .title
+        all: unset
+        @include main.f-size-very-small
+        font-weight: 500
+
+    .field
+        z-index: 1
+        display: flex
+        align-items: center
+        height: 2rem
+        background: white
+        border-radius: 3px
+        box-shadow: inset 0 -2px rgba(0,0,0, .3)
+        cursor: pointer
+
+        transition: .2s
+
+        .selection
+            padding-left: .5rem 
+        .icon
+            margin-left: auto 
+            aspect-ratio: 1
+            height: 100%
+            padding: .3rem
+            box-sizing: border-box
 
     .dropdown
+        all: unset
+        z-index: 0
         @include main.button-font
         position: absolute
         display: inline-flex
         flex-direction: column
         top: 100%
         right: 0
-        margin-top: 1rem
+        left: 0
+        
         background: var(--accent)
         padding: 1rem
-        border-radius: 3px
+        border-radius: 0 0 3px 3px
         box-shadow: 0px 0px 10px rgba(0, 0, 0, .5)
 
         .li
@@ -107,6 +151,7 @@ watch(isShown, () => {
             @include main.f-size-very-small
             padding: .5rem 1rem
             gap: 1rem
+            cursor: pointer
 
             .icon
                 z-index: 2

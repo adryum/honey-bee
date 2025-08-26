@@ -10,21 +10,29 @@ const router = Router()
 // returns all apiary hives
 router.post('/hives', async (req: Request<{},{}, {
     identification: IUserIdentification
-    apiaryId: string
+    apiaryId: string,
+    searchWord: string
 }>, res: Response) => {
     const { identification, apiaryId } = req.body
-    
+    var { searchWord } = req.body
+
     if (!identification || !apiaryId) 
         return res.status(401).send('incorrect credentials!') 
+
+    searchWord = (!searchWord) ? '%' : searchWord.concat('%')
         
     try {
         const [hives] = await db.query(`
-            SELECT *
+            SELECT 
+                ${HiveT.id} AS id,
+                ${HiveT.name} AS name,
+                ${HiveT.imagePath} AS imagePath
             FROM ${HiveT.tableName}
-            WHERE ${HiveT.userId} = ? AND ${HiveT.apiaryId} = ?`, 
-            [identification.id, apiaryId]
+            WHERE ${HiveT.userId} = ? AND ${HiveT.apiaryId} = ? AND ${HiveT.name} LIKE ?`, 
+            [identification.id, apiaryId, searchWord]
         )
-        res.status(200).json({ hives });
+        console.log(hives);
+        return res.status(200).json(hives);
     } catch (err) {
         console.error(err);
         res.status(500).send('Server error');
@@ -34,11 +42,9 @@ router.post('/hives', async (req: Request<{},{}, {
 // returns all apiaries which start with given filter
 router.post('/apiaries', async (req: Request<{},{},{
     identification: IUserIdentification
-    searchFilter: string
+    searchWord: string
 }>, res: Response) => {
-    console.log(req.body);
-    
-    let { identification, searchFilter } = req.body
+    let { identification, searchWord: searchFilter } = req.body
 
     if (!identification.id) 
         return res.status(401).send('incorrect credentials!') 
@@ -75,7 +81,7 @@ router.post('/', async (req: Request<{},{},{
     identification: IUserIdentification
     apiaryId: string
 }>, res: Response) => {
-    let { identification, apiaryId } = req.body
+    const { identification, apiaryId } = req.body
 
     // missing credentials
     if (!identification || apiaryId == null) 
@@ -85,11 +91,13 @@ router.post('/', async (req: Request<{},{},{
         const [apiary] = await db.query(`
             SELECT *
             FROM ${ApiaryT.tableName}
-            WHERE ${ApiaryT.userId} = ? AND ${ApiaryT.id} = ?`, 
+            WHERE ${ApiaryT.userId} = ? AND ${ApiaryT.id} = ?
+            LIMIT 1`, 
             [identification.id, apiaryId]
         )
 
-        res.status(200).json({ apiary })
+        console.log(apiary);
+        return res.status(200).json( (apiary as any[])[0] )
     } catch (err) {
         console.error(err);
         res.status(500).send('Server error');
@@ -103,6 +111,7 @@ router.post('/create', async (req: Request<{},{},{
     location: string
     description: string
 }>, res: Response) => {
+    console.log(req.body);
     let { identification, name, location, description } = req.body
 
     // missing credentials
@@ -132,7 +141,8 @@ router.post('/delete', async (req: Request<{},{},{
     identification: IUserIdentification
     apiaryId: string
 }>, res: Response) => {
-    let { identification, apiaryId } = req.body
+    console.log(req.body);
+    const { identification, apiaryId } = req.body
 
     // missing credentials
     if (!identification || apiaryId == null) 

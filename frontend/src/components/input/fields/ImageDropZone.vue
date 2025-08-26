@@ -1,8 +1,8 @@
 <script setup lang="ts">
 import { useDropZone } from "@vueuse/core";
-import { computed, ref, useCssModule, watch } from "vue";
+import { ref, useCssModule, watch } from "vue";
 import Button from "../buttons/Button.vue";
-import { motion, rgba } from 'motion-v';
+import { motion } from 'motion-v';
 
 const s = useCssModule()
 const dropZoneRef = ref()
@@ -12,22 +12,8 @@ const { isOverDropZone, files } = useDropZone(dropZoneRef,
         dataTypes: ['jpeg', 'image', 'png']
     }
 )
-
-const imageSrc = ref('')
+const imageSrc = defineModel<string>('imageSrc')
 const fileInput = ref<HTMLInputElement | null>(null)
-
-function openFilePicker() {
-    if (fileInput.value) {
-        fileInput.value.click()
-    }
-}
-
-function handleFiles(event: Event) {
-    if (!event.target) return 
-
-    const target = event.target as HTMLInputElement
-    files.value = target.files ? Array.from(target.files) : null
-}
 
 watch(files, () => {
     if (files.value && files.value[0]) {
@@ -41,6 +27,19 @@ watch(files, () => {
         imageSrc.value = ''
     }
 })
+
+function openFilePicker() {
+    if (fileInput.value) {
+        fileInput.value.click()
+    }
+}
+
+function handleFiles(event: Event) {
+    if (!event.target) return 
+
+    const target = event.target as HTMLInputElement
+    files.value = target.files ? Array.from(target.files) : null
+}
 </script>
 
 <template>

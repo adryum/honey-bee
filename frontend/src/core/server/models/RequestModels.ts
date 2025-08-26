@@ -13,7 +13,7 @@ export type ApiaryRequestModel = {
 
 export type ApiariesRequestModel = {
     identification: UserIdentificationModel
-    apiaryNameStartingSymbols: string
+    searchWord: string
 }
 
 export type ApiaryDeleteRequestModel = {
@@ -24,7 +24,7 @@ export type ApiaryDeleteRequestModel = {
 export type ApiaryHivesRequestModel = {
     identification: UserIdentificationModel
     apiaryId: number
-    hiveNameStartingSymbols: string
+    searchWord: string
 }
 
 // hives

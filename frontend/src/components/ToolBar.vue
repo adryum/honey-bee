@@ -3,7 +3,7 @@ import { useCssModule } from "vue";
 import type { ComponentWithProps } from "../utils/components";
 
 const props = withDefaults(defineProps<{
-    name: string,
+    name?: string,
     components: ComponentWithProps[]
 }>(), {
     name: "{ PAGE }"

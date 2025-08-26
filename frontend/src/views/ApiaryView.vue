@@ -29,18 +29,20 @@ const components = [
             createComponentInstance(CreateApiaryPopup, {}, true)
         }
     }),
-    createComponentWithProps(SmallSearchbar, { onClick: (value: string) => searchApiaries(value) }),
+    createComponentWithProps(SmallSearchbar, { 
+        onClick: (value: string) => searchApiaries(value) 
+    }),
 ]
-
 </script>
 
 <template>
     <div :class="s.container">
         <ToolBar name="Apiaries" :components="components"/>
         <div :class="s.appiaries" ref="page">
-            <ApiarySummaryCard class="item" 
-            v-for="apiary in apiaries" 
-            :apiary="apiary":onDelete="searchApiaries"/>
+            <ApiarySummaryCard v-for="apiary in apiaries"
+                @click="$router.push('/apiaryHives/' + apiary!.id)"
+                class="item" 
+                :apiary="apiary" :onDelete="searchApiaries"/>
         </div>
     </div>
 </template>

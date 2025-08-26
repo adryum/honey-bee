@@ -2,7 +2,7 @@
 import { ref, useCssModule } from "vue"
 import { getSVG, SVGIconRes } from "../../core/SVGLoader";
 import { motion } from "motion-v"
-import type { IDropdownButton } from "../../core/Interfaces";
+import type { DropdownOptions } from "../../core/Interfaces";
 import CubeDropdown from "../input/dropdowns/CubeDropdown.vue";
 import Button from "../input/buttons/Button.vue";
 const s = useCssModule()

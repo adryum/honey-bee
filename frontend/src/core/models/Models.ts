@@ -17,3 +17,11 @@ export type UserModel = {
     role: string
     paidTier: string
 }
+
+export type HiveModel = {
+    id: number
+    name: string
+    imagePath: string
+    apiaryName?: string
+    apiaryImagePath?: string
+}

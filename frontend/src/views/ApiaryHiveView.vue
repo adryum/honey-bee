@@ -8,22 +8,28 @@ import { createComponentWithProps, createComponentInstance } from '../utils/comp
 import IconTextButton from '../components/input/buttons/IconTextButton.vue';
 import CreateHivePopup from '../components/popups/CreateHivePopup.vue';
 import SmallSearchbar from '../components/input/fields/SmallSearchbar.vue';
-import type {  ApiaryResponseModel, HiveResponseModel } from '../core/server/models/ResponseModels.js';
+import type {  ApiaryHivesResponseModel, ApiaryResponseModel, HiveResponseModel } from '../core/server/models/ResponseModels.js';
+import { ApiaryRepository } from '../core/repositories/ApiaryRepository.js';
 
 const s = useCssModule()
-const hives = ref<HiveResponseModel[] | null>()
-const thisApiary = ref<ApiaryResponseModel | null>()
+const hives = ref<ApiaryHivesResponseModel | undefined>()
+const apiary = ref<ApiaryResponseModel | null>()
 const props = defineProps<{
-    id: number
+    apiaryId: string
 }>()
 
 async function searchHives(searchText: string) {
-    // hives.value = await getApiaryHives(props.id, searchText)
+    hives.value = await ApiaryRepository.getApiaryHives(Number(props.apiaryId), searchText)
 }
+
+onMounted(async () => {
+    apiary.value = await ApiaryRepository.getApiary(Number(props.apiaryId))
+    hives.value = await ApiaryRepository.getApiaryHives(Number(props.apiaryId))
+})
 
 const components = [
     createComponentWithProps(IconTextButton, { 
-        text: 'add apiary',
+        text: 'add hive',
         svg: getSVG(SVGIconRes.Pluss),
         onClick: () => {
             createComponentInstance(CreateHivePopup, {}, true)
@@ -31,19 +37,14 @@ const components = [
     }),
     createComponentWithProps(SmallSearchbar, { onClick: (searchText: string) => searchHives(searchText) }),
 ]
-
-onMounted(async () => {
-    // thisApiary.value = await getApiary(props.id)
-    // hives.value = await getApiaryHives(props.id)
-})
 </script>
 
 <template>
 <div :class="s.container">
-        <ToolBar name="Apiaries" :components="components"/>
+        <ToolBar :name="apiary?.name" :components="components"/>
         <div :class="s.appiaries" ref="page">
-            <Hive class="item" 
-            v-for="i in 3"/>
+            <Hive v-for="hive in hives"  class="item" 
+                :hive="hive"/>
         </div>
 </div>
 </template>
@@ -61,7 +62,7 @@ onMounted(async () => {
 
     .appiaries
         display: grid
-        grid-template-columns: repeat(auto-fit, minmax(500px, 1fr))
+        grid-template-columns: repeat(auto-fit, minmax(400px, 1fr))
         justify-content: center
         gap: 1rem
 </style>

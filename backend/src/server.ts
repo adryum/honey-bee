@@ -23,37 +23,20 @@ export const db = mysql.createPool({
     database: process.env.MYSQL_DATABASE as string,
 }).promise()
 
+// middle man between request and resposne
 app.use((req, res, next) => {
-  console.log('Incoming request:', req.method, req.url);
-  next();
+    console.log('Incoming request:', req.method, req.url);
+    console.log('body: ', req.body);
+    next();
 });
+
 app.use("/registration", registrationRoute)
 app.use("/admin", adminRoute)
 app.use("/hive", hiveRoute)
 app.use("/apiary", apiaryRoute)
-
-
 
 app.listen(port, () => {
     console.log(`Server running at http://localhost:${port}`);
 });
 
 testConnection()
-
-
-
-
-
-// function convertNULLToUndefinedOrRemove(obj) {
-//     let newObj = structuredClone(obj)
-//     let hasAValue = false
-//     for (let key in newObj) {
-//         if (newObj[key] === null) {
-//             newObj[key] = undefined
-//         } else {
-//             hasAValue = true
-//         }
-//     }
-
-//     return (hasAValue) ? newObj : undefined
-// }

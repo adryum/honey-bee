@@ -4,17 +4,17 @@ import { AnimatePresence, motion } from 'motion-v';
 import { getSVG, SVGIconRes, type SVGIcon } from '../../../core/SVGLoader';
 import { onClickOutside, useToggle } from '@vueuse/core';
 import SVGComponent from '../../SVGComponent.vue';
-import type { IDropdownButton } from '../../../core/Interfaces';
+import type { DropdownOptions } from '../../../core/Interfaces';
 import IconCubeButton from '../buttons/IconCubeButton.vue';
 
 const s = useCssModule()
 const props = withDefaults(defineProps<{
     svg?: SVGIcon
     onClick?: () => void
-    buttons: IDropdownButton[]
+    options: DropdownOptions[]
 }>(), {
     svg: () => getSVG(SVGIconRes.House),
-    buttons: () => [{
+    options: () => [{
             text: 'option1',
             svg: getSVG(SVGIconRes.House)
         },
@@ -31,7 +31,7 @@ const selectedChoice = ref<Number>()
 const [isShown] = useToggle()
 onClickOutside(dropdown, () => isShown.value = false, { ignore: [button]})
 
-function onItemClick(button: IDropdownButton) {
+function onItemClick(button: DropdownOptions) {
     isShown.value = false
     button.onClick?.()
 }
@@ -52,7 +52,7 @@ watch(isShown, () => {
             :animate="{ opacity: 1, x: '0px'  }"
             :exit="{ opacity: 0, x: '5px' }"
             >
-            <motion.li v-for="(button, i) in buttons" :key="i" 
+            <motion.li v-for="(button, i) in options" :key="i" 
                 :class="s.li" 
                 @click="() => onItemClick(button)" 
                 @mouseover="selectedChoice = i"

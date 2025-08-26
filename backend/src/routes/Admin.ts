@@ -3,11 +3,9 @@ import { db } from "../server";
 
 const router = Router()
 
-interface IUserResponse {
+router.post('/users', async (req: Request<{},{}, {
     identification: string
-}
-
-router.post('/users', async (req: Request<{},{}, IUserResponse>, res: Response) => {
+}>, res: Response) => {
     const { identification } = req.body 
 
     console.log(identification);

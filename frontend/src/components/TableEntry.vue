@@ -38,8 +38,6 @@ async function onUserDelete() {
     margin: 0 .5rem
     padding: .2rem .5rem
     align-items: center
-
-    font-size: main.$font-size-text
     color: black
     transition: .3s
     > * 

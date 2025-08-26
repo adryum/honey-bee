@@ -52,14 +52,12 @@ onMounted(async () => {
 
         h1
             all: unset
-            font-size: main.$font-size-big
     .row
         padding: 0 .5rem
         display: flex
         height: 2.5rem
         border-bottom: 1px solid rgb(220, 220, 220)
         gap: 1rem
-        font-size: main.$font-size-text
         color: #A1A1A1
         > * 
             display: flex

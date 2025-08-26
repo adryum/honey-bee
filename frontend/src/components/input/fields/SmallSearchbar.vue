@@ -2,6 +2,7 @@
 import { ref, useCssModule } from "vue";
 import { motion } from 'motion-v';
 
+const s = useCssModule()
 const text = ref('')
 const isHoldingAction = ref(false)
 const props = withDefaults(defineProps<{
@@ -14,9 +15,6 @@ const props = withDefaults(defineProps<{
     actionText: 'Search',
     onClick: () => {}
 })
-
-
-const s = useCssModule()
 </script>
 
 <template>

@@ -90,8 +90,6 @@ onMounted(() => {
         opacity: 0.6
         background: repeating-linear-gradient( -45deg, var(--base) 1px, var(--base) 5px, transparent 5px, transparent 35px )
 
-
-
     &:hover
         z-index: 1
         box-shadow: 0 0 10px rgba(0, 0, 0, .5)
@@ -130,8 +128,8 @@ onMounted(() => {
     background: var(--accent)
 
 .today
-    background: var(--light)
-    border: 5px solid rgba(20, 180, 20, .8)
+    background: rgba(20, 220, 20, .4)
+    // border: 5px solid rgba(20, 180, 20, .2)
 
 .weekend
     background: var(--accent)

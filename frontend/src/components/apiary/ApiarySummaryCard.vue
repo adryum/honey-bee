@@ -2,18 +2,18 @@
 import { ref, useCssModule } from "vue"
 import { getSVG, SVGIconRes } from "../../core/SVGLoader";
 import { motion } from "motion-v"
-import type { IDropdownButton } from "../../core/Interfaces";
+import type { DropdownOptions } from "../../core/Interfaces";
 import CubeDropdown from "../input/dropdowns/CubeDropdown.vue";
-const s = useCssModule()
+import type { ApiaryResponseModel } from "../../core/server/models/ResponseModels";
 
-const props = defineProps({
-  apiary: Object,
-  sizeMultiplier: Number,
-  onDelete: Function
-})
+const s = useCssModule()
+const props = defineProps<{
+    apiary: ApiaryResponseModel,
+    onDelete: Function
+}>()
 
 const MotionIconCubeDropdown = motion.create(CubeDropdown)
-const dropdownActions: IDropdownButton[] = [
+const dropdownActions: DropdownOptions[] = [
     {
         text: 'Overview',
         svg: getSVG(SVGIconRes.OpenWindow, 'black'),
@@ -28,7 +28,7 @@ const dropdownActions: IDropdownButton[] = [
 
 </script>
 <template>
-<div :class="s.container" ref="container" @click="$router.push('/apiaries/' + apiary!.id)">
+<div :class="s.container" ref="container">
     <img :class="s.image" src="/src/assets/images/apiary1.jpg" alt="apiary image">
     <hr :class="s.linearDim">
     <MotionIconCubeDropdown 
@@ -37,9 +37,13 @@ const dropdownActions: IDropdownButton[] = [
          />
     <h1 :class="[s.name]">{{ apiary!.name }}</h1>
     <ul :class="s.info">
-        <div :class="s.entry"></div>
-        <div :class="s.entry"></div>
-        <div :class="s.entry"></div>
+        <div :class="s.entry">
+            <p :class="s.value">{{ apiary.hiveCount }}</p>
+            <hr>
+            <p :class="s.title">Hives</p>
+        </div>
+        <!-- <div :class="s.entry"></div>
+        <div :class="s.entry"></div> -->
     </ul>
 
 </div>
@@ -49,6 +53,7 @@ const dropdownActions: IDropdownButton[] = [
 @use '@/assets/_colors.sass' as colors
 @use '@/assets/main.sass' as main
 .container
+    @include main.font
     position: relative
     display: flex
     flex-direction: column
@@ -65,7 +70,6 @@ const dropdownActions: IDropdownButton[] = [
         box-shadow: 2px 2px 10px rgba(0, 0, 0, .3)
         transform: translateY(-3px)
 
-        
     &:hover .image
         scale: 1.1
     &:hover .options
@@ -78,9 +82,7 @@ const dropdownActions: IDropdownButton[] = [
         right: 0
         margin: 1em
         
-
     .name
-        @include main.font
         font-size: 3.5em
         font-weight: 800
         
@@ -99,11 +101,27 @@ const dropdownActions: IDropdownButton[] = [
         padding: 1em
 
     .entry
-        width: 50px
-        height: 50px
+        display: flex
+        flex-direction: column
+        justify-content: space-between
+        align-items: center
 
-        border: 2px solid rgba(255, 255, 255, .5)
-        border-radius: 5px
+        // background: rgba(0, 0, 0, .4)
+        // padding: .5rem 1rem 
+        // box-sizing: border-box  
+        // border-radius: 10px      
+        .value
+            color: white
+            @include main.f-size-very-small
+            font-weight: 700
+
+        .title
+            color: white
+            @include main.f-size-very-small
+            font-weight: 400
+            letter-spacing: .8px
+
+        
 
     .image
         position: absolute

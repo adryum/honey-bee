@@ -24,19 +24,20 @@ export namespace ApiaryEndpoints {
 
     export async function getApiaryHives(
         apiaryId: number, 
-        hiveNameStartsWith: string = '%', 
+        searchWord: string = '%', 
         identification = RegistrationRepository.getUserIdentification()
     ) {
         const payload: ApiaryHivesRequestModel = {
             identification: identification,
             apiaryId: apiaryId,
-            hiveNameStartingSymbols: hiveNameStartsWith
+            searchWord: searchWord
         }
 
         try {
             const promise = await axios.post<ApiaryHivesResponseModel>('/apiary/hives', payload)
-        
-            return promise.data.hives
+            console.log(promise.data);
+            
+            return promise.data
         } catch (error) {
             catchedErrorLog(error)
         }
@@ -66,12 +67,12 @@ export namespace ApiaryEndpoints {
     }
 
     export async function getApiaries(
-        apiaryNameStartingSymbols: string = "%", 
+        searchWord: string = "%", 
         identification = RegistrationRepository.getUserIdentification()
     ) {
         const payload: ApiariesRequestModel = {
             identification: identification,
-            apiaryNameStartingSymbols: apiaryNameStartingSymbols
+            searchWord: searchWord
         }
         console.log(payload);
         

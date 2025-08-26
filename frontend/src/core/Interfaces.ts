@@ -1,7 +1,7 @@
 import type { SVGIcon } from "./SVGLoader";
 
-export interface IDropdownButton {
+export type DropdownOptions = {
     text: string,
-    svg: SVGIcon,
+    svg?: SVGIcon,
     onClick?: () => void
 }

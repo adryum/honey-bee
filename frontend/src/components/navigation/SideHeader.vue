@@ -66,8 +66,8 @@ const containerVariants: Record<string, VariantType> = {
 }
 
 const tabVariants: Record<string, VariantType> = {
-    expanded:  { opacity: 1, y: 0, transition: { delay: .2, duration: .3  } },
-    collapsed: { opacity: 0, y: 5, transition: {  duration: .15 } }
+    expanded:  { opacity: 1, display: 'flex', y: 0, transition: { delay: .2, duration: .3  } },
+    collapsed: { opacity: 0, display: 'none', y: 5, transition: {  duration: .15 } }
 }
 
 const s = useCssModule()
@@ -135,7 +135,6 @@ const s = useCssModule()
         flex-direction: column
         padding: 1rem .5rem
         gap: .3rem
-        width: auto
 
         .tab
             z-index: 0
