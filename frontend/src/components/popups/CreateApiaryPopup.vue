@@ -77,6 +77,7 @@ const isValid = computed(() => {
     grid-template-rows: 250px
     
     gap: 1rem
+    width: 40rem
 
     .fields
         display: flex

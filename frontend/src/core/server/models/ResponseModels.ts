@@ -31,6 +31,8 @@ export type HiveResponseModel = {
     id: number
     name: string
     imagePath: string
+    apiaryName?: string
+    apiaryImagePath?: string
 }
 
 export type HiveOverviewResponseModel = {

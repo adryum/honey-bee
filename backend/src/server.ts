@@ -27,6 +27,7 @@ export const db = mysql.createPool({
 app.use((req, res, next) => {
     console.log('Incoming request:', req.method, req.url);
     console.log('body: ', req.body);
+    
     next();
 });
 

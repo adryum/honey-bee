@@ -2,7 +2,7 @@ import { Router, type Request, type Response } from "express";
 import type { IUserIdentification } from "../Enums";
 import { db } from "../server";
 import { ApiaryT, HiveT } from "../TableColumnTitles";
-import { col } from "../utils";
+import { col, handleSearchWord } from "../utils";
 import type { ResultSetHeader, RowDataPacket } from "mysql2";
 import { uploadImage } from "../image_cloud/Cloudinary";
 import { UserId } from "../image_cloud/PublicIdBuilder";
@@ -12,24 +12,36 @@ const router = Router()
 // returns all hives
 router.post('/hives', async (req: Request<{},{},{
     identification: IUserIdentification
+    searchWord: string
 }>, res: Response) => {
     const { identification } = req.body
-
+    var { searchWord } = req.body
     // missing credentials
     if (!identification) 
         return res.status(401).send('incorrect credentials!') 
+
+    searchWord = handleSearchWord(searchWord)
+    console.log(searchWord);
+    
+
     try {
         const [hives] = await db.query(`
             SELECT 
-                ${HiveT.tableName}.*, 
-                ${ApiaryT.name} as apiary
+                ${col(HiveT.tableName, HiveT.id)} AS id, 
+                ${col(HiveT.tableName, HiveT.name)} as name,
+                ${col(HiveT.tableName, HiveT.imagePath)} as imagePath,
+                ${col(HiveT.tableName, HiveT.apiaryId)} as apiaryId,
+                ${col(ApiaryT.tableName, ApiaryT.name)} as apiaryName,
+                ${col(ApiaryT.tableName, ApiaryT.imagePath)} as apiaryImagePath
             FROM ${HiveT.tableName}
             LEFT JOIN ${ApiaryT.tableName} ON ${col(HiveT.tableName, HiveT.apiaryId)} = ${col(ApiaryT.tableName, ApiaryT.id)}
-            WHERE ${col(HiveT.tableName, HiveT.userId)} = ?`, 
-            [identification.id]
+            WHERE ${col(HiveT.tableName, HiveT.userId)} = ? AND ${col(HiveT.tableName, HiveT.name)} LIKE ?`, 
+            [identification.id, searchWord]
         )
 
-        res.status(200).json({ hives })
+        console.log(hives);
+        
+        res.status(200).json( hives )
     } catch (err) {
         console.error(err);
         res.status(500).send('Server error');
@@ -46,6 +58,8 @@ router.post('/hive/overview', async (req: Request<{},{},{
     // missing credentials
     if (!identification || !hiveId) 
         return res.status(401).send('incorrect credentials!') 
+
+    
       
     const [[overviewResults]] = await db.query<RowDataPacket[]>(`
         SELECT 

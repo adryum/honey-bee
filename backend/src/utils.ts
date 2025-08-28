@@ -9,6 +9,10 @@ export async function testConnection() {
   }
 }
 
-export function col(table: string, column: string) {
+export function handleSearchWord(word: string): string {
+    return (!word) ? '%' : (word.charAt(0) != '%') ? word = word.concat('%') : word
+}
+
+export function col(table: string, column: string): string {
   return `${table}.${column}`;
 }

@@ -14,7 +14,7 @@ const props = withDefaults(defineProps<{
 <template>
 <div :class="s.container">
     <div v-if="showApiary" :class="s.location">
-        <img :class="s.wood" :src="hive.apiaryImagePath">
+        <!-- <img :class="s.wood" :src="hive.apiaryImagePath"> -->
         <p>{{ hive.apiaryName }}</p>
    </div>
 
@@ -36,6 +36,10 @@ const props = withDefaults(defineProps<{
     @include main.font
     display: flex
     flex-direction: column
+
+
+    .location
+        height: 2rem
 
     .hive
         display: flex
@@ -63,6 +67,9 @@ const props = withDefaults(defineProps<{
                 height: 100%
                 display: block
                 object-fit: cover
+                border: 2px solid rgba(0, 0, 0, .5)
+                box-sizing: border-box
+
 
 .wood
     width: 100%

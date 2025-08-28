@@ -128,7 +128,7 @@ onMounted(() => {
     background: var(--accent)
 
 .today
-    background: rgba(20, 220, 20, .4)
+    background: rgba(20, 100, 20, .5)
     // border: 5px solid rgba(20, 180, 20, .2)
 
 .weekend

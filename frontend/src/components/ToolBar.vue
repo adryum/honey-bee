@@ -4,9 +4,9 @@ import type { ComponentWithProps } from "../utils/components";
 
 const props = withDefaults(defineProps<{
     name?: string,
-    components: ComponentWithProps[]
+    components?: ComponentWithProps[]
 }>(), {
-    name: "{ PAGE }"
+    name: "{ PAGE }",
 })
 
 const s = useCssModule()

@@ -23,7 +23,7 @@ onMounted(() => {
 
 const { style } = useDraggable(container, {
     handle: handle,
-    initialValue: { x: 0, y: 0  }
+    initialValue: { x: 100, y: 100  }
 })
 
 function startExiting() {
@@ -79,10 +79,9 @@ function exit() {
 
     box-sizing: border-box
 
-    width: 40rem
 
-    box-shadow: 0px 0px 20px rgba(0, 0, 0, 0.5)
-    background: var(--light)
+    box-shadow: 0px 0px 580px rgba(0, 0, 0, 0.9)
+    background: var(--accent)
 
 
     .handle

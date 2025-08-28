@@ -1,9 +1,9 @@
 import axios from "axios";
-import type { HiveAssignRequestModel, HiveCreateRequestModel, HiveOverviewRequestModel, HiveUnassignRequestModel } from "../models/RequestModels";
-import type { HiveOverviewResponseModel } from "../models/ResponseModels";
+import type { HiveAssignRequestModel, HiveCreateRequestModel, HiveOverviewRequestModel, HiveRequestModel, HiveUnassignRequestModel } from "../models/RequestModels";
+import type { HiveOverviewResponseModel, HiveResponseModel } from "../models/ResponseModels";
 import { RegistrationRepository, catchedErrorLog } from "../../repositories/RegistrationRepository";
 
-namespace HiveEndpoints {
+export namespace HiveEndpoints {
     export async function createHive(
         name: string, 
         location: string, 
@@ -28,8 +28,6 @@ namespace HiveEndpoints {
             catchedErrorLog(error)
         }
     }
-
-
 
     export async function assignHiveToApiary(
         hiveId: number, 
@@ -62,6 +60,23 @@ namespace HiveEndpoints {
             const promise = await axios.post('/hive/unassign', payload)
 
             return promise.status
+        } catch (error) {
+            catchedErrorLog(error)
+        }
+    }
+
+    export async function getHives(
+        searchWord: string, 
+        identification = RegistrationRepository.getUserIdentification()
+    ) {
+        const payload: HiveRequestModel = {
+            identification: identification,
+            searchWord: searchWord
+        }
+        try {
+            const promise = await axios.post<HiveResponseModel[]>('/hive/hives', payload)
+
+            return promise.data
         } catch (error) {
             catchedErrorLog(error)
         }

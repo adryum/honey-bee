@@ -6,7 +6,7 @@ import ToolBar from '../components/ToolBar.vue';
 import { getSVG, SVGIconRes } from '../core/SVGLoader.js';
 import { createComponentWithProps, createComponentInstance } from '../utils/components.js';
 import IconTextButton from '../components/input/buttons/IconTextButton.vue';
-import CreateHivePopup from '../components/popups/CreateHivePopup.vue';
+import CreateHivePopup from '../components/popups/hive/AddHivePopup.vue';
 import SmallSearchbar from '../components/input/fields/SmallSearchbar.vue';
 import type {  ApiaryHivesResponseModel, ApiaryResponseModel, HiveResponseModel } from '../core/server/models/ResponseModels.js';
 import { ApiaryRepository } from '../core/repositories/ApiaryRepository.js';

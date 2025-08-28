@@ -66,6 +66,9 @@ const props = withDefaults(defineProps<{
 
         height: 100%
 
+        padding: .5rem 1rem
+        box-sizing: border-box
+
         border-radius: 0 3px 3px 0
         box-shadow: inset 0 -2px rgba(0,0,0, .5)
         background: #963B28

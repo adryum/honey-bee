@@ -74,16 +74,11 @@ function onItemClick(button: DropdownOptions) {
                 :class="s.li" 
                 @click="() => onItemClick(option)" 
                 @mouseover="selectedChoice = i"
+                :animate="option.text === selection ? { backgroundColor: 'var(--light)'} : {}"
+                :while-hover="option.text != selection ? { transition: { duration: .1 }, backgroundColor: 'var(--base)'} : {}"
                 :while-press="{ scale: 0.9 }">
                 <SVGComponent :class="s.icon" :svg="option.svg" />
                 <p :class="s.text">{{ option.text }}</p> 
-
-                <motion.div
-                    v-if="i === selectedChoice"
-                    :class="s.selected"
-                    layoutId="selected1"
-                    :transition="{ duration: 0.4, ease: [0, 0.71, 0.2, 1.01], type: 'spring' }"
-                    />
             </motion.li>
     
         </motion.ol>
@@ -150,8 +145,10 @@ function onItemClick(button: DropdownOptions) {
             display: flex
             @include main.f-size-very-small
             padding: .5rem 1rem
+            border-radius: 3px
             gap: 1rem
             cursor: pointer
+            background: var(--accent)
 
             .icon
                 z-index: 2

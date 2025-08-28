@@ -37,6 +37,11 @@ export type HiveCreateRequestModel = {
     type: string, 
 }
 
+export type HiveRequestModel = {
+    searchWord: string
+    identification: UserIdentificationModel
+}
+
 export type HiveAssignRequestModel = {
     identification: UserIdentificationModel
     hiveId: number 
