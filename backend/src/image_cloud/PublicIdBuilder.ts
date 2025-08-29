@@ -2,7 +2,7 @@ interface BaseRequirements {
     getResource(): string
 }
 
-export class UserId implements BaseRequirements {
+export class PublicIdBuilder implements BaseRequirements {
     userId: string
     
     constructor(userId: string) {
@@ -27,10 +27,10 @@ export class UserId implements BaseRequirements {
 }
 
 class Hive implements BaseRequirements {
-    parent: UserId
+    parent: PublicIdBuilder
     hiveId: string
     
-    constructor(parent: UserId, hiveId: string) {
+    constructor(parent: PublicIdBuilder, hiveId: string) {
         this.parent = parent
         this.hiveId = hiveId
     }
@@ -45,10 +45,10 @@ class Hive implements BaseRequirements {
 }
 
 class Apiary implements BaseRequirements {
-    parent: UserId
+    parent: PublicIdBuilder
     apiaryId: string
     
-    constructor(parent: UserId, apiaryId: string) {
+    constructor(parent: PublicIdBuilder, apiaryId: string) {
         this.parent = parent
         this.apiaryId = apiaryId
     }
@@ -63,10 +63,10 @@ class Apiary implements BaseRequirements {
 }
 
 class Bee implements BaseRequirements {
-    parent: UserId
+    parent: PublicIdBuilder
     beeId: string
     
-    constructor(parent: UserId, beeId: string) {
+    constructor(parent: PublicIdBuilder, beeId: string) {
         this.parent = parent
         this.beeId = beeId
     }

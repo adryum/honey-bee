@@ -47,19 +47,20 @@ export namespace ApiaryEndpoints {
         name: string, 
         location: string, 
         description: string, 
-        imagePath: string, 
+        image: File | null, 
         identification = RegistrationRepository.getUserIdentification()
     ) {
-        const payload: ApiaryCreateRequestModel = {
-            name: name,
-            location: location,
-            description: description,
-            imagePath: imagePath,
-            identification: identification
-        }
+        const formData = new FormData();
+        formData.append("name", name);
+        formData.append("location", location);
+        formData.append("description", description);
+        formData.append("identification", JSON.stringify(identification)); // stringify o
+        if (image) formData.append("image", image); // must match upload.single("image")
 
+        console.log('path: ', image);
+        
         try {
-            const promise = await axios.post('/apiary/create', payload)
+            const promise = await axios.post('/apiary/create', formData)
             return promise.status
         } catch (error) {
             catchedErrorLog(error)
@@ -80,6 +81,8 @@ export namespace ApiaryEndpoints {
         try {
             const promise = await axios.post<ApiariesResponseModel>('/apiary/apiaries', payload)
 
+            console.log('apiaries', promise.data.apiaries);
+             
             return promise.data.apiaries
         } catch (error) {
             catchedErrorLog(error)

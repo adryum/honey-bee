@@ -2,8 +2,11 @@ import { Router, type Request, type Response } from "express";
 import { db } from "../server";
 import { type IUserIdentification } from "../Enums";
 import { ApiaryT, HiveT } from "../TableColumnTitles";
-import { RowDataPacket } from "mysql2";
+import { ResultSetHeader, RowDataPacket } from "mysql2";
 import { col } from "../utils";
+import { getImage, uploadImage } from "../image_cloud/Cloudinary";
+import { PublicIdBuilder } from "../image_cloud/PublicIdBuilder";
+import { upload } from "../Multer";
 
 const router = Router()
 
@@ -53,7 +56,7 @@ router.post('/apiaries', async (req: Request<{},{},{
     searchFilter = (!searchFilter) ? '%' : searchFilter.concat('%')
 
     try {
-        const [apiaries] = await db.query(`
+        const [apiaries] = await db.query<any[]>(`
             SELECT 
                 ${col(ApiaryT.tableName, ApiaryT.id)} AS id, 
                 ${col(ApiaryT.tableName, ApiaryT.name)} AS name,
@@ -65,11 +68,10 @@ router.post('/apiaries', async (req: Request<{},{},{
             WHERE ${col(ApiaryT.tableName, ApiaryT.userId)} = ? AND ${col(ApiaryT.tableName, ApiaryT.name)} LIKE ?
             GROUP BY ${col(ApiaryT.tableName, ApiaryT.id)}
             `,
-            [identification.id, searchFilter])
+            [identification.id, searchFilter]
+        )
         
-        console.log(apiaries);
-        
-        res.status(200).json({ apiaries })
+        res.status(200).json({apiaries})
     } catch (err) {
         console.error(err);
         res.status(500).send('Server error');
@@ -105,21 +107,24 @@ router.post('/', async (req: Request<{},{},{
 })
 
 // creates apiary
-router.post('/create', async (req: Request<{},{},{
-    identification: IUserIdentification
+router.post('/create', upload.single("image"), async (req: Request<{},{},{
+    identification: string
     name: string
     location: string
     description: string
 }>, res: Response) => {
-    console.log(req.body);
-    let { identification, name, location, description } = req.body
+    console.log("req.body:", req.body);
+    console.log("req.file:", req.file);
+    const { name, location, description } = req.body
+    const file = req.file;
+    const identificationObj = JSON.parse(req.body.identification);
 
     // missing credentials
-    if (!identification || !name || !location) 
+    if (!identificationObj || !name) 
         return res.status(400).send('incorrect information!') 
 
     try {
-        await db.query(`
+        const [result] = await db.query<ResultSetHeader>(`
             INSERT INTO ${ApiaryT.tableName} (
             ${ApiaryT.name}, 
             ${ApiaryT.location}, 
@@ -127,9 +132,25 @@ router.post('/create', async (req: Request<{},{},{
             ${ApiaryT.userId}
             )
             VALUES(?, ?, ?, ?)`, 
-            [name, location, description, identification.id]
+            [name, location, description, identificationObj.id]
         )
-        res.status(201)
+
+        // add image
+        if (file) {
+            const imageKey = new PublicIdBuilder(identificationObj.id).Apiary(result.insertId.toString()).getResource()
+
+            const url = await uploadImage(file, imageKey)
+            console.log(url);
+            
+            const [updateRes] = await db.query<ResultSetHeader>(`
+                UPDATE ${ApiaryT.tableName} 
+                SET ${ApiaryT.imagePath} = ?
+                WHERE ${ApiaryT.id} = ?`,
+                [url, result.insertId]
+            )
+        }
+        
+        res.status(201).send()
     } catch (err) {
         console.error(err);
         res.status(500).send('Server error');
@@ -162,7 +183,7 @@ router.post('/delete', async (req: Request<{},{},{
             [apiaryId, identification.id]
         )
 
-        res.status(204)
+        res.status(204).send()
     } catch (err) {
         console.error(err);
         res.status(500).send('Server error');

@@ -5,7 +5,8 @@ import { ApiaryT, HiveT } from "../TableColumnTitles";
 import { col, handleSearchWord } from "../utils";
 import type { ResultSetHeader, RowDataPacket } from "mysql2";
 import { uploadImage } from "../image_cloud/Cloudinary";
-import { UserId } from "../image_cloud/PublicIdBuilder";
+import { PublicIdBuilder } from "../image_cloud/PublicIdBuilder";
+import { upload } from "../Multer";
 
 const router = Router()
 
@@ -23,7 +24,6 @@ router.post('/hives', async (req: Request<{},{},{
     searchWord = handleSearchWord(searchWord)
     console.log(searchWord);
     
-
     try {
         const [hives] = await db.query(`
             SELECT 
@@ -184,7 +184,7 @@ router.post('/unassign', async (req: Request<{},{}, {
             [hiveId, identification.id]
         )
 
-        res.status(204)
+        res.status(204).send()
     } catch (error) {
         console.error(error);
         res.status(500).send('Server error');
@@ -193,22 +193,22 @@ router.post('/unassign', async (req: Request<{},{}, {
 
 
 // creates hive
-router.post('/create', async (req: Request<{},{},{
+router.post('/create', upload.single("image"), async (req: Request<{},{},{
     identification: IUserIdentification
     name: string
     location: string
     description: string
     type: string
-    imagePath: string
-}>, res) => {
-    const { identification, name, location, description, type, imagePath } = req.body
+}>, res: Response) => {
+    const { identification, name, location, description, type } = req.body
+    const image  = req.file
 
     // missing credentials
     if (!identification || !name || !type)
         return res.status(401).send('incorrect information!') 
 
     try {
-        const [response] = await db.query<ResultSetHeader>(`
+        const [result] = await db.query<ResultSetHeader>(`
             INSERT INTO ${HiveT.tableName} (
                 ${HiveT.name}, 
                 ${HiveT.location}, 
@@ -220,19 +220,20 @@ router.post('/create', async (req: Request<{},{},{
             [name, location, description, type, identification.id]
         )
 
-        // insert image url
-        var imageUrl: string | undefined
-        if (imagePath)
-            imageUrl = await uploadImage(imagePath, new UserId(identification.id).Hive(String(response.insertId)).getResource())
+        // insert image
+        if (image) {
+            const imageKey = new PublicIdBuilder(identification.id).Apiary(result.insertId.toString()).getResource()
 
-        if (imageUrl)
-            await db.query<ResultSetHeader>(`
+            uploadImage(image, imageKey)
+
+            const [updateRes] = await db.query<ResultSetHeader>(`
                 UPDATE ${HiveT.tableName}
-                SET ${HiveT.imagePath} = ${imageUrl}
-                WHERE ${HiveT.id} = ${response.insertId}`,
+                SET ${HiveT.imagePath} = ${imageKey}
+                WHERE ${HiveT.id} = ${result.insertId}`,
             )
-        
-        res.status(201)
+        }
+
+        res.status(201).send()
     } catch (error) {
         console.error(error);
         res.status(500).send('Server error');

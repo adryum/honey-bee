@@ -12,19 +12,21 @@ const { isOverDropZone, files } = useDropZone(dropZoneRef,
         dataTypes: ['jpeg', 'image', 'png']
     }
 )
-const imageSrc = defineModel<string>('imageSrc')
+const imageFile = defineModel<File | null>('imageFile'); // the uploaded file
+const imageSrc = ref<string | null>(null); // the preview URL
 const fileInput = ref<HTMLInputElement | null>(null)
 
 watch(files, () => {
-    if (files.value && files.value[0]) {
-        const fileReader = new FileReader()
-        fileReader.readAsDataURL(files.value[0])
-        fileReader.onload = () => {
-            console.log(fileReader.result as string);
-            imageSrc.value = fileReader.result as string // update reactive ref
-        }
+    const file = files.value?.[0] ?? null;
+
+    if (file) {
+        
+        imageFile.value = file; // store the actual file
+        imageSrc.value = URL.createObjectURL(file); // preview URL
+        console.log(imageFile.value);
     } else {
-        imageSrc.value = ''
+        imageFile.value = null;
+        imageSrc.value = null;
     }
 })
 

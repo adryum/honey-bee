@@ -8,7 +8,7 @@ import { getSVG, SVGIconRes } from '../../core/SVGLoader';
 const s = useCssModule()
 const container = ref()
 const handle = ref()
-const isExiting = ref(true)
+const isExiting = ref(false)
 const parentEl = ref<HTMLElement>()
 const props = defineProps<{
     title: string,
@@ -27,18 +27,18 @@ const { style } = useDraggable(container, {
 })
 
 function startExiting() {
-  isExiting.value = false
+  isExiting.value = true
 }
 
 function exit() {
-    if (!isExiting.value)
+    if (isExiting.value)
         props.unmount?.()
 }
 </script>
 
 <template>
 <AnimatePresence>
-    <motion.div v-if="isExiting" 
+    <motion.div v-if="!isExiting" 
         :class="s.wrapper"
         :initial="{y: 5 , opacity: 0, }"
         :animate="{y: 0, opacity: 1, transition: {duration: .1}}"

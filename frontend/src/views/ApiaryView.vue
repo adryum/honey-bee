@@ -12,6 +12,7 @@ import { ApiaryRepository } from '../core/repositories/ApiaryRepository';
 
 const s = useCssModule()
 const apiaries = ref<ApiaryResponseModel[]>([])
+const searchWord = ref<string>('')
 
 onMounted(async () => {
     apiaries.value = await ApiaryRepository.getApiaries()
@@ -26,11 +27,18 @@ const components = [
         text: 'add apiary',
         svg: getSVG(SVGIconRes.Pluss),
         onClick: () => {
-            createComponentInstance(CreateApiaryPopup, {}, true)
+            createComponentInstance(CreateApiaryPopup, {
+                onCreate: async () => {
+                    await searchApiaries(searchWord.value)
+                } 
+            }, true)
         }
     }),
     createComponentWithProps(SmallSearchbar, { 
-        onClick: (value: string) => searchApiaries(value) 
+        onClick: (value: string) => {
+            searchWord.value = value
+            searchApiaries(value) 
+        } 
     }),
 ]
 </script>

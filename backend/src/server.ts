@@ -1,4 +1,7 @@
 import dotenv from "dotenv";
+dotenv.config()
+import "./image_cloud/Cloudinary"
+
 import mysql from 'mysql2'
 import express from "express";
 import cors from "cors";
@@ -8,7 +11,8 @@ import adminRoute from "./routes/Admin"
 import hiveRoute from "./routes/Hives"
 import apiaryRoute from "./routes/Apiaries"
 
-dotenv.config()
+
+
 const app = express();
 const port = 5000;
 
@@ -24,12 +28,12 @@ export const db = mysql.createPool({
 }).promise()
 
 // middle man between request and resposne
-app.use((req, res, next) => {
-    console.log('Incoming request:', req.method, req.url);
-    console.log('body: ', req.body);
+// app.use((req, res, next) => {
+//     console.log('Incoming request:', req.method, req.url);
+//     console.log('body: ', req.body);
     
-    next();
-});
+//     next();
+// });
 
 app.use("/registration", registrationRoute)
 app.use("/admin", adminRoute)

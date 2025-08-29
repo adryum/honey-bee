@@ -16,24 +16,14 @@ interface CloudinaryResource {
   [key: string]: any; // allow extra fields
 }
 
-const {
-    CLOUDINARY_NAME,
-    CLOUDINARY_API_KEY,
-    CLOUDINARY_API_SECRET,
-} = process.env as {
-    CLOUDINARY_NAME: string;
-    CLOUDINARY_API_KEY: string;
-    CLOUDINARY_API_SECRET: string;
-};
-
 // Configuration
 cloudinary.config({ 
-    cloud_name: CLOUDINARY_NAME, 
-    api_key: CLOUDINARY_API_KEY, 
-    api_secret: CLOUDINARY_API_SECRET // Click 'View API Keys' above to copy your API secret
+    cloud_name: process.env.CLOUDINARY_NAME as string, 
+    api_key: process.env.CLOUDINARY_API_KEY as string, 
+    api_secret: process.env.CLOUDINARY_API_SECRET as string // Click 'View API Keys' above to copy your API secret
 });
 
-const DEFAULT_PLACEHOLDER = "https://via.placeholder.com/500";
+const DEFAULT_PLACEHOLDER = "https://blocks.astratic.com/img/general-img-landscape.png";
 
 /**
  * Uploads an image to Cloudinary.
@@ -42,11 +32,17 @@ const DEFAULT_PLACEHOLDER = "https://via.placeholder.com/500";
  * @returns UploadApiResponse or undefined if upload fails
  */
 export async function uploadImage(
-  imagePath: string,
-  publicId: string
+    file: Express.Multer.File,
+    publicId: string
 ): Promise<string | undefined> {
     try {
-        const result: UploadApiResponse = await cloudinary.uploader.upload(imagePath, { public_id: publicId });
+        const base64 = `data:${file.mimetype};base64,${file.buffer.toString("base64")}`;
+
+        // Upload to Cloudinary
+        const result: UploadApiResponse = await cloudinary.uploader.upload(base64, {
+            public_id: publicId,
+            folder: "apiaries", // optional folder
+        });
         
         return result.secure_url;
     } catch (error) {

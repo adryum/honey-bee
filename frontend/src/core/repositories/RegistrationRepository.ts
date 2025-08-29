@@ -73,7 +73,8 @@ export class RegistrationRepository {
 
 export function catchedErrorLog(error: unknown) {
     if (axios.isAxiosError(error)) {
-        console.error("API error:", (error as AxiosError).message);
+        console.error("API error:", error.response?.data || error.message);
+        console.error("Status:", error.response?.status);
     } else {
         console.error("Unexpected error:", error);
     }

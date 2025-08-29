@@ -4,33 +4,37 @@ import TitledField from '../input/fields/TitledField.vue';
 import Button from '../input/buttons/Button.vue';
 import ImageDropZone from '../input/fields/ImageDropZone.vue';
 import PopupFrame from './PopupFrame.vue'
+import { ApiaryRepository } from '../../core/repositories/ApiaryRepository';
 
 const s = useCssModule()
 const props = defineProps<{
+    onCreate?: () => {}, 
     unmount?: () => {},
     focusHandler?: (el: HTMLElement) => {}
 }>()
 
-const imageSrc = ref('')
+const imageFile = ref<File | null>(null)
 const name = ref('')
 const location = ref('')
 const description = ref('')
 
-async function onCreate(name: string, location: string, description: string): Promise<void> {
-    // const result = await createApiary(props.currentFilter, name, location, description)
- 
-    // if (result === 201) {
-    //     // only on successful result 
-    //     props.refreshApiaries()
-    //     removePopup(props.id)
-    // } else {
-    //     // err handling
+async function create() {
+    console.log(imageFile.value);
 
-    // }
+    await ApiaryRepository.createApiary(
+        name.value,
+        location.value,
+        description.value,
+        imageFile.value
+    );
+
+    props.onCreate?.()
+    
+    props.unmount?.();
 }
 
 const isValid = computed(() => {
-    return name.value && location.value
+    return name.value
 })
 </script>
 
@@ -38,7 +42,7 @@ const isValid = computed(() => {
 <PopupFrame title="Create apiary" :unmount="unmount" :focus-handler="focusHandler">
     <template #body>
         <div :class="s.grid">
-            <ImageDropZone :image-src="imageSrc" :class="s.image"/>
+            <ImageDropZone v-model:image-file="imageFile" :class="s.image"/>
             
             <div :class="s.fields">
                 <TitledField 
@@ -57,7 +61,7 @@ const isValid = computed(() => {
                     v-model="description"/>
                 <Button 
                     :class="s.button" 
-                    @click="isValid ? onCreate(name, location, description) : {}" 
+                    @click="create" 
                     text="Create" />
             </div>
             

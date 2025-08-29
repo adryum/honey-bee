@@ -29,11 +29,11 @@ const dropdownActions: DropdownOptions[] = [
 </script>
 <template>
 <div :class="s.container" ref="container">
-    <img :class="s.image" src="/src/assets/images/apiary1.jpg" alt="apiary image">
+    <img :class="s.image" :src="apiary.imagePath" alt="apiary image">
     <hr :class="s.linearDim">
     <MotionIconCubeDropdown 
         :svg="getSVG(SVGIconRes.MoreDots)" :class="[s.options]"
-        :buttons="dropdownActions"
+        :options="dropdownActions"
          />
     <h1 :class="[s.name]">{{ apiary!.name }}</h1>
     <ul :class="s.info">
