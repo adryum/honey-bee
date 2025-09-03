@@ -23,7 +23,7 @@ cloudinary.config({
     api_secret: process.env.CLOUDINARY_API_SECRET as string // Click 'View API Keys' above to copy your API secret
 });
 
-const DEFAULT_PLACEHOLDER = "https://blocks.astratic.com/img/general-img-landscape.png";
+export const DEFAULT_PLACEHOLDER = "https://blocks.astratic.com/img/general-img-landscape.png";
 
 /**
  * Uploads an image to Cloudinary.

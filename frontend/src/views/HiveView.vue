@@ -85,7 +85,6 @@ const s = useCssModule()
         margin-left: auto 
 
 .button-special
-    background: main.$button-special
 
 .grid
     flex: 1

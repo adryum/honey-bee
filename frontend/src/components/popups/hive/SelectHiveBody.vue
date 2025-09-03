@@ -43,6 +43,7 @@ async function getHives(searchWord: string) {
     flex-direction: column
     
     overflow-y: scroll
+    padding-right: 1rem 
     gap: 1rem    
     .hives
         display: grid 
@@ -50,7 +51,7 @@ async function getHives(searchWord: string) {
         gap: 1rem
 
         height: 30rem
-        width: 80rem
+        width: 50rem
 
         .info
             align-self: center

@@ -4,7 +4,7 @@ import { type IUserIdentification } from "../Enums";
 import { ApiaryT, HiveT } from "../TableColumnTitles";
 import { ResultSetHeader, RowDataPacket } from "mysql2";
 import { col } from "../utils";
-import { getImage, uploadImage } from "../image_cloud/Cloudinary";
+import { DEFAULT_PLACEHOLDER, getImage, uploadImage } from "../image_cloud/Cloudinary";
 import { PublicIdBuilder } from "../image_cloud/PublicIdBuilder";
 import { upload } from "../Multer";
 
@@ -70,8 +70,13 @@ router.post('/apiaries', async (req: Request<{},{},{
             `,
             [identification.id, searchFilter]
         )
+
+        const newApiaries = apiaries.map(apiary => ({
+            ...apiary,
+            imagePath: apiary.imagePath || DEFAULT_PLACEHOLDER
+        }))
         
-        res.status(200).json({apiaries})
+        res.status(200).json({apiaries: newApiaries })
     } catch (err) {
         console.error(err);
         res.status(500).send('Server error');

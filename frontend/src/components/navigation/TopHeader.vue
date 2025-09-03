@@ -17,5 +17,5 @@ const s = useCssModule()
     width: 100%
     min-height: 4rem
 
-    background: #F9EDDC
+    background: var(--light)
 </style>

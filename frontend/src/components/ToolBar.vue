@@ -31,7 +31,7 @@ const s = useCssModule()
     width: 100%
     height: 3rem
 
-    background: #F9EDDC
+    background: var(--light)
     padding: 0 1rem
     box-sizing: border-box
     z-index: 1

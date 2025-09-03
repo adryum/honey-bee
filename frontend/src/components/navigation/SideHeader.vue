@@ -122,12 +122,12 @@ const s = useCssModule()
     flex-direction: column
     width: 4rem
     height: 100vh
-    background: colors.$accent
+    background: var(--accent)
 
     .tip
         height: 4rem
         width: 100%
-        background: colors.$light
+        background: var(--light)
 
     .list
         all: unset
@@ -154,7 +154,7 @@ const s = useCssModule()
             transition: .1s ease-out
 
             &:hover
-                background-color: colors.$base
+                background-color: var(--base)
 
             .icon
                 display: flex

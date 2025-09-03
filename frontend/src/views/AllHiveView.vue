@@ -93,7 +93,6 @@ hr
     overflow-y: auto
 
 .button-special
-    background: main.$button-special
 
 @media (max-width: 600px) 
     .container

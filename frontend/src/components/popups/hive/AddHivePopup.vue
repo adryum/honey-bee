@@ -23,7 +23,7 @@ function switchTab(tab: string) {
     <template #body>
         <div :class="s.body">
             <div :class="s.addMode">
-                <button v-for="tab in tabs" 
+                <motion.button v-for="tab in tabs" :key="tab"
                 :class="s.addType"
                 @click="() => switchTab(tab)"
                 >
@@ -34,7 +34,7 @@ function switchTab(tab: string) {
                         layoutId="Selected_add_hive_tab"
                         :transition="{ duration: 0.4, ease: [0, 0.71, 0.2, 1.01], type: 'spring' }"
                     />
-                </button>
+                </motion.button>
             </div>
 
             <AnimatePresence mode="wait">
@@ -63,10 +63,11 @@ function switchTab(tab: string) {
             position: relative
             flex: 1
             cursor: pointer
+            z-index: 2
 
             box-sizing: border-box
             padding: 0 .5rem
-            background: var(--base)
+            background: var(--accent)
             backdrop-filter: brightness(95%)
 
             .text

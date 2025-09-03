@@ -57,7 +57,6 @@ const s = useCssModule()
         margin-left: auto 
 
 .button-special
-    background: main.$button-special
 
 .content
     flex: 1

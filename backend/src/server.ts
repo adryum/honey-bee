@@ -11,8 +11,6 @@ import adminRoute from "./routes/Admin"
 import hiveRoute from "./routes/Hives"
 import apiaryRoute from "./routes/Apiaries"
 
-
-
 const app = express();
 const port = 5000;
 

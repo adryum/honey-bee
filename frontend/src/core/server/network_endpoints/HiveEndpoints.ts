@@ -29,28 +29,11 @@ export namespace HiveEndpoints {
         }
     }
 
-    export async function assignHiveToApiary(
-        hiveId: number, 
-        apiaryId: number,
-        identification = RegistrationRepository.getUserIdentification()
-    ) {
-        const payload: HiveAssignRequestModel = {
-            identification: identification,
-            hiveId: hiveId,
-            apiaryId: apiaryId
-        }
-        try {
-            const promise = await axios.post('/hive/assign', payload)
-            
-            return promise.status
-        } catch (error) {
-            catchedErrorLog(error)
-        }
-    }
+    export 
 
     export async function unassignHive(
         hiveId: number,
-        identification = RegistrationRepository.getUserIdentification()
+        identification = 
     ) {
         const payload: HiveUnassignRequestModel = {
             identification: identification,

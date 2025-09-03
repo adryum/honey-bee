@@ -51,7 +51,7 @@ function exit() {
                 <slot name="header">
                     
                 </slot>
-                <TransparentIconButton :svg="getSVG(SVGIconRes.Cross)" @click="startExiting" :class="s.button"/>
+                <TransparentIconButton :svg="getSVG(SVGIconRes.Cross, 'black')" @click="startExiting" :class="s.button"/>
             </div>
 
             <div :class="s.body">
@@ -79,16 +79,15 @@ function exit() {
 
     box-sizing: border-box
 
-
-    box-shadow: 0px 0px 580px rgba(0, 0, 0, 0.9)
-    background: var(--accent)
+    box-shadow: 0px 0px 50px 2px rgba(0, 0, 0, 0.4)
+    background: var(--base)
 
 
     .handle
         display: flex
         align-items: center
         height: 2rem
-        background: var(--base)
+        background: var(--light)
         
         padding-left: .5rem
 

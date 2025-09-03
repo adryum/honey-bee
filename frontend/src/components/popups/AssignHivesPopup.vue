@@ -2,9 +2,10 @@
 import { onMounted, ref, useCssModule } from 'vue';
 import IconCubeButton from '../input/buttons/IconCubeButton.vue';
 import { removePopup } from '@/core/popups';
-import { assignHiveToApiary, getHives, rUser } from '@/core/repositories/homeRepository';
+import { getHives, rUser } from '@/core/repositories/homeRepository';
 import Hive from '../hive/Hive.vue';
 import PathTitle from '../PathTitle.vue';
+import { useHive } from '../../core/view_models/HiveViewModel';
 
 const props = defineProps({
     id: String,
@@ -13,15 +14,17 @@ const props = defineProps({
     refreshHives: Function
 })
 
+const { assignHive } = useHive()
+
 const assignedHives = ref([])
 const unassignedHives = ref([])
 
-function onAssignment() {
+const onAssignment = async () => {
     props.refreshHives()
-    refreshPopup()
+    await refreshPopup()
 }
 
-async function refreshPopup() {
+const refreshPopup = async () => {
     const hives = await getHives()
 
     assignedHives.value = hives.filter((item) => item['apiary_id'] && item['apiary_id'] != props.apiaryId)
@@ -45,7 +48,7 @@ onMounted(async () => refreshPopup())
     <div :class="s.grid">
         <HorizontalHr v-if="assignedHives.length > 0" text="Assigned hives"/>
         <Hive v-for="(hive, i) in assignedHives" :key="i"
-            @click="assignHiveToApiary(hive.id, apiaryId, onAssignment)"
+            @click="assignHive(hive.id, apiaryId, onAssignment)"
             :hive="hive"
         />
         <HorizontalHr v-if="unassignedHives.length > 0" text="Unassigned hives"/>
