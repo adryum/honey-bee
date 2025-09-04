@@ -1,37 +1,47 @@
 <script setup lang="ts">
-import { onMounted, ref, useCssModule } from 'vue';
+import { ref, useCssModule, watch } from 'vue';
 import { motion } from 'motion-v';
-import type { HiveModel } from '../../../core/models/Models';
-import { HiveRepository } from '../../../core/repositories/HiveRepository';
 import Hive from '../../hive/Hive.vue';
 import ToolBar from '../../ToolBar.vue';
-import { getSVG, SVGIconRes } from '../../../core/SVGLoader';
-import { createComponentWithProps, createComponentInstance } from '../../../utils/components';
+import { createComponentWithProps } from '../../../utils/components';
 import SmallSearchbar from '../../input/fields/SmallSearchbar.vue';
+import { useHiveStore } from '../../../core/view_models/HiveViewModel';
+import type { HiveModel } from '../../../core/models/Models';
 
 const s = useCssModule()
+const props = defineProps<{
+    apiaryId: number
+    onAssign: () => {}
+}>()
+const hiveStore = useHiveStore()
+const hives = ref<HiveModel[]>([...hiveStore.hives])
 const searchWord = ref<string>('')
-const hives = ref<HiveModel[]>()
 const components = [
-    createComponentWithProps(SmallSearchbar, { onClick: async (searchText: string) => await getHives(searchText) }),
+    createComponentWithProps(SmallSearchbar, { onClick: (searchText: string) => searchWord.value = searchText }),
 ]
 
-onMounted(async () => {
-    await getHives(searchWord.value)
-})
-
-async function getHives(searchWord: string) {
-    hives.value = await HiveRepository.getHives(searchWord)
+function searchHives() {
+    hives.value = hiveStore.searchForHives({
+        searchWord: searchWord.value
+    })
 }
-</script>
 
+async function assignHive(hiveId: number) {
+    await hiveStore.assignHive(hiveId, props.apiaryId)
+    props.onAssign();
+    searchHives()
+}
+
+watch(searchWord, () => searchHives())
+</script>
 
 <template>
     <motion.div :class="s.container">
         <ToolBar name="Your hives" :components="components" />
         <div :class="s.hives">
-            <Hive v-for="hive in hives" :key="hive.id" :hive="hive" :show-apiary="true"/>
-            <p :class="s.info" v-if="hives?.isEmpty">You have no hives matching this criteria</p>
+            <Hive v-for="hive in hives" :key="hive.id" 
+            @click="assignHive(hive.id)" :hive="hive" :show-apiary="true"/>
+            <p :class="s.info" v-if="!hives.length">You have no hives matching this criteria</p>
         </div>
     </motion.div>
 </template>

@@ -22,6 +22,23 @@ export type HiveModel = {
     id: number
     name: string
     imagePath: string
+    apiaryId?: number
     apiaryName?: string
     apiaryImagePath?: string
+}
+
+export type HiveSearchModel = {
+    searchWord?: string
+    isAssigned?: boolean
+    type?: string
+    apiaryId?: number
+    ignoreDifferentLetterCases?: boolean
+}
+
+export type CreateHiveModel = {
+    name: string
+    location?: string
+    description?: string
+    type: string
+    image?: File
 }

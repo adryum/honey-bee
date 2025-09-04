@@ -15,10 +15,12 @@ router.post('/hives', async (req: Request<{},{},{
     identification: IUserIdentification
     searchWord: string
 }>, res: Response) => {
+    
     const { identification } = req.body
+    console.log(req.body);
     var { searchWord } = req.body
     // missing credentials
-    if (!identification) 
+    if (!identification.id) 
         return res.status(401).send('incorrect credentials!') 
 
     searchWord = handleSearchWord(searchWord)
@@ -151,14 +153,30 @@ router.post('/assign', async (req: Request<{},{},{
         return res.status(401).send('incorrect credentials!') 
       
     try {
-        const [hives] = await db.query(`
+        await db.query<ResultSetHeader>(`
             UPDATE ${HiveT.tableName} 
             SET ${HiveT.apiaryId} = ? 
             WHERE ${HiveT.id} = ? AND ${HiveT.userId} = ?`, 
             [apiaryId, hiveId, identification.id]
         )
+
+        const [hive] = await db.query(`
+            SELECT 
+                ${col(HiveT.tableName, HiveT.id)} AS id, 
+                ${col(HiveT.tableName, HiveT.name)} as name,
+                ${col(HiveT.tableName, HiveT.imagePath)} as imagePath,
+                ${col(HiveT.tableName, HiveT.apiaryId)} as apiaryId,
+                ${col(ApiaryT.tableName, ApiaryT.name)} as apiaryName,
+                ${col(ApiaryT.tableName, ApiaryT.imagePath)} as apiaryImagePath
+            FROM ${HiveT.tableName}
+            LEFT JOIN ${ApiaryT.tableName} ON ${col(HiveT.tableName, HiveT.apiaryId)} = ${col(ApiaryT.tableName, ApiaryT.id)}
+            WHERE ${col(HiveT.tableName, HiveT.userId)} = ? AND ${col(HiveT.tableName, HiveT.id)} LIKE ?`, 
+            [identification.id, hiveId])
+
+        console.log(hive);
         
-        res.status(201).json({ hives })
+
+        res.status(201).json(hive)
     } catch (err) {
         console.error(err);
         res.status(500).send('Server error');

@@ -49,7 +49,9 @@ const router = createRouter({
         path: '/apiaryHives/:apiaryId',
         name: 'apiary hives',
         component: ApiaryHiveView,
-        props: true
+        props: route => ({
+            apiaryId: Number(route.params.apiaryId) // convert to number here
+        })
     },
     {
         path: '/settings',

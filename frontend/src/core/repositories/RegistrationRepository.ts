@@ -5,6 +5,7 @@ import router from '../../router'
 import type { UserIdentificationModel } from '../server/models/RequestModels'
 import { toUserModel } from '../models/ModelConverters'
 import { RegistrationEndpoints } from '../server/network_endpoints/RegistrationEndpoints'
+import { useHiveStore } from '../view_models/HiveViewModel'
 
 export class RegistrationRepository {
     static user = ref<UserModel | null>()
@@ -33,7 +34,8 @@ export class RegistrationRepository {
         console.log('authenticated')
         console.log(this.isAuthenticated.value);
         console.log(userModel);
-        
+
+        useHiveStore().init()
         
         router.push('/')
     }

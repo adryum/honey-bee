@@ -15,10 +15,15 @@ export function createComponentWithProps<
   return { component, props }
 }
 
-export function createComponentInstance<T extends DefineComponent<any, any, any, any, any> = DefineComponent>(
-    component: T,
-    props?: Partial<InstanceType<T>['$props']>,
-    isPopup: Boolean = false
+type ExtraPopupProps = {
+  unmount?: () => void
+  focusHandler?: (el: HTMLElement) => void
+}
+
+export function createComponentInstance(
+    component: Component, // <-- loose type
+    props: Record<string, any> = {},
+    isPopup = false
 ) {
     // useless wrapper just to later 'safely and correctly' unmount created
     const container = document.createElement('div')

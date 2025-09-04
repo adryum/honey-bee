@@ -7,7 +7,9 @@ import SelectHiveBody from './SelectHiveBody.vue';
 
 const s = useCssModule()
 const props = defineProps<{
-    unmount?: () => {},
+    apiaryId: number
+    onAssign: () => {} 
+    unmount?: () => {}
     focusHandler?: (el: HTMLElement) => {}
 }>()
 const tabs = ['Create New', 'Move Existing']
@@ -38,7 +40,7 @@ function switchTab(tab: string) {
             </div>
 
             <AnimatePresence mode="wait">
-                <component :is="selectedTab === tabs[0] ? CreateHiveBody : SelectHiveBody" :key="selectedTab" />
+                <component :apiaryId="apiaryId" :onAssign="onAssign" :is="selectedTab === tabs[0] ? CreateHiveBody : SelectHiveBody" :key="selectedTab" />
             </AnimatePresence>
         </div>
     </template>

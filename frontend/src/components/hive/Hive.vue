@@ -16,7 +16,7 @@ const props = withDefaults(defineProps<{
         <div :class="s.header">
             <div :class="s.title">
                 <p :class="s.name">{{ hive.name }}</p>
-                <p v-if="showApiary" :class="s.apiaryName">{{ hive.apiaryName }} Darziemalania s 1235667</p>
+                <p v-if="showApiary" :class="s.apiaryName">{{ hive.apiaryName }}</p>
             </div>
         </div>
 

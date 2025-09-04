@@ -26,12 +26,12 @@ export const db = mysql.createPool({
 }).promise()
 
 // middle man between request and resposne
-// app.use((req, res, next) => {
-//     console.log('Incoming request:', req.method, req.url);
-//     console.log('body: ', req.body);
+app.use((req, res, next) => {
+    console.log('Incoming request:', req.method, req.url);
+    console.log('body: ', req.body);
     
-//     next();
-// });
+    next();
+});
 
 app.use("/registration", registrationRoute)
 app.use("/admin", adminRoute)

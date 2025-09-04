@@ -6,36 +6,45 @@ import ToolBar from '../components/ToolBar.vue';
 import { getSVG, SVGIconRes } from '../core/SVGLoader.js';
 import { createComponentWithProps, createComponentInstance } from '../utils/components.js';
 import IconTextButton from '../components/input/buttons/IconTextButton.vue';
-import CreateHivePopup from '../components/popups/hive/AddHivePopup.vue';
 import SmallSearchbar from '../components/input/fields/SmallSearchbar.vue';
 import type {  ApiaryHivesResponseModel, ApiaryResponseModel, HiveResponseModel } from '../core/server/models/ResponseModels.js';
 import { ApiaryRepository } from '../core/repositories/ApiaryRepository.js';
+import AddHivePopup from '../components/popups/hive/AddHivePopup.vue';
+import { useHiveStore } from '../core/view_models/HiveViewModel.js';
+import type { HiveModel, HiveSearchModel } from '../core/models/Models.js';
 
 const s = useCssModule()
-const hives = ref<ApiaryHivesResponseModel | undefined>()
-const apiary = ref<ApiaryResponseModel | null>()
 const props = defineProps<{
-    apiaryId: string
+    apiaryId: number
 }>()
+const hiveStore = useHiveStore()
+const hives = ref<HiveModel[]>([...hiveStore.getApiaryHives(props.apiaryId)]) 
+const apiary = ref<ApiaryResponseModel | null>()
+const searchWord = ref<string>('')
 
-async function searchHives(searchText: string) {
-    hives.value = await ApiaryRepository.getApiaryHives(Number(props.apiaryId), searchText)
+async function searchHives() {
+    const request: HiveSearchModel =  {
+        searchWord: searchWord.value,
+        apiaryId: props.apiaryId,
+        ignoreDifferentLetterCases: true
+    }
+
+    hives.value = hiveStore.searchForHives(request)
 }
-
-onMounted(async () => {
-    apiary.value = await ApiaryRepository.getApiary(Number(props.apiaryId))
-    hives.value = await ApiaryRepository.getApiaryHives(Number(props.apiaryId))
-})
 
 const components = [
     createComponentWithProps(IconTextButton, { 
         text: 'add hive',
         svg: getSVG(SVGIconRes.Pluss),
         onClick: () => {
-            createComponentInstance(CreateHivePopup, {}, true)
+            createComponentInstance(AddHivePopup, { apiaryId: props.apiaryId, onAssign: searchHives }, true)
         }
     }),
-    createComponentWithProps(SmallSearchbar, { onClick: (searchText: string) => searchHives(searchText) }),
+    createComponentWithProps(SmallSearchbar, { onClick: (searchText: string) => {
+            searchWord.value = searchText
+            searchHives()
+        }
+    }),
 ]
 </script>
 
