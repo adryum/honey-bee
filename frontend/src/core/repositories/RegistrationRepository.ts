@@ -1,11 +1,12 @@
 import axios, { AxiosError } from 'axios'
 import { computed, ref } from 'vue'
 import type { UserLoginModel, UserModel, UserSignUpModel } from '../models/Models'
-import router from '../../router'
-import type { UserIdentificationModel } from '../server/models/RequestModels'
+import router from '../router'
+import type { UserIdentificationModel } from '../api/models/RequestModels'
 import { toUserModel } from '../models/ModelConverters'
-import { RegistrationEndpoints } from '../server/network_endpoints/RegistrationEndpoints'
-import { useHiveStore } from '../view_models/HiveViewModel'
+import { RegistrationEndpoints } from '../api/network_endpoints/RegistrationEndpoints'
+import { useHiveStore } from '../stores/HiveStore'
+import { useApiaryStore } from '../stores/ApiaryStore'
 
 export class RegistrationRepository {
     static user = ref<UserModel | null>()
@@ -36,6 +37,7 @@ export class RegistrationRepository {
         console.log(userModel);
 
         useHiveStore().init()
+        useApiaryStore().init()
         
         router.push('/')
     }

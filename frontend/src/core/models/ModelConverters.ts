@@ -1,4 +1,4 @@
-import type { HiveResponseModel, RegistrationResponseModel } from "../server/models/ResponseModels";
+import type { HiveResponseModel, RegistrationResponseModel } from "../api/models/ResponseModels";
 import type { HiveModel, UserModel } from "./Models";
 
 export function toUserModel(response: RegistrationResponseModel): UserModel {

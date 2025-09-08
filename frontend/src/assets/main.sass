@@ -9,9 +9,19 @@
   font-optical-sizing: auto
   font-style: normal
 
+@mixin mono-font
+    font-family: "Roboto Mono", monospace;
+    font-optical-sizing: auto
+    font-style: normal
+    
+
 @mixin button-font
-    @include font
-    font-weight: 700
+    @include mono-font
+    @include f-size-very-small
+    font-weight: 500
+    letter-spacing: .04em
+    // line-height: 14px
+    text-transform: uppercase;
     
 
 @mixin f-size-huge
@@ -21,11 +31,11 @@
 @mixin f-size-large
     font-size: 40px
 @mixin f-size-medium
-    font-size: 32px
+    font-size: 30px
 @mixin f-size-small
-    font-size: 24px
+    font-size: 18px
 @mixin f-size-very-small
-    font-size: 16px
+    font-size: 14px
 @mixin f-size-tiny
     font-size: 12px
    

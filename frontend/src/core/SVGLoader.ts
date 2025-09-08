@@ -5,10 +5,12 @@ export interface SVGBody {
 
 export interface SVGIcon extends SVGBody{
     color: string
+    res: SVGIconRes
 }
 
 export const getSVG = (svg: SVGIconRes, color: string = '#FFFFFF'): SVGIcon => {
     return {
+        res: svg,
         path: svgs[svg].path,
         viewBox: svgs[svg].viewBox,
         color: color

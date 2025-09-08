@@ -1,10 +1,10 @@
 <script setup lang="ts">
 import { RouterView } from 'vue-router'
 import { useCssModule, watch } from 'vue';
-import router from './router';
-import TopHeader from './components/navigation/TopHeader.vue';
-import SideHeader from './components/navigation/SideHeader.vue';
+import router from './core/router';
 import { RegistrationRepository } from './core/repositories/RegistrationRepository';
+import SideHeader from './ui/components/navigation/SideHeader.vue';
+import TopHeader from './ui/components/navigation/TopHeader.vue';
 
 const s = useCssModule()
 const isAuthenticated = RegistrationRepository.isAuthenticated

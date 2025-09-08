@@ -56,10 +56,11 @@ router.post('/apiaries', async (req: Request<{},{},{
     searchFilter = (!searchFilter) ? '%' : searchFilter.concat('%')
 
     try {
-        const [apiaries] = await db.query<any[]>(`
+        var [apiaries] = await db.query<any[]>(`
             SELECT 
                 ${col(ApiaryT.tableName, ApiaryT.id)} AS id, 
                 ${col(ApiaryT.tableName, ApiaryT.name)} AS name,
+                ${col(ApiaryT.tableName, ApiaryT.location)} AS location,
                 ${col(ApiaryT.tableName, ApiaryT.description)} AS description,
                 ${col(ApiaryT.tableName, ApiaryT.imagePath)} AS imagePath,
                 COUNT(${col(HiveT.tableName, HiveT.id)}) AS hiveCount
@@ -71,12 +72,13 @@ router.post('/apiaries', async (req: Request<{},{},{
             [identification.id, searchFilter]
         )
 
-        const newApiaries = apiaries.map(apiary => ({
+        apiaries = apiaries.map(apiary => ({
             ...apiary,
             imagePath: apiary.imagePath || DEFAULT_PLACEHOLDER
         }))
         
-        res.status(200).json({apiaries: newApiaries })
+        console.log(apiaries);
+        res.status(200).json(apiaries)
     } catch (err) {
         console.error(err);
         res.status(500).send('Server error');

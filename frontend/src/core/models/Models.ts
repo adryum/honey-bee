@@ -18,6 +18,29 @@ export type UserModel = {
     paidTier: string
 }
 
+// apiaries
+export type ApiaryModel = {
+    id: number
+    name: string
+    description: string
+    location: string
+    imagePath: string
+    hiveCount: number
+}
+
+export type ApiaryCreateModel = {
+    name: string
+    description?: string
+    location?: string
+    imageFile?: File
+}
+
+export type ApiarySearchOptions = {
+    searchWord?: string
+    ignoreDifferentLetterCases?: boolean
+    hiveCount?: number
+}
+
 export type HiveModel = {
     id: number
     name: string
@@ -27,7 +50,7 @@ export type HiveModel = {
     apiaryImagePath?: string
 }
 
-export type HiveSearchModel = {
+export type HiveSearchOptions = {
     searchWord?: string
     isAssigned?: boolean
     type?: string
@@ -35,7 +58,7 @@ export type HiveSearchModel = {
     ignoreDifferentLetterCases?: boolean
 }
 
-export type CreateHiveModel = {
+export type HiveCreateModel = {
     name: string
     location?: string
     description?: string
