@@ -44,7 +44,7 @@ function exit() {
         :animate="{y: 0, opacity: 1, transition: {duration: .1}}"
         :exit="{y: 200 , opacity: 0}"
         @motioncomplete="exit"
-    >
+        >
         <div @mousedown="() => focusHandler?.(parentEl!)" ref="container" :style="style" :class="s.container" >
             <div ref="handle" :class="s.handle">
                 <h1 :class="s.popupName">{{ title }}</h1>
@@ -81,21 +81,24 @@ function exit() {
 
     box-shadow: 0px 0px 50px 2px rgba(0, 0, 0, 0.4)
     background: var(--base)
+    border: 1px solid rgba(0, 0, 0, 0.4)
 
 
     .handle
         display: flex
         align-items: center
         height: 2rem
-        background: var(--light)
+        background: rgba(0, 0, 0, 0.2)
         
         padding-left: .5rem
 
         .popupName
             all: unset
-            @include main.font
+            @include main.mono-font
+            text-transform: uppercase;
+
             @include main.f-size-very-small
-            font-weight: 500
+            font-weight: 900
 
 
         .button

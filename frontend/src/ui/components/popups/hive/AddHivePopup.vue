@@ -62,6 +62,7 @@ function switchTab(tab: string) {
 
         .addType
             all: unset
+            @include main.button-font
             position: relative
             flex: 1
             cursor: pointer

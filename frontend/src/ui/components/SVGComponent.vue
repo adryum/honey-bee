@@ -16,11 +16,20 @@ const s = useCssModule()
 </script>
 
 <template>
-<svg xmlns="http://www.w3.org/2000/svg" :viewBox="svg.viewBox">
-    <path :fill="svg.color" :d="svg.path"/>
+<svg :class="s.svg" xmlns="http://www.w3.org/2000/svg" preserveAspectRatio="none" :viewBox="svg.viewBox">
+    <path :class="s.path" :fill="svg.color" :d="svg.path"/>
 </svg>
 </template>
 
 <style module lang='sass'>
 @use '@/assets/main.sass' as main
+
+.svg
+    display: flex
+    align-items: center
+    justify-content: center
+
+.path
+    width: 100%
+    min-height: 5rem
 </style>

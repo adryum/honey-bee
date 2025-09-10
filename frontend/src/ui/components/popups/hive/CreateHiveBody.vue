@@ -7,6 +7,7 @@ import SelectionDropdown from '../../input/dropdowns/SelectionDropdown.vue';
 import Button from '../../input/buttons/Button.vue';
 import { useHiveStore } from '../../../../core/stores/HiveStore';
 import type { HiveCreateModel } from '../../../../core/models/Models';
+import type { DropdownOptions } from '../../../../core/Interfaces';
 
 const s = useCssModule()
 const props = defineProps<{
@@ -18,15 +19,18 @@ const location = ref('')
 const description = ref('')
 const type = ref('')
 const image = ref<File>()
-const typeOptions = [
+const typeOptions: DropdownOptions[] = [
     {
-        text: 'Stationary' 
+        text: 'Stationary',
+        color: ''
     }, 
     {
-        text: 'Tower'
+        text: 'Tower',
+        color: ''
     }, 
     {
-        text: 'Movable'
+        text: 'Movable',
+        color: ''
     } 
 ]
 

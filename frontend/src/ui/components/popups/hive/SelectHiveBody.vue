@@ -63,6 +63,7 @@ watch(searchWord, () => searchHives())
         height: 30rem
         width: 50rem
 
+
         .info
             align-self: center
             justify-self: center

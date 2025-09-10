@@ -23,20 +23,21 @@ USE `honey_bee`;
 CREATE TABLE IF NOT EXISTS `apiaries` (
   `id` bigint NOT NULL AUTO_INCREMENT,
   `name` varchar(50) DEFAULT NULL,
-  `image` varchar(50) DEFAULT NULL,
+  `image_path` text CHARACTER SET utf8mb4 COLLATE utf8mb4_0900_ai_ci,
   `location` varchar(50) DEFAULT NULL,
   `description` varchar(500) DEFAULT NULL,
   `user_id` bigint DEFAULT NULL,
   PRIMARY KEY (`id`),
   KEY `FK_apiary_user` (`user_id`) USING BTREE,
   CONSTRAINT `FK_apiaries_users` FOREIGN KEY (`user_id`) REFERENCES `users` (`id`) ON DELETE CASCADE
-) ENGINE=InnoDB AUTO_INCREMENT=57 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
+) ENGINE=InnoDB AUTO_INCREMENT=85 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
 
--- Dumping data for table honey_bee.apiaries: ~1 rows (approximately)
-INSERT INTO `apiaries` (`id`, `name`, `image`, `location`, `description`, `user_id`) VALUES
-	(37, 'Dreiliņi', 'apiary.jpg', 'asd', 'dsa', 2),
-	(45, 'asda', 'apiary1.jpg', 'asdasdadadasdasd', '', 2),
-	(54, 'Dimants', NULL, 'Rīga', '', 2);
+-- Dumping data for table honey_bee.apiaries: ~3 rows (approximately)
+INSERT INTO `apiaries` (`id`, `name`, `image_path`, `location`, `description`, `user_id`) VALUES
+	(70, 'bee', 'https://res.cloudinary.com/dj8lvgcxl/image/upload/v1756478835/apiaries/User:2_Apiary:70.jpg', '', '', 2),
+	(71, '234r', NULL, '', '', 2),
+	(83, 'Bear', 'https://res.cloudinary.com/dj8lvgcxl/image/upload/v1756907137/apiaries/User:2_Apiary:83.png', '', '', 2),
+	(84, 'Hampter', 'https://res.cloudinary.com/dj8lvgcxl/image/upload/v1757347829/apiaries/User:2_Apiary:84.png', '', '', 2);
 
 -- Dumping structure for table honey_bee.calendar_entry
 CREATE TABLE IF NOT EXISTS `calendar_entry` (
@@ -112,7 +113,7 @@ CREATE TABLE IF NOT EXISTS `calendar_entry__queen_bee` (
 CREATE TABLE IF NOT EXISTS `hives` (
   `id` bigint NOT NULL AUTO_INCREMENT,
   `name` varchar(50) DEFAULT NULL,
-  `image` varchar(50) DEFAULT NULL,
+  `image_path` varchar(100) CHARACTER SET utf8mb4 COLLATE utf8mb4_0900_ai_ci DEFAULT NULL,
   `location` varchar(50) DEFAULT NULL,
   `type` enum('Stationary','Movable','Tower') CHARACTER SET utf8mb4 COLLATE utf8mb4_0900_ai_ci DEFAULT NULL,
   `weight` float DEFAULT NULL,
@@ -130,16 +131,16 @@ CREATE TABLE IF NOT EXISTS `hives` (
   CONSTRAINT `FK_hives_users` FOREIGN KEY (`user_id`) REFERENCES `users` (`id`) ON DELETE CASCADE
 ) ENGINE=InnoDB AUTO_INCREMENT=34 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
 
--- Dumping data for table honey_bee.hives: ~10 rows (approximately)
-INSERT INTO `hives` (`id`, `name`, `image`, `location`, `type`, `weight`, `frames`, `description`, `queen_bee_id`, `apiary_id`, `user_id`) VALUES
-	(1, 'Box', 'Hive1.jpg', NULL, 'Movable', 23, 1, NULL, 2, NULL, 2),
-	(2, 'Box2', 'Hive3.jpg', NULL, 'Tower', 234.6, 8, NULL, 1, NULL, 2),
-	(3, 'Bisumaja', 'Hive2.jpeg', NULL, 'Movable', 23, 1, NULL, 1, 37, 2),
-	(4, 'Klucis', 'Hive4.webp', NULL, 'Movable', 1, 2, NULL, 1, 37, 2),
-	(5, 'kartonas', 'Hive5.webp', NULL, 'Tower', 2, 3, NULL, NULL, NULL, 2),
-	(6, 'asdasda', 'Hive6.jpg', NULL, 'Movable', 34, NULL, NULL, NULL, NULL, 2),
-	(7, 'ageyusfsdgu', 'Hive7.jpeg', NULL, 'Movable', NULL, NULL, NULL, NULL, 37, 2),
-	(30, 'Halva', '', 'Rīga', 'Stationary', NULL, NULL, 'Liela māja kokā', NULL, NULL, 2);
+-- Dumping data for table honey_bee.hives: ~8 rows (approximately)
+INSERT INTO `hives` (`id`, `name`, `image_path`, `location`, `type`, `weight`, `frames`, `description`, `queen_bee_id`, `apiary_id`, `user_id`) VALUES
+	(1, 'Box', 'Hive1.jpg', NULL, 'Movable', 23, 1, NULL, 2, 71, 2),
+	(2, 'Box2', 'Hive3.jpg', NULL, 'Tower', 234.6, 8, NULL, 1, 84, 2),
+	(3, 'Bisumaja', 'Hive2.jpeg', NULL, 'Movable', 23, 1, NULL, 1, 71, 2),
+	(4, 'Klucis', 'Hive4.webp', NULL, 'Movable', 1, 2, NULL, 1, 71, 2),
+	(5, 'kartonas', 'Hive5.webp', NULL, 'Tower', 2, 3, NULL, NULL, 84, 2),
+	(6, 'asdasda', 'Hive6.jpg', NULL, 'Movable', 34, NULL, NULL, NULL, 71, 2),
+	(7, 'ageyusfsdgu', 'Hive7.jpeg', NULL, 'Movable', NULL, NULL, NULL, NULL, 84, 2),
+	(30, 'Halva', '', 'Rīga', 'Stationary', NULL, NULL, 'Liela māja kokā', NULL, 71, 2);
 
 -- Dumping structure for table honey_bee.inventory
 CREATE TABLE IF NOT EXISTS `inventory` (
@@ -273,20 +274,18 @@ INSERT INTO `queen_bee_species` (`id`, `name_latin`, `description`, `image`, `li
 -- Dumping structure for table honey_bee.users
 CREATE TABLE IF NOT EXISTS `users` (
   `id` bigint NOT NULL AUTO_INCREMENT,
-  `account_code` varchar(20) CHARACTER SET utf8mb4 COLLATE utf8mb4_0900_ai_ci NOT NULL,
-  `name` varchar(30) CHARACTER SET utf8mb4 COLLATE utf8mb4_0900_ai_ci NOT NULL,
-  `surname` varchar(30) CHARACTER SET utf8mb4 COLLATE utf8mb4_0900_ai_ci NOT NULL,
-  `profile_picture` blob,
+  `username` varchar(20) CHARACTER SET utf8mb4 COLLATE utf8mb4_0900_ai_ci NOT NULL,
   `e_mail` varchar(30) NOT NULL DEFAULT '',
   `password` varchar(30) NOT NULL DEFAULT '',
-  `role` enum('Admin','Worker','Free User','Paid User') CHARACTER SET utf8mb4 COLLATE utf8mb4_0900_ai_ci DEFAULT NULL,
-  `username` varchar(20) DEFAULT NULL,
+  `profile_picture` varchar(50) DEFAULT NULL,
+  `role` enum('Admin','User') CHARACTER SET utf8mb4 COLLATE utf8mb4_0900_ai_ci NOT NULL DEFAULT 'User',
+  `paid_tier` enum('Free') CHARACTER SET utf8mb4 COLLATE utf8mb4_0900_ai_ci NOT NULL DEFAULT 'Free',
   PRIMARY KEY (`id`)
 ) ENGINE=InnoDB AUTO_INCREMENT=17 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
 
--- Dumping data for table honey_bee.users: ~7 rows (approximately)
-INSERT INTO `users` (`id`, `account_code`, `name`, `surname`, `profile_picture`, `e_mail`, `password`, `role`, `username`) VALUES
-	(2, '#2', 'Time', 'Lielas', NULL, 'admin@gmail.com', 'Admin1', 'Admin', 'Pica');
+-- Dumping data for table honey_bee.users: ~1 rows (approximately)
+INSERT INTO `users` (`id`, `username`, `e_mail`, `password`, `profile_picture`, `role`, `paid_tier`) VALUES
+	(2, 'Lolssss', 'admin@gmail.com', 'Admin1', NULL, 'Admin', 'Free');
 
 /*!40103 SET TIME_ZONE=IFNULL(@OLD_TIME_ZONE, 'system') */;
 /*!40101 SET SQL_MODE=IFNULL(@OLD_SQL_MODE, '') */;
