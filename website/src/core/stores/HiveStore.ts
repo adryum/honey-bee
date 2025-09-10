@@ -8,32 +8,41 @@ const hiveRepository = new HiveApi()
 export const useHiveStore = defineStore('hive', { 
     state: () => ({
         hives: [] as HiveModel[],
-        showHiveAssignLoading: false,
-        showHiveFetchLoading: false,
+        isCreatingHive: false,
+        isAssigningHive: false,
+        isFetchingHive: false,
     }),
     actions: {
         async init() {
             await this.getHives()
         },
 
-        async createHive(hive: HiveCreateModel): Promise<HiveModel | null> {
+        async createHive(
+            { hive, onSuccess, onFailure }: {
+                hive: HiveCreateModel
+                onSuccess: (hive: HiveModel) => void
+                onFailure: (error: unknown) => void
+            }
+        ): Promise<HiveModel | null> {
             try {
                 const newHive = await hiveRepository.createHive(hive)
 
                 if (newHive) {
                     this.hives.push(newHive)
+                    onSuccess(newHive)
                 }
 
                 return newHive
             } catch (error) {
                 console.error(error);
+                onFailure(error)
                 return null
             }
         },
 
         async assignHive(hiveId: number, apiaryId: number) {
             try {
-                this.showHiveAssignLoading = true
+                this.isAssigningHive = true
                 const assignedHive = await hiveRepository.assignHive(hiveId, apiaryId);
                 if (assignedHive) {
                     const index = this.hives.findIndex(hive => hive.id === assignedHive.id)
@@ -52,18 +61,18 @@ export const useHiveStore = defineStore('hive', {
             } catch (error) {
                 console.error(error);
             } finally {
-                this.showHiveAssignLoading = false
+                this.isAssigningHive = false
             }
         },
 
         async getHives() {
             try {
-                this.showHiveFetchLoading = true
+                this.isFetchingHive = true
                 this.hives = await hiveRepository.getHives();
             } catch (error) {
                 console.error(error);
             } finally {
-                this.showHiveFetchLoading = false
+                this.isFetchingHive = false
             }
         },
 

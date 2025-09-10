@@ -8,12 +8,13 @@ import Button from '../../input/buttons/Button.vue';
 import { useHiveStore } from '../../../../core/stores/HiveStore';
 import type { HiveCreateModel } from '../../../../core/models/Models';
 import type { DropdownOptions } from '../../../../core/Interfaces';
+import { useHiveCreate } from '../../../../core/composables/useHiveCreate';
 
 const s = useCssModule()
 const props = defineProps<{
     apiaryId: number
 }>()
-const hiveStore = useHiveStore()
+const { isCreatingHive, createHive, assignHive } = useHiveCreate()
 const name = ref('')
 const location = ref('')
 const description = ref('')
@@ -38,7 +39,7 @@ const isEverythingValid = computed(() => {
     return name.value && type.value
 })
 
-async function createHive() {
+async function startCreatingHive() {
     if (!isEverythingValid.value) return
 
     const request: HiveCreateModel = {
@@ -49,8 +50,16 @@ async function createHive() {
         image: image.value
     } 
 
-    const response = await hiveStore.createHive(request)
-    if (response) await hiveStore.assignHive(response.id, props.apiaryId)
+    const response = await createHive({
+        hive: request,
+        onSuccess(hive) {
+            
+        },
+        onFailure(error) {
+            
+        },
+    })
+    if (response) await assignHive(response.id, props.apiaryId)
 }
 </script>
 
@@ -77,7 +86,7 @@ async function createHive() {
         <SelectionDropdown :class="s.tag" 
             title="Type" :options="typeOptions" :selection="type"
         />
-        <Button :class="s.button" text="Add" @click="createHive"/>
+        <Button :class="s.button" text="Add" @click="startCreatingHive"/>
     </div>
 </motion.div>
 </template>
