@@ -26,6 +26,8 @@ const props = withDefaults(defineProps<{
                 <div :class="s.image"></div>
                 <p :class="s.queenbeeSpecies">Bigususus Bitususus</p>
             </div>
+            <div v-if="hive.type" :class="s.type">{{ hive.type }}</div>
+            <hr :class="s.imgShadow">
             <img :class="s.hiveImage" :src="hive.imagePath" alt="hive image">
         </div>
    </div>
@@ -48,6 +50,7 @@ const props = withDefaults(defineProps<{
         box-sizing: border-box
         padding-left: .5rem 
         background: var(--light)
+        
 
         .title
             display: flex
@@ -62,6 +65,8 @@ const props = withDefaults(defineProps<{
         height: 15rem
         background: var(--accent)
         width: 95%
+        border: 1px solid rgba(0, 0, 0, .2)
+        border-top: none
 
         .apiaryName
             @include main.f-size-very-small
@@ -73,6 +78,16 @@ const props = withDefaults(defineProps<{
             right: 0
             padding: 1rem
 
+        .type
+            position: absolute
+            top: 0
+            right: 0
+            background: var(--dark)
+            color: white
+            border-radius: 100vh
+            padding: .25rem .5rem
+            margin: .5rem
+
         .queen
             position: absolute
             bottom: 0
@@ -82,8 +97,8 @@ const props = withDefaults(defineProps<{
             display: flex
             align-items: center
             gap: 1rem
-            padding: 1rem
-            background: rgba(0, 0, 0, .2)
+            padding: .5rem
+            background: linear-gradient(to top, rgba(255, 255, 255, .4) 0%, rgba(255, 255, 255, 0) 100%);
 
             .image
                 width: 4rem
@@ -93,7 +108,14 @@ const props = withDefaults(defineProps<{
                 @include main.f-size-small
                 font-weight: 500
                 
-                
+        .imgShadow
+            margin: 0
+            border: none
+            position: absolute
+            top: 0
+            width: 100%
+            height: 5px
+            background: linear-gradient(to bottom, rgba(0, 0, 0, .4) 0%, rgba(0, 0, 0, 0) 100%);
 
         .hiveImage
             width: 100%
@@ -101,6 +123,7 @@ const props = withDefaults(defineProps<{
             display: block
             object-fit: cover
             box-sizing: border-box
+            
 
 
 .wood

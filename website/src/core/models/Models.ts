@@ -46,6 +46,7 @@ export type HiveModel = {
     id: number
     name: string
     imagePath: string
+    type: string
     apiaryId?: number
     apiaryName?: string
     apiaryImagePath?: string

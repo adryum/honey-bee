@@ -9,6 +9,17 @@ import { PublicIdBuilder } from "../image_cloud/PublicIdBuilder";
 import { upload } from "../Multer";
 
 const router = Router()
+const hiveModelQuery =`
+    SELECT 
+        ${col(HiveT.tableName, HiveT.id)} AS id, 
+        ${col(HiveT.tableName, HiveT.name)} as name,
+        ${col(HiveT.tableName, HiveT.imagePath)} as imagePath,
+        ${col(HiveT.tableName, HiveT.apiaryId)} as apiaryId,
+        ${col(HiveT.tableName, HiveT.type)} as type,
+        ${col(ApiaryT.tableName, ApiaryT.name)} as apiaryName,
+        ${col(ApiaryT.tableName, ApiaryT.imagePath)} as apiaryImagePath
+    FROM ${HiveT.tableName}
+    LEFT JOIN ${ApiaryT.tableName} ON ${col(HiveT.tableName, HiveT.apiaryId)} = ${col(ApiaryT.tableName, ApiaryT.id)}`
 
 // returns all hives
 router.post('/hives', async (req: Request<{},{},{
@@ -28,15 +39,7 @@ router.post('/hives', async (req: Request<{},{},{
     
     try {
         const [hives] = await db.query(`
-            SELECT 
-                ${col(HiveT.tableName, HiveT.id)} AS id, 
-                ${col(HiveT.tableName, HiveT.name)} as name,
-                ${col(HiveT.tableName, HiveT.imagePath)} as imagePath,
-                ${col(HiveT.tableName, HiveT.apiaryId)} as apiaryId,
-                ${col(ApiaryT.tableName, ApiaryT.name)} as apiaryName,
-                ${col(ApiaryT.tableName, ApiaryT.imagePath)} as apiaryImagePath
-            FROM ${HiveT.tableName}
-            LEFT JOIN ${ApiaryT.tableName} ON ${col(HiveT.tableName, HiveT.apiaryId)} = ${col(ApiaryT.tableName, ApiaryT.id)}
+            ${hiveModelQuery}
             WHERE ${col(HiveT.tableName, HiveT.userId)} = ? AND ${col(HiveT.tableName, HiveT.name)} LIKE ?`, 
             [identification.id, searchWord]
         )
@@ -161,15 +164,7 @@ router.post('/assign', async (req: Request<{},{},{
         )
 
         const [hive] = await db.query(`
-            SELECT 
-                ${col(HiveT.tableName, HiveT.id)} AS id, 
-                ${col(HiveT.tableName, HiveT.name)} as name,
-                ${col(HiveT.tableName, HiveT.imagePath)} as imagePath,
-                ${col(HiveT.tableName, HiveT.apiaryId)} as apiaryId,
-                ${col(ApiaryT.tableName, ApiaryT.name)} as apiaryName,
-                ${col(ApiaryT.tableName, ApiaryT.imagePath)} as apiaryImagePath
-            FROM ${HiveT.tableName}
-            LEFT JOIN ${ApiaryT.tableName} ON ${col(HiveT.tableName, HiveT.apiaryId)} = ${col(ApiaryT.tableName, ApiaryT.id)}
+            ${hiveModelQuery}
             WHERE ${col(HiveT.tableName, HiveT.userId)} = ? AND ${col(HiveT.tableName, HiveT.id)} LIKE ?`, 
             [identification.id, hiveId])
 
@@ -256,15 +251,7 @@ router.post('/create', upload.single("image"), async (req: Request<{},{},{
         }
 
         const [hive] = await db.query<any[]>(`
-            SELECT 
-                ${col(HiveT.tableName, HiveT.id)} AS id, 
-                ${col(HiveT.tableName, HiveT.name)} as name,
-                ${col(HiveT.tableName, HiveT.imagePath)} as imagePath,
-                ${col(HiveT.tableName, HiveT.apiaryId)} as apiaryId,
-                ${col(ApiaryT.tableName, ApiaryT.name)} as apiaryName,
-                ${col(ApiaryT.tableName, ApiaryT.imagePath)} as apiaryImagePath
-            FROM ${HiveT.tableName}
-            LEFT JOIN ${ApiaryT.tableName} ON ${col(HiveT.tableName, HiveT.apiaryId)} = ${col(ApiaryT.tableName, ApiaryT.id)}
+            ${hiveModelQuery}
             WHERE ${col(HiveT.tableName, HiveT.userId)} = ? AND ${col(HiveT.tableName, HiveT.id)} LIKE ?`, 
             [identificationObj.id, result.insertId]
         )

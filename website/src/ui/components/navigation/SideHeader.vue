@@ -134,7 +134,6 @@ const s = useCssModule()
         display: flex
         flex-direction: column
         padding: 1rem .5rem
-        gap: .3rem
 
         .tab
             z-index: 0
