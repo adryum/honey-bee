@@ -212,17 +212,19 @@ router.post('/unassign', async (req: Request<{},{}, {
 
 // creates hive
 router.post('/create', upload.single("image"), async (req: Request<{},{},{
-    identification: IUserIdentification
+    identification: string
     name: string
     location: string
     description: string
     type: string
 }>, res: Response) => {
-    const { identification, name, location, description, type } = req.body
+    const { name, location, description, type } = req.body
     const image  = req.file
+    const identificationObj = JSON.parse(req.body.identification);
+
 
     // missing credentials
-    if (!identification || !name || !type)
+    if (!identificationObj.id || !name || !type)
         return res.status(401).send('incorrect information!') 
 
     try {
@@ -235,23 +237,40 @@ router.post('/create', upload.single("image"), async (req: Request<{},{},{
                 ${HiveT.userId}
             )
             VALUES(?, ?, ?, ?, ?)`, 
-            [name, location, description, type, identification.id]
+            [name, location, description, type, identificationObj.id]
         )
 
         // insert image
         if (image) {
-            const imageKey = new PublicIdBuilder(identification.id).Apiary(result.insertId.toString()).getResource()
+            const imageKey = new PublicIdBuilder(identificationObj.id).Apiary(result.insertId.toString()).getResource()
 
-            uploadImage(image, imageKey)
+            const url = await uploadImage(image, imageKey)
+            console.log(url);
 
             const [updateRes] = await db.query<ResultSetHeader>(`
                 UPDATE ${HiveT.tableName}
-                SET ${HiveT.imagePath} = ${imageKey}
-                WHERE ${HiveT.id} = ${result.insertId}`,
+                SET ${HiveT.imagePath} = ?
+                WHERE ${HiveT.id} = ?`,
+                [url, result.insertId]
             )
         }
 
-        res.status(201).send()
+        const [hive] = await db.query<any[]>(`
+            SELECT 
+                ${col(HiveT.tableName, HiveT.id)} AS id, 
+                ${col(HiveT.tableName, HiveT.name)} as name,
+                ${col(HiveT.tableName, HiveT.imagePath)} as imagePath,
+                ${col(HiveT.tableName, HiveT.apiaryId)} as apiaryId,
+                ${col(ApiaryT.tableName, ApiaryT.name)} as apiaryName,
+                ${col(ApiaryT.tableName, ApiaryT.imagePath)} as apiaryImagePath
+            FROM ${HiveT.tableName}
+            LEFT JOIN ${ApiaryT.tableName} ON ${col(HiveT.tableName, HiveT.apiaryId)} = ${col(ApiaryT.tableName, ApiaryT.id)}
+            WHERE ${col(HiveT.tableName, HiveT.userId)} = ? AND ${col(HiveT.tableName, HiveT.id)} LIKE ?`, 
+            [identificationObj.id, result.insertId]
+        )
+
+        console.log(hive[0]);
+        res.status(200).json(hive[0])
     } catch (error) {
         console.error(error);
         res.status(500).send('Server error');

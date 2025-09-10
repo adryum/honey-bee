@@ -3,7 +3,7 @@ import type { HiveCreateModel, HiveModel, HiveSearchOptions } from "../models/Mo
 import { defineStore } from "pinia"
 import { useApiaryStore } from "./ApiaryStore"
 
-const hiveRepository = new HiveApi()
+const hiveApi = new HiveApi()
 
 export const useHiveStore = defineStore('hive', { 
     state: () => ({
@@ -24,8 +24,11 @@ export const useHiveStore = defineStore('hive', {
                 onFailure: (error: unknown) => void
             }
         ): Promise<HiveModel | null> {
+            console.log("creating hive");
             try {
-                const newHive = await hiveRepository.createHive(hive)
+                const newHive = await hiveApi.createHive(hive)
+                console.log("Created hive: ", newHive);
+                
 
                 if (newHive) {
                     this.hives.push(newHive)
@@ -43,13 +46,13 @@ export const useHiveStore = defineStore('hive', {
         async assignHive(hiveId: number, apiaryId: number) {
             try {
                 this.isAssigningHive = true
-                const assignedHive = await hiveRepository.assignHive(hiveId, apiaryId);
+                const assignedHive = await hiveApi.assignHive(hiveId, apiaryId);
                 if (assignedHive) {
                     const index = this.hives.findIndex(hive => hive.id === assignedHive.id)
                     if (index !== -1) {
                         const store = useApiaryStore()
                         store.assignHiveUpdate({ 
-                            takenApiaryId: this.hives[index].apiaryId!, 
+                            takenApiaryId: this.hives[index].apiaryId, 
                             givenApiaryId: apiaryId 
                         })
 
@@ -68,7 +71,7 @@ export const useHiveStore = defineStore('hive', {
         async getHives() {
             try {
                 this.isFetchingHive = true
-                this.hives = await hiveRepository.getHives();
+                this.hives = await hiveApi.getHives();
             } catch (error) {
                 console.error(error);
             } finally {

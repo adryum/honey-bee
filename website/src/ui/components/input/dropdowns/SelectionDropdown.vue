@@ -7,7 +7,7 @@ import SVGComponent from '../../SVGComponent.vue';
 import type { DropdownOptions } from '../../../../core/Interfaces';
 
 const s = useCssModule()
-const selection = defineModel('selection')
+const selected = defineModel('selected')
 const props = withDefaults(defineProps<{
     title: string
     svg?: SVGIcon
@@ -32,7 +32,7 @@ const field = ref()
 const selectedChoice = ref<Number>()
 const [isShown] = useToggle()
 const allOptions = computed(() => [
-    { text: "None" },
+    { text: "None" } as DropdownOptions,
     ...props.options,
 ])
 const MotionSVG = motion.create(SVGComponent)
@@ -45,7 +45,7 @@ watch(isShown, () => {
 
 function onItemClick(button: DropdownOptions) {
     isShown.value = false
-    selection.value = button.text
+    selected.value = button.text
 }
 </script>
 
@@ -58,7 +58,7 @@ function onItemClick(button: DropdownOptions) {
             @click="isShown = !isShown"
             :style="isShown ? 'border-radius: 3px 3px 0 0' : ''"
         >
-            <p :class="s.selection">{{ selection }}</p>
+            <p :class="s.selection">{{ selected }}</p>
             <MotionSVG 
                 :initial="{ rotateZ: 270 }" 
                 :animate="isShown ? { rotateZ: 270 } : { rotateZ: 90 }" :class="s.icon" :svg="getSVG(SVGIconRes.ArrowHead, 'black')"/>
@@ -76,8 +76,8 @@ function onItemClick(button: DropdownOptions) {
                 :class="s.li" 
                 @click="() => onItemClick(option)" 
                 @mouseover="selectedChoice = i"
-                :animate="option.text === selection ? { backgroundColor: 'var(--light)'} : {}"
-                :while-hover="option.text != selection ? { transition: { duration: .1 }, backgroundColor: 'var(--base)'} : {}"
+                :animate="option.text === selected ? { backgroundColor: 'var(--light)'} : {}"
+                :while-hover="option.text != selected ? { transition: { duration: .1 }, backgroundColor: 'var(--base)'} : {}"
                 :while-press="{ scale: 0.9 }">
                 <SVGComponent :class="s.icon" :svg="option.svg" />
                 <p :class="s.text">{{ option.text }}</p> 

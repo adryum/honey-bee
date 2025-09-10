@@ -10,14 +10,18 @@ import type {  ApiaryResponseModel } from '../../core/api/models/ResponseModels.
 import AddHivePopup from '../components/popups/hive/AddHivePopup.vue';
 import { useHiveStore } from '../../core/stores/HiveStore.js';
 import type { HiveModel, HiveSearchOptions } from '../../core/models/Models.js';
+import { useApiaryView } from '@/core/composables/useApiaryView.js';
 
 const s = useCssModule()
 const props = defineProps<{
     apiaryId: number
 }>()
 const hiveStore = useHiveStore()
+const { searchForApiaries } = useApiaryView()
+const apiaryName = ref(searchForApiaries({
+    id: props.apiaryId
+})[0].name)
 const hives = ref<HiveModel[]>([...hiveStore.getApiaryHives(props.apiaryId)]) 
-const apiary = ref<ApiaryResponseModel | null>()
 const searchWord = ref<string>('')
 
 async function searchHives() {
@@ -51,7 +55,7 @@ const components = [
 
 <template>
 <div :class="s.container">
-        <ToolBar :name="apiary?.name" :components="components"/>
+        <ToolBar :name="apiaryName" :components="components"/>
         <div :class="s.appiaries" ref="page">
             <Hive v-for="hive in hives"  class="item" 
                 :hive="hive"/>

@@ -9,3 +9,7 @@ export function cssStringToObject(cssString: string): Record<string, string> {
       return obj
     }, {})
 }
+
+export function isNumber(number: unknown) {
+    return typeof number === "number"
+}

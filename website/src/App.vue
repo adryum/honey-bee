@@ -9,7 +9,7 @@ import TopHeader from './ui/components/navigation/TopHeader.vue';
 const s = useCssModule()
 const isAuthenticated = RegistrationRepository.isAuthenticated
 
-watch(isAuthenticated, (newVal) => {
+watch(isAuthenticated, (newVal: any) => {
     console.log(`new auth value : ${newVal}`);
     
     if (!newVal) {

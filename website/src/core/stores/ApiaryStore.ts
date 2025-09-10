@@ -1,6 +1,7 @@
 import { defineStore } from "pinia"
 import type { ApiaryCreateModel, ApiaryModel, ApiarySearchOptions } from "../models/Models"
 import { ApiaryApi } from "../api/ApiaryApi"
+import { isNumber } from '@/core/utils/others'
 
 const apiaryApi = new ApiaryApi()
 
@@ -59,9 +60,13 @@ export const useApiaryStore = defineStore('apiary', {
             }
         },
         assignHiveUpdate(
-            {takenApiaryId, givenApiaryId}: {takenApiaryId: number, givenApiaryId: number}
+            {takenApiaryId, givenApiaryId}: {takenApiaryId: number | undefined, givenApiaryId: number}
         ) {
-            this.apiaries.find(apiary => apiary.id === takenApiaryId)!.hiveCount--
+            console.log(takenApiaryId);
+            console.log(isNumber(takenApiaryId));
+            
+            if (isNumber(takenApiaryId))
+                this.apiaries.find(apiary => apiary.id === takenApiaryId)!.hiveCount--
             this.apiaries.find(apiary => apiary.id === givenApiaryId)!.hiveCount++
         },
         searchForApiaries(options: ApiarySearchOptions): ApiaryModel[] {
@@ -80,7 +85,11 @@ export const useApiaryStore = defineStore('apiary', {
                     ? options.hiveCount === apiary.hiveCount
                     : true 
 
-                return wordMatches && countMatches
+                const idMatches = (isNumber(options.id))
+                    ? options.id === apiary.id
+                    : true
+
+                return wordMatches && countMatches && idMatches
             })
         },
         getApiary(apiaryId: number): ApiaryModel | undefined {

@@ -1,11 +1,10 @@
 <script setup lang="ts">
-import { computed, ref, useCssModule } from 'vue';
+import { computed, ref, useCssModule } from 'vue'
 import { motion } from 'motion-v';
 import TitledField from '../../input/fields/TitledField.vue';
 import ImageDropZone from '../../input/fields/ImageDropZone.vue';
 import SelectionDropdown from '../../input/dropdowns/SelectionDropdown.vue';
 import Button from '../../input/buttons/Button.vue';
-import { useHiveStore } from '../../../../core/stores/HiveStore';
 import type { HiveCreateModel } from '../../../../core/models/Models';
 import type { DropdownOptions } from '../../../../core/Interfaces';
 import { useHiveCreate } from '../../../../core/composables/useHiveCreate';
@@ -13,6 +12,7 @@ import { useHiveCreate } from '../../../../core/composables/useHiveCreate';
 const s = useCssModule()
 const props = defineProps<{
     apiaryId: number
+    onAssign: () => {}
 }>()
 const { isCreatingHive, createHive, assignHive } = useHiveCreate()
 const name = ref('')
@@ -36,10 +36,21 @@ const typeOptions: DropdownOptions[] = [
 ]
 
 const isEverythingValid = computed(() => {
-    return name.value && type.value
+    return Boolean(name.value && type.value)
 })
 
 async function startCreatingHive() {
+    console.log(isEverythingValid.value);
+    const request1: HiveCreateModel = {
+        name: name.value,
+        location: location.value,
+        description: description.value,
+        type: type.value,
+        image: image.value
+    } 
+    console.log(request1);
+    
+    
     if (!isEverythingValid.value) return
 
     const request: HiveCreateModel = {
@@ -49,6 +60,7 @@ async function startCreatingHive() {
         type: type.value,
         image: image.value
     } 
+    console.log("create pressed", request);
 
     const response = await createHive({
         hive: request,
@@ -59,14 +71,18 @@ async function startCreatingHive() {
             
         },
     })
-    if (response) await assignHive(response.id, props.apiaryId)
+    
+    if (response) {
+        await assignHive(response.id, props.apiaryId)
+        props.onAssign()
+    }
 }
 </script>
 
 
 <template>
 <motion.div :class="s.grid">
-    <ImageDropZone :class="s.image" :image-src="image"/>
+    <ImageDropZone :class="s.image" v-model:image-file="image"/>
     <div :class="s.fields">
         <TitledField 
             :class="s.name" 
@@ -84,7 +100,7 @@ async function startCreatingHive() {
             title="Description" 
             v-model="description"/>
         <SelectionDropdown :class="s.tag" 
-            title="Type" :options="typeOptions" :selection="type"
+            title="Type" :options="typeOptions" v-model:selected="type"
         />
         <Button :class="s.button" text="Add" @click="startCreatingHive"/>
     </div>
