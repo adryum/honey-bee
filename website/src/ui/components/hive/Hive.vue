@@ -1,6 +1,7 @@
 <script setup lang="ts">
 import { useCssModule, ref, onMounted, watch, toRef } from 'vue';
 import type { HiveModel } from '../../../core/models/Models';
+import CubeDropdown from '../input/dropdowns/CubeDropdown.vue';
 
 const s = useCssModule()
 const props = withDefaults(defineProps<{
@@ -18,6 +19,7 @@ const props = withDefaults(defineProps<{
                 <p :class="s.name">{{ hive.name }}</p>
                 <p v-if="showApiary" :class="s.apiaryName">{{ hive.apiaryName }}</p>
             </div>
+            <CubeDropdown :class="s.options"/>
         </div>
 
         <div :class="s.body">
@@ -48,8 +50,11 @@ const props = withDefaults(defineProps<{
         width: 100%
 
         box-sizing: border-box
-        padding-left: .5rem 
+        padding: 0 .5rem 
         background: var(--light)
+
+        .options 
+            margin-left: auto
         
 
         .title

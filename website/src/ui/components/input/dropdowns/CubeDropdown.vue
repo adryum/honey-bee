@@ -11,7 +11,7 @@ const s = useCssModule()
 const props = withDefaults(defineProps<{
     svg?: SVGIcon
     onClick?: () => void
-    options: DropdownOptions[]
+    options?: DropdownOptions[]
 }>(), {
     svg: () => getSVG(SVGIconRes.House),
     options: () => [{
@@ -86,6 +86,7 @@ watch(isShown, () => {
     .dropdown
         @include main.button-font
         position: absolute
+        z-index: 1
         display: inline-flex
         flex-direction: column
         top: 100%
