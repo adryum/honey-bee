@@ -13,3 +13,11 @@ export function cssStringToObject(cssString: string): Record<string, string> {
 export function isNumber(number: unknown) {
     return typeof number === "number"
 }
+
+export function removeFrom<T>(array: T[], item: T): T[] {
+    const index = array.indexOf(item);
+    if (index > -1) {
+        array.splice(index, 1);
+    }
+    return array;
+};

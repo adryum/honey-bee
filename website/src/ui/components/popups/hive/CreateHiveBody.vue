@@ -102,7 +102,7 @@ async function startCreatingHive() {
         <SelectionDropdown :class="s.tag" 
             title="Type" :options="typeOptions" v-model:selected="type"
         />
-        <Button :class="s.button" text="Add" @click="startCreatingHive"/>
+        <Button :style="{ background: 'rgba(0,0,0, .3)' }" :class="s.button" text="Add" @click="startCreatingHive"/>
     </div>
 </motion.div>
 </template>

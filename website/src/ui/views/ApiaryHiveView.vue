@@ -1,6 +1,6 @@
 <script setup lang="ts">
 import Hive from '../components/hive/Hive.vue';
-import { ref, useCssModule } from "vue";
+import { onMounted, ref, useCssModule, watch } from "vue";
 import ToolBar from '../components/ToolBar.vue';
 import { getSVG, SVGIconRes } from '../../core/SVGLoader.js';
 import { createComponentWithProps, createComponentInstance } from '../../core/utils/components.js';
@@ -11,30 +11,31 @@ import AddHivePopup from '../components/popups/hive/AddHivePopup.vue';
 import { useHiveStore } from '../../core/stores/HiveStore.js';
 import type { HiveModel, HiveSearchOptions } from '../../core/models/Models.js';
 import { useApiaryView } from '@/core/composables/useApiaryView.js';
+import { useApiaryHiveView } from '@/core/composables/useApiaryHiveView.js';
 
 const s = useCssModule()
 const props = defineProps<{
     apiaryId: number
 }>()
-const hiveStore = useHiveStore()
+const { apiaryHives, updateHives } = useApiaryHiveView()
 const { searchForApiaries } = useApiaryView()
 const apiaryName = ref(searchForApiaries({
     id: props.apiaryId
 })[0].name)
-const hives = ref<HiveModel[]>([...hiveStore.getApiaryHives(props.apiaryId)]) 
+
 const searchWord = ref<string>('')
 
 async function searchHives() {
-    const request: HiveSearchOptions =  {
+    const options: HiveSearchOptions =  {
         searchWord: searchWord.value,
         apiaryId: props.apiaryId,
         ignoreDifferentLetterCases: true
     }
 
-    console.log(props.apiaryId);
-    
-
-    hives.value = hiveStore.searchForHives(request)
+    updateHives({
+        apiaryId: props.apiaryId,
+        options: options
+    })
 }
 
 const components = [
@@ -51,13 +52,20 @@ const components = [
         }
     }),
 ]
+
+onMounted(() => {
+    updateHives({
+        apiaryId: props.apiaryId,
+        options: {}
+    })
+})
 </script>
 
 <template>
 <div :class="s.container">
         <ToolBar :name="apiaryName" :components="components"/>
         <div :class="s.appiaries" ref="page">
-            <Hive v-for="hive in hives"  class="item" 
+            <Hive v-for="hive in apiaryHives"  class="item" 
                 :hive="hive"/>
         </div>
 </div>

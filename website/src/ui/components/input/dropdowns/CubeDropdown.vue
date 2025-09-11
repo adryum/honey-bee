@@ -59,8 +59,8 @@ watch(isShown, () => {
                 @click="() => onItemClick(button)" 
                 @mouseover="selectedChoice = i"
                 :while-press="{ scale: 0.9 }">
-                <SVGComponent :class="s.icon" :svg="(button.svg) ? getSVG(button.svg.res, button.color) : undefined" />
-                <p :class="s.text" :style="{ color: button.color }">{{ button.text }}</p> 
+                <SVGComponent :class="s.icon" :svg="(button.svg) ? getSVG(button.svg.res, button.color ?? 'black') : undefined" />
+                <p :class="s.text" :style="{ color: button.color ?? 'black' }">{{ button.text }}</p> 
 
                 <motion.div
                     v-if="i === selectedChoice"
@@ -86,7 +86,6 @@ watch(isShown, () => {
     .dropdown
         @include main.button-font
         position: absolute
-        z-index: 1
         display: inline-flex
         flex-direction: column
         top: 100%
@@ -104,6 +103,7 @@ watch(isShown, () => {
             @include main.f-size-very-small
             padding: .5rem 1rem
             gap: 1rem
+            cursor: pointer
 
             .icon
                 z-index: 2

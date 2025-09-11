@@ -25,16 +25,16 @@ const s = useCssModule()
 @use '@/assets/main.sass' as main
 .container
     display: flex
+    position: sticky
+    z-index: 5
     align-items: center
     top: 0
-    position: sticky
     width: 100%
     height: 3rem
 
     background: var(--light)
     padding: 0 1rem
     box-sizing: border-box
-    z-index: 1
 
     box-shadow: 0 2px 5px 0 rgba(0, 0, 0, .2)
 

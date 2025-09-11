@@ -59,15 +59,11 @@ export const useApiaryStore = defineStore('apiary', {
                 this.showApiaryCreateLoading = false
             }
         },
-        assignHiveUpdate(
-            {takenApiaryId, givenApiaryId}: {takenApiaryId: number | undefined, givenApiaryId: number}
-        ) {
-            console.log(takenApiaryId);
-            console.log(isNumber(takenApiaryId));
-            
-            if (isNumber(takenApiaryId))
-                this.apiaries.find(apiary => apiary.id === takenApiaryId)!.hiveCount--
-            this.apiaries.find(apiary => apiary.id === givenApiaryId)!.hiveCount++
+        assignHive({ apiaryId }: { apiaryId: number | undefined }) {
+            if (isNumber(apiaryId)) this.apiaries.find(apiary => apiary.id === apiaryId)!.hiveCount++
+        },
+        unassignHive({ apiaryId }: { apiaryId: number | undefined}) {
+            if (isNumber(apiaryId)) this.apiaries.find(apiary => apiary.id === apiaryId)!.hiveCount--
         },
         searchForApiaries(options: ApiarySearchOptions): ApiaryModel[] {
             if (this.apiaries.length === 0) return [] as ApiaryModel[]

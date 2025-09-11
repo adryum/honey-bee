@@ -2,15 +2,18 @@ import { HiveApi } from "../api/HiveApi"
 import type { HiveCreateModel, HiveModel, HiveSearchOptions } from "../models/Models"
 import { defineStore } from "pinia"
 import { useApiaryStore } from "./ApiaryStore"
+import { removeFrom } from "../utils/others"
 
 const hiveApi = new HiveApi()
 
 export const useHiveStore = defineStore('hive', { 
     state: () => ({
         hives: [] as HiveModel[],
+        apiaryHives: [] as HiveModel[],
         isCreatingHive: false,
         isAssigningHive: false,
         isFetchingHive: false,
+        isDeletingHive: false,
     }),
     actions: {
         async init() {
@@ -42,6 +45,39 @@ export const useHiveStore = defineStore('hive', {
                 return null
             }
         },
+        async deleteHive(
+            { hiveId, hiveName, onSuccess, onFailure }: {
+                hiveId: number
+                hiveName: string
+                onSuccess: (hiveName: string) => void
+                onFailure: (error: unknown) => void
+            }
+        ): Promise<void> {
+            console.log("creating hive");
+            try {
+                this.isDeletingHive = true
+                const isSuccess = await hiveApi.deleteHive(hiveId)
+                
+                if (isSuccess) {
+                    console.log("Deleted hive ", hiveName);
+                    const store = useApiaryStore()
+                    const apiaryId = this.hives.find(hive => hive.id === hiveId)!.apiaryId
+                    store.unassignHive({ apiaryId })
+
+                    this.hives = this.hives.filter(hive => hive.id !== hiveId)
+                    this.apiaryHives = this.apiaryHives.filter(hive => hive.id !== hiveId)
+
+                    onSuccess(hiveName)
+                } else {
+                    onFailure('failed to delete chat!')
+                }
+            } catch (error) {
+                console.error(error);
+                onFailure(error)
+            } finally {
+                this.isDeletingHive = false
+            }
+        },
 
         async assignHive(hiveId: number, apiaryId: number) {
             try {
@@ -51,11 +87,9 @@ export const useHiveStore = defineStore('hive', {
                     const index = this.hives.findIndex(hive => hive.id === assignedHive.id)
                     if (index !== -1) {
                         const store = useApiaryStore()
-                        store.assignHiveUpdate({ 
-                            takenApiaryId: this.hives[index].apiaryId, 
-                            givenApiaryId: apiaryId 
-                        })
-
+                        store.unassignHive({ apiaryId: this.hives[index].apiaryId })
+                        store.assignHive({ apiaryId: apiaryId })
+            
                         this.hives[index] = assignedHive
                     }
                     console.log(assignedHive);
@@ -80,27 +114,43 @@ export const useHiveStore = defineStore('hive', {
         },
 
         searchForHives(options: HiveSearchOptions): HiveModel[] {
-            return this.hives.filter(hive => {
-                const wordMatches = (options.searchWord) 
-                ? (options.ignoreDifferentLetterCases) 
-                    ? hive.name.toLocaleUpperCase().startsWith(options.searchWord.toLocaleUpperCase())
-                    : hive.name.startsWith(options.searchWord)
-                : true
-                
-                const isAssigned = (options.isAssigned) 
-                ? hive.apiaryName 
-                : true
-
-                const apiaryMatches = (typeof options.apiaryId === "number") 
-                ? hive.apiaryId === options.apiaryId
-                : true
-
-                return wordMatches && isAssigned && apiaryMatches
-            })
+            return this.hives.filter(hive => this.hiveMatchesOptions({ 
+                hive: hive, 
+                options: options 
+            }))
         },
 
-        getApiaryHives(apiaryId: number): HiveModel[] {
-            return this.hives.filter(hive => hive.apiaryId === apiaryId)
+        updateApiaryHives({apiaryId, options}:{
+            apiaryId: number, 
+            options: HiveSearchOptions
+        }): void {
+            this.apiaryHives = this.hives
+                .filter(hive => hive.apiaryId === apiaryId)
+                .filter(hive => this.hiveMatchesOptions({ 
+                    hive: hive, 
+                    options: options 
+                }))
+        },
+
+        hiveMatchesOptions({hive, options}: {
+            hive: HiveModel, 
+            options: HiveSearchOptions
+        }): boolean {
+            const wordMatches = (options.searchWord) 
+            ? (options.ignoreDifferentLetterCases) 
+                ? hive.name.toLocaleUpperCase().startsWith(options.searchWord.toLocaleUpperCase())
+                : hive.name.startsWith(options.searchWord)
+            : true
+            
+            const isAssigned = (options.isAssigned) 
+            ? Boolean(hive.apiaryName) 
+            : true
+
+            const apiaryMatches = (typeof options.apiaryId === "number") 
+            ? hive.apiaryId === options.apiaryId
+            : true
+
+            return wordMatches && isAssigned && apiaryMatches
         }
     }
 })

@@ -32,9 +32,13 @@ const s = useCssModule()
 
     padding: .5rem
 
-    background: var(--dark)
-    border-radius: 3px
+    // background: var(--accent)
+    // border-radius: 3px
     box-shadow: inset 0 -2px rgba(0,0,0, .3)
+    transition: .2s
+
+    &:hover
+        backdrop-filter: brightness(90%)
     
     .icon
         width: 1.5rem

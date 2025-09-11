@@ -217,7 +217,6 @@ router.post('/create', upload.single("image"), async (req: Request<{},{},{
     const image  = req.file
     const identificationObj = JSON.parse(req.body.identification);
 
-
     // missing credentials
     if (!identificationObj.id || !name || !type)
         return res.status(401).send('incorrect information!') 
@@ -258,6 +257,33 @@ router.post('/create', upload.single("image"), async (req: Request<{},{},{
 
         console.log(hive[0]);
         res.status(200).json(hive[0])
+    } catch (error) {
+        console.error(error);
+        res.status(500).send('Server error');
+    }
+})
+
+// delete hive
+router.post('/delete', upload.none(), async (req: Request<{},{},{
+    identification: string
+    hiveId: string
+}>, res: Response) => {
+    const { hiveId } = req.body
+    const identificationObj = JSON.parse(req.body.identification);
+    console.log(hiveId);
+
+    // missing credentials
+    if (!identificationObj.id || !hiveId)
+        return res.status(401).send('incorrect information!') 
+
+    try {
+        const deleteQuery = await db.query(`
+            DELETE FROM ${HiveT.tableName} 
+            WHERE ${HiveT.id} = ? AND ${HiveT.userId} = ?`, 
+            [hiveId, identificationObj.id]
+        )
+
+        res.status(204).send()
     } catch (error) {
         console.error(error);
         res.status(500).send('Server error');

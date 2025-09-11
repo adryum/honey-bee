@@ -41,7 +41,7 @@ const s = useCssModule()
     padding: .5rem 1rem 
     gap: 1rem
 
-    background: #D8A435
+    background: var(--dark)
     border-radius: 3px
     box-shadow: inset 0 -2px rgba(0,0,0, .3)
     

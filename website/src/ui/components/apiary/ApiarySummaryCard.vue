@@ -1,7 +1,7 @@
 <script setup lang="ts">
 import { ref, useCssModule } from "vue"
 import { getSVG, SVGIconRes } from "../../../core/SVGLoader";
-import { motion } from "motion-v"
+import { motion, rgba } from "motion-v"
 import type { DropdownOptions } from "../../../core/Interfaces";
 import CubeDropdown from "../input/dropdowns/CubeDropdown.vue";
 import type { ApiaryResponseModel } from "../../../core/api/models/ResponseModels";
@@ -33,7 +33,8 @@ const dropdownActions: DropdownOptions[] = [
 <div :class="s.container" ref="container">
     <img :class="s.image" :src="apiary.imagePath" alt="apiary image">
     <hr :class="s.linearDim">
-    <MotionIconCubeDropdown 
+    <MotionIconCubeDropdown
+        :style="{ background: 'rgba(0,0,0, 0.3)'}"
         :svg="getSVG(SVGIconRes.MoreDots)" :class="[s.options]"
         :options="dropdownActions"
          />
@@ -64,7 +65,7 @@ const dropdownActions: DropdownOptions[] = [
     height: 450px
     box-sizing: border-box
     overflow: hidden
-    border-radius: 5px
+    // border-radius: 5px
     transition: .3s ease-out
     cursor: pointer
 

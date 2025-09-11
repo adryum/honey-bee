@@ -4,6 +4,19 @@ import type { HiveAssignRequestModel } from "./models/RequestModels";
 import { catchedErrorLog, RegistrationRepository } from "../repositories/RegistrationRepository";
 
 export class HiveApi {
+    async deleteHive(hiveId: number): Promise<boolean> {
+        try {
+            const formdata = new FormData()
+            formdata.append('identification', JSON.stringify(RegistrationRepository.getUserIdentification()))
+            formdata.append('hiveId', hiveId.toString())
+            
+            await axios.post('/hive/delete', formdata)
+            return true
+        } catch (error) {
+            catchedErrorLog(error)
+            return false
+        } 
+    }
     async createHive(hive: HiveCreateModel): Promise<HiveModel | null> {
         try {
             const formdata = new FormData()
@@ -41,23 +54,6 @@ export class HiveApi {
             return []
         }
     }
-
-    // async  getHiveOverview(
-    //     hiveId: number, 
-    //     identification = RegistrationRepository.getUserIdentification()
-    // ) {
-    //     const payload: HiveOverviewRequestModel = {
-    //         identification: identification,
-    //         hiveId: hiveId
-    //     }
-    //     try {
-    //         const promise = await axios.post<HiveOverviewResponseModel>('/hive/overview', payload)
-
-    //         return promise.data
-    //     } catch (error) {
-    //         catchedErrorLog(error)
-    //     }
-    // }
 
     async assignHive(hiveId: number, apiaryId: number): Promise<HiveModel | null> {
         const payload: HiveAssignRequestModel = {

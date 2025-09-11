@@ -2,6 +2,9 @@
 import { useCssModule, ref, onMounted, watch, toRef } from 'vue';
 import type { HiveModel } from '../../../core/models/Models';
 import CubeDropdown from '../input/dropdowns/CubeDropdown.vue';
+import { getSVG, SVGIconRes } from '@/core/SVGLoader';
+import { useHive } from '@/core/composables/useHive';
+import type { DropdownOptions } from '@/core/Interfaces';
 
 const s = useCssModule()
 const props = withDefaults(defineProps<{
@@ -10,6 +13,26 @@ const props = withDefaults(defineProps<{
 }>(), {
     showApiary: false
 })
+const { isDeletingHive, isAssigningHive, deleteHive, assignHive } = useHive()
+const moreOptions: DropdownOptions[] = [
+    {
+        text: 'Delete',
+        svg: getSVG(SVGIconRes.Trashcan),
+        color: 'var(--red)',
+        onClick: async () => {
+            await deleteHive({
+                hiveId: props.hive.id,
+                hiveName: props.hive.name,
+                onSuccess(hiveName) {
+                    
+                },
+                onFailure(error) {
+                    
+                },
+            })
+        },
+    }
+]
 </script>
 
 <template>
@@ -19,7 +42,10 @@ const props = withDefaults(defineProps<{
                 <p :class="s.name">{{ hive.name }}</p>
                 <p v-if="showApiary" :class="s.apiaryName">{{ hive.apiaryName }}</p>
             </div>
-            <CubeDropdown :class="s.options"/>
+            <CubeDropdown  
+                :svg="getSVG(SVGIconRes.MoreDots, 'black')" 
+                :class="s.options"
+                :options="moreOptions"/>
         </div>
 
         <div :class="s.body">
@@ -45,6 +71,8 @@ const props = withDefaults(defineProps<{
 
     .header
         display: flex
+        position: relative
+        z-index: 1
         align-items: center
         height: 4rem
         width: 100%
@@ -55,7 +83,6 @@ const props = withDefaults(defineProps<{
 
         .options 
             margin-left: auto
-        
 
         .title
             display: flex
@@ -65,6 +92,11 @@ const props = withDefaults(defineProps<{
                 @include main.f-size-small
                 font-weight: 700
 
+            .apiaryName
+                @include main.f-size-very-small
+                font-weight: 400
+                letter-spacing: .5px
+
     .body
         position: relative
         height: 15rem
@@ -73,17 +105,12 @@ const props = withDefaults(defineProps<{
         border: 1px solid rgba(0, 0, 0, .2)
         border-top: none
 
-        .apiaryName
-            @include main.f-size-very-small
-            font-weight: 300
-            letter-spacing: .5px
-
-            position: absolute
-            top: 0
-            right: 0
-            padding: 1rem
+        
 
         .type
+            @include main.f-size-very-small
+            font-weight: 400
+            letter-spacing: .5px
             position: absolute
             top: 0
             right: 0

@@ -29,7 +29,7 @@ const s = useCssModule()
     align-items: center
 
     padding: .5rem 1rem
-    background: #D8A435
+    background: var(--dark)
     border-radius: 3px
     border-bottom: 2px solid rgba(0,0,0,.2)
     
