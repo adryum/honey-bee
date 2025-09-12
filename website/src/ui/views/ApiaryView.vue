@@ -9,6 +9,7 @@ import { getSVG, SVGIconRes } from '../../core/SVGLoader';
 import { createComponentWithProps, createComponentInstance } from '../../core/utils/components';
 import { useApiaryView } from '../../core/composables/useApiaryView';
 import type { ApiaryModel } from '../../core/models/Models';
+import { onResize } from '@/core/utils/Hooks';
 
 const s = useCssModule()
 const { searchForApiaries } = useApiaryView()
@@ -34,10 +35,6 @@ const components = [
     }),
 ]
 
-onMounted(() => {
-    apiaries.value = searchForApiaries({})
-})
-
 function searchApiaries() {
     apiaries.value = searchForApiaries({
         searchWord: searchWord.value,
@@ -45,12 +42,24 @@ function searchApiaries() {
     })
 }
 
+const grid = ref<HTMLDivElement>()
+const gridColumns = ref(0)
+const minHiveWidth = 350
+
+onResize(grid, (element) => {
+    const rect = element.contentRect
+    gridColumns.value = Math.floor(rect.width / minHiveWidth)
+})
+
+onMounted(() => {
+    apiaries.value = searchForApiaries({})
+})
 </script>
 
 <template>
     <div :class="s.container">
         <ToolBar name="Apiaries" :components="components"/>
-        <div :class="s.appiaries" ref="page">
+        <div :style="{ gridTemplateColumns: `repeat(${gridColumns}, 1fr)` }" :class="s.appiaries" ref="grid">
             <ApiarySummaryCard v-for="apiary in apiaries"
                 @click="$router.push('/apiaryHives/' + apiary!.id)"
                 class="item" 
@@ -72,7 +81,5 @@ function searchApiaries() {
 
     .appiaries
         display: grid
-        grid-template-columns: repeat(auto-fit, minmax(500px, 592px))
-        justify-content: center
-        gap: 1rem
+        gap: 20px
 </style>

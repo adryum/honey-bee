@@ -1,6 +1,6 @@
 <script setup lang="ts">
 import Hive from '../components/hive/Hive.vue';
-import { onMounted, ref, useCssModule, watch } from "vue";
+import { computed, onBeforeUnmount, onMounted, ref, useCssModule, watch, type Ref } from "vue";
 import ToolBar from '../components/ToolBar.vue';
 import { getSVG, SVGIconRes } from '../../core/SVGLoader.js';
 import { createComponentWithProps, createComponentInstance } from '../../core/utils/components.js';
@@ -12,6 +12,8 @@ import { useHiveStore } from '../../core/stores/HiveStore.js';
 import type { HiveModel, HiveSearchOptions } from '../../core/models/Models.js';
 import { useApiaryView } from '@/core/composables/useApiaryView.js';
 import { useApiaryHiveView } from '@/core/composables/useApiaryHiveView.js';
+import { clamp } from '@/core/utils/others.js';
+import { onResize } from '@/core/utils/Hooks.js';
 
 const s = useCssModule()
 const props = defineProps<{
@@ -53,6 +55,15 @@ const components = [
     }),
 ]
 
+const grid = ref<HTMLDivElement>()
+const gridColumns = ref(0)
+const minHiveWidth = 350
+
+onResize(grid, (element) => {
+    const rect = element.contentRect
+    gridColumns.value = Math.floor(rect.width / minHiveWidth)
+})
+
 onMounted(() => {
     updateHives({
         apiaryId: props.apiaryId,
@@ -64,7 +75,7 @@ onMounted(() => {
 <template>
 <div :class="s.container">
         <ToolBar :name="apiaryName" :components="components"/>
-        <div :class="s.appiaries" ref="page">
+        <div :class="s.appiaries" :style="{ gap: `20px`, gridTemplateColumns: `repeat(${gridColumns}, 1fr)`  }" ref="grid">
             <Hive v-for="hive in apiaryHives"  class="item" 
                 :hive="hive"/>
         </div>
@@ -84,7 +95,4 @@ onMounted(() => {
 
     .appiaries
         display: grid
-        grid-template-columns: repeat(auto-fit, 400px)
-        justify-content: center
-        gap: 2rem
 </style>
