@@ -5,11 +5,12 @@ import { motion, rgba } from "motion-v"
 import type { DropdownOptions } from "../../../core/Interfaces";
 import CubeDropdown from "../input/dropdowns/CubeDropdown.vue";
 import type { ApiaryResponseModel } from "../../../core/api/models/ResponseModels";
+import type { ApiaryModel } from "@/core/models/Models";
 
 const s = useCssModule()
 const props = defineProps<{
-    apiary: ApiaryResponseModel,
-    onDelete: Function
+    apiary: ApiaryModel,
+    onDelete?: Function
 }>()
 
 const MotionIconCubeDropdown = motion.create(CubeDropdown)

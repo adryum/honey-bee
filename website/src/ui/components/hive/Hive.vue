@@ -5,6 +5,8 @@ import CubeDropdown from '../input/dropdowns/CubeDropdown.vue';
 import { getSVG, SVGIconRes } from '@/core/SVGLoader';
 import { useHive } from '@/core/composables/useHive';
 import type { DropdownOptions } from '@/core/Interfaces';
+import { createComponentInstance } from '@/core/utils/components';
+import AssignToApiaryPopup from '../popups/AssignToApiaryPopup.vue';
 
 const s = useCssModule()
 const props = withDefaults(defineProps<{
@@ -13,7 +15,7 @@ const props = withDefaults(defineProps<{
 }>(), {
     showApiary: false
 })
-const { isDeletingHive, isAssigningHive, deleteHive, assignHive } = useHive()
+const { isDeletingHive, deleteHive, updateHives } = useHive()
 const moreOptions: DropdownOptions[] = [
     {
         text: 'Delete',
@@ -30,6 +32,18 @@ const moreOptions: DropdownOptions[] = [
                     
                 },
             })
+        },
+    },
+    {
+        text: 'Move',
+        svg: getSVG(SVGIconRes.ArrowHead),
+        onClick: async () => {
+            createComponentInstance(AssignToApiaryPopup, {
+                hiveId: props.hive.id,
+                onAssign: () => {
+                    updateHives({ apiaryId: props.hive.apiaryId!, options: {} })
+                } 
+            }, true)
         },
     }
 ]
@@ -68,6 +82,7 @@ const moreOptions: DropdownOptions[] = [
     display: flex
     flex-direction: column
     align-items: center
+    aspect-ratio: 1 / .75
 
     .header
         display: flex
@@ -99,13 +114,11 @@ const moreOptions: DropdownOptions[] = [
 
     .body
         position: relative
-        height: 15rem
         background: var(--accent)
         width: 95%
+        height: calc(100% - 4.1rem)
         border: 1px solid rgba(0, 0, 0, .2)
         border-top: none
-
-        
 
         .type
             @include main.f-size-very-small
