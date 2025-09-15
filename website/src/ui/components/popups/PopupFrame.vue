@@ -49,7 +49,7 @@ function exit() {
         <div @mousedown="() => focusHandler?.(parentEl!)" 
             ref="container"
             :style="style"
-            :class="[s.container, isResizable && s.resizable]" 
+            :class="[s.container]" 
             >
             <div ref="handle" :class="s.handle">
                 <h1 :class="s.popupName">{{ title }}</h1>
@@ -77,10 +77,6 @@ function exit() {
     position: fixed
     transition: .5s
 
-.resizable
-    resize: both
-    overflow: auto
-
 .container 
     position: fixed
     display: flex
@@ -92,10 +88,8 @@ function exit() {
     background: var(--base)
     border: 1px solid rgba(0, 0, 0, 0.4)
     
-    
     max-height: 90vh
     max-width: 90vw
-
 
     .handle
         display: flex

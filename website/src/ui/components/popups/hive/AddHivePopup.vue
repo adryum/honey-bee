@@ -21,7 +21,7 @@ function switchTab(tab: string) {
 </script>
 
 <template>
-<PopupFrame title="Add hive" :unmount="unmount" :focus-handler="focusHandler" :isResizable="true">
+<PopupFrame title="Add hive" :unmount="unmount" :focus-handler="focusHandler">
     <template #body>
         <div :class="s.body">
             <div :class="s.addMode">
@@ -53,7 +53,7 @@ function switchTab(tab: string) {
     display: flex
     flex-direction: column
     gap: 1rem
-
+    height: 100%
 
     .addMode
         display: flex

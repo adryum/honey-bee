@@ -12,7 +12,7 @@ import { useHiveStore } from '../../core/stores/HiveStore.js';
 import type { HiveModel, HiveSearchOptions } from '../../core/models/Models.js';
 import { useApiaryView } from '@/core/composables/useApiaryView.js';
 import { useApiaryHiveView } from '@/core/composables/useApiaryHiveView.js';
-import { clamp } from '@/core/utils/others.js';
+import { clamp, useFlexibleGrid } from '@/core/utils/others.js';
 import { onResize } from '@/core/utils/Hooks.js';
 
 const s = useCssModule()
@@ -54,25 +54,12 @@ const components = [
         }
     }),
 ]
-// function flexibleGridStyle(gridRef: Ref<HTMLDivElement>, itemWidth: number)
-function flexibleGridStyle({gridRef, itemWidth}: { gridRef: Ref<HTMLDivElement | null>, itemWidth: number }) {
-    const style = ref<CSSProperties>({
-        display: 'grid',
-        gridTemplateColumns: 'repeat(1, 1fr)',
-    })
-
-    onResize(gridRef, (element) => {
-        const columns = Math.max(1, Math.floor(element.contentRect.width / itemWidth))
-        style.value.gridTemplateColumns = `repeat(${columns}, 1fr)`
-    })
-
-    return {
-        style
-    }
-}
-
 const grid = ref<HTMLDivElement | null>(null)
-const { style: gridStyle } = flexibleGridStyle({ gridRef: grid, itemWidth: 350})
+const { style: gridStyle } = useFlexibleGrid({ 
+    gridRef: grid,
+    itemWidth: 350,
+    gap: '10px'
+})
 
 onMounted(() => {
     updateHives({
@@ -85,7 +72,7 @@ onMounted(() => {
 <template>
 <div :class="s.container">
         <ToolBar :name="apiaryName" :components="components"/>
-        <div :class="s.appiaries" :style="style" ref="grid">
+        <div :class="s.appiaries" :style="gridStyle" ref="grid">
             <Hive v-for="hive in apiaryHives"  class="item" 
                 :hive="hive"/>
         </div>

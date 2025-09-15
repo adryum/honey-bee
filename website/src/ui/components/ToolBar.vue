@@ -33,7 +33,7 @@ const s = useCssModule()
     height: 3rem
 
     background: var(--light)
-    padding: 0 1rem
+    padding: .5rem 1rem
     box-sizing: border-box
 
     box-shadow: 0 2px 5px 0 rgba(0, 0, 0, .2)
