@@ -29,15 +29,18 @@ export function clamp(value: number, min: number, max: number): number {
   return Math.min(Math.max(value, min), max)
 }
 
-export function useFlexibleGrid({gridRef, itemWidth, gap}: { gridRef: Ref<HTMLDivElement | null>, itemWidth: number, gap: string }) {
+export function useFlexibleGrid({gridRef, itemWidth, gapPixels }: { gridRef: Ref<HTMLDivElement | null>, itemWidth: number, gapPixels: number }) {
     const style = ref<CSSProperties>({
         display: 'grid',
-        gap: gap,
+        gap: gapPixels + "px",
         gridTemplateColumns: 'repeat(1, 1fr)',
     })
 
     onResize(gridRef, (element) => {
-        const columns = Math.max(1, Math.floor(element.contentRect.width / itemWidth))
+        // possible columns
+        const possibleColumns = Math.max(1, Math.floor(element.contentRect.width / itemWidth))
+        // adds gaps to consideration
+        const columns = Math.max(1, Math.floor((element.contentRect.width - gapPixels * (possibleColumns - 1)) / itemWidth))
         style.value.gridTemplateColumns = `repeat(${columns}, 1fr)`
     })
 

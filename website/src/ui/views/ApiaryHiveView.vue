@@ -57,8 +57,8 @@ const components = [
 const grid = ref<HTMLDivElement | null>(null)
 const { style: gridStyle } = useFlexibleGrid({ 
     gridRef: grid,
-    itemWidth: 350,
-    gap: '10px'
+    itemWidth: 400,
+    gapPixels: 10
 })
 
 onMounted(() => {

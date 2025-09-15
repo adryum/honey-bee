@@ -5,11 +5,11 @@ import AllHiveView from '@/ui/views/AllHiveView.vue'
 import ApiaryView from '@/ui/views/ApiaryView.vue'
 import SignUpView from '@/ui/views/registration/SignUpView.vue'
 import ApiaryHiveView from '@/ui/views/ApiaryHiveView.vue'
-import HiveView from '@/ui/views/HiveView.vue'
 import SettingsView from '@/ui/views/SettingsView.vue'
 import UsersView from '@/ui/views/UsersView.vue'
 import CalendarView from '@/ui/views/CalendarView.vue'
 import AllBeeView from '@/ui/views/AllBeeView.vue'
+import HiveOverview from '@/ui/views/HiveOverview.vue'
 
 const router = createRouter({
   history: createWebHistory(import.meta.env.BASE_URL),
@@ -17,7 +17,7 @@ const router = createRouter({
     {
       path: '/',
       name: 'home',
-      component: MainView,
+      component: HiveOverview,
     },
     {
         path: '/login',
@@ -37,7 +37,7 @@ const router = createRouter({
     {
         path: '/hives/:hiveId',
         name: 'Hive',
-        component: HiveView,
+        component: HiveOverview,
         props: true
     },
     {
