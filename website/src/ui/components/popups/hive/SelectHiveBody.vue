@@ -53,15 +53,15 @@ watch(searchWord, () => searchHives())
     flex-direction: column
     
     overflow-y: scroll
+
     padding-right: 1rem 
     gap: 1rem    
     .hives
         display: grid 
-        grid-template-columns: repeat(auto-fit, minmax(20rem, 1fr))
+        grid-template-columns: repeat(auto-fit, minmax(15rem, 1fr))
         gap: 1rem
-
-        height: 30rem
         width: 50rem
+        height: 60vh
 
 
         .info

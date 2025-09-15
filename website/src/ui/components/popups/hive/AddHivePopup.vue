@@ -21,7 +21,7 @@ function switchTab(tab: string) {
 </script>
 
 <template>
-<PopupFrame title="Add hive" :unmount="unmount" :focus-handler="focusHandler">
+<PopupFrame title="Add hive" :unmount="unmount" :focus-handler="focusHandler" :isResizable="true">
     <template #body>
         <div :class="s.body">
             <div :class="s.addMode">

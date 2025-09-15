@@ -125,7 +125,7 @@ const s = useCssModule()
     background: var(--accent)
 
     .tip
-        height: 4rem
+        height: 3rem
         width: 100%
         background: var(--light)
 

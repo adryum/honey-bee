@@ -1,6 +1,6 @@
 import { type Ref, onMounted, onBeforeUnmount } from "vue"
 
-export function onResize(ref: Ref<HTMLElement | undefined>, onChange: (element: ResizeObserverEntry) => void): void {
+export function onResize(ref: Ref<HTMLElement | undefined | null>, onChange: (element: ResizeObserverEntry) => void): void {
     let observer: ResizeObserver | null = null
     onMounted(() => {
         if (!ref.value) return

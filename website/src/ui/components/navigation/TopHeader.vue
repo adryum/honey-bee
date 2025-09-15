@@ -15,7 +15,7 @@ const s = useCssModule()
 @use '@/assets/main.sass' as main
 .container
     width: 100%
-    min-height: 4rem
+    min-height: 3rem
 
     background: var(--light)
 </style>

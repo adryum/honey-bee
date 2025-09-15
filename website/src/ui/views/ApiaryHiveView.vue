@@ -1,6 +1,6 @@
 <script setup lang="ts">
 import Hive from '../components/hive/Hive.vue';
-import { computed, onBeforeUnmount, onMounted, ref, useCssModule, watch, type Ref } from "vue";
+import { computed, onBeforeUnmount, onMounted, ref, useCssModule, watch, type CSSProperties, type Ref } from "vue";
 import ToolBar from '../components/ToolBar.vue';
 import { getSVG, SVGIconRes } from '../../core/SVGLoader.js';
 import { createComponentWithProps, createComponentInstance } from '../../core/utils/components.js';
@@ -54,15 +54,25 @@ const components = [
         }
     }),
 ]
+// function flexibleGridStyle(gridRef: Ref<HTMLDivElement>, itemWidth: number)
+function flexibleGridStyle({gridRef, itemWidth}: { gridRef: Ref<HTMLDivElement | null>, itemWidth: number }) {
+    const style = ref<CSSProperties>({
+        display: 'grid',
+        gridTemplateColumns: 'repeat(1, 1fr)',
+    })
 
-const grid = ref<HTMLDivElement>()
-const gridColumns = ref(0)
-const minHiveWidth = 350
+    onResize(gridRef, (element) => {
+        const columns = Math.max(1, Math.floor(element.contentRect.width / itemWidth))
+        style.value.gridTemplateColumns = `repeat(${columns}, 1fr)`
+    })
 
-onResize(grid, (element) => {
-    const rect = element.contentRect
-    gridColumns.value = Math.floor(rect.width / minHiveWidth)
-})
+    return {
+        style
+    }
+}
+
+const grid = ref<HTMLDivElement | null>(null)
+const { style: gridStyle } = flexibleGridStyle({ gridRef: grid, itemWidth: 350})
 
 onMounted(() => {
     updateHives({
@@ -75,7 +85,7 @@ onMounted(() => {
 <template>
 <div :class="s.container">
         <ToolBar :name="apiaryName" :components="components"/>
-        <div :class="s.appiaries" :style="{ gap: `20px`, gridTemplateColumns: `repeat(${gridColumns}, 1fr)`  }" ref="grid">
+        <div :class="s.appiaries" :style="style" ref="grid">
             <Hive v-for="hive in apiaryHives"  class="item" 
                 :hive="hive"/>
         </div>
@@ -92,7 +102,4 @@ onMounted(() => {
 
     padding: 1rem
     box-sizing: border-box
-
-    .appiaries
-        display: grid
 </style>

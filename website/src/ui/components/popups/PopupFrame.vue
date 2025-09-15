@@ -12,6 +12,7 @@ const isExiting = ref(false)
 const parentEl = ref<HTMLElement>()
 const props = defineProps<{
     title: string,
+    isResizable?: boolean,
     unmount?: () => {},
     focusHandler?: (el: HTMLElement) => {}
 }>()
@@ -45,7 +46,11 @@ function exit() {
         :exit="{y: 200 , opacity: 0}"
         @motioncomplete="exit"
         >
-        <div @mousedown="() => focusHandler?.(parentEl!)" ref="container" :style="style" :class="s.container" >
+        <div @mousedown="() => focusHandler?.(parentEl!)" 
+            ref="container"
+            :style="style"
+            :class="[s.container, isResizable && s.resizable]" 
+            >
             <div ref="handle" :class="s.handle">
                 <h1 :class="s.popupName">{{ title }}</h1>
                 <slot name="header">
@@ -72,6 +77,10 @@ function exit() {
     position: fixed
     transition: .5s
 
+.resizable
+    resize: both
+    overflow: auto
+
 .container 
     position: fixed
     display: flex
@@ -82,6 +91,10 @@ function exit() {
     box-shadow: 0px 0px 50px 2px rgba(0, 0, 0, 0.4)
     background: var(--base)
     border: 1px solid rgba(0, 0, 0, 0.4)
+    
+    
+    max-height: 90vh
+    max-width: 90vw
 
 
     .handle
