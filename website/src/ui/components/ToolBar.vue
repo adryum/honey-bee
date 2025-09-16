@@ -32,7 +32,7 @@ const s = useCssModule()
     width: 100%
     height: 3rem
 
-    background: var(--light)
+    background: #ffebb3
     padding: .5rem 1rem
     box-sizing: border-box
 
@@ -46,6 +46,8 @@ const s = useCssModule()
     .name
         @include main.font
         font-size: 1.5rem
-        color: black
+        color: #d16500
+        font-weight: 700
+        letter-spacing: .02em
         margin: 0
 </style>

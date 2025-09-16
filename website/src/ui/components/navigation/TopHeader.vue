@@ -13,6 +13,7 @@ const s = useCssModule()
 
 <style module lang='sass'>
 @use '@/assets/main.sass' as main
+@use '@/assets/_colors.sass' as colors
 .container
     width: 100%
     min-height: 3rem

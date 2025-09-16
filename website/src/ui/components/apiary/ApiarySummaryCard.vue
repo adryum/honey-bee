@@ -69,6 +69,7 @@ const dropdownActions: DropdownOptions[] = [
     // border-radius: 5px
     transition: .3s ease-out
     cursor: pointer
+    border: 1px solid rgba(0,0,0,0.2)
 
     &:hover
         box-shadow: 2px 2px 10px rgba(0, 0, 0, .3)

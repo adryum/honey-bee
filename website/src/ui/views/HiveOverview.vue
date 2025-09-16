@@ -1,5 +1,6 @@
 <script setup lang="ts">
 import { ref, useCssModule } from "vue";
+import TitledField from "../components/input/fields/TitledField.vue";
 
 const props = defineProps({
     hiveId: String,
@@ -13,28 +14,62 @@ const s = useCssModule()
    <div :class="s.generalInfo">
         <div :class="s.header">Info</div>
         <div :class="s.body">
-            <div :class="s.imageSide"></div>
+            <div :class="s.imageSide">
+                <img src="@/assets/images/apiary.jpg" alt="">
+            </div>
             <div :class="s.dataSide">
-                <div></div>
-                <div></div>
-                <div></div>
-                <div></div>
-                <div></div>
+                <TitledField title="Name"/>
+                <TitledField title="Location"/>
+                <TitledField title="Description"/>
             </div>
         </div>
    </div>
 
-
    <div :class="s.notes">
         <div :class="s.header">Notes</div>
         <div :class="s.body">
-            <div></div>
-            <div></div>
-            <div></div>
-            <div></div>
+            <div :class="s.note">
+                <div :class="s.top">
+                    <h2 :class="s.informative">Information</h2>
+                    <p :class="s.date">22 sep. 2046.</p>
+                </div>
+                <h1 :class="s.title">Do that thing!</h1>
+                <p :class="s.content">Yadayadadaadad a a  s s ss jk kgkgfd k kd dthis and that!!!</p>
+            </div>
+            <div :class="s.note">
+                <div :class="s.top">
+                    <h2 :class="s.informative">Information</h2>
+                    <p :class="s.date">22 sep. 2046.</p>
+                </div>
+                <h1 :class="s.title">Do that thing!</h1>
+                <p :class="s.content">Yadayadadaadad a a  s s ss jk kgkgfd k kd dthis and that!!!</p>
+            </div>
+            <div :class="s.note">
+                <div :class="s.top">
+                    <h2 :class="s.informative">Information</h2>
+                    <p :class="s.date">22 sep. 2046.</p>
+                </div>
+                <h1 :class="s.title">Do that thing!</h1>
+                <p :class="s.content">Yadayadadaadad a a  s s ss jk kgkgfd k kd dthis and that!!!</p>
+            </div>
+            <div :class="s.note">
+                <div :class="s.top">
+                    <h2 :class="s.informative">Information</h2>
+                    <p :class="s.date">22 sep. 2046.</p>
+                </div>
+                <h1 :class="s.title">Do that thing!</h1>
+                <p :class="s.content">Yadayadadaadad a a  s s ss jk kgkgfd k kd dthis and that!!!</p>
+            </div>
+            <div :class="s.note">
+                <div :class="s.top">
+                    <h2 :class="s.informative">Information</h2>
+                    <p :class="s.date">22 sep. 2046.</p>
+                </div>
+                <h1 :class="s.title">Do that thing!</h1>
+                <p :class="s.content">Yadayadadaadad a a  s s ss jk kgkgfd k kd dthis and that!!!</p>
+            </div>
         </div>
    </div>
-
 
    <div :class="s.eventLog">
         <div :class="s.header">Events</div>
@@ -69,13 +104,64 @@ const s = useCssModule()
         </div>
    </div>
 
-
    <div :class="s.upcomingEvents">
         <div :class="s.header">Upcoming calendar events</div>
         <div :class="s.body">
-            <div></div>
-            <div></div>
-            <div></div>
+            <div :class="[s.column, s.otherday]">
+                <div :class="s.topHeader">
+                    <div :class="s.title">Yesterday</div>
+                    <div :class="s.date">
+                        <h1 :class="s.dateNumber">23</h1>
+                        <h2 :class="s.dateMonth">sep.</h2>
+                    </div>
+                    
+                </div>
+                <div :class="s.tasks">
+                    <div></div>
+                    <div></div>
+                    <div></div>
+                    <div></div>
+                </div>
+            </div>
+            <div :class="[s.column, s.today]">
+                <div :class="s.topHeader">
+                    <div :class="s.title">Today!</div>
+                    <div :class="s.date">
+                        <h1 :class="s.dateNumber">24</h1>
+                        <h2 :class="s.dateMonth">sep.</h2>
+                    </div>
+                    
+                </div>
+                <div :class="s.tasks">
+                    <div :class="s.task">
+                        <h1 :class="s.title">Do that thing!</h1>
+                        <p :class="s.content">Yadayadadaadad a a  s s ss jk kgkgfd k kd dthis and that!!!</p>
+                    </div>
+                    <div :class="s.task">
+                        <h1 :class="s.title">Feed hungry bees</h1>
+                        <p :class="s.content">They need to be fed with only the most potent elixir from our rarest flowers!</p>
+                    </div>
+                </div>
+            </div>
+            <div :class="[s.column, s.otherday]">
+                <div :class="s.topHeader">
+                    <div :class="s.title">Tomorow</div>
+                    <div :class="s.date">
+                        <h1 :class="s.dateNumber">25</h1>
+                        <h2 :class="s.dateMonth">sep.</h2>
+                    </div>
+                    
+                </div>
+                <div :class="s.tasks">
+                    <div :class="s.task">
+                        <h1 :class="s.title">Do that thing!</h1>
+                        <p :class="s.content">Yadayadadaadad a a  s s ss jk kgkgfd k kd dthis and that!!!</p>
+                    </div>
+                    <div></div>
+                    <div></div>
+                    <div></div>
+                </div>
+            </div>
         </div>
    </div>
 
@@ -93,6 +179,16 @@ const s = useCssModule()
 
 <style module lang='sass'>
 @use '@/assets/main.sass' as main
+.header
+    display: flex
+    align-items: center
+    width: 100%
+    height: 2rem
+    padding: 0 0.5rem
+    box-sizing: border-box
+    background: var(--light)
+    @include main.button-font
+
 .container 
     flex: 1
     display: grid
@@ -104,16 +200,16 @@ const s = useCssModule()
     gap: 1rem
     box-sizing: border-box
 
+    > *
+        border-radius: 3px
+        overflow: hidden
+        border: 1px solid var(--light)
+
     .stimulants
         display: flex
         flex-direction: column
         grid-area: stimulants
         background: rgba(0, 0, 0, .3)
-
-        .header
-            width: 100%
-            height: 2rem
-            background: rgba(0, 0, 0, .3)
         
         .body
             flex: 1
@@ -133,36 +229,123 @@ const s = useCssModule()
         display: flex
         flex-direction: column
         grid-area: upcomingEvents
-        background: rgba(0, 0, 0, .3)
 
-        .header
-            width: 100%
-            height: 2rem
-            background: rgba(0, 0, 0, .3)
-        
+        border-radius: 3px
+        overflow: hidden
+
         .body
+            @include main.font
             flex: 1
             grid-area: data
             display: flex
+            align-items: flex-end
 
             padding: 1rem
             gap: 1rem
             box-sizing: border-box
 
-            > *
+            .column
                 flex: 1
-                background: rgba(0, 0, 0, .3)
+                border-radius: 3px
+                overflow: hidden
+                border: 1px solid var(--light)
+
+                display: flex
+                flex-direction: column
+                gap: 1rem
+
+                padding: 1rem
+                box-sizing: border-box
+                .tasks
+                    display: flex
+                    flex-direction: column
+                    gap: 1rem
+                    overflow: auto
+
+                    .task
+                        display: flex
+                        flex-direction: column
+                        gap: .5rem
+                        padding: .5rem
+                        border-radius: 6px
+
+                        box-sizing: border-box
+                        background: white
+                        border: 1px solid var(--accent)
+
+                        .title
+                            @include main.f-size-very-small
+                            font-weight: 900
+
+                        .content
+                            @include main.f-size-very-small
+
+                .topHeader
+                    display: flex
+                    flex-direction: column
+                    gap: .5rem
+
+                    .title
+                        display: flex
+                        align-items: center
+                        justify-content: center
+                        padding: 0.25rem .5rem
+                        box-sizing: border-box
+                        width: 100%
+                        border-radius: 3px
+
+                        @include main.f-size-very-small
+                        @include main.mono-font
+                        font-weight: 900
+                        text-transform: uppercase;
+                        background: var(--light)
+
+                    .date
+                        display: flex
+                        gap: .5rem
+                        align-items: center
+
+                        .dateNumber
+                            @include main.f-size-medium
+                            font-weight: 700
+                        .dateMonth
+                            @include main.f-size-small
+
+            .otherday
+                height: 95%
+                opacity: .8
+
+                transition: 0.2s
+                &:hover
+                    opacity: 1
+
+                .topHeader
+
+                    .title
+                        display: flex
+                        align-items: center
+                        justify-content: center
+                        padding: 0.25rem .5rem
+                        box-sizing: border-box
+                        width: 100%
+                        border-radius: 3px
+
+                        @include main.f-size-very-small
+                        @include main.mono-font
+                        font-weight: 900
+                        text-transform: uppercase;
+                        background: var(--accent)
+
+            .today
+                height: 100%
+                
+
 
     .suppers
         display: flex
         flex-direction: column
         grid-area: suppers
         background: rgba(0, 0, 0, .3)
-
-        .header
-            width: 100%
-            height: 2rem
-            background: rgba(0, 0, 0, .3)
         
         .body
             flex: 1
@@ -184,11 +367,6 @@ const s = useCssModule()
         grid-area: queen
         background: rgba(0, 0, 0, .3)
 
-        .header
-            width: 100%
-            height: 2rem
-            background: rgba(0, 0, 0, .3)
-        
         .body
             flex: 1
             grid-area: data
@@ -209,11 +387,6 @@ const s = useCssModule()
         flex-direction: column
         grid-area: eventLog
         background: rgba(0, 0, 0, .3)
-
-        .header
-            width: 100%
-            height: 2rem
-            background: rgba(0, 0, 0, .3)
         
         .body
             flex: 1
@@ -233,13 +406,8 @@ const s = useCssModule()
         display: flex
         flex-direction: column
         grid-area: notes
-        background: rgba(0, 0, 0, .3)
+        @include main.font
 
-        .header
-            width: 100%
-            height: 2rem
-            background: rgba(0, 0, 0, .3)
-        
         .body
             flex: 1
             grid-area: data
@@ -250,21 +418,53 @@ const s = useCssModule()
             gap: 1rem
             box-sizing: border-box
 
-            > *
-                flex: 1
+            .note
+                display: flex
+                flex-direction: column
                 background: rgba(0, 0, 0, .3)
+
+                gap: .5rem
+                padding: .5rem
+
+                box-sizing: border-box
+                background: white
+                border: 1px solid var(--accent)
+                border-left: 6px solid var(--accent)
+
+                .top
+                    @include main.mono-font
+                    @include main.f-size-tiny
+
+                    display: flex
+                    justify-content: space-between
+
+                    .informative
+                        font-weight: 900
+                        letter-spacing: .02em
+                        text-transform: uppercase;
+
+                    .date
+                        font-weight: 500
+
+
+
+                .title
+                    @include main.f-size-very-small
+                    font-weight: 900
+                    padding-left: 1rem
+
+                .content
+                    @include main.f-size-very-small
+                    padding-left: 1rem
+
+
+
 
     .generalInfo
         display: flex
         flex-direction: column
         grid-area: genInfo
-        background: rgba(0, 0, 0, .3)
 
-        .header
-            width: 100%
-            height: 2rem
-            background: rgba(0, 0, 0, .3)
-        
         .body
             flex: 1
             display: grid
@@ -274,10 +474,17 @@ const s = useCssModule()
             padding: 1rem
             gap: 1rem
             box-sizing: border-box
+            background: var(--base)
 
             .imageSide
                 grid-area: image
+                overflow: hidden
                 background: rgba(0, 0, 0, .3)
+
+                img
+                    width: 100%
+                    height: 100%
+                    object-fit: cover
 
             .dataSide
                 grid-area: data
@@ -286,10 +493,4 @@ const s = useCssModule()
 
                 gap: 1rem
                 box-sizing: border-box
-                > *
-                    flex: 1
-                    background: rgba(0, 0, 0, .3)
-
-
-    
 </style>

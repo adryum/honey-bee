@@ -86,7 +86,7 @@ function exit() {
 
     box-shadow: 0px 0px 50px 2px rgba(0, 0, 0, 0.4)
     background: var(--base)
-    border: 1px solid rgba(0, 0, 0, 0.4)
+    border: 1px solid  var(--light)
     
     max-height: 90vh
     max-width: 90vw
@@ -95,7 +95,7 @@ function exit() {
         display: flex
         align-items: center
         height: 2rem
-        background: rgba(0, 0, 0, 0.2)
+        background: var(--light)
         
         padding-left: .5rem
 

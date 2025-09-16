@@ -153,7 +153,7 @@ const s = useCssModule()
             transition: .1s ease-out
 
             &:hover
-                background-color: var(--base)
+                background-color: var(--accent)
 
             .icon
                 display: flex
@@ -177,7 +177,7 @@ const s = useCssModule()
                 width: 100%
 
                 border-radius: 5px
-                background: colors.$light
+                background: var(--base)
 
     .extender
         all: unset
@@ -185,7 +185,7 @@ const s = useCssModule()
         display: flex
         justify-content: center
         align-items: center
-        background: colors.$light
+        background: colors.$accent
         width: 2rem
         height: 2rem
 
