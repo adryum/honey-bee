@@ -168,7 +168,52 @@ const s = useCssModule()
    <div :class="s.stimulants">
         <div :class="s.header">Active drugs</div>
         <div :class="s.body">
-            <div></div>
+            <div :class="s.entry">
+                <div :class="s.imageContainer">
+                    <img src="@/assets/images/apiary.jpg" alt="">
+                </div>
+
+                <div :class="s.info">
+                    <h1 :class="s.name">Trens</h1>
+                    <div :class="s.tags">
+                        <div :class="s.tag">
+                            <h2 :class="s.title">Since</h2>
+                            <p :class="s.date">22.sep.</p>
+                        </div>
+                        <div :class="s.tag">
+                            <h2 :class="s.title">Till</h2>
+                            <p :class="s.date">22.sep.</p>
+                        </div>
+                        <div :class="s.tag">
+                            <h2 :class="s.title">Next</h2>
+                            <p :class="s.date">22.sep.</p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div :class="s.entry">
+                <div :class="s.imageContainer">
+                    <img src="@/assets/images/apiary.jpg" alt="">
+                </div>
+
+                <div :class="s.info">
+                    <h1 :class="s.name">Želejas lācīši</h1>
+                    <div :class="s.tags">
+                        <div :class="s.tag">
+                            <h2 :class="s.title">Since</h2>
+                            <p :class="s.date">22.sep.</p>
+                        </div>
+                        <div :class="s.tag">
+                            <h2 :class="s.title">Till</h2>
+                            <p :class="s.date">22.sep.</p>
+                        </div>
+                        <div :class="s.tag">
+                            <h2 :class="s.title">Next</h2>
+                            <p :class="s.date">22.sep.</p>
+                        </div>
+                    </div>
+                </div>
+            </div>
             <div></div>
             <div></div>
         </div>
@@ -209,9 +254,10 @@ const s = useCssModule()
         display: flex
         flex-direction: column
         grid-area: stimulants
-        background: rgba(0, 0, 0, .3)
         
         .body
+            @include main.font
+
             flex: 1
             grid-area: data
             display: flex
@@ -221,9 +267,65 @@ const s = useCssModule()
             gap: 1rem
             box-sizing: border-box
 
-            > *
-                flex: 1
-                background: rgba(0, 0, 0, .3)
+            .entry
+                display: flex
+                width: 100%
+
+                background: white
+                border: 1px solid var(--light)
+                border-radius: 3px
+
+
+                .imageContainer
+                    min-width: 20%
+                    height: 100%
+
+                    img
+                        width: 100%
+                        height: 100%
+                        object-fit: cover
+
+
+                .info
+                    display: flex
+                    flex-direction: column
+                    gap: .5rem
+                    width: 100%
+
+                    box-sizing: border-box
+                    padding: 1rem
+
+                    .name
+                        @include main.f-size-small
+                        font-weight: 700
+                        
+
+                    .tags
+                        display: flex
+                        width: 100%
+                        background: var(--accent)
+                        gap: 1px
+                        border-left: 1px solid var(--accent)
+                        border-right: 1px solid var(--accent)
+
+                        .tag
+                            flex: 1
+                            display: flex
+                            flex-direction: column
+                            gap: .2rem
+
+                            box-sizing: border-box
+                            padding: .5rem
+                            background: white
+
+                            .title
+                                @include main.f-size-tiny
+                                font-weight: 900
+                                letter-spacing: 0.02em
+
+                            .date
+                                @include main.f-size-very-small
+
 
     .upcomingEvents
         display: flex
@@ -421,7 +523,6 @@ const s = useCssModule()
             .note
                 display: flex
                 flex-direction: column
-                background: rgba(0, 0, 0, .3)
 
                 gap: .5rem
                 padding: .5rem
