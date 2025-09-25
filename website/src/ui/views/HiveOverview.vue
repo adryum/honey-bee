@@ -224,29 +224,37 @@ const s = useCssModule()
 
 <style module lang='sass'>
 @use '@/assets/main.sass' as main
+@use '@/assets/_base.sass' as base
 .header
     display: flex
     align-items: center
     width: 100%
     height: 2rem
+    border-radius: 3px
     padding: 0 0.5rem
     box-sizing: border-box
-    background: var(--light)
+    background: hsl(43, 99, 60)
     @include main.button-font
 
 .body
     background: #edebdf
     background: #f9f8f3
-    // background: white
+    background: white
 
 
 .container 
     flex: 1
     display: grid
-    grid-template-areas: "genInfo genInfo genInfo genInfo upcomingEvents upcomingEvents upcomingEvents upcomingEvents notes notes" "eventLog eventLog stimulants stimulants suppers suppers queen queen notes notes"
-    grid-template-columns: repeat(10, 1fr)
-    grid-template-rows: repeat(2, 1fr)
 
+    @media (min-width: base.$xl) 
+        grid-template-areas:"genInfo genInfo genInfo upcomingEvents upcomingEvents upcomingEvents" "stimulants stimulants suppers suppers queen queen " "eventLog eventLog notes notes notes notes"
+        grid-template-rows: repeat(3, 400px)
+        grid-template-columns: repeat(6, 1fr)
+    
+    @media (min-width: base.$xxl) 
+        grid-template-columns: repeat(10, 1fr)
+        grid-template-areas: "genInfo genInfo genInfo genInfo upcomingEvents upcomingEvents upcomingEvents upcomingEvents notes notes" "eventLog eventLog stimulants stimulants suppers suppers queen queen notes notes"
+        grid-template-rows: repeat(2, 1fr)
     padding: 1rem
     gap: 1rem
     box-sizing: border-box
