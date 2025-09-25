@@ -234,6 +234,12 @@ const s = useCssModule()
     background: var(--light)
     @include main.button-font
 
+.body
+    background: #edebdf
+    background: #f9f8f3
+    // background: white
+
+
 .container 
     flex: 1
     display: grid
@@ -248,7 +254,7 @@ const s = useCssModule()
     > *
         border-radius: 3px
         overflow: hidden
-        border: 1px solid var(--light)
+        // border: 1px solid var(--light)
 
     .stimulants
         display: flex
@@ -272,8 +278,8 @@ const s = useCssModule()
                 width: 100%
 
                 background: white
-                border: 1px solid var(--light)
                 border-radius: 3px
+                overflow: hidden
 
 
                 .imageContainer
@@ -315,7 +321,7 @@ const s = useCssModule()
                             gap: .2rem
 
                             box-sizing: border-box
-                            padding: .5rem
+                            padding: 0 .5rem
                             background: white
 
                             .title
@@ -369,11 +375,11 @@ const s = useCssModule()
                         flex-direction: column
                         gap: .5rem
                         padding: .5rem
-                        border-radius: 6px
+                        border-radius: 0 0 6px 6px
 
                         box-sizing: border-box
                         background: white
-                        border: 1px solid var(--accent)
+                        border-top: 6px solid var(--accent)
 
                         .title
                             @include main.f-size-very-small
@@ -415,8 +421,6 @@ const s = useCssModule()
 
             .otherday
                 height: 95%
-                opacity: .8
-
                 transition: 0.2s
                 &:hover
                     opacity: 1
@@ -529,8 +533,8 @@ const s = useCssModule()
 
                 box-sizing: border-box
                 background: white
-                border: 1px solid var(--accent)
                 border-left: 6px solid var(--accent)
+                border-radius: 0 6px 6px 0
 
                 .top
                     @include main.mono-font
@@ -575,7 +579,6 @@ const s = useCssModule()
             padding: 1rem
             gap: 1rem
             box-sizing: border-box
-            background: var(--base)
 
             .imageSide
                 grid-area: image

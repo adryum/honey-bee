@@ -18,5 +18,5 @@ const s = useCssModule()
     width: 100%
     min-height: 3rem
 
-    background: var(--light)
+    background: var(--accent)
 </style>

@@ -46,7 +46,7 @@ const s = useCssModule()
     .name
         @include main.font
         font-size: 1.5rem
-        color: #d16500
+        color: black
         font-weight: 700
         letter-spacing: .02em
         margin: 0
