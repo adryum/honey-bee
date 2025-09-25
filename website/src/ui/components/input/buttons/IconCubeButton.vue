@@ -1,14 +1,14 @@
 <script setup lang="ts">
 import { useCssModule } from 'vue';
 import { motion } from 'motion-v';
-import { getSVG, SVGIconRes, type SVGIcon } from '../../../../core/SVGLoader';
 import SVGComponent from '../../SVGComponent.vue';
+import { SVGImage, SVGRes } from '@/core/SVGLoader';
 
 const props = withDefaults(defineProps<{
-    svg?: SVGIcon
+    svg?: SVGImage
     onClick?: () => void
 }>(), {
-    svg: () => getSVG(SVGIconRes.House)
+    svg: () => new SVGImage(SVGRes.House)
 })
 const s = useCssModule()
 </script>

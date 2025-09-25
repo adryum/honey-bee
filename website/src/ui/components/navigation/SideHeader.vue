@@ -1,10 +1,12 @@
 <script setup lang="ts">
 import { useToggle } from "@vueuse/core";
-import { computed, ref, useCssModule, type CSSProperties } from "vue";
+import { computed, onMounted, reactive, ref, useCssModule, type CSSProperties } from "vue";
 import { motion, type VariantType } from "motion-v"
-import { getSVG, SVGIconRes, type SVGIcon } from '../../../core/SVGLoader';
 import SVGComponent from "../SVGComponent.vue";
+import { SVGImage, SVGRes } from "@/core/SVGLoader";
+import router from "@/core/router";
 
+const s = useCssModule()
 const [isExtended, toggleExtension] = useToggle() 
 const toggleStyle = computed(() => ({
     transform: `rotateZ(${isExtended.value ? 180 : 0 }deg)`
@@ -13,49 +15,49 @@ const toggleStyle = computed(() => ({
 interface Tab {
     name: string,
     pagePath: string,
-    svg: SVGIcon
+    svg: SVGImage
 }
 
 const tabs: Tab[] = [
     {
         name: 'home',
         pagePath: '/',
-        svg: getSVG(SVGIconRes.House, 'black')
+        svg: new SVGImage(SVGRes.House)
     },
     {
         name: 'apiaries',
         pagePath: '/apiaries',
-        svg: getSVG(SVGIconRes.Apiaries, 'black')
+        svg: new SVGImage(SVGRes.Apiaries, 'black')
     },
     {
         name: 'calendar',
         pagePath: '/calendar',
-        svg: getSVG(SVGIconRes.Calendar, 'black')
+        svg: new SVGImage(SVGRes.Calendar, 'black')
     },
     {
         name: 'bees',
         pagePath: '/bees',
-        svg: getSVG(SVGIconRes.Bee, 'black')
+        svg: new SVGImage(SVGRes.Bee, 'black')
     },
     {
         name: 'd',
         pagePath: '/',
-        svg: getSVG(SVGIconRes.House)
+        svg: new SVGImage(SVGRes.House)
     },
     {
         name: 'e',
         pagePath: '/',
-        svg: getSVG(SVGIconRes.House)
+        svg: new SVGImage(SVGRes.House)
     },
     {
         name: 'f',
         pagePath: '/',
-        svg: getSVG(SVGIconRes.House)
+        svg: new SVGImage(SVGRes.House)
     },
     {
         name: 'g',
         pagePath: '/',
-        svg: getSVG(SVGIconRes.House)
+        svg: new SVGImage(SVGRes.House)
     }
 ]
 const selectedTab = ref(tabs[0])
@@ -70,7 +72,19 @@ const tabVariants: Record<string, VariantType> = {
     collapsed: { opacity: 0, display: 'none', y: 5, transition: {  duration: .15 } }
 }
 
-const s = useCssModule()
+function onTabSelect(tab: Tab) {
+    router.push(tab.pagePath)
+    
+    // changes svg color
+    selectedTab.value.svg.color = 'black'
+    selectedTab.value = tab
+    tab.svg.color = 'white'
+}
+
+onMounted(() => {
+    onTabSelect(tabs[0])
+})
+
 </script>
 <template>
   <motion.div
@@ -79,7 +93,7 @@ const s = useCssModule()
     :animate="isExtended ? 'expanded' : 'collapsed'"
   >
     <div :class="s.tip"></div>
-    <button :class="s.extender" :style="toggleStyle" @click="toggleExtension()"><SVGComponent :svg="getSVG(SVGIconRes.ArrowHead, 'black')"/></button>
+    <button :class="s.extender" :style="toggleStyle" @click="toggleExtension()"><SVGComponent :svg="new SVGImage(SVGRes.ArrowHead, 'black')"/></button>
 
     <ul :class="s.list">
       <motion.li
@@ -87,7 +101,7 @@ const s = useCssModule()
         :key="i"  
         :class="s.tab"
         :while-press="{ scale: 0.9, transition: { duration: 0.1 } }"
-        @click="selectedTab = tab; $router.push(tab.pagePath)"
+        @click="onTabSelect(tab); "
         >
         <SVGComponent :class="s.icon" :svg="tab.svg" />
 
@@ -96,7 +110,7 @@ const s = useCssModule()
           :variants="tabVariants"
           :initial="'collapsed'"
           :animate="isExtended ? 'expanded' : 'collapsed'"
-          style="display: inline-block;"
+          :style="{ color: tab.svg.color.value }"
         >
           {{ tab.name }}
         </motion.h2>
@@ -122,18 +136,18 @@ const s = useCssModule()
     flex-direction: column
     width: 4rem
     height: 100vh
-    background: var(--accent)
+    background: var(--surface)
 
     .tip
         height: 3rem
         width: 100%
-        background: var(--light)
+        background: #ffaa66
 
     .list
         all: unset
         display: flex
         flex-direction: column
-        padding: 1rem .5rem
+        padding: 1rem .5rem 
 
         .tab
             z-index: 0
@@ -145,7 +159,7 @@ const s = useCssModule()
             
             width: 100%
             height: 40px
-            padding: .5rem
+            padding: .5rem 
             box-sizing: border-box
             background-color: transparent
             border-radius: 5px
@@ -153,7 +167,7 @@ const s = useCssModule()
             transition: .1s ease-out
 
             &:hover
-                background-color: var(--accent)
+                background-color: rgba(0, 0, 0, .1)
 
             .icon
                 display: flex
@@ -163,21 +177,25 @@ const s = useCssModule()
                 height: 100%
                 aspect-ratio: 1
                 margin-left: .25rem 
+                transition: .9s ease-out
+
 
             .text
                 z-index: 2
                 position: absolute
                 margin-left: 3rem
+                transition: .2s ease
+
            
             .selected
                 z-index: 1
                 position: absolute
                 right: 0
                 height: 100%
-                width: 100%
+                width: 200%
 
-                border-radius: 5px
-                background: var(--base)
+                border-radius: 3px
+                background: #ffaa66
 
     .extender
         all: unset
@@ -185,13 +203,13 @@ const s = useCssModule()
         display: flex
         justify-content: center
         align-items: center
-        background: colors.$accent
+        background: var(--accent)
         width: 2rem
         height: 2rem
 
         border-radius: 50px
         bottom: 1rem
-        right: -.5rem
+        right: -.7rem
 
         padding: .5rem
         box-sizing: border-box

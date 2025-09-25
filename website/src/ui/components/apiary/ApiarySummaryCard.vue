@@ -1,6 +1,6 @@
 <script setup lang="ts">
 import { ref, useCssModule } from "vue"
-import { getSVG, SVGIconRes } from "../../../core/SVGLoader";
+import { SVGImage, SVGRes } from "../../../core/SVGLoader";
 import { motion, rgba } from "motion-v"
 import type { DropdownOptions } from "../../../core/Interfaces";
 import CubeDropdown from "../input/dropdowns/CubeDropdown.vue";
@@ -17,13 +17,13 @@ const MotionIconCubeDropdown = motion.create(CubeDropdown)
 const dropdownActions: DropdownOptions[] = [
     {
         text: 'Overview',
-        svg: getSVG(SVGIconRes.OpenWindow, 'black'),
+        svg: new SVGImage(SVGRes.OpenWindow),
         onClick: () => { },
         color: ""
     },
     {
         text: 'Delete',
-        svg: getSVG(SVGIconRes.Cross, 'black'),
+        svg: new SVGImage(SVGRes.Cross),
         onClick: () => { },
         color: "#963B28"
     },
@@ -36,7 +36,7 @@ const dropdownActions: DropdownOptions[] = [
     <hr :class="s.linearDim">
     <MotionIconCubeDropdown
         :style="{ background: 'rgba(0,0,0, 0.3)'}"
-        :svg="getSVG(SVGIconRes.MoreDots)" :class="[s.options]"
+        :svg="new SVGImage(SVGRes.MoreDots)" :class="[s.options]"
         :options="dropdownActions"
          />
     <h1 :class="[s.name]">{{ apiary!.name }}</h1>

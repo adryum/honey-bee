@@ -5,23 +5,24 @@ import { onClickOutside, useToggle } from '@vueuse/core';
 import SVGComponent from '../../SVGComponent.vue';
 import IconCubeButton from '../buttons/IconCubeButton.vue';
 import type { DropdownOptions } from '../../../../core/Interfaces';
-import { type SVGIcon, SVGIconRes, getSVG } from '../../../../core/SVGLoader';
+import { SVGImage, SVGRes } from '@/core/SVGLoader';
+
 
 const s = useCssModule()
 const props = withDefaults(defineProps<{
-    svg?: SVGIcon
+    svg?: SVGImage
     onClick?: () => void
     options?: DropdownOptions[]
 }>(), {
-    svg: () => getSVG(SVGIconRes.House),
+    svg: () => new SVGImage(SVGRes.House),
     options: () => [{
             text: 'option1',
-            svg: getSVG(SVGIconRes.House),
+            svg: new SVGImage(SVGRes.House),
             color: 'black'
         },
         {
             text: 'option2',
-            svg: getSVG(SVGIconRes.House),
+            svg: new SVGImage(SVGRes.House),
             color: 'red'
         },
     ]
@@ -59,7 +60,7 @@ watch(isShown, () => {
                 @click="() => onItemClick(button)" 
                 @mouseover="selectedChoice = i"
                 :while-press="{ scale: 0.9 }">
-                <SVGComponent :class="s.icon" :svg="(button.svg) ? getSVG(button.svg.res, button.color ?? 'black') : undefined" />
+                <SVGComponent :class="s.icon" :svg="button.svg" />
                 <p :class="s.text" :style="{ color: button.color ?? 'black' }">{{ button.text }}</p> 
 
                 <motion.div
@@ -124,7 +125,7 @@ watch(isShown, () => {
                 width: 100%
 
                 border-radius: 3px
-                background: colors.$light
+                background: var(--light)
 
 
 

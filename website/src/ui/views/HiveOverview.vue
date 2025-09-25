@@ -226,25 +226,29 @@ const s = useCssModule()
 @use '@/assets/main.sass' as main
 @use '@/assets/_base.sass' as base
 .header
+    @include main.button-font
+    position: relative
     display: flex
     align-items: center
     width: 100%
-    height: 2rem
-    border-radius: 3px
+    min-height: 2rem
     padding: 0 0.5rem
     box-sizing: border-box
-    background: hsl(43, 99, 60)
-    @include main.button-font
+    background: var(--surface)
+    border-top: 4px solid var(--light)
+    // border-bottom: 1px solid rgba(0, 0, 0, .1)
+    box-shadow: 0 2px 5px 0 rgba(0, 0, 0, .1)
 
 .body
-    background: #edebdf
-    background: #f9f8f3
-    background: white
-
+    background: var(--surface)
 
 .container 
     flex: 1
     display: grid
+
+    padding: 1rem
+    gap: 1rem
+    box-sizing: border-box
 
     @media (min-width: base.$xl) 
         grid-template-areas:"genInfo genInfo genInfo upcomingEvents upcomingEvents upcomingEvents" "stimulants stimulants suppers suppers queen queen " "eventLog eventLog notes notes notes notes"
@@ -255,14 +259,10 @@ const s = useCssModule()
         grid-template-columns: repeat(10, 1fr)
         grid-template-areas: "genInfo genInfo genInfo genInfo upcomingEvents upcomingEvents upcomingEvents upcomingEvents notes notes" "eventLog eventLog stimulants stimulants suppers suppers queen queen notes notes"
         grid-template-rows: repeat(2, 1fr)
-    padding: 1rem
-    gap: 1rem
-    box-sizing: border-box
 
     > *
-        border-radius: 3px
+        border-radius: 0 0 3px 3px
         overflow: hidden
-        // border: 1px solid var(--light)
 
     .stimulants
         display: flex
@@ -346,7 +346,6 @@ const s = useCssModule()
         flex-direction: column
         grid-area: upcomingEvents
 
-        border-radius: 3px
         overflow: hidden
 
         .body

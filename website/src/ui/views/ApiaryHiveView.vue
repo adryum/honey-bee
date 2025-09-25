@@ -2,7 +2,7 @@
 import Hive from '../components/hive/Hive.vue';
 import { computed, onBeforeUnmount, onMounted, ref, useCssModule, watch, type CSSProperties, type Ref } from "vue";
 import ToolBar from '../components/ToolBar.vue';
-import { getSVG, SVGIconRes } from '../../core/SVGLoader.js';
+import { SVGImage, SVGRes } from '../../core/SVGLoader.js';
 import { createComponentWithProps, createComponentInstance } from '../../core/utils/components.js';
 import IconTextButton from '../components/input/buttons/IconTextButton.vue';
 import SmallSearchbar from '../components/input/fields/SmallSearchbar.vue';
@@ -43,7 +43,7 @@ async function searchHives() {
 const components = [
     createComponentWithProps(IconTextButton, { 
         text: 'add hive',
-        svg: getSVG(SVGIconRes.Pluss),
+        svg: new SVGImage(SVGRes.Pluss),
         onClick: () => {
             createComponentInstance(AddHivePopup, { apiaryId: props.apiaryId, onAssign: searchHives }, true)
         }

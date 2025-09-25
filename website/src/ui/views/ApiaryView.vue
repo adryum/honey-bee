@@ -5,7 +5,7 @@ import ToolBar from '../components/ToolBar.vue';
 import SmallSearchbar from '../components/input/fields/SmallSearchbar.vue';
 import IconButton from '../components/input/buttons/IconTextButton.vue';
 import CreateApiaryPopup from '../components/popups/CreateApiaryPopup.vue';
-import { getSVG, SVGIconRes } from '../../core/SVGLoader';
+import { SVGImage, SVGRes } from '../../core/SVGLoader';
 import { createComponentWithProps, createComponentInstance } from '../../core/utils/components';
 import { useApiaryView } from '../../core/composables/useApiaryView';
 import type { ApiaryModel } from '../../core/models/Models';
@@ -18,7 +18,7 @@ const searchWord = ref<string>('')
 const components = [
     createComponentWithProps(IconButton, { 
         text: 'add apiary',
-        svg: getSVG(SVGIconRes.Pluss),
+        svg: new SVGImage(SVGRes.Pluss),
         onClick: () => {
             createComponentInstance(CreateApiaryPopup, {
                 onCreate: () => {

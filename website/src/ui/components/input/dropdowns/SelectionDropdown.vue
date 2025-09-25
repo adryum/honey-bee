@@ -1,7 +1,7 @@
 <script setup lang="ts">
 import { computed, ref, useCssModule, watch } from 'vue';
 import { AnimatePresence, motion } from 'motion-v';
-import { getSVG, SVGIconRes, type SVGIcon } from '../../../../core/SVGLoader';
+import { SVGImage, SVGRes } from '@/core/SVGLoader';
 import { onClickOutside, useToggle } from '@vueuse/core';
 import SVGComponent from '../../SVGComponent.vue';
 import type { DropdownOptions } from '../../../../core/Interfaces';
@@ -10,19 +10,19 @@ const s = useCssModule()
 const selected = defineModel('selected')
 const props = withDefaults(defineProps<{
     title: string
-    svg?: SVGIcon
+    svg?: SVGImage
     onClick?: () => void
     options: DropdownOptions[]
 }>(), {
-    svg: () => getSVG(SVGIconRes.House),
+    svg: () => new SVGImage(SVGRes.House),
     options: () => [{
             text: 'option1',
-            svg: getSVG(SVGIconRes.House),
+            svg: new SVGImage(SVGRes.House),
             color: ''
         },
         {
             text: 'option2',
-            svg: getSVG(SVGIconRes.House),
+            svg: new SVGImage(SVGRes.House),
             color: ''
         },
     ]
@@ -61,7 +61,7 @@ function onItemClick(button: DropdownOptions) {
             <p :class="s.selection">{{ selected }}</p>
             <MotionSVG 
                 :initial="{ rotateZ: 270 }" 
-                :animate="isShown ? { rotateZ: 270 } : { rotateZ: 90 }" :class="s.icon" :svg="getSVG(SVGIconRes.ArrowHead, 'black')"/>
+                :animate="isShown ? { rotateZ: 270 } : { rotateZ: 90 }" :class="s.icon" :svg="new SVGImage(SVGRes.ArrowHead)"/>
         </div>
         
         <AnimatePresence>
@@ -171,7 +171,7 @@ function onItemClick(button: DropdownOptions) {
                 width: 100%
 
                 border-radius: 3px
-                background: colors.$light
+                background: var(--light)
 
 
 

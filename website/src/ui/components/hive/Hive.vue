@@ -2,7 +2,7 @@
 import { useCssModule, ref, onMounted, watch, toRef } from 'vue';
 import type { HiveModel } from '../../../core/models/Models';
 import CubeDropdown from '../input/dropdowns/CubeDropdown.vue';
-import { getSVG, SVGIconRes } from '@/core/SVGLoader';
+import { SVGImage, SVGRes } from '@/core/SVGLoader';
 import { useHive } from '@/core/composables/useHive';
 import type { DropdownOptions } from '@/core/Interfaces';
 import { createComponentInstance } from '@/core/utils/components';
@@ -19,7 +19,7 @@ const { isDeletingHive, deleteHive, updateHives } = useHive()
 const moreOptions: DropdownOptions[] = [
     {
         text: 'Delete',
-        svg: getSVG(SVGIconRes.Trashcan),
+        svg: new SVGImage(SVGRes.Trashcan),
         color: 'var(--red)',
         onClick: async () => {
             await deleteHive({
@@ -36,7 +36,7 @@ const moreOptions: DropdownOptions[] = [
     },
     {
         text: 'Move',
-        svg: getSVG(SVGIconRes.ArrowHead),
+        svg: new SVGImage(SVGRes.ArrowHead),
         onClick: async () => {
             createComponentInstance(AssignToApiaryPopup, {
                 hiveId: props.hive.id,
@@ -57,7 +57,7 @@ const moreOptions: DropdownOptions[] = [
                 <p v-if="showApiary" :class="s.apiaryName">{{ hive.apiaryName }}</p>
             </div>
             <CubeDropdown  
-                :svg="getSVG(SVGIconRes.MoreDots, 'black')" 
+                :svg="new SVGImage(SVGRes.MoreDots, 'black')" 
                 :class="s.options"
                 :options="moreOptions"/>
         </div>

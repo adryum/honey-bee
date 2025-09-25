@@ -1,8 +1,8 @@
-import type { SVGIcon } from "./SVGLoader";
+import type { SVGImage } from "./SVGLoader";
 
 export type DropdownOptions = {
     text: string
-    svg?: SVGIcon 
+    svg?: SVGImage 
     color?: string 
     onClick?: () => void
 }
