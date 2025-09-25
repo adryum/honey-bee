@@ -54,8 +54,8 @@ VITE_API=<Datubāzes API pieprasījumu links ar serverpusē norādīto portu '50
 2. Jāpalaiž serveris ar komandu 'node server.js'
 
 ```sh
-cd backend
-node server.js
+cd server
+npx nodemon src/server.ts
 ```
 
 ## Ieslēgt frontendu
@@ -64,6 +64,6 @@ node server.js
 3. Jāatver terminālī parādītais local http links.
 
 ```sh
-cd frontend
+cd website
 npm run dev
 ```
