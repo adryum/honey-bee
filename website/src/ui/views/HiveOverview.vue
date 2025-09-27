@@ -288,11 +288,14 @@ const s = useCssModule()
         grid-template-areas:"genInfo genInfo genInfo upcomingEvents upcomingEvents upcomingEvents" "stimulants stimulants suppers suppers queen queen " "eventLog eventLog notes notes notes notes"
         grid-template-rows: repeat(3, 400px)
         grid-template-columns: repeat(6, 1fr)
+        max-height: 100%
+
     
     @media (min-width: base.$xxl) 
         grid-template-columns: repeat(10, 1fr)
         grid-template-areas: "genInfo genInfo genInfo genInfo upcomingEvents upcomingEvents upcomingEvents upcomingEvents notes notes" "eventLog eventLog stimulants stimulants suppers suppers queen queen notes notes"
         grid-template-rows: repeat(2, 1fr)
+        max-height: calc( 100vh - 3rem )
 
     > *
         border-radius: 0 0 3px 3px
