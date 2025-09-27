@@ -26,21 +26,22 @@ const s = useCssModule()
 @use '/src/assets/main.sass' as main
 .container
     all: unset
-    display: flex
+    display: inline-flex
     align-items: center
+    justify-content: center
     cursor: pointer
 
-    padding: .5rem
+    padding: .2rem
+    border-radius: 3px
+    box-sizing: border-box
 
-    // background: var(--accent)
-    // border-radius: 3px
-    box-shadow: inset 0 -2px rgba(0,0,0, .3)
+    // box-shadow: inset 0 -2px rgba(0,0,0, .3)
     transition: .2s
 
     &:hover
-        backdrop-filter: brightness(90%)
+        background: rgba(0,0,0, .1)
     
     .icon
-        width: 1.5rem
-        aspect-ratio: 1
+        height: 100%
+        width: 100%
 </style>

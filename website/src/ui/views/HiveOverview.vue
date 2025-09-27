@@ -1,6 +1,8 @@
 <script setup lang="ts">
 import { ref, useCssModule } from "vue";
 import TitledField from "../components/input/fields/TitledField.vue";
+import IconCubeButton from "../components/input/buttons/IconCubeButton.vue";
+import { SVGImage, SVGRes } from "@/core/SVGLoader";
 
 const props = defineProps({
     hiveId: String,
@@ -105,29 +107,49 @@ const s = useCssModule()
    </div>
 
    <div :class="s.upcomingEvents">
-        <div :class="s.header">Upcoming calendar events</div>
+        <div :class="s.header">
+            <h1>Upcoming calendar events</h1>
+
+            <div :class="s.navigator">
+                <IconCubeButton :class="[s.iconButton, s.left]" :svg="new SVGImage(SVGRes.ArrowHead)"/>
+                 <p>current date 2025.</p>
+                <IconCubeButton :class="s.iconButton" :svg="new SVGImage(SVGRes.ArrowHead)"/>
+                <IconCubeButton :class="s.iconButton" :svg="new SVGImage(SVGRes.MoreDots)"/>
+            </div>
+        </div>
         <div :class="s.body">
-            <div :class="[s.column, s.otherday]">
+            <div :class="[s.column, s.today]">
                 <div :class="s.topHeader">
-                    <div :class="s.title">Yesterday</div>
-                    <div :class="s.date">
-                        <h1 :class="s.dateNumber">23</h1>
+                    <div :class="[s.title]">
+                        <h1 :class="s.dateNumber">25</h1>
                         <h2 :class="s.dateMonth">sep.</h2>
+                        <p :class="s.todayText">Today</p>
                     </div>
                     
                 </div>
                 <div :class="s.tasks">
-                    <div></div>
-                    <div></div>
-                    <div></div>
-                    <div></div>
+                    <div :class="s.task">
+                        <h1 :class="s.title">Do that thing!</h1>
+                        <p :class="s.content">Yadayadadaadad a a  s s ss jk kgkgfd k kd dthis and that!!!</p>
+                    </div>
+                    <div :class="s.task">
+                        <h1 :class="s.title">Feed hungry bees</h1>
+                        <p :class="s.content">They need to be fed with only the most potent elixir from our rarest flowers!</p>
+                    </div>
+                    <div :class="s.task">
+                        <h1 :class="s.title">Feed hungry bees</h1>
+                        <p :class="s.content">They need to be fed with only the most potent elixir from our rarest flowers!</p>
+                    </div>
+                    <div :class="s.task">
+                        <h1 :class="s.title">Feed hungry bees</h1>
+                        <p :class="s.content">They need to be fed with only the most potent elixir from our rarest flowers!</p>
+                    </div>
                 </div>
             </div>
-            <div :class="[s.column, s.today]">
+            <div :class="[s.column]">
                 <div :class="s.topHeader">
-                    <div :class="s.title">Today!</div>
-                    <div :class="s.date">
-                        <h1 :class="s.dateNumber">24</h1>
+                    <div :class="s.title">
+                        <h1 :class="s.dateNumber">25</h1>
                         <h2 :class="s.dateMonth">sep.</h2>
                     </div>
                     
@@ -143,14 +165,12 @@ const s = useCssModule()
                     </div>
                 </div>
             </div>
-            <div :class="[s.column, s.otherday]">
+            <div :class="[s.column]">
                 <div :class="s.topHeader">
-                    <div :class="s.title">Tomorow</div>
-                    <div :class="s.date">
+                    <div :class="s.title">
                         <h1 :class="s.dateNumber">25</h1>
                         <h2 :class="s.dateMonth">sep.</h2>
                     </div>
-                    
                 </div>
                 <div :class="s.tasks">
                     <div :class="s.task">
@@ -231,13 +251,27 @@ const s = useCssModule()
     display: flex
     align-items: center
     width: 100%
-    min-height: 2rem
-    padding: 0 0.5rem
+    min-height: 2.5rem
+    max-height: 2.5rem
+    padding: .25rem 0.5rem
     box-sizing: border-box
     background: var(--surface)
     border-top: 4px solid var(--light)
     // border-bottom: 1px solid rgba(0, 0, 0, .1)
     box-shadow: 0 2px 5px 0 rgba(0, 0, 0, .1)
+
+    .navigator
+        margin-left: auto
+        display: flex
+        align-items: center
+        gap: .2rem
+        height: 100%
+
+        .iconButton
+            height: 100%
+
+            &.left
+                rotate: 180deg 0 0 1
 
 .body
     background: var(--surface)
@@ -288,6 +322,7 @@ const s = useCssModule()
                 background: white
                 border-radius: 3px
                 overflow: hidden
+                // border: 1px solid var(--base)
 
 
                 .imageContainer
@@ -359,22 +394,31 @@ const s = useCssModule()
             gap: 1rem
             box-sizing: border-box
 
+            
+
             .column
                 flex: 1
                 border-radius: 3px
                 overflow: hidden
-                border: 1px solid var(--light)
 
                 display: flex
                 flex-direction: column
                 gap: 1rem
 
+                height: 100%
+
                 padding: 1rem
                 box-sizing: border-box
+                border: 1px solid var(--base)
+
+                &.today
+                    border: 1px solid var(--light)
+
                 .tasks
                     display: flex
                     flex-direction: column
                     gap: 1rem
+                    height: 100%
                     overflow: auto
 
                     .task
@@ -402,57 +446,29 @@ const s = useCssModule()
 
                     .title
                         display: flex
-                        align-items: center
-                        justify-content: center
-                        padding: 0.25rem .5rem
+                        align-items: flex-end
+                        line-height: 14px
+                        
                         box-sizing: border-box
                         width: 100%
                         border-radius: 3px
+                        gap: .5rem
 
                         @include main.f-size-very-small
-                        @include main.mono-font
                         font-weight: 900
-                        text-transform: uppercase;
-                        background: var(--light)
+                        text-transform: uppercase
 
-                    .date
-                        display: flex
-                        gap: .5rem
-                        align-items: center
+                        .todayText
+                            margin-left: auto
+                            @include main.f-size-very-small
+                            font-weight: 900
+                            color: var(--light)
 
                         .dateNumber
-                            @include main.f-size-medium
+                            @include main.f-size-small
                             font-weight: 700
                         .dateMonth
-                            @include main.f-size-small
-
-            .otherday
-                height: 95%
-                transition: 0.2s
-                &:hover
-                    opacity: 1
-
-                .topHeader
-
-                    .title
-                        display: flex
-                        align-items: center
-                        justify-content: center
-                        padding: 0.25rem .5rem
-                        box-sizing: border-box
-                        width: 100%
-                        border-radius: 3px
-
-                        @include main.f-size-very-small
-                        @include main.mono-font
-                        font-weight: 900
-                        text-transform: uppercase;
-                        background: var(--accent)
-
-            .today
-                height: 100%
-                
-
+                            @include main.f-size-very-small
 
     .suppers
         display: flex
