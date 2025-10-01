@@ -1,6 +1,7 @@
 <script setup lang="ts">
 import { useCssModule } from "vue";
 import TitledField from "../input/fields/TitledField.vue";
+import TitledText from "../paragrafs/TitledText.vue";
 
 const s = useCssModule()
 </script>
@@ -13,9 +14,10 @@ const s = useCssModule()
             <img src="@/assets/images/apiary.jpg" alt="">
         </div>
         <div :class="s.dataSide">
-            <TitledField title="Name"/>
-            <TitledField title="Location"/>
-            <TitledField title="Description"/>
+            <TitledText title="Name" content="Hive name"/>
+            <TitledText title="Type" content="Movable"/>
+            <TitledText title="Location" content="D'arciems"/>
+            <TitledText title="Description" content="Big yellow, has a lot of bees. Quite comfy and warm. Has a lot of honney :)))))"/>
         </div>
     </div>
 </div>
