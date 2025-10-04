@@ -3,25 +3,35 @@ import { useCssModule } from "vue";
 import TitledField from "../input/fields/TitledField.vue";
 import IconCubeButton from "../input/buttons/IconCubeButton.vue";
 import { SVGImage, SVGRes } from "@/core/SVGLoader";
+import TitledText from "../paragrafs/TitledText.vue";
+import { useI18n } from "vue-i18n";
 
 const s = useCssModule()
+const { t } = useI18n()
+
 </script>
 
 <template>
 <div :class="s.container">
     <div :class="s.header">
-        <h1>Queen</h1>
+        <h1>{{ t("hiveOverview.queen") }}</h1>
         <div :class="s.buttons">
             <IconCubeButton :class="s.button" :svg="new SVGImage(SVGRes.MoreDots)"/>
         </div>
     </div>
     <div :class="s.body">
-        <div :class="s.imageContainer">
+         <div :class="s.imageContainer">
             <img src="/src/assets/images/queen1.jpg" alt="">
         </div>
-        <div :class="s.description">
-            <TitledField title="Species" hint="Tetragonula carbonaria"/>
-            <TitledField title="Age" hint="23 weeks"/>  
+        <div :class="s.tags">
+            <div :class="[s.tag, s.firstTag]">
+                <h2 :class="s.title">Species</h2>
+                <p :class="s.date">Tetragonula carbonaria</p>
+            </div>
+            <div :class="[s.tag, s.lastTag]">
+                <h2 :class="s.title">Age</h2>
+                <p :class="s.date">23 weeks</p>
+            </div>
         </div>
     </div>
 </div>
@@ -65,9 +75,13 @@ const s = useCssModule()
         display: flex
         flex-direction: column
         height: calc(100% - 2.5rem)
-        padding: 1rem
-        gap: 1rem
+        margin: 1rem
+        gap: .5rem
         box-sizing: border-box
+        background: white
+        border-radius: 3px
+        overflow: auto
+
 
         .imageContainer
             flex: 1 
@@ -75,14 +89,43 @@ const s = useCssModule()
             min-height: 0 // prevents flexbox from overflowing
             
             img
-                border-radius: 3px
                 width: 100%
                 height: 100%
                 object-fit: cover
 
-        .description
+        .tags
             display: flex
-            gap: 1rem
-            min-height: 3rem
-            max-height: 3rem
+            gap: 2px
+            padding: 0 .5rem
+            min-height: 4rem
+            
+            
+            .tag
+                flex: 1
+                display: flex
+                flex-direction: column
+                gap: .25rem
+                box-sizing: border-box
+
+                &.lastTag .title
+                    border-radius: 0 10px 10px 0
+
+                &.middleTag .title
+
+                &.firstTag .title
+                    border-radius: 10px 0 0 10px
+
+
+                .title
+                    @include main.f-size-very-small
+                    font-weight: 700
+                    letter-spacing: 0.02em
+                    // border: 1px solid
+                    padding: .25rem .5rem 
+                    background: var(--grayishOnWhite)
+
+                .date
+                    @include main.f-size-very-small
+                    letter-spacing: 0.02em
+                    padding: .25rem .5rem 
 </style>

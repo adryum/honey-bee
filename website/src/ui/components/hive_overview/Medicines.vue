@@ -3,14 +3,17 @@ import { useCssModule } from "vue";
 import Stimulant from './Stimulant.vue'
 import IconCubeButton from "../input/buttons/IconCubeButton.vue";
 import { SVGImage, SVGRes } from "@/core/SVGLoader";
+import { useI18n } from "vue-i18n";
 
 const s = useCssModule()
+const { t } = useI18n()
+
 </script>
 
 <template>
 <div :class="s.container">
     <div :class="s.header">
-        <h1>Active drugs</h1>
+        <h1>{{ t("hiveOverview.medicine") }}</h1>
         <div :class="s.buttons">
             <IconCubeButton :class="s.button" :svg="new SVGImage(SVGRes.Pluss)"/>
             <IconCubeButton :class="s.button" :svg="new SVGImage(SVGRes.MoreDots)"/>
@@ -70,7 +73,7 @@ const s = useCssModule()
         flex-direction: column
 
         padding: 1rem
-        gap: 1rem
+        gap: .5rem
         box-sizing: border-box
         overflow: auto
 </style>

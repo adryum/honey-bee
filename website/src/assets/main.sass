@@ -1,5 +1,6 @@
 @use './base.sass' as *;
 @use './colors.sass' as *;
+@use 'sass:math'
 
 @forward './colors.sass'
 @forward './base.sass'
@@ -38,6 +39,11 @@
     font-size: 14px
 @mixin f-size-tiny
     font-size: 12px
+
+
+@mixin random-rotation 
+    transform: rotate(math.random(2) * 1deg);
+
    
 
 .h1

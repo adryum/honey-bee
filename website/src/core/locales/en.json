@@ -1,0 +1,11 @@
+{
+    "hiveOverview": {
+        "info" : "info",
+        "calendarEvents" : "Calendar events",
+        "actionHistory" : "Action history",
+        "medicine" : "Medicine",
+        "notes" : "Notes",
+        "queen" : "Queen",
+        "suppers" : "Suppers"
+    }
+}

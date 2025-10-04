@@ -4,14 +4,16 @@ import EventLogEntry from "./EventLogEntry.vue";
 import EventLogTimeSeparator from './EventLogTimeSeparator.vue'
 import { SVGImage, SVGRes } from "@/core/SVGLoader";
 import IconCubeButton from "../input/buttons/IconCubeButton.vue";
+import { useI18n } from "vue-i18n";
 
 const s = useCssModule()
+const { t } = useI18n()
 </script>
 
 <template>
 <div :class="s.container">
     <div :class="s.header">
-        <h1>Events</h1>
+        <h1>{{ t("hiveOverview.actionHistory") }}</h1>
         <div :class="s.buttons">
             <IconCubeButton :class="s.button" :svg="new SVGImage(SVGRes.OpenWindow)"/>
             <IconCubeButton :class="s.button" :svg="new SVGImage(SVGRes.MoreDots)"/>
@@ -77,7 +79,7 @@ const s = useCssModule()
         flex-direction: column
 
         padding: 1rem
-        gap: 1rem
+        gap: .5rem
         box-sizing: border-box
         overflow: auto
 </style>

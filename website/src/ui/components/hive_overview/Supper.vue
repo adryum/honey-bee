@@ -2,7 +2,9 @@
 import { SVGImage, SVGRes } from "@/core/SVGLoader";
 import { useCssModule } from "vue";
 import IconCubeButton from "../input/buttons/IconCubeButton.vue";
+import { useI18n } from "vue-i18n";
 
+const { t } = useI18n()
 const s = useCssModule()
 </script>
 
@@ -59,7 +61,7 @@ const s = useCssModule()
         padding: .5rem 1rem
         border-radius: 3px
         box-sizing: border-box
-        background: var(--surface)
+        background: var(--grayishOnWhite)
 
         .title
             @include main.f-size-very-small

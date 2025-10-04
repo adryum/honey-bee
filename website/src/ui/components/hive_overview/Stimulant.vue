@@ -2,34 +2,30 @@
 import { useCssModule } from "vue";
 import IconCubeButton from "../input/buttons/IconCubeButton.vue";
 import { SVGImage, SVGRes } from "@/core/SVGLoader";
+import TitledText from "../paragrafs/TitledText.vue";
 
 const s = useCssModule()
 </script>
 
 <template>
 <div :class="s.container">
-    <div :class="s.imageContainer">
-        <img src="@/assets/images/apiary.jpg" alt="">
+    <div :class="s.header">
+        <h1 :class="s.name">Trens</h1>
+        <IconCubeButton :class="s.button" :svg="new SVGImage(SVGRes.MoreDots)"/>
     </div>
-
-    <div :class="s.info">
-        <div :class="s.header">
-            <h1 :class="s.name">Trens</h1>
-            <IconCubeButton :class="s.button" :svg="new SVGImage(SVGRes.MoreDots)"/>
+    <!-- <TitledText title="Description"/> -->
+    <div :class="s.tags">
+        <div :class="[s.tag, s.firstTag]">
+            <h2 :class="s.title">Since</h2>
+            <p :class="s.date">22.sep.</p>
         </div>
-        <div :class="s.tags">
-            <div :class="s.tag">
-                <h2 :class="s.title">Since</h2>
-                <p :class="s.date">22.sep.</p>
-            </div>
-            <div :class="s.tag">
-                <h2 :class="s.title">Till</h2>
-                <p :class="s.date">22.sep.</p>
-            </div>
-            <div :class="s.tag">
-                <h2 :class="s.title">Next</h2>
-                <p :class="s.date">22.sep.</p>
-            </div>
+        <div :class="[s.tag, s.middleTag]">
+            <h2 :class="s.title">Till</h2>
+            <p :class="s.date">22.sep.</p>
+        </div>
+        <div :class="[s.tag, s.lastTag]">
+            <h2 :class="s.title">Next</h2>
+            <p :class="s.date">22.sep.</p>
         </div>
     </div>
 </div>
@@ -39,64 +35,59 @@ const s = useCssModule()
 @use '@/assets/main.sass' as main
 .container
     display: flex
+    flex-direction: column
     width: 100%
 
     background: white
     border-radius: 3px
 
-    .imageContainer
-        min-width: 20%
-        height: 100%
+    gap: .5rem
 
-        img
-            width: 100%
-            height: 100%
-            object-fit: cover
+    box-sizing: border-box
+    padding: .5rem
 
-
-    .info
+    .header
         display: flex
-        flex-direction: column
-        gap: 1rem
+        align-items: center
+        .name
+            @include main.f-size-small
+            font-weight: 700
 
-        box-sizing: border-box
-        padding: .5rem
+        .button
+            height: 28px
+            margin-left: auto
 
-        .header
+    .tags
+        display: flex
+        gap: 2px
+        
+        .tag
+            flex: 1
             display: flex
-            padding: .25rem 0
-            align-items: center
-            .name
-                @include main.f-size-small
+            flex-direction: column
+            gap: .25rem
+            box-sizing: border-box
+
+            &.lastTag .title
+                border-radius: 0 10px 10px 0
+
+            &.middleTag .title
+
+            &.firstTag .title
+                border-radius: 10px 0 0 10px
+
+
+            .title
+                @include main.f-size-very-small
                 font-weight: 700
+                letter-spacing: 0.02em
+                // border: 1px solid
+                padding: .25rem .5rem 
+                background: var(--grayishOnWhite)
 
-            .button
-                height: 28px
-                margin-left: auto
-            
+            .date
+                @include main.f-size-very-small
+                letter-spacing: 0.02em
+                padding: .25rem .5rem 
 
-        .tags
-            display: flex
-            background: var(--accent)
-            gap: 1px
-            border-left: 1px solid var(--accent)
-            border-right: 1px solid var(--accent)
-
-            .tag
-                flex: 1
-                display: flex
-                flex-direction: column
-                gap: .2rem
-
-                box-sizing: border-box
-                padding: 0 .5rem
-                background: white
-
-                .title
-                    @include main.f-size-tiny
-                    font-weight: 900
-                    letter-spacing: 0.02em
-
-                .date
-                    @include main.f-size-very-small
 </style>

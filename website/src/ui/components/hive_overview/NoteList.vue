@@ -2,108 +2,34 @@
 import { useCssModule } from "vue";
 import IconCubeButton from "../input/buttons/IconCubeButton.vue";
 import { SVGImage, SVGRes } from "@/core/SVGLoader";
+import { useI18n } from "vue-i18n";
+import Note from './Note.vue'
 
 const s = useCssModule()
+const { t } = useI18n()
+
 </script>
 
 <template>
 <div :class="s.container">
     <div :class="s.header">
-        <h1>Notes</h1>
+        <h1>{{ t("hiveOverview.notes") }}</h1>
         <div :class="s.buttons">
             <IconCubeButton :class="s.button" :svg="new SVGImage(SVGRes.Pluss)"/>
             <IconCubeButton :class="s.button" :svg="new SVGImage(SVGRes.MoreDots)"/>
         </div>
     </div>
     <div :class="s.body">
-        <div :class="s.note">
-            <div :class="s.top">
-                <h2 :class="s.informative">Information</h2>
-                <p :class="s.date">22 sep. 2046.</p>
-            </div>
-            <h1 :class="s.title">Do that thing!</h1>
-            <p :class="s.content">Yadayadadaadad a a  s s ss jk kgkgfd k kd dthis and that!!!</p>
-        </div>
-        <div :class="s.note">
-            <div :class="s.top">
-                <h2 :class="s.informative">Information</h2>
-                <p :class="s.date">22 sep. 2046.</p>
-            </div>
-            <h1 :class="s.title">Do that thing!</h1>
-            <p :class="s.content">Yadayadadaadad a a  s s ss jk kgkgfd k kd dthis and that!!!</p>
-        </div>
-        <div :class="s.note">
-            <div :class="s.top">
-                <h2 :class="s.informative">Information</h2>
-                <p :class="s.date">22 sep. 2046.</p>
-            </div>
-            <h1 :class="s.title">Do that thing!</h1>
-            <p :class="s.content">Yadayadadaadad a a  s s ss jk kgkgfd k kd dthis and that!!!</p>
-        </div>
-        <div :class="s.note">
-            <div :class="s.top">
-                <h2 :class="s.informative">Information</h2>
-                <p :class="s.date">22 sep. 2046.</p>
-            </div>
-            <h1 :class="s.title">Do that thing!</h1>
-            <p :class="s.content">Yadayadadaadad a a  s s ss jk kgkgfd k kd dthis and that!!!</p>
-        </div>
-        <div :class="s.note">
-            <div :class="s.top">
-                <h2 :class="s.informative">Information</h2>
-                <p :class="s.date">22 sep. 2046.</p>
-            </div>
-            <h1 :class="s.title">Do that thing!</h1>
-            <p :class="s.content">Yadayadadaadad a a  s s ss jk kgkgfd k kd dthis and that!!!</p>
-        </div>
-        <div :class="s.note">
-            <div :class="s.top">
-                <h2 :class="s.informative">Information</h2>
-                <p :class="s.date">22 sep. 2046.</p>
-            </div>
-            <h1 :class="s.title">Do that thing!</h1>
-            <p :class="s.content">Yadayadadaadad a a  s s ss jk kgkgfd k kd dthis and that!!!</p>
-        </div>
-        <div :class="s.note">
-            <div :class="s.top">
-                <h2 :class="s.informative">Information</h2>
-                <p :class="s.date">22 sep. 2046.</p>
-            </div>
-            <h1 :class="s.title">Do that thing!</h1>
-            <p :class="s.content">Yadayadadaadad a a  s s ss jk kgkgfd k kd dthis and that!!!</p>
-        </div>
-        <div :class="s.note">
-            <div :class="s.top">
-                <h2 :class="s.informative">Information</h2>
-                <p :class="s.date">22 sep. 2046.</p>
-            </div>
-            <h1 :class="s.title">Do that thing!</h1>
-            <p :class="s.content">Yadayadadaadad a a  s s ss jk kgkgfd k kd dthis and that!!!</p>
-        </div>
-        <div :class="s.note">
-            <div :class="s.top">
-                <h2 :class="s.informative">Information</h2>
-                <p :class="s.date">22 sep. 2046.</p>
-            </div>
-            <h1 :class="s.title">Do that thing!</h1>
-            <p :class="s.content">Yadayadadaadad a a  s s ss jk kgkgfd k kd dthis and that!!!</p>
-        </div>
-        <div :class="s.note">
-            <div :class="s.top">
-                <h2 :class="s.informative">Information</h2>
-                <p :class="s.date">22 sep. 2046.</p>
-            </div>
-            <h1 :class="s.title">Do that thing!</h1>
-            <p :class="s.content">Yadayadadaadad a a  s s ss jk kgkgfd k kd dthis and that!!!</p>
-        </div>
-        <div :class="s.note">
-            <div :class="s.top">
-                <h2 :class="s.informative">Information</h2>
-                <p :class="s.date">22 sep. 2046.</p>
-            </div>
-            <h1 :class="s.title">Do that thing!</h1>
-            <p :class="s.content">Yadayadadaadad a a  s s ss jk kgkgfd k kd dthis and that!!!</p>
-        </div>
+        <Note />
+        <Note />
+        <Note />
+        <Note />
+        <Note />
+        <Note />
+        <Note />
+        <Note />
+        <Note />
+        <Note />
     </div>
 </div>
 </template>
@@ -152,46 +78,7 @@ const s = useCssModule()
         flex-direction: column
 
         padding: 1rem
-        gap: 1rem
+        gap: .5rem
         box-sizing: border-box
         overflow: auto
-
-        .note
-            display: flex
-            flex-direction: column
-
-            gap: .5rem
-            padding: .5rem
-
-            box-sizing: border-box
-            background: white
-            border-left: 6px solid var(--accent)
-            border-radius: 0 6px 6px 0
-
-            .top
-                @include main.mono-font
-                @include main.f-size-tiny
-
-                display: flex
-                justify-content: space-between
-
-                .informative
-                    font-weight: 900
-                    letter-spacing: .02em
-                    text-transform: uppercase;
-
-                .date
-                    font-weight: 500
-
-
-
-            .title
-                @include main.f-size-very-small
-                font-weight: 900
-                padding-left: 1rem
-
-            .content
-                @include main.f-size-very-small
-                padding-left: 1rem
-
 </style>

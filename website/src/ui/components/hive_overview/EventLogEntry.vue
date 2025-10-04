@@ -20,6 +20,9 @@ const s = useCssModule()
     @include main.f-size-very-small
     @include main.font
     display: flex
+    background: white
+    padding: .5rem
+    border-radius: 3px
 
     .header
         display: flex

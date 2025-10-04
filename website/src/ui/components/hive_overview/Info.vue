@@ -2,22 +2,25 @@
 import { useCssModule } from "vue";
 import TitledField from "../input/fields/TitledField.vue";
 import TitledText from "../paragrafs/TitledText.vue";
+import { useI18n } from "vue-i18n";
 
 const s = useCssModule()
+const { t } = useI18n()
+
 </script>
 
 <template>
 <div :class="s.container">
-    <div :class="s.header">Info</div>
+    <div :class="s.header">{{ t("hiveOverview.info") }}</div>
     <div :class="s.body">
         <div :class="s.imageSide">
             <img src="@/assets/images/apiary.jpg" alt="">
         </div>
         <div :class="s.dataSide">
-            <TitledText title="Name" content="Hive name"/>
-            <TitledText title="Type" content="Movable"/>
-            <TitledText title="Location" content="D'arciems"/>
-            <TitledText title="Description" content="Big yellow, has a lot of bees. Quite comfy and warm. Has a lot of honney :)))))"/>
+            <TitledText :class="s.entry" title="Name" content="Hive name"/>
+            <TitledText :class="s.entry" title="Type" content="Movable"/>
+            <TitledText :class="s.entry" title="Location" content="D'arciems"/>
+            <TitledText :class="[s.entry, s.description]" title="Description" content="Big yellow, has a lot of bees. Quite comfy and warm. Has a lot of honney :)))))"/>
         </div>
     </div>
 </div>
@@ -66,6 +69,7 @@ const s = useCssModule()
         padding: 1rem
         gap: 1rem
         box-sizing: border-box
+        overflow: auto
 
         .imageSide
             grid-area: image
@@ -83,6 +87,14 @@ const s = useCssModule()
             display: flex
             flex-direction: column
 
-            gap: 1rem
+            gap: .5rem
             box-sizing: border-box
+
+            .description
+                flex: 1
+
+            .entry
+                padding: .5rem
+                background: white
+                border-radius: 3px
 </style>

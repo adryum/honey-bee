@@ -3,10 +3,10 @@ import { ref, useCssModule } from "vue";
 import NoteList from '../components/hive_overview/NoteList.vue'
 import CalendarHiveEvents from "../components/hive_overview/CalendarHiveEvents.vue";
 import QueenBee from '../components/hive_overview/QueenBee.vue'
-import Stimulants from '../components/hive_overview/Stimulants.vue'
 import Info from '../components/hive_overview/Info.vue'
 import Suppers from '../components/hive_overview/Suppers.vue'
 import EventLog from '../components/hive_overview/EventLog.vue'
+import Medicines from "../components/hive_overview/Medicines.vue";
 
 const props = defineProps({
     hiveId: String,
@@ -23,7 +23,7 @@ const s = useCssModule()
     <QueenBee :class="s.queenBee"/>
     <Suppers :class="s.suppers"/>
     <CalendarHiveEvents :class="s.upcomingEvents" />
-    <Stimulants :class="s.stimulants"/>
+    <Medicines :class="s.stimulants"/>
 </div>
 </template>
 

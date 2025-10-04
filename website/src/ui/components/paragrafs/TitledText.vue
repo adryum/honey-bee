@@ -28,7 +28,7 @@ const props = withDefaults(defineProps<{
 
     .title
         @include main.f-size-very-small
-        font-weight: 900
+        font-weight: 700
         letter-spacing: 0.02em
 
     .content

@@ -19,11 +19,12 @@ const s = useCssModule()
     text-align: center
     font-weight: 900
     letter-spacing: .02em
+    
 
-    // border-radius: 3px
+    border-radius: 3px
     padding: 0.5rem 1rem
     box-sizing: border-box
-    // background: 
+    background: white 
     // border-bottom: 8px solid var(--accent) 
     border-left: 8px solid var(--accent) 
     

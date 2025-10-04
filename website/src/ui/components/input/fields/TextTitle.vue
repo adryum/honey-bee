@@ -60,7 +60,6 @@ onMounted(() => {
     background: rgba(0, 0, 0, 0)
 
 .input 
-    @include main.input-base
     all: unset
     position: relative
     width: 100%
