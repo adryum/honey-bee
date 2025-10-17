@@ -1,8 +1,9 @@
 import { HiveApi } from "../api/HiveApi"
-import type { HiveCreateModel, HiveModel, HiveSearchOptions } from "../models/Models"
+import type { HiveCreateModel, HiveModel, HiveSearchOptions, LogModel } from "../models/Models"
 import { defineStore } from "pinia"
 import { useApiaryStore } from "./ApiaryStore"
-import { removeFrom } from "../utils/others"
+import { isNumber, removeFrom, replace } from "../utils/others"
+import type { CallbackModel, SupperCreateRequestModel, SupperModel } from "../models/SupperModels"
 
 const hiveApi = new HiveApi()
 
@@ -10,10 +11,12 @@ export const useHiveStore = defineStore('hive', {
     state: () => ({
         hives: [] as HiveModel[],
         apiaryHives: [] as HiveModel[],
-        isCreatingHive: false,
+        suppers: [] as SupperModel[],
+        logs: [] as LogModel[],
         isAssigningHive: false,
         isFetchingHive: false,
         isDeletingHive: false,
+        isSupperLoading: false
     }),
     actions: {
         async init() {
@@ -110,6 +113,55 @@ export const useHiveStore = defineStore('hive', {
                 console.error(error);
             } finally {
                 this.isFetchingHive = false
+            }
+        },
+        async createSupper(supper: SupperCreateRequestModel, callback: CallbackModel) {
+            try {
+                this.isSupperLoading = true
+                var response = await hiveApi.createSupper(supper)
+                
+                if (response) {
+                    this.suppers.push(response)
+                    callback.onSuccess("Created supper")
+                }
+            } catch (error) {
+                console.error(error)
+                callback.onFailure(error)
+            } finally {
+                this.isSupperLoading = false
+            }
+        },
+        async updateSupper(supper: SupperModel, callback: CallbackModel) {
+            try {
+                this.isSupperLoading = true
+                var response = await hiveApi.updateSupper(supper)
+
+                if (response) {
+                    replace(this.suppers, response, (item) => item.id === response?.id)
+                    this.suppers
+                    callback.onSuccess("Updated supper")
+                }
+            } catch (error) {
+                console.error(error);
+                callback.onFailure(error);
+            } finally {
+                this.isSupperLoading = false
+            }
+        },
+        async deleteSupper(id: number, callback: CallbackModel) {
+            try {
+                this.isSupperLoading = true
+                var response = await hiveApi.deleteSupper(id)
+                
+                if (isNumber(response)) {
+                    this.suppers = this.suppers.filter(supper => supper.id != response)
+                    callback.onSuccess("Updated supper")
+                }
+            } catch (error) {
+                console.error(error);
+                callback.onFailure(error);
+            } finally {
+                this.isSupperLoading = false
             }
         },
 

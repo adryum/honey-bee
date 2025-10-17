@@ -67,3 +67,11 @@ export type HiveCreateModel = {
     type: string
     image?: File
 }
+
+
+
+export type LogModel = {
+    creator: string
+    creationDate: string
+    message: string
+}

@@ -2,8 +2,47 @@ import axios from "axios";
 import type { HiveCreateModel, HiveModel } from "../models/Models";
 import type { HiveAssignRequestModel } from "./models/RequestModels";
 import { catchedErrorLog, RegistrationRepository } from "../repositories/RegistrationRepository";
+import type { SupperCreateRequestModel, SupperCreateResponseModel } from "../models/SupperModels";
 
 export class HiveApi {
+    async createSupper(supper: SupperCreateRequestModel): Promise<SupperCreateResponseModel | undefined> {
+        try {
+            const formdata = new FormData()
+            formdata.append("type", supper.type)
+            formdata.append("frames", supper.frames.toString())
+            formdata.append('identification', JSON.stringify(RegistrationRepository.getUserIdentification()))
+
+            return await axios.post('/hive/supper/create', formdata)
+        } catch (error) {
+            catchedErrorLog(error)
+            return undefined
+        }
+    }
+    async updateSupper(supper: SupperCreateRequestModel): Promise<SupperCreateResponseModel | undefined> {
+        try {
+            const formdata = new FormData()
+            formdata.append("type", supper.type)
+            formdata.append("frames", supper.frames.toString())
+            formdata.append('identification', JSON.stringify(RegistrationRepository.getUserIdentification()))
+
+            return await axios.post('/hive/supper/update', formdata)
+        } catch (error) {
+            catchedErrorLog(error)
+            return undefined
+        }
+    }
+    async deleteSupper(id: number): Promise<number | undefined> {
+        try {
+            const formdata = new FormData()
+            formdata.append("id", id.toString())
+            formdata.append('identification', JSON.stringify(RegistrationRepository.getUserIdentification()))
+
+            return await axios.post('/hive/supper/delete', formdata)
+        } catch (error) {
+            catchedErrorLog(error)
+            return undefined
+        }
+    }
     async deleteHive(hiveId: number): Promise<boolean> {
         try {
             const formdata = new FormData()

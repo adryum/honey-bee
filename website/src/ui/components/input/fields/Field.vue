@@ -3,7 +3,7 @@ import { ref, useCssModule } from "vue";
 import { motion } from 'motion-v';
 
 const s = useCssModule()
-const text = defineModel<string>({ default: ''})
+const text = defineModel<string | number>({ default: ''})
 const props = withDefaults(defineProps<{
     hint?: string
 }>(),

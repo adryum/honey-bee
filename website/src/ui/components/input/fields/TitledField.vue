@@ -3,7 +3,7 @@ import { useCssModule } from "vue";
 import Field from "./Field.vue";
 
 const s = useCssModule()
-const text = defineModel<string>()
+const text = defineModel<string | number>()
 
 const props = withDefaults(defineProps<{
     title?: string

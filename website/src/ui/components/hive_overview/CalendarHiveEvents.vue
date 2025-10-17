@@ -4,9 +4,11 @@ import { useCssModule } from "vue";
 import IconCubeButton from "../input/buttons/IconCubeButton.vue";
 import CalendarHiveEventEntry from './CalendarHiveEventEntry.vue'
 import { useI18n } from "vue-i18n";
+import { ScreenSize, useScreenSize } from "@/core/ScreenSizes";
 
 const s = useCssModule()
 const { t } = useI18n()
+const { screenSize, biggerThan } = useScreenSize()
 
 </script>
 
@@ -53,7 +55,7 @@ const { t } = useI18n()
                 <CalendarHiveEventEntry />
             </div>
         </div>
-        <div :class="s.entry">
+        <div v-if="biggerThan(ScreenSize.XXL)" :class="s.entry">
             <div :class="s.title">
                 <div :class="s.date">
                     <h1 :class="s.dateNumber">25</h1>
