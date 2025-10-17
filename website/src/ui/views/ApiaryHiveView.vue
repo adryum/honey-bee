@@ -1,19 +1,16 @@
 <script setup lang="ts">
 import Hive from '../components/hive/Hive.vue';
-import { computed, onBeforeUnmount, onMounted, ref, useCssModule, watch, type CSSProperties, type Ref } from "vue";
+import { onMounted, ref, useCssModule } from "vue";
 import ToolBar from '../components/ToolBar.vue';
 import { SVGImage, SVGRes } from '../../core/SVGLoader.js';
 import { createComponentWithProps, createComponentInstance } from '../../core/utils/components.js';
 import IconTextButton from '../components/input/buttons/IconTextButton.vue';
 import SmallSearchbar from '../components/input/fields/SmallSearchbar.vue';
-import type {  ApiaryResponseModel } from '../../core/api/models/ResponseModels.js';
 import AddHivePopup from '../components/popups/hive/AddHivePopup.vue';
-import { useHiveStore } from '../../core/stores/HiveStore.js';
-import type { HiveModel, HiveSearchOptions } from '../../core/models/Models.js';
 import { useApiaryView } from '@/core/composables/useApiaryView.js';
 import { useApiaryHiveView } from '@/core/composables/useApiaryHiveView.js';
-import { clamp, useFlexibleGrid } from '@/core/utils/others.js';
-import { onResize } from '@/core/utils/Hooks.js';
+import { useFlexibleGrid } from '@/core/utils/others.js';
+import type { HiveSearchOptions } from '@/core/models/HiveModels.js';
 
 const s = useCssModule()
 const props = defineProps<{

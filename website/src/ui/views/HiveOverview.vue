@@ -1,20 +1,19 @@
 <script setup lang="ts">
-import { ref, useCssModule } from "vue";
-import NoteList from '../components/hive_overview/NoteList.vue'
-import CalendarHiveEvents from "../components/hive_overview/CalendarHiveEvents.vue";
-import QueenBee from '../components/hive_overview/QueenBee.vue'
-import Info from '../components/hive_overview/Info.vue'
-import Suppers from '../components/hive_overview/Suppers.vue'
-import EventLog from '../components/hive_overview/EventLog.vue'
-import Medicines from "../components/hive_overview/Medicines.vue";
+import { useCssModule } from 'vue';
+import Info from '../components/hive_overview/Info.vue';
+import NoteList from '../components/hive_overview/notes/NoteList.vue';
+import QueenBee from '../components/hive_overview/QueenBee.vue';
+import Suppers from '../components/hive_overview/supper/Suppers.vue';
+import CalendarHiveEvents from '../components/hive_overview/calendar/CalendarHiveEvents.vue';
+import MedicineList from '../components/hive_overview/medicine/MedicineList.vue';
+import EventLog from '../components/hive_overview/event_logs/EventLog.vue';
 
+const s = useCssModule()
 const props = defineProps({
     hiveId: String,
 })
 
-const s = useCssModule()
 </script>
-
 <template>
 <div :class="s.container">
     <Info :class="s.generalInfo"/>
@@ -23,7 +22,7 @@ const s = useCssModule()
     <QueenBee :class="s.queenBee"/>
     <Suppers :class="s.suppers"/>
     <CalendarHiveEvents :class="s.upcomingEvents" />
-    <Medicines :class="s.stimulants"/>
+    <MedicineList :class="s.stimulants"/>
 </div>
 </template>
 

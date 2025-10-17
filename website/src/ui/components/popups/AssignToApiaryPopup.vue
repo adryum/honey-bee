@@ -1,7 +1,7 @@
 <script setup lang="ts">
 import { useHiveAssignToApiary } from '@/core/composables/useApiaryAssignHive';
 import type { ApiaryModel } from '@/core/models/Models';
-import { createComponentWithProps } from '@/core/utils/components';
+import { createComponentWithProps, type PopupFunctions } from '@/core/utils/components';
 import { useCssModule, ref, watch, onMounted } from 'vue';
 import SmallSearchbar from '../input/fields/SmallSearchbar.vue';
 import { motion } from 'motion-v';
@@ -13,8 +13,7 @@ const s = useCssModule()
 const props = defineProps<{
     hiveId: number
     onAssign: () => {}
-    unmount?: () => {},
-    focusHandler?: (el: HTMLElement) => {}
+    popupFunctions: PopupFunctions
 }>()
 const searchWord = ref<string>('')
 const components = [
@@ -42,7 +41,7 @@ onMounted(() => {
 </script>
 
 <template>
-<PopupFrame title="Move hive" :unmount="unmount" :focus-handler="focusHandler">
+<PopupFrame title="Move hive" :popup-functions="popupFunctions">
     <template #body>
         <motion.div :class="s.container">
             <ToolBar name="Your apiaries" :components="components" />

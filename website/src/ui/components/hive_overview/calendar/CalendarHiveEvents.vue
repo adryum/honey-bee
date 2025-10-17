@@ -1,7 +1,7 @@
 <script setup lang="ts">
 import { SVGImage, SVGRes } from "@/core/SVGLoader";
 import { useCssModule } from "vue";
-import IconCubeButton from "../input/buttons/IconCubeButton.vue";
+import IconCubeButton from "../../input/buttons/IconCubeButton.vue";
 import CalendarHiveEventEntry from './CalendarHiveEventEntry.vue'
 import { useI18n } from "vue-i18n";
 import { ScreenSize, useScreenSize } from "@/core/ScreenSizes";

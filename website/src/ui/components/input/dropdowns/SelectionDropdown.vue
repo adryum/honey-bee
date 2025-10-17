@@ -110,8 +110,9 @@ function onItemClick(button: DropdownOptions) {
         align-items: center
         height: 2rem
         background: white
-        border-radius: 3px
-        box-shadow: inset 0 -2px rgba(0,0,0, .3)
+        border-radius: 2px
+        // box-shadow: inset 0 -2px rgba(0,0,0, .3)
+        border: 1px solid rgba(0,0,0,.1)
         cursor: pointer
 
         transition: .2s
@@ -136,10 +137,12 @@ function onItemClick(button: DropdownOptions) {
         right: 0
         left: 0
         
-        background: var(--accent)
+        background: var(--surface)
         padding: 1rem
         border-radius: 0 0 3px 3px
-        box-shadow: 0px 0px 10px rgba(0, 0, 0, .5)
+        // box-shadow: 0px 0px 10px rgba(0, 0, 0, .5)
+        border: 1px solid rgba(0,0,0,.1)
+
 
         .li
             all: unset
@@ -150,7 +153,7 @@ function onItemClick(button: DropdownOptions) {
             border-radius: 3px
             gap: 1rem
             cursor: pointer
-            background: var(--accent)
+            background: var(--surface)
 
             .icon
                 z-index: 2
@@ -171,8 +174,5 @@ function onItemClick(button: DropdownOptions) {
                 width: 100%
 
                 border-radius: 3px
-                background: var(--light)
-
-
-
+                background: var(--surface)
 </style>

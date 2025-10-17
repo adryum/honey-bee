@@ -1,7 +1,7 @@
 <script setup lang="ts">
 import { useCssModule } from "vue";
-import Stimulant from './Stimulant.vue'
-import IconCubeButton from "../input/buttons/IconCubeButton.vue";
+import Medicine from './MedicineEntry.vue'
+import IconCubeButton from "../../input/buttons/IconCubeButton.vue";
 import { SVGImage, SVGRes } from "@/core/SVGLoader";
 import { useI18n } from "vue-i18n";
 
@@ -20,13 +20,13 @@ const { t } = useI18n()
         </div>
     </div>
     <div :class="s.body">
-        <stimulant />
-        <stimulant />
-        <stimulant />
-        <stimulant />
-        <stimulant />
-        <stimulant />
-        <stimulant />
+        <Medicine />
+        <Medicine />
+        <Medicine />
+        <Medicine />
+        <Medicine />
+        <Medicine />
+        <Medicine />
     </div>
 </div>
 </template>

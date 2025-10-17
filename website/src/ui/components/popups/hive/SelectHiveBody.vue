@@ -1,14 +1,13 @@
 <script setup lang="ts">
-import { computed, onMounted, ref, useCssModule, watch, type Ref } from 'vue';
+import { ref, useCssModule, watch } from 'vue';
 import { motion } from 'motion-v';
 import Hive from '../../hive/Hive.vue';
 import ToolBar from '../../ToolBar.vue';
 import { useHiveStore } from '../../../../core/stores/HiveStore';
-import type { HiveModel } from '../../../../core/models/Models';
 import { createComponentWithProps } from '../../../../core/utils/components';
 import SmallSearchbar from '../../input/fields/SmallSearchbar.vue'
 import { useFlexibleGrid } from '@/core/utils/others';
-import { onResize } from '@/core/utils/Hooks';
+import type { HiveModel } from '@/core/models/HiveModels';
 
 const s = useCssModule()
 const props = defineProps<{

@@ -1,10 +1,52 @@
 import axios from "axios";
-import type { HiveCreateModel, HiveModel } from "../models/Models";
 import type { HiveAssignRequestModel } from "./models/RequestModels";
 import { catchedErrorLog, RegistrationRepository } from "../repositories/RegistrationRepository";
-import type { SupperCreateRequestModel, SupperCreateResponseModel } from "../models/SupperModels";
+import type { SupperCreateRequestModel, SupperCreateResponseModel, SupperModel } from "../models/SupperModels";
+import type { NoteCreateRequestModel, NoteCreateResponseModel, NoteModel } from "../models/NoteModels";
+import type { HiveCreateModel, HiveModel, HiveUpdateModel } from "../models/HiveModels";
 
 export class HiveApi {
+    async createNote(note: NoteCreateRequestModel): Promise<NoteCreateResponseModel | undefined> {
+        try {
+            const formdata = new FormData()
+            formdata.append("type", note.type)
+            formdata.append("title", note.title)
+            formdata.append("content", note.content)
+            formdata.append('identification', JSON.stringify(RegistrationRepository.getUserIdentification()))
+
+            return await axios.post('/hive/note/create', formdata)
+        } catch (error) {
+            catchedErrorLog(error)
+            return undefined
+        }
+    }
+    async updateNote(note: NoteModel): Promise<NoteCreateResponseModel | undefined> {
+        try {
+            const formdata = new FormData()
+            formdata.append("id", note.id.toString())
+            formdata.append("type", note.type)
+            formdata.append("title", note.title)
+            formdata.append("content", note.content)
+            formdata.append('identification', JSON.stringify(RegistrationRepository.getUserIdentification()))
+
+            return await axios.post('/hive/note/update', formdata)
+        } catch (error) {
+            catchedErrorLog(error)
+            return undefined
+        }
+    }
+    async deleteNote(id: number): Promise<number | undefined> {
+        try {
+            const formdata = new FormData()
+            formdata.append("id", id.toString())
+            formdata.append('identification', JSON.stringify(RegistrationRepository.getUserIdentification()))
+
+            return await axios.post('/hive/note/delete', formdata)
+        } catch (error) {
+            catchedErrorLog(error)
+            return undefined
+        }
+    }
     async createSupper(supper: SupperCreateRequestModel): Promise<SupperCreateResponseModel | undefined> {
         try {
             const formdata = new FormData()
@@ -18,9 +60,10 @@ export class HiveApi {
             return undefined
         }
     }
-    async updateSupper(supper: SupperCreateRequestModel): Promise<SupperCreateResponseModel | undefined> {
+    async updateSupper(supper: SupperModel): Promise<SupperCreateResponseModel | undefined> {
         try {
             const formdata = new FormData()
+            formdata.append("id", supper.id.toString())
             formdata.append("type", supper.type)
             formdata.append("frames", supper.frames.toString())
             formdata.append('identification', JSON.stringify(RegistrationRepository.getUserIdentification()))
@@ -56,6 +99,23 @@ export class HiveApi {
             return false
         } 
     }
+    async updateHive(hive: HiveUpdateModel): Promise<HiveModel | undefined> {
+        try {
+            const formdata = new FormData()
+            formdata.append('identification', JSON.stringify(RegistrationRepository.getUserIdentification()))
+            formdata.append('id', hive.id.toString())
+            if (hive.name) formdata.append('name', hive.name)
+            if (hive.type) formdata.append('type', hive.type)
+            if (hive.location) formdata.append('location', hive.location)
+            if (hive.description) formdata.append('description', hive.description)
+            if (hive.imageFile) formdata.append('image', hive.imageFile)
+      
+            return await axios.post('/hive/update', formdata)
+        } catch (error) {
+            catchedErrorLog(error)
+            return undefined
+        } 
+    }
     async createHive(hive: HiveCreateModel): Promise<HiveModel | null> {
         try {
             const formdata = new FormData()
@@ -73,7 +133,6 @@ export class HiveApi {
             return null
         } 
     }
-
     async getHives(searchWord: string = "%"): Promise<HiveModel[]> {
         try {
             console.log('userID', RegistrationRepository.getUserIdentification());

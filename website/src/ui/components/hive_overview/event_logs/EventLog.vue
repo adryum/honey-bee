@@ -1,31 +1,41 @@
 <script setup lang="ts">
-import { useCssModule } from "vue";
-import IconCubeButton from "../input/buttons/IconCubeButton.vue";
-import { SVGImage, SVGRes } from "@/core/SVGLoader";
-import Supper from './Supper.vue'
-import { useI18n } from "vue-i18n";
+import { SVGImage, SVGRes } from '@/core/SVGLoader';
+import { useCssModule } from 'vue';
+import { useI18n } from 'vue-i18n';
+import IconCubeButton from '../../input/buttons/IconCubeButton.vue';
+import EventLogEntry from '@/ui/components/hive_overview/event_logs/EventLogEntry.vue';
+import EventLogTimeSeparator from '@/ui/components/hive_overview/event_logs/EventLogTimeSeparator.vue';
 
 const s = useCssModule()
 const { t } = useI18n()
-
 </script>
 
 <template>
 <div :class="s.container">
     <div :class="s.header">
-        <h1>{{ t("hiveOverview.suppers") }}</h1>
+        <h1>{{ t("hiveOverview.actionHistory") }}</h1>
         <div :class="s.buttons">
-            <IconCubeButton :class="s.button" :svg="new SVGImage(SVGRes.Pluss)"/>
+            <IconCubeButton :class="s.button" :svg="new SVGImage(SVGRes.OpenWindow)"/>
             <IconCubeButton :class="s.button" :svg="new SVGImage(SVGRes.MoreDots)"/>
         </div>
     </div>
     <div :class="s.body">
-        <supper :class="s.supper"/>
-        <supper :class="s.supper"/>
-        <supper :class="s.supper"/>
-        <supper :class="s.supper"/>
-        <supper :class="s.supper"/>
-        <supper :class="s.supper"/>
+        <EventLogEntry/>
+        <EventLogEntry/>
+        <EventLogTimeSeparator />
+        <EventLogEntry/>
+        <EventLogEntry/>
+        <EventLogEntry/>
+        <EventLogEntry/>
+        <EventLogEntry/>
+        <EventLogEntry/>
+        <event-log-time-separator />
+        <EventLogEntry/>
+        <EventLogEntry/>
+        <EventLogEntry/>
+        <EventLogEntry/>
+        <EventLogEntry/>
+        <EventLogEntry/>
     </div>
 </div>
 </template>
@@ -35,10 +45,8 @@ const { t } = useI18n()
 .container
     display: flex
     flex-direction: column
-    @include main.font
     background: var(--surface)
     overflow: hidden
-
 
     .header
         @include main.button-font
@@ -64,10 +72,9 @@ const { t } = useI18n()
 
             .button
                 height: 100%
-
     .body
-        @include main.font
         flex: 1
+        grid-area: data
         display: flex
         flex-direction: column
 
@@ -75,5 +82,4 @@ const { t } = useI18n()
         gap: .5rem
         box-sizing: border-box
         overflow: auto
-        
 </style>

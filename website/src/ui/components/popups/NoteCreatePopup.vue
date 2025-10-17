@@ -8,6 +8,8 @@ import { useCreateSupper } from '@/core/composables/useCreateSupper';
 import SelectionDropdown from '../input/dropdowns/SelectionDropdown.vue';
 import type { DropdownOptions } from '@/core/Interfaces';
 import type { PopupFunctions } from '@/core/utils/components';
+import FieldMultiple from '../input/fields/FieldMultiple.vue';
+import { useCreateNote } from '@/core/composables/useCreateNote';
 
 const s = useCssModule()
 const props = defineProps<{
@@ -15,18 +17,18 @@ const props = defineProps<{
     popupFunctions: PopupFunctions
 }>()
 
-const { isSupperLoading, createSupper } = useCreateSupper();
+const { isNoteLoading, createNote } = useCreateNote();
 const closeFunction = ref<(() => void) | null>(null)
 const type = ref('')
-const frameCount = ref(0)
+const title = ref('')
+const content = ref('')
 const dropdownOptions = [
-    { text: "deep" },
-    { text: "medium" },
-    { text: "small" },
+    { text: "INFORMATION" },
+    { text: "WARNING" },
 ] as DropdownOptions[]
 
 const isValid = computed(() => {
-    return Boolean(type.value)
+    return Boolean(type.value) && Boolean(title.value) && Boolean(content.value)
 })
 
 function closePopup() {
@@ -36,10 +38,11 @@ function closePopup() {
 async function create() {
     if (!isValid.value) return
 
-    await createSupper(
+    await createNote(
         {
             type: type.value,
-            frames: frameCount.value
+            title: title.value,
+            content: content.value
         },
         {
             onSuccess() {
@@ -62,8 +65,13 @@ async function create() {
             <TitledField 
                 :class="s.frames" 
                 :is-required="true" 
-                title="Frames"
-                v-model="frameCount"/>
+                title="Title"
+                v-model="title"/>
+            <FieldMultiple 
+                :class="s.frames" 
+                :is-required="true" 
+                title="Content"
+                v-model="content"/>
             <Button 
                 :class="s.create" 
                 @click="create" 

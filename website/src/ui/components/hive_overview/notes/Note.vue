@@ -1,6 +1,6 @@
 <script setup lang="ts">
 import { onMounted, ref, useCssModule } from "vue";
-import IconCubeButton from "../input/buttons/IconCubeButton.vue";
+import IconCubeButton from "../../input/buttons/IconCubeButton.vue";
 import { SVGImage, SVGRes } from "@/core/SVGLoader";
 
 const s = useCssModule()
@@ -47,6 +47,7 @@ onMounted(() => {
     flex-direction: column
     background: white
     border-radius: 3px
+    // border-;: 4px solid var(--accent)
 
     .body
         display: flex
@@ -55,9 +56,9 @@ onMounted(() => {
 
         .tags
             display: flex
-            background: var(--accent)
-            padding: .25rem .5rem
-            border-radius: 3px
+            // background: 
+            padding: .5rem .5rem .25rem 1rem 
+            // border-radius: 3px
             
             align-items: center
             .information
@@ -70,9 +71,10 @@ onMounted(() => {
                 align-items: center
                 max-width: max-content
                 border-radius: 30px
+                color: var(--accent)
 
         .innerbody
-            padding: 1rem
+            padding: 0 1rem 1rem 1rem
 
             .footer
                 display: flex

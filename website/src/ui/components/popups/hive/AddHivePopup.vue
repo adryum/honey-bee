@@ -4,13 +4,13 @@ import PopupFrame from '../PopupFrame.vue';
 import { AnimatePresence, motion } from 'motion-v';
 import CreateHiveBody from './CreateHiveBody.vue';
 import SelectHiveBody from './SelectHiveBody.vue';
+import type { PopupFunctions } from '@/core/utils/components';
 
 const s = useCssModule()
 const props = defineProps<{
     apiaryId: number
     onAssign: () => {} 
-    unmount?: () => {}
-    focusHandler?: (el: HTMLElement) => {}
+    popupFunctions: PopupFunctions
 }>()
 const tabs = ['Create New', 'Move Existing']
 const selectedTab = ref(tabs[0])
@@ -21,7 +21,7 @@ function switchTab(tab: string) {
 </script>
 
 <template>
-<PopupFrame title="Add hive" :unmount="unmount" :focus-handler="focusHandler">
+<PopupFrame title="Add hive" :popupFunctions="popupFunctions">
     <template #body>
         <div :class="s.body">
             <div :class="s.addMode">

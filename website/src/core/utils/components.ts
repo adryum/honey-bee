@@ -20,6 +20,40 @@ type ExtraPopupProps = {
   focusHandler?: (el: HTMLElement) => void
 }
 
+export type PopupFunctions = {
+    unmount: () => void
+    focus: () => void
+}
+
+export function createPopup(
+    component: Component, // <-- loose type
+    props: Record<string, any> = {},
+) {
+    // useless wrapper just to later 'safely and correctly' unmount created
+    const container = document.createElement('div')
+    document.body.appendChild(container)
+
+    container.style.position = 'fixed'
+    
+    const popupFunctions: PopupFunctions = {
+        unmount: function (): void {
+            render(null, container)
+            container.remove()
+        },
+        focus: function (): void {
+            focusPopup(container)
+        }
+    } 
+
+    // Create vnode with optional props  ...props - all previously defined props, and new one - unmount
+    const vnode: VNode = createVNode(component, { ...props, popupFunctions})
+    render(vnode, container)
+
+    return {
+        vnode,
+    }
+}
+
 export function createComponentInstance(
     component: Component, // <-- loose type
     props: Record<string, any> = {},

@@ -1,9 +1,11 @@
 import { HiveApi } from "../api/HiveApi"
-import type { HiveCreateModel, HiveModel, HiveSearchOptions, LogModel } from "../models/Models"
 import { defineStore } from "pinia"
 import { useApiaryStore } from "./ApiaryStore"
 import { isNumber, removeFrom, replace } from "../utils/others"
 import type { CallbackModel, SupperCreateRequestModel, SupperModel } from "../models/SupperModels"
+import type { NoteCreateRequestModel, NoteModel } from "../models/NoteModels"
+import type { HiveModel, HiveCreateModel, HiveSearchOptions, HiveUpdateModel } from "../models/HiveModels"
+import type { LogModel } from "../models/Models"
 
 const hiveApi = new HiveApi()
 
@@ -12,24 +14,37 @@ export const useHiveStore = defineStore('hive', {
         hives: [] as HiveModel[],
         apiaryHives: [] as HiveModel[],
         suppers: [] as SupperModel[],
+        notes: [] as NoteModel[],
         logs: [] as LogModel[],
+        isHiveLoading: false,
         isAssigningHive: false,
         isFetchingHive: false,
         isDeletingHive: false,
-        isSupperLoading: false
+        isSupperLoading: false,
+        isNoteLoading: false
     }),
     actions: {
         async init() {
             await this.getHives()
         },
+        async updateHive(hive: HiveUpdateModel, callback: CallbackModel): Promise<HiveModel | undefined> {
+            console.log("updating hive");
+            try {
+                const response = await hiveApi.updateHive(hive)
+                
+                if (response) {
+                    replace(this.hives, response, (hive) => hive.id === response.id)
+                    callback.onSuccess("Updated hive")
+                }
 
-        async createHive(
-            { hive, onSuccess, onFailure }: {
-                hive: HiveCreateModel
-                onSuccess: (hive: HiveModel) => void
-                onFailure: (error: unknown) => void
+                return response
+            } catch (error) {
+                console.error(error);
+                callback.onFailure(error)
+                return undefined
             }
-        ): Promise<HiveModel | null> {
+        },
+        async createHive(hive: HiveCreateModel, callback: CallbackModel): Promise<HiveModel | null> {
             console.log("creating hive");
             try {
                 const newHive = await hiveApi.createHive(hive)
@@ -38,13 +53,13 @@ export const useHiveStore = defineStore('hive', {
 
                 if (newHive) {
                     this.hives.push(newHive)
-                    onSuccess(newHive)
+                    callback.onSuccess(newHive.name)
                 }
 
                 return newHive
             } catch (error) {
                 console.error(error);
-                onFailure(error)
+                callback.onFailure(error)
                 return null
             }
         },
@@ -81,7 +96,6 @@ export const useHiveStore = defineStore('hive', {
                 this.isDeletingHive = false
             }
         },
-
         async assignHive(hiveId: number, apiaryId: number) {
             try {
                 this.isAssigningHive = true
@@ -104,7 +118,6 @@ export const useHiveStore = defineStore('hive', {
                 this.isAssigningHive = false
             }
         },
-
         async getHives() {
             try {
                 this.isFetchingHive = true
@@ -138,7 +151,6 @@ export const useHiveStore = defineStore('hive', {
 
                 if (response) {
                     replace(this.suppers, response, (item) => item.id === response?.id)
-                    this.suppers
                     callback.onSuccess("Updated supper")
                 }
             } catch (error) {
@@ -162,6 +174,54 @@ export const useHiveStore = defineStore('hive', {
                 callback.onFailure(error);
             } finally {
                 this.isSupperLoading = false
+            }
+        },
+        async createNote(supper: NoteCreateRequestModel, callback: CallbackModel) {
+            try {
+                this.isNoteLoading = true
+                var response = await hiveApi.createNote(supper)
+                
+                if (response) {
+                    this.notes.push(response)
+                    callback.onSuccess("Created note")
+                }
+            } catch (error) {
+                console.error(error)
+                callback.onFailure(error)
+            } finally {
+                this.isNoteLoading = false
+            }
+        },
+        async updateNote(supper: NoteModel, callback: CallbackModel) {
+            try {
+                this.isNoteLoading = true
+                var response = await hiveApi.updateNote(supper)
+
+                if (response) {
+                    replace(this.notes, response, (item) => item.id === response?.id)
+                    callback.onSuccess("Updated note")
+                }
+            } catch (error) {
+                console.error(error);
+                callback.onFailure(error);
+            } finally {
+                this.isNoteLoading = false
+            }
+        },
+        async deleteNote(id: number, callback: CallbackModel) {
+            try {
+                this.isNoteLoading = true
+                var response = await hiveApi.deleteNote(id)
+                
+                if (isNumber(response)) {
+                    this.notes = this.notes.filter(note => note.id != response)
+                    callback.onSuccess("Updated note")
+                }
+            } catch (error) {
+                console.error(error);
+                callback.onFailure(error);
+            } finally {
+                this.isNoteLoading = false
             }
         },
 

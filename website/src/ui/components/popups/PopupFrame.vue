@@ -1,52 +1,56 @@
 <script setup lang="ts">
 import { useDraggable } from '@vueuse/core';
 import { AnimatePresence, motion } from 'motion-v';
-import { getCurrentInstance, onMounted, ref, useCssModule } from 'vue';
+import { onMounted, ref, useCssModule } from 'vue';
 import TransparentIconButton from '../input/buttons/TransparentIconButton.vue';
 import { SVGImage, SVGRes } from '../../../core/SVGLoader';
+import type { PopupFunctions } from '@/core/utils/components';
 
 const s = useCssModule()
 const container = ref()
 const handle = ref()
 const isExiting = ref(false)
-const parentEl = ref<HTMLElement>()
+const hasEntered = ref(false)
 const props = defineProps<{
     title: string,
     isResizable?: boolean,
-    unmount?: () => {},
-    focusHandler?: (el: HTMLElement) => {}
+    popupFunctions: PopupFunctions
 }>()
-
-onMounted(() => {
-    const instance = getCurrentInstance();
-    parentEl.value = instance?.proxy?.$el.parentElement as HTMLElement;
-})
 
 const { style } = useDraggable(container, {
     handle: handle,
     initialValue: { x: 100, y: 100  }
 })
+const emit = defineEmits(['close'])
 
 function startExiting() {
   isExiting.value = true
+  console.log("Closing popup")
 }
 
-function exit() {
+function handleMotions() {
     if (isExiting.value)
-        props.unmount?.()
+        props.popupFunctions.unmount()
+
+    if (!hasEntered.value)
+        hasEntered.value = true
 }
+
+onMounted(() => {
+  emit('close', startExiting)
+})
 </script>
 
 <template>
 <AnimatePresence>
     <motion.div v-if="!isExiting" 
         :class="s.wrapper"
-        :initial="{y: 5 , opacity: 0, }"
-        :animate="{y: 0, opacity: 1, transition: {duration: .1}}"
-        :exit="{y: 200 , opacity: 0}"
-        @motioncomplete="exit"
+        :initial="{y: -100 , opacity: 0}"
+        :animate="{y: 0, opacity: 1, transition: {duration: .1}} "
+        :exit="{y: 800 , opacity: 0}"
+        @motioncomplete="handleMotions"
         >
-        <div @mousedown="() => focusHandler?.(parentEl!)" 
+        <div @mousedown="popupFunctions.focus" 
             ref="container"
             :style="style"
             :class="[s.container]" 
@@ -75,7 +79,6 @@ function exit() {
 .wrapper
     top: 0
     position: fixed
-    transition: .5s
 
 .container 
     position: fixed

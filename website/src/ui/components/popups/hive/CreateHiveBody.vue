@@ -5,16 +5,16 @@ import TitledField from '../../input/fields/TitledField.vue';
 import ImageDropZone from '../../input/fields/ImageDropZone.vue';
 import SelectionDropdown from '../../input/dropdowns/SelectionDropdown.vue';
 import Button from '../../input/buttons/Button.vue';
-import type { HiveCreateModel } from '../../../../core/models/Models';
 import type { DropdownOptions } from '../../../../core/Interfaces';
 import { useHiveCreate } from '../../../../core/composables/useHiveCreate';
+import type { HiveCreateModel } from '@/core/models/HiveModels';
 
 const s = useCssModule()
 const props = defineProps<{
     apiaryId: number
     onAssign: () => {}
 }>()
-const { isCreatingHive, createHive, assignHive } = useHiveCreate()
+const { isHiveLoading, createHive, assignHive } = useHiveCreate()
 const name = ref('')
 const location = ref('')
 const description = ref('')
@@ -62,15 +62,18 @@ async function startCreatingHive() {
     } 
     console.log("create pressed", request);
 
-    const response = await createHive({
-        hive: request,
-        onSuccess(hive) {
-            
-        },
-        onFailure(error) {
-            
-        },
-    })
+    const response = await createHive(
+        request,
+        {
+            onSuccess(hive) {
+                
+            },
+            onFailure(error) {
+                
+            },
+        }
+        
+    )
     
     if (response) {
         await assignHive(response.id, props.apiaryId)

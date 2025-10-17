@@ -5,12 +5,12 @@ import Button from '../input/buttons/Button.vue';
 import ImageDropZone from '../input/fields/ImageDropZone.vue';
 import PopupFrame from './PopupFrame.vue'
 import { useApiaryCreate } from '../../../core/composables/useApiaryCreate';
+import type { PopupFunctions } from '@/core/utils/components';
 
 const s = useCssModule()
 const props = defineProps<{
     onCreate?: () => {}, 
-    unmount?: () => {},
-    focusHandler?: (el: HTMLElement) => {}
+    popupFunctions: PopupFunctions
 }>()
 
 const { showApiaryCreateLoading, createApiary } = useApiaryCreate()
@@ -31,7 +31,7 @@ async function create() {
         },
         onSuccess(apiary) {
             props.onCreate?.()
-            props.unmount?.();
+            props.popupFunctions.unmount?.();
         },
         onFailure(error) {
             
@@ -45,7 +45,7 @@ const isValid = computed(() => {
 </script>
 
 <template>
-<PopupFrame title="Create apiary" :unmount="unmount" :focus-handler="focusHandler">
+<PopupFrame title="Create apiary" :popup-functions="popupFunctions">
     <template #body>
         <div :class="s.grid">
             <ImageDropZone v-model:image-file="imageFile" :class="s.image"/>

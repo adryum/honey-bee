@@ -1,8 +1,7 @@
 <script setup lang="ts">
 import { useCssModule } from "vue";
-import IconCubeButton from "../input/buttons/IconCubeButton.vue";
+import IconCubeButton from "../../input/buttons/IconCubeButton.vue";
 import { SVGImage, SVGRes } from "@/core/SVGLoader";
-import TitledText from "../paragrafs/TitledText.vue";
 
 const s = useCssModule()
 </script>

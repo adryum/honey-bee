@@ -3,10 +3,10 @@ import { useHiveStore } from "../stores/HiveStore";
 
 export function useHiveCreate() {
     const store = useHiveStore()
-    const { isCreatingHive } = storeToRefs(store)
+    const { isHiveLoading } = storeToRefs(store)
 
     return {
-        isCreatingHive,
+        isHiveLoading,
         createHive: store.createHive,
         assignHive: store.assignHive
     }

@@ -42,34 +42,6 @@ export type ApiarySearchOptions = {
     id?: number
 }
 
-export type HiveModel = {
-    id: number
-    name: string
-    imagePath: string
-    type: string
-    apiaryId?: number
-    apiaryName?: string
-    apiaryImagePath?: string
-}
-
-export type HiveSearchOptions = {
-    searchWord?: string
-    isAssigned?: boolean
-    type?: string
-    apiaryId?: number
-    ignoreDifferentLetterCases?: boolean
-}
-
-export type HiveCreateModel = {
-    name: string
-    location?: string
-    description?: string
-    type: string
-    image?: File
-}
-
-
-
 export type LogModel = {
     creator: string
     creationDate: string
