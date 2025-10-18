@@ -1,12 +1,12 @@
 import { Router, type Request, type Response } from "express";
 import type { IUserIdentification } from "../Enums";
-import { db } from "../server";
+import { db } from "../config/Database";
 import { ApiaryT, HiveT } from "../TableColumnTitles";
 import { col, handleSearchWord } from "../utils";
 import type { ResultSetHeader, RowDataPacket } from "mysql2";
-import { uploadImage } from "../image_cloud/Cloudinary";
-import { PublicIdBuilder } from "../image_cloud/PublicIdBuilder";
-import { upload } from "../Multer";
+import { uploadImage } from "../config/image_cloud/Cloudinary";
+import { PublicIdBuilder } from "../config/image_cloud/PublicIdBuilder";
+import { upload } from "../config/Multer";
 
 const router = Router()
 const hiveModelQuery =`

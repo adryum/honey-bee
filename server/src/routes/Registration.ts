@@ -1,8 +1,8 @@
 import { Router, type Request, type Response } from "express";
-import { db } from "../server";
 import type { ResultSetHeader, RowDataPacket } from "mysql2";
 import { PaidTier, UserRole } from "../Enums";
 import { UserT } from "../TableColumnTitles";
+import { db } from "../config/Database";
 
 const router = Router()
 

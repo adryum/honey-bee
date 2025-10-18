@@ -14,7 +14,7 @@ export class HiveApi {
             formdata.append("content", note.content)
             formdata.append('identification', JSON.stringify(RegistrationRepository.getUserIdentification()))
 
-            return await axios.post('/hive/note/create', formdata)
+            return await axios.post('/note/create', formdata)
         } catch (error) {
             catchedErrorLog(error)
             return undefined
@@ -29,7 +29,7 @@ export class HiveApi {
             formdata.append("content", note.content)
             formdata.append('identification', JSON.stringify(RegistrationRepository.getUserIdentification()))
 
-            return await axios.post('/hive/note/update', formdata)
+            return await axios.post('/note/update', formdata)
         } catch (error) {
             catchedErrorLog(error)
             return undefined
@@ -41,7 +41,7 @@ export class HiveApi {
             formdata.append("id", id.toString())
             formdata.append('identification', JSON.stringify(RegistrationRepository.getUserIdentification()))
 
-            return await axios.post('/hive/note/delete', formdata)
+            return await axios.post('/note/delete', formdata)
         } catch (error) {
             catchedErrorLog(error)
             return undefined

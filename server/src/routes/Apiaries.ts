@@ -1,12 +1,12 @@
 import { Router, type Request, type Response } from "express";
-import { db } from "../server";
+import { db } from "../config/Database";
 import { type IUserIdentification } from "../Enums";
 import { ApiaryT, HiveT } from "../TableColumnTitles";
-import { ResultSetHeader, RowDataPacket } from "mysql2";
+import { ResultSetHeader } from "mysql2";
 import { col } from "../utils";
-import { DEFAULT_PLACEHOLDER, getImage, uploadImage } from "../image_cloud/Cloudinary";
-import { PublicIdBuilder } from "../image_cloud/PublicIdBuilder";
-import { upload } from "../Multer";
+import { DEFAULT_PLACEHOLDER, uploadImage } from "../config/image_cloud/Cloudinary";
+import { PublicIdBuilder } from "../config/image_cloud/PublicIdBuilder";
+import { upload } from "../config/Multer";
 
 const router = Router()
 

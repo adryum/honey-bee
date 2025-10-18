@@ -1,5 +1,27 @@
 // for unfutunat souls User<T> T is table
 
+export enum NoteT {
+    tableName = "notes",
+    id = "id",
+
+    title = "title",
+    content = "content",
+    creationDate = "creation_date",
+    type = "type",
+    userId = "user_id"
+}
+
+export enum NotePlaceT {
+    tableName = "note_place",
+    id = "id",
+
+    noteId = "note_id",
+    queenBeeId = "queen_bee_id",
+    hiveId = "hive_id",
+    apiaryId = "apiary_id",
+    inventoryId = "inventory_id"
+}
+
 export enum UserT {
     tableName = "users",
     id = "id",

@@ -1,4 +1,4 @@
-import { db } from './server'
+import { db } from "./config/Database";
 
 export async function testConnection() {
   try {
@@ -15,4 +15,17 @@ export function handleSearchWord(word: string): string {
 
 export function col(table: string, column: string): string {
   return `${table}.${column}`;
+}
+
+export function isNumber(number: unknown) {
+    return typeof number === "number"
+}
+
+export const toMySQLUTCDateTime = (date: Date): string => {
+  const pad = (n: number) => String(n).padStart(2, '0');
+  return `${date.getUTCFullYear()}-${pad(date.getUTCMonth() + 1)}-${pad(date.getUTCDate())} ${pad(date.getUTCHours())}:${pad(date.getUTCMinutes())}:${pad(date.getUTCSeconds())}`;
+};
+
+export function getCurrentUTCDateString(): string {
+    return toMySQLUTCDateTime(new Date())
 }
