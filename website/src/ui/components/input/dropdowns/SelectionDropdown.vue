@@ -67,9 +67,9 @@ function onItemClick(button: DropdownOptions) {
         <AnimatePresence>
         <motion.ol ref="dropdown" v-if="isShown"
             :class="s.dropdown"
-            :initial="{ opacity: 0, y: '-5px' }"
-            :animate="{ opacity: 1, y: '0px'  }"
-            :exit="{ opacity: 0, y: '-5px' }"
+            :initial="{ opacity: 0, y: '-1px' }"
+            :animate="{ opacity: 1, y: '0px', transition: { duration: .1 } }"
+            :exit="{ opacity: 0, y: '-1px', transition: { duration: .05 }}"
             @click.stop
             >
             <motion.li v-for="(option, i) in allOptions" :key="i" 
@@ -78,7 +78,8 @@ function onItemClick(button: DropdownOptions) {
                 @mouseover="selectedChoice = i"
                 :animate="option.text === selected ? { backgroundColor: 'var(--light)'} : {}"
                 :while-hover="option.text != selected ? { transition: { duration: .1 }, backgroundColor: 'var(--base)'} : {}"
-                :while-press="{ scale: 0.9 }">
+                :while-press="{ scale: 0.9 }"
+                >
                 <SVGComponent :class="s.icon" :svg="option.svg" />
                 <p :class="s.text">{{ option.text }}</p> 
             </motion.li>
@@ -128,7 +129,7 @@ function onItemClick(button: DropdownOptions) {
 
     .dropdown
         all: unset
-        z-index: 0
+        z-index: 10
         @include main.button-font
         position: absolute
         display: inline-flex

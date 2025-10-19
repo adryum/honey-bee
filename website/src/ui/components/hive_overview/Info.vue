@@ -1,17 +1,37 @@
 <script setup lang="ts">
 import { useCssModule } from "vue";
-import TitledField from "../input/fields/TitledField.vue";
 import TitledText from "../paragrafs/TitledText.vue";
 import { useI18n } from "vue-i18n";
+import IconCubeButton from "../input/buttons/IconCubeButton.vue";
+import { SVGImage, SVGRes } from "@/core/SVGLoader";
+import { createPopup } from "@/core/utils/components";
+import HiveUpdatePopup from "../popups/hive/HiveUpdatePopup.vue";
+import type { HiveModel } from "@/core/models/HiveModels";
 
 const s = useCssModule()
 const { t } = useI18n()
+const hive = 
+
+  {
+    apiaryId: 84,
+    apiaryImagePath: "https://res.cloudinary.com/dj8lvgcxl/image/upload/v1757347829/apiaries/User:2_Apiary:84.png",
+    apiaryName: "Hampter", 
+    id: 2,
+    imagePath: "Hive3.jpg",
+    name: "Box2",
+    type: "Tower"
+  } as HiveModel
 
 </script>
 
 <template>
 <div :class="s.container">
-    <div :class="s.header">{{ t("hiveOverview.info") }}</div>
+    <div :class="s.header">
+        <p>{{ t("hiveOverview.info") }}</p>
+        <div :class="s.buttons">
+            <IconCubeButton :class="s.button" :svg="new SVGImage(SVGRes.ArrowHead)" @click="createPopup(HiveUpdatePopup, { hive: hive })"/>
+        </div>
+    </div>
     <div :class="s.body">
         <div :class="s.imageSide">
             <img src="@/assets/images/apiary.jpg" alt="">
@@ -48,14 +68,14 @@ const { t } = useI18n()
         // border-bottom: 1px solid rgba(0, 0, 0, .1)
         box-shadow: 0 2px 5px 0 rgba(0, 0, 0, .1)
 
-        .navigator
+        .buttons
             margin-left: auto
             display: flex
             align-items: center
             gap: .2rem
             height: 100%
 
-            .iconButton
+            .button
                 height: 100%
 
                 &.left

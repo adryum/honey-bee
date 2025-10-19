@@ -14,7 +14,7 @@ export function cssStringToObject(cssString: string): Record<string, string> {
 }
 
 export function isNumber(number: unknown) {
-    return typeof number === "number"
+    return typeof number === "number" && Number.isFinite(number)
 }
 
 export function removeFrom<T>(array: T[], item: T): T[] {

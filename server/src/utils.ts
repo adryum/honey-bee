@@ -18,7 +18,7 @@ export function col(table: string, column: string): string {
 }
 
 export function isNumber(number: unknown) {
-    return typeof number === "number"
+    return typeof number === "number" && Number.isFinite(number)
 }
 
 export const toMySQLUTCDateTime = (date: Date): string => {

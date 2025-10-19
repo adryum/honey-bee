@@ -1,25 +1,41 @@
 <script setup lang="ts">
-import { useCssModule } from "vue";
+import type { FieldValidator, FieldOptions } from "@/core/options/FieldOptions";
+import { reactive, ref, useCssModule } from "vue";
 import Field from "./Field.vue";
 
 const s = useCssModule()
-const text = defineModel<string | number>()
+const text = defineModel<string | number>("text")
+const validator = ref<FieldValidator>({ isValid: true, error: ""})
+const emit = defineEmits<{
+    validator: [FieldValidator]
+}>()
 
 const props = withDefaults(defineProps<{
     title?: string
     hint?: string
+    fieldOptions?: FieldOptions
 }>(),
 {
     title: '{ TITLE }',
     hint: '...',
 })
 
+function onValidatorUpdate(event: FieldValidator) {
+    validator.value = event
+    emit('validator', validator.value)
+}
 </script>
 
 <template>
 <div :class="s.container">
-    <h1 :class="s.title">{{ title }}</h1>
-    <Field :class="s.field" :hint="hint" v-model="text"/>
+    <div :class="s.title">
+        <h1>{{ title }}</h1>
+        <p :class="s.error">{{ ((fieldOptions?.isRequired) ? "* " : " ") + validator.error }}</p>
+    </div>
+    <Field :class="s.field" :hint="hint" :field-options="fieldOptions"
+        v-model:text="text" 
+        @validator="onValidatorUpdate"
+        />
 </div>
 </template>
 
@@ -32,10 +48,15 @@ const props = withDefaults(defineProps<{
 
     .title
         all: unset
+        display: flex
+        gap: .5rem
         @include main.font
         @include main.f-size-very-small
         font-weight: 500
 
+        .error
+            color: red
+            font-weight: 400
     .field
         height: 2rem
 
