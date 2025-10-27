@@ -1,4 +1,4 @@
-import { useApiaryStore } from "../stores/ApiaryStore"
+import { useApiaryStore } from "@/core/stores/ApiaryStore"
 
 export function useApiaryView() {
     const store = useApiaryStore()

@@ -1,5 +1,5 @@
 <script setup lang="ts">
-import { useHiveAssignToApiary } from '@/core/composables/useApiaryAssignHive';
+import { useHiveAssignToApiary } from '@/core/composables/apiary/useApiaryAssignHive';
 import type { ApiaryModel } from '@/core/models/Models';
 import { createComponentWithProps, type PopupFunctions } from '@/core/utils/components';
 import { useCssModule, ref, watch, onMounted } from 'vue';

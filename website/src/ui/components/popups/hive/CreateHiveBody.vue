@@ -5,8 +5,8 @@ import TitledField from '../../input/fields/TitledField.vue';
 import ImageDropZone from '../../input/fields/ImageDropZone.vue';
 import SelectionDropdown from '../../input/dropdowns/SelectionDropdown.vue';
 import Button from '../../input/buttons/Button.vue';
-import type { DropdownOptions } from '../../../../core/Interfaces';
-import { useHiveCreate } from '../../../../core/composables/useHiveCreate';
+import type { DropdownOptions } from '@/core/Interfaces';
+import { useHiveCreate } from '@/core/composables/hive/useHiveCreate';
 import type { HiveCreateModel } from '@/core/models/HiveModels';
 
 const s = useCssModule()

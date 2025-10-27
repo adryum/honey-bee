@@ -4,7 +4,7 @@ import TitledField from '../input/fields/TitledField.vue';
 import Button from '../input/buttons/Button.vue';
 import ImageDropZone from '../input/fields/ImageDropZone.vue';
 import PopupFrame from './PopupFrame.vue'
-import { useApiaryCreate } from '../../../core/composables/useApiaryCreate';
+import { useApiaryCreate } from '@/core/composables/apiary/useApiaryCreate';
 import type { PopupFunctions } from '@/core/utils/components';
 
 const s = useCssModule()

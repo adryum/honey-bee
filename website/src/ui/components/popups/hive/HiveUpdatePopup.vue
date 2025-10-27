@@ -9,8 +9,10 @@ import type { DropdownOptions } from '../../../../core/Interfaces';
 import type { HiveModel, HiveUpdateModel } from '@/core/models/HiveModels';
 import PopupFrame from '../PopupFrame.vue';
 import type { PopupFunctions } from '@/core/utils/components';
-import { useHiveUpdate } from '@/core/composables/useHiveUpdate';
-import type { FieldValidator, FieldOptions } from '@/core/options/FieldOptions';
+import { useHiveUpdate } from '@/core/composables/hive/useHiveUpdate';
+import type { FieldValidator, FieldOptions } from '@/core/composables/field/useField';
+import FieldMultiple from '../../input/fields/FieldMultiple.vue';
+import TitledFieldMultiple from '../../input/fields/TitledFieldMultiple.vue';
 
 const s = useCssModule()
 const props = defineProps<{
@@ -27,12 +29,15 @@ const tempType = ref('')
 const tempImage = ref<File>()
 
 // valid fields
-const isNameValid = ref<FieldValidator>()
-const isDescriptionValid = ref<FieldValidator>()
-const isTypeValid = ref<FieldValidator>({ isValid: true, error: ""})
-const isLocationValid = ref<FieldValidator>()
+const nameValidator = ref<FieldValidator>()
+const descriptionValidator = ref<FieldValidator>()
+const typeValidator = ref<FieldValidator>({ isValid: true, error: ""})
+const locationValidator = ref<FieldValidator>()
 const isEverythingValid = computed(() => {
-    return isNameValid.value?.isValid && isDescriptionValid.value?.isValid && isTypeValid.value?.isValid && isLocationValid.value?.isValid
+    return nameValidator.value?.isValid 
+    && descriptionValidator.value?.isValid 
+    && typeValidator.value?.isValid 
+    && locationValidator.value?.isValid
 })
 
 // dropdowns
@@ -118,24 +123,22 @@ const rule2 = {
         <div :class="s.fields">
             <TitledField 
                 :class="s.name" 
-                :is-required="true" 
                 title="Name"
                 :field-options="rule2"
                 v-model:text="tempName"
-                @validator="e => isNameValid = e"/>
+                @validator="e => nameValidator = e"/>
             <TitledField 
                 :class="s.location" 
-                :is-required="true" 
                 title="Location" 
                 :field-options="rule"
                 v-model:text="tempLocation"
-                @validator="e => isLocationValid = e"/>
-            <TitledField 
-                :class="s.description" 
-                :is-required="true" 
+                @validator="e => locationValidator = e"/>
+            <TitledFieldMultiple
+                :class="s.description"
+                :field-options="rule2"
                 title="Description" 
                 v-model:text="tempDescription"
-                @validator="e => isDescriptionValid = e"/>
+                @validator="e => descriptionValidator = e"/>
             <SelectionDropdown :class="s.typeDrop" 
                 title="Type" :options="typeOptions" v-model:selected="tempType"
             />
@@ -166,6 +169,7 @@ const rule2 = {
         flex-direction: column
         grid-area: fields
         gap: 1rem
+        overflow-y: auto
 
 
     .image

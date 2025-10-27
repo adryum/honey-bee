@@ -1,5 +1,5 @@
 import { storeToRefs } from "pinia";
-import { useApiaryStore } from "../stores/ApiaryStore";
+import { useApiaryStore } from "@/core/stores/ApiaryStore";
 
 export function useApiaryCreate() {
     const store = useApiaryStore()

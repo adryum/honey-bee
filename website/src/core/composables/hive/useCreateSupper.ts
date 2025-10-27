@@ -1,5 +1,5 @@
 import { storeToRefs } from "pinia";
-import { useHiveStore } from "../stores/HiveStore";
+import { useHiveStore } from "@/core/stores/HiveStore";
 
 export function useCreateSupper() {
     const store = useHiveStore()

@@ -1,7 +1,7 @@
 <script setup lang="ts">
-import { reactive, ref, useCssModule } from "vue";
-import Field from "./Field.vue";
+import { ref, useCssModule } from "vue";
 import type { FieldValidator, FieldOptions } from "@/core/composables/field/useField";
+import FieldMultiple from "./FieldMultiple.vue";
 
 const s = useCssModule()
 const text = defineModel<string | number>("text")
@@ -32,7 +32,7 @@ function onValidatorUpdate(event: FieldValidator) {
         <h1>{{ title }}</h1>
         <p :class="s.error">{{ ((fieldOptions?.isRequired) ? "* " : " ") + validator.error }}</p>
     </div>
-    <Field :class="s.field" :hint="hint" :field-options="fieldOptions"
+    <FieldMultiple :class="s.field" :hint="hint" :field-options="fieldOptions"
         v-model:text="text" 
         @validator="onValidatorUpdate"
         />
@@ -58,6 +58,5 @@ function onValidatorUpdate(event: FieldValidator) {
             color: red
             font-weight: 400
     .field
-        height: 2rem
-
+        
 </style>

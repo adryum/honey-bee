@@ -1,6 +1,5 @@
 import { storeToRefs } from "pinia"
-import { useApiaryStore } from "../stores/ApiaryStore"
-import { useHiveStore } from "../stores/HiveStore"
+import { useHiveStore } from "@/core/stores/HiveStore"
 
 export function useApiaryHiveView() {
     const store = useHiveStore()

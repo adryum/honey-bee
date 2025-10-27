@@ -1,12 +1,12 @@
 <script setup lang="ts">
-import { useCssModule, ref, onMounted, watch, toRef } from 'vue';
-import type { HiveModel } from '../../../core/models/Models';
+import { useCssModule } from 'vue';
 import CubeDropdown from '../input/dropdowns/CubeDropdown.vue';
 import { SVGImage, SVGRes } from '@/core/SVGLoader';
-import { useHive } from '@/core/composables/useHive';
+import { useHive } from '@/core/composables/hive/useHive';
 import type { DropdownOptions } from '@/core/Interfaces';
 import { createComponentInstance } from '@/core/utils/components';
 import AssignToApiaryPopup from '../popups/AssignToApiaryPopup.vue';
+import type { HiveModel } from '@/core/models/HiveModels';
 
 const s = useCssModule()
 const props = withDefaults(defineProps<{

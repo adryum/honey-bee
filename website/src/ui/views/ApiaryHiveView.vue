@@ -7,10 +7,10 @@ import { createComponentWithProps, createComponentInstance } from '../../core/ut
 import IconTextButton from '../components/input/buttons/IconTextButton.vue';
 import SmallSearchbar from '../components/input/fields/SmallSearchbar.vue';
 import AddHivePopup from '../components/popups/hive/AddHivePopup.vue';
-import { useApiaryView } from '@/core/composables/useApiaryView.js';
-import { useApiaryHiveView } from '@/core/composables/useApiaryHiveView.js';
+import { useApiaryView } from '@/core/composables/apiary/useApiaryView.js';
 import { useFlexibleGrid } from '@/core/utils/others.js';
 import type { HiveSearchOptions } from '@/core/models/HiveModels.js';
+import { useApiaryHiveView } from '@/core/composables/apiary/useApiaryHiveView.js';
 
 const s = useCssModule()
 const props = defineProps<{

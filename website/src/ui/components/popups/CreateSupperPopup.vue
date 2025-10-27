@@ -2,9 +2,8 @@
 import { computed, ref, useCssModule } from 'vue';
 import TitledField from '../input/fields/TitledField.vue';
 import Button from '../input/buttons/Button.vue';
-import ImageDropZone from '../input/fields/ImageDropZone.vue';
 import PopupFrame from './PopupFrame.vue'
-import { useCreateSupper } from '@/core/composables/useCreateSupper';
+import { useCreateSupper } from '@/core/composables/hive/useCreateSupper';
 import SelectionDropdown from '../input/dropdowns/SelectionDropdown.vue';
 import type { DropdownOptions } from '@/core/Interfaces';
 import type { PopupFunctions } from '@/core/utils/components';

@@ -7,7 +7,7 @@ import IconButton from '../components/input/buttons/IconTextButton.vue';
 import CreateApiaryPopup from '../components/popups/CreateApiaryPopup.vue';
 import { SVGImage, SVGRes } from '../../core/SVGLoader';
 import { createComponentWithProps, createComponentInstance } from '../../core/utils/components';
-import { useApiaryView } from '../../core/composables/useApiaryView';
+import { useApiaryView } from '../../core/composables/apiary/useApiaryView';
 import type { ApiaryModel } from '../../core/models/Models';
 import { onResize } from '@/core/utils/Hooks';
 
