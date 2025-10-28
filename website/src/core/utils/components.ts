@@ -1,4 +1,4 @@
-import { createVNode, render, type Component, type DefineComponent, type ExtractPropTypes, type VNode} from "vue";
+import { createVNode, ref, render, type Component, type DefineComponent, type ExtractPropTypes, type Ref, type VNode} from "vue";
 import { focusPopup } from "./PopupHiarchy";
 
 export interface ComponentWithProps {
@@ -25,6 +25,11 @@ export type PopupFunctions = {
     focus: () => void
 }
 
+export type PopupInfo = {
+    element: Ref<HTMLElement>
+    zIndex: Ref<number>
+}
+
 export function createPopup(
     component: Component, // <-- loose type
     props: Record<string, any> = {},
@@ -34,6 +39,11 @@ export function createPopup(
     document.body.appendChild(container)
 
     container.style.position = 'fixed'
+
+    const popupInfo: PopupInfo = {
+        zIndex: ref(0),
+        element: ref(container)
+    }
     
     const popupFunctions: PopupFunctions = {
         unmount: function (): void {
@@ -41,12 +51,14 @@ export function createPopup(
             container.remove()
         },
         focus: function (): void {
-            focusPopup(container)
+            focusPopup(popupInfo)
         }
     } 
+    
+    focusPopup(popupInfo)
 
     // Create vnode with optional props  ...props - all previously defined props, and new one - unmount
-    const vnode: VNode = createVNode(component, { ...props, popupFunctions})
+    const vnode: VNode = createVNode(component, { ...props, popupFunctions, popupInfo})
     render(vnode, container)
 
     return {
@@ -56,17 +68,11 @@ export function createPopup(
 
 export function createComponentInstance(
     component: Component, // <-- loose type
-    props: Record<string, any> = {},
-    isPopup = false
+    props: Record<string, any> = {}
 ) {
     // useless wrapper just to later 'safely and correctly' unmount created
     const container = document.createElement('div')
     document.body.appendChild(container)
-
-    if (isPopup) {
-        container.style.position = 'fixed'
-        focusPopup(container)
-    }
 
     // unmount function that component can call to destroy itself
     const unmount = () => {
@@ -75,7 +81,7 @@ export function createComponentInstance(
     }
 
     // Create vnode with optional props  ...props - all previously defined props, and new one - unmount
-    const vnode: VNode = createVNode(component, { ...props, unmount, ...(isPopup ? { focusHandler: focusPopup } : {})})
+    const vnode: VNode = createVNode(component, { ...props, unmount })
     render(vnode, container)
 
     return {

@@ -8,7 +8,7 @@ import Button from '../../input/buttons/Button.vue';
 import type { DropdownOptions } from '../../../../core/Interfaces';
 import type { HiveModel, HiveUpdateModel } from '@/core/models/HiveModels';
 import PopupFrame from '../PopupFrame.vue';
-import type { PopupFunctions } from '@/core/utils/components';
+import type { PopupFunctions, PopupInfo } from '@/core/utils/components';
 import { useHiveUpdate } from '@/core/composables/hive/useHiveUpdate';
 import type { FieldValidator, FieldOptions } from '@/core/composables/field/useField';
 import FieldMultiple from '../../input/fields/FieldMultiple.vue';
@@ -18,6 +18,7 @@ const s = useCssModule()
 const props = defineProps<{
     hive: HiveModel
     popupFunctions: PopupFunctions
+    popupInfo: PopupInfo
 }>()
 const { updateHive, isHiveLoading, apiaries } = useHiveUpdate()
 // temp vals
@@ -106,46 +107,54 @@ onMounted(() => {
     tempApiaryId.value = props.hive.apiaryId
     tempType.value = props.hive.type
 })
-const rule = {
-    minLength: 20,
-} as FieldOptions
-const rule2 = {
+const ruleName = {
     isRequired: true,
-    minLength:9,
+    minLength: 3,
+    maxLength: 20,
+} as FieldOptions
+const ruleDescription = {
+    maxLength: 250,
 } as FieldOptions
 </script>
 
 <template>
-<PopupFrame title="Update hive" :popupFunctions="popupFunctions">
+<PopupFrame title="Update hive" :popupFunctions="popupFunctions" :popupInfo="popupInfo">
     <template #body>
     <motion.div :class="s.grid">
         <ImageDropZone :class="s.image" v-model:image-file="tempImage"/>
         <div :class="s.fields">
-            <TitledField 
-                :class="s.name" 
-                title="Name"
-                :field-options="rule2"
-                v-model:text="tempName"
-                @validator="e => nameValidator = e"/>
-            <TitledField 
-                :class="s.location" 
-                title="Location" 
-                :field-options="rule"
-                v-model:text="tempLocation"
-                @validator="e => locationValidator = e"/>
-            <TitledFieldMultiple
-                :class="s.description"
-                :field-options="rule2"
-                title="Description" 
-                v-model:text="tempDescription"
-                @validator="e => descriptionValidator = e"/>
-            <SelectionDropdown :class="s.typeDrop" 
-                title="Type" :options="typeOptions" v-model:selected="tempType"
-            />
-            <SelectionDropdown :class="s.apiaryDrop" 
-                title="Type" :options="apiaryOptions" v-model:selected="tempApiaryId"
-            />
-            <Button :style="(isEverythingValid) ? { background: 'rgba(0,0,0, .3)' } : { opacity: 0.5 }" :class="s.button" text="Save" @click="fireUpdateHive"/>
+            <div :class="s.field">
+                
+                <TitledField 
+                    :class="s.name" 
+                    title="Name"
+                    :field-options="ruleName"
+                    v-model:text="tempName"
+                    @validator="e => nameValidator = e"/>
+                
+                <div :class="s.dropdowns">
+                    <SelectionDropdown :class="s.typeDrop" 
+                        title="Type" :options="typeOptions" v-model:selected="tempType" :z-index="popupInfo.zIndex.value"
+                    />
+                    <SelectionDropdown :class="s.apiaryDrop" 
+                        title="Apiary" :options="apiaryOptions" v-model:selected="tempApiaryId" :z-index="popupInfo.zIndex.value"
+                    />
+                </div>
+                <TitledField 
+                    :class="s.location" 
+                    title="Location"
+                    v-model:text="tempLocation"
+                    @validator="e => locationValidator = e"/>
+                <TitledFieldMultiple
+                    :class="s.description"
+                    :field-options="ruleDescription"
+                    title="Description" 
+                    v-model:text="tempDescription"
+                    @validator="e => descriptionValidator = e"/>
+            </div>
+            <div :class="s.buttonPart">
+                <Button :style="(isEverythingValid) ? { background: 'rgba(0,0,0, .3)' } : { opacity: 0.5 }" :class="s.button" text="Save" @click="fireUpdateHive"/>
+            </div>
         </div>
     </motion.div>
     </template>
@@ -158,26 +167,42 @@ const rule2 = {
     display: grid
     grid-template-areas: 'img fields' 
     grid-template-columns: 1fr 1fr
-    grid-template-rows: 400px
+    grid-template-rows: 350px
     
     gap: 1rem
     width: 50rem
 
 
     .fields
-        display: flex
-        flex-direction: column
         grid-area: fields
+        display: grid
+        grid-template-areas: 'fields' 'button'
+        grid-template-rows: 1fr 2rem
         gap: 1rem
-        overflow-y: auto
+
+        .field
+            grid-area: fields
+            gap: 1rem
+            display: flex
+            flex-direction: column
+            overflow-y: auto
+
+            .dropdowns
+                display: grid
+                grid-template-columns: 1fr 1fr
+                gap: 1rem
 
 
+        .buttonPart
+            grid-area: button
+            display: flex
+            .button
+                flex: 1
     .image
         grid-area: img
         width: 100%
         height: 100%
         object-fit: cover
 
-    .button
-        margin-top: auto
+    
 </style>

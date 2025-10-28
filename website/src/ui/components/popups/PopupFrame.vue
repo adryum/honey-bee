@@ -4,7 +4,7 @@ import { AnimatePresence, motion } from 'motion-v';
 import { onMounted, ref, useCssModule } from 'vue';
 import TransparentIconButton from '../input/buttons/TransparentIconButton.vue';
 import { SVGImage, SVGRes } from '../../../core/SVGLoader';
-import type { PopupFunctions } from '@/core/utils/components';
+import type { PopupFunctions, PopupInfo } from '@/core/utils/components';
 
 const s = useCssModule()
 const container = ref()
@@ -15,6 +15,7 @@ const props = defineProps<{
     title: string,
     isResizable?: boolean,
     popupFunctions: PopupFunctions
+    popupInfo: PopupInfo
 }>()
 
 const { style } = useDraggable(container, {

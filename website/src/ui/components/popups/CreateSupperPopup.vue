@@ -6,12 +6,13 @@ import PopupFrame from './PopupFrame.vue'
 import { useCreateSupper } from '@/core/composables/hive/useCreateSupper';
 import SelectionDropdown from '../input/dropdowns/SelectionDropdown.vue';
 import type { DropdownOptions } from '@/core/Interfaces';
-import type { PopupFunctions } from '@/core/utils/components';
+import type { PopupFunctions, PopupInfo } from '@/core/utils/components';
 
 const s = useCssModule()
 const props = defineProps<{
     onCreate?: () => {}, 
     popupFunctions: PopupFunctions
+    popupInfo: PopupInfo
 }>()
 
 const { isSupperLoading, createSupper } = useCreateSupper();
@@ -54,7 +55,7 @@ async function create() {
 </script>
 
 <template>
-<PopupFrame title="Create supper" :popup-functions="popupFunctions" v-on:close="(fun) => closeFunction = fun">
+<PopupFrame title="Create supper" :popup-functions="popupFunctions" :popup-info="popupInfo" v-on:close="(fun) => closeFunction = fun">
     <template #body>
         <div :class="s.grid">
             <SelectionDropdown :class="s.dropdown" title="Type" :options="dropdownOptions" />

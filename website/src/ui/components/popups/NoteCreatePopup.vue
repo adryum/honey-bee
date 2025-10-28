@@ -2,19 +2,18 @@
 import { computed, ref, useCssModule } from 'vue';
 import TitledField from '../input/fields/TitledField.vue';
 import Button from '../input/buttons/Button.vue';
-import ImageDropZone from '../input/fields/ImageDropZone.vue';
 import PopupFrame from './PopupFrame.vue'
-import { useCreateSupper } from '@/core/composables/useCreateSupper';
 import SelectionDropdown from '../input/dropdowns/SelectionDropdown.vue';
 import type { DropdownOptions } from '@/core/Interfaces';
-import type { PopupFunctions } from '@/core/utils/components';
+import type { PopupFunctions, PopupInfo } from '@/core/utils/components';
 import FieldMultiple from '../input/fields/FieldMultiple.vue';
-import { useCreateNote } from '@/core/composables/useCreateNote';
+import { useCreateNote } from '@/core/composables/hive/useCreateNote';
 
 const s = useCssModule()
 const props = defineProps<{
     onCreate?: () => {}, 
     popupFunctions: PopupFunctions
+    popupInfo: PopupInfo
 }>()
 
 const { isNoteLoading, createNote } = useCreateNote();
@@ -58,7 +57,7 @@ async function create() {
 </script>
 
 <template>
-<PopupFrame title="Create supper" :popup-functions="popupFunctions" v-on:close="(fun) => closeFunction = fun">
+<PopupFrame title="Create supper" :popup-functions="popupFunctions" :popup-info="popupInfo" v-on:close="(fun) => closeFunction = fun">
     <template #body>
         <div :class="s.grid">
             <SelectionDropdown :class="s.dropdown" title="Type" :options="dropdownOptions" />
