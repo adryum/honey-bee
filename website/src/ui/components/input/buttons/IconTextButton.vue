@@ -8,17 +8,22 @@ import { SVGImage, SVGRes } from '@/core/SVGLoader';
 const props = withDefaults(defineProps<{
     svg?: SVGImage
     text: string,
+    isImportant?: boolean
+    isDisabled?: boolean
     onClick?: () => void
 }>(), {
     text: 'button',
+    isImportant: true,
+    isDisabled: false,
     svg: () => new SVGImage(SVGRes.Apiaries)
 })
 const s = useCssModule()
 </script>
 
 <template>
-<motion.button :class="s.container" @click="onClick"
-    :while-press="{scale: 0.9}"
+<motion.button :class="[s.container, isImportant && s.important, isDisabled && s.disabled]" @click="onClick"
+    :while-press="isDisabled ? {} : {scale: 0.9}"
+    :disabled="isDisabled"
 >
     <SVGComponent :class="s.icon" :svg="svg"/>
     <p :class="s.text">{{ text }}</p>
@@ -37,9 +42,15 @@ const s = useCssModule()
     padding: .5rem 1rem 
     gap: 1rem
 
-    background: var(--dark)
     border-radius: 3px
-    box-shadow: inset 0 -2px rgba(0,0,0, .3)
+    border: 2px solid rgba(0,0,0,.2)
+    box-sizing: border-box
+    // box-shadow: inset 0 -2px rgba(0,0,0, .3)
+
+    &.important
+        border: 2px solid var(--accent)
+        border-bottom: 2px solid rgba(0,0,0,.2)
+        background: var(--accent)
     
     .icon
         width: 1rem
@@ -47,5 +58,8 @@ const s = useCssModule()
 
     .text
         @include main.button-font
-        color: var(--button-text)
+        color: black
+
+.disabled
+    opacity: .5
 </style>

@@ -16,7 +16,7 @@ const s = useCssModule()
 
 <template>
 <motion.button :class="[s.container, isImportant && s.important, isDisabled && s.disabled]"
-    :while-press="{scale: 0.9}"
+    :while-press="isDisabled ? {} : {scale: 0.9}"
     :disabled="isDisabled"
 >
     <p :class="s.text">{{ text }}</p>

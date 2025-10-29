@@ -60,10 +60,17 @@ const isDifferent = computed(() => {
     const hive = props.hive
     const isApiaryDifferent = tempApiaryId.value != hive.apiaryId
     const isNameDifferent = tempName.value != hive.name
+    const isTypeDifferent = tempType.value != hive.type
     const isImageDifferent = Boolean(tempImage.value)
     const isLocationDifferent = tempLocation.value != hive.location
     const isDescriptionDifferent = tempDescription.value != hive.description
-    return isApiaryDifferent || isImageDifferent || isNameDifferent || isLocationDifferent || isDescriptionDifferent 
+    
+    return isApiaryDifferent 
+    || isImageDifferent 
+    || isNameDifferent 
+    || isLocationDifferent 
+    || isDescriptionDifferent 
+    || isTypeDifferent
 })
 
 async function fireUpdateHive() {
@@ -153,7 +160,7 @@ const ruleDescription = {
                     @validator="e => descriptionValidator = e"/>
             </div>
             <div :class="s.buttonPart">
-                <Button :isDisabled="!isEverythingValid" :class="s.button" text="Save" @click="fireUpdateHive"/>
+                <Button :isDisabled="!isEverythingValid || !isDifferent" :class="s.button" text="Save" @click="fireUpdateHive"/>
             </div>
         </div>
     </motion.div>
