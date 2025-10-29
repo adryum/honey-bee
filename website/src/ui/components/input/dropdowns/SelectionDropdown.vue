@@ -1,11 +1,12 @@
 <script setup lang="ts">
-import { computed, nextTick, onUnmounted, ref, Teleport, toRef, useCssModule, watch } from 'vue';
+import { computed, nextTick, onUnmounted, reactive, ref, Teleport, toRef, useCssModule, watch } from 'vue';
 import { AnimatePresence, motion } from 'motion-v';
 import { SVGImage, SVGRes } from '@/core/SVGLoader';
 import { onClickOutside, useToggle } from '@vueuse/core';
 import SVGComponent from '../../SVGComponent.vue';
 import type { DropdownOptions } from '../../../../core/Interfaces';
 import { autoUpdate, computePosition, flip, offset, shift } from '@floating-ui/vue';
+import type { FieldValidator } from '@/core/composables/field/useField';
 
 const s = useCssModule()
 const props = withDefaults(defineProps<{
@@ -14,9 +15,11 @@ const props = withDefaults(defineProps<{
     svg?: SVGImage
     onClick?: () => void
     options: DropdownOptions[]
+    isRequiried?: boolean
 }>(), {
     zIndex: 0,
     svg: () => new SVGImage(SVGRes.House),
+    isRequiried: false,
     options: () => [{
             text: 'option1',
             svg: new SVGImage(SVGRes.House),
@@ -29,6 +32,7 @@ const props = withDefaults(defineProps<{
         },
     ]
 })
+
 const selected = defineModel('selected')
 
 const dropdown = ref()
@@ -46,22 +50,24 @@ onClickOutside(dropdownList, () => isListShown.value = false, { ignore: [dropdow
 var cleanup: () => void
 function onShow() {
     const listDomEl = dropdownList.value?.$el as HTMLElement
-    console.log(listDomEl);
     
     cleanup = autoUpdate(dropdown.value, listDomEl, () => {
-        computePosition(dropdown.value, listDomEl, {
-            middleware: [
-                flip(),      // flip to the opposite side if not enough space
-            ]
-        }).then(({x, y}) => {
-            Object.assign(listDomEl.style, {
-                left: `${x}px`,
-                top: `${y}px`,
-                width: `${dropdown.value!.offsetWidth}px`,
-                boxSizing: 'border-box',
-                zIndex: props.zIndex
+        requestAnimationFrame(() => {
+            computePosition(dropdown.value, listDomEl, {
+                middleware: [
+                    flip(),      // flip to the opposite side if not enough space
+                    shift()     // keep it horizontally on screen
+                ]
+            }).then(({x, y}) => {
+                Object.assign(listDomEl.style, {
+                    left: `${x}px`,
+                    top: `${y}px`,
+                    width: `${dropdown.value!.offsetWidth}px`,
+                    boxSizing: 'border-box',
+                    zIndex: props.zIndex
+                });
             });
-        });
+        })
     });
 }
 
@@ -74,7 +80,6 @@ watch(isListShown, async (newValue, oldValue) => {
     if (newValue === oldValue) return
 
     if (newValue) {
-        console.log('show');
         await nextTick() // wait for dropdownList to exist in the DOM
         onShow()
     } else {
@@ -83,14 +88,36 @@ watch(isListShown, async (newValue, oldValue) => {
     }
 })
 
+const validator = reactive<FieldValidator>({ isValid: true, error: ""})
+const emit = defineEmits<{
+    validator: [FieldValidator]
+}>()
+
+function validateInput() {
+    validator.isValid = Boolean(selected.value)
+    emit('validator', validator)
+}
+watch(selected, (newVal) => {
+        if (props.isRequiried) {
+            validateInput()
+        } else  {
+            validator.isValid = true
+            validator.error = ""
+            emit('validator', validator)
+        }
+    }, { immediate: true })
+
 onUnmounted(() => cleanup?.())
 </script>
 
 <template>
     <div :class="s.container">
-        <h2 :class="s.title">{{ title }}</h2>
+        <div :class="s.title">
+            <h2>{{ title }}</h2>
+            <p v-if="isRequiried" :class="s.isRequired"> *  {{ validator.error }}</p>
+        </div>
 
-        <div :class="s.field"
+        <div :class="[s.field, !validator.isValid && s.notValid] "
             ref="dropdown"
             @click="isListShown = !isListShown"
             :style="isListShown ? 'border-radius: 3px 3px 0 0' : ''"
@@ -192,6 +219,10 @@ onUnmounted(() => cleanup?.())
         @include main.f-size-very-small
         font-weight: 500
 
+        .isRequired
+            color: red
+            font-weight: 400
+
     .field
         z-index: 1
         display: flex
@@ -203,6 +234,9 @@ onUnmounted(() => cleanup?.())
         cursor: pointer
 
         transition: .2s
+
+        &.notValid
+            border: 1px solid rgba(250,0,0,1)
 
         .selection
             padding-left: .5rem 

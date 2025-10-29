@@ -7,6 +7,8 @@ import { useCreateSupper } from '@/core/composables/hive/useCreateSupper';
 import SelectionDropdown from '../input/dropdowns/SelectionDropdown.vue';
 import type { DropdownOptions } from '@/core/Interfaces';
 import type { PopupFunctions, PopupInfo } from '@/core/utils/components';
+import { isNumber } from '@/core/utils/others';
+import type { FieldOptions, FieldValidator } from '@/core/composables/field/useField';
 
 const s = useCssModule()
 const props = defineProps<{
@@ -18,6 +20,8 @@ const props = defineProps<{
 const { isSupperLoading, createSupper } = useCreateSupper();
 const closeFunction = ref<(() => void) | null>(null)
 const type = ref('')
+const typeValidator = ref<FieldValidator>()
+const frameValidator = ref<FieldValidator>()
 const frameCount = ref(0)
 const dropdownOptions = [
     { text: "deep" },
@@ -25,8 +29,15 @@ const dropdownOptions = [
     { text: "small" },
 ] as DropdownOptions[]
 
-const isValid = computed(() => {
-    return Boolean(type.value)
+const frameOptions: FieldOptions = {
+    onlyNumbers: true,
+    isRequired: true
+}
+const isEverythingValid = computed(() => {
+    console.log(typeValidator.value?.isValid);
+    console.log(frameCount.value > 0);
+    
+    return typeValidator.value?.isValid && frameValidator.value?.isValid && frameCount.value > -1
 })
 
 function closePopup() {
@@ -34,7 +45,7 @@ function closePopup() {
 }
 
 async function create() {
-    if (!isValid.value) return
+    if (!isEverythingValid.value) return
 
     await createSupper(
         {
@@ -58,20 +69,31 @@ async function create() {
 <PopupFrame title="Create supper" :popup-functions="popupFunctions" :popup-info="popupInfo" v-on:close="(fun) => closeFunction = fun">
     <template #body>
         <div :class="s.grid">
-            <SelectionDropdown :class="s.dropdown" title="Type" :options="dropdownOptions" />
+            <SelectionDropdown 
+                :class="s.dropdown" 
+                title="Type" 
+                :options="dropdownOptions" 
+                :z-index="popupInfo.zIndex.value" 
+                :is-requiried="true"
+                v-model:selected="type"
+                @validator="validator => typeValidator = validator" />
             <TitledField 
                 :class="s.frames" 
                 :is-required="true" 
                 title="Frames"
-                v-model="frameCount"/>
+                v-model:text="frameCount"
+                :field-options="frameOptions"
+                @validator="validator => frameValidator = validator"/>
             <Button 
                 :class="s.create" 
                 @click="create" 
+                :is-disabled="!isEverythingValid"
                 text="Create" />
             <Button 
                 :class="s.cancel" 
                 @click="closePopup" 
-                text="cancel" />
+                text="cancel"
+                :is-important="false" />
         </div>
     </template>
 </PopupFrame>

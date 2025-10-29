@@ -4,15 +4,20 @@ import { motion } from 'motion-v';
 
 const props = withDefaults(defineProps<{
     text?: string
+    isImportant?: boolean
+    isDisabled?: boolean
 }>(), {
-    text: 'button'
+    text: 'button',
+    isImportant: true,
+    isDisabled: false
 })
 const s = useCssModule()
 </script>
 
 <template>
-<motion.button :class="s.container"
+<motion.button :class="[s.container, isImportant && s.important, isDisabled && s.disabled]"
     :while-press="{scale: 0.9}"
+    :disabled="isDisabled"
 >
     <p :class="s.text">{{ text }}</p>
 </motion.button>
@@ -29,10 +34,19 @@ const s = useCssModule()
     align-items: center
 
     padding: .5rem 1rem
-    background: var(--dark)
     border-radius: 3px
-    border-bottom: 2px solid rgba(0,0,0,.2)
+    box-sizing: border-box
+    border: 2px solid rgba(0,0,0,.2)
     
     .text
         @include main.button-font
+
+
+.important
+    border: 2px solid var(--accent)
+    border-bottom: 2px solid rgba(0,0,0,.2)
+    background: var(--accent)
+
+.disabled
+    opacity: .5
 </style>

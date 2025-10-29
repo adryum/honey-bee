@@ -153,7 +153,7 @@ const ruleDescription = {
                     @validator="e => descriptionValidator = e"/>
             </div>
             <div :class="s.buttonPart">
-                <Button :style="(isEverythingValid) ? { background: 'rgba(0,0,0, .3)' } : { opacity: 0.5 }" :class="s.button" text="Save" @click="fireUpdateHive"/>
+                <Button :isDisabled="!isEverythingValid" :class="s.button" text="Save" @click="fireUpdateHive"/>
             </div>
         </div>
     </motion.div>

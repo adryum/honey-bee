@@ -1,5 +1,5 @@
 import { isNumber } from "@/core/utils/others"
-import { computed, ref, reactive, watch, type Ref } from "vue"
+import { computed, reactive, watch, type Ref } from "vue"
 
 export enum FieldType {
     None = "text",
@@ -65,11 +65,12 @@ export function useField(
         const options = mergedFieldOptions.value
         
         // all options
+        const isAValue = (options.isRequired) ? fieldValue != "" : true
         const isNumberB = (options.onlyNumbers) ? isNumber(Number(fieldValue)) : true
         const isInMaxLength = fieldValue.length <= options.maxLength
         const isInMinLength = fieldValue.length >= options.minLength
 
-        if (isNumberB && isInMaxLength && isInMinLength) {
+        if (isNumberB && isInMaxLength && isInMinLength && isAValue) {
             validator.isValid = true
             validator.error = "" 
         }

@@ -48,11 +48,11 @@ function handleFiles(event: Event) {
 <div :class="s.container">
     <motion.div ref="dropZoneRef" :class="s.dropZone"
         :style="imageSrc ? { padding: 0 } : {}"
-        :animate="isOverDropZone ? { rotateZ: '2deg', outlineOffset: '4px' } : { }"
+        :animate="isOverDropZone ? { rotateZ: '2deg', outlineOffset: '4px',  scale: .9} : { }"
         >
         <motion.div v-if="!imageSrc" 
         :class="s.decorativeDiv"
-        :animate="isOverDropZone ? { rotateZ: '-6deg', scale: .6 } : {}"
+        :animate="isOverDropZone ? { rotateZ: '-6deg', scale: .6, borderRadius: '10px' } : {}"
         ></motion.div>
         <h1 v-if="!imageSrc" :class="s.dropHint">Drop image here!</h1>
         
@@ -70,9 +70,10 @@ function handleFiles(event: Event) {
             style="display: none"
             @change="handleFiles"
         />
-        <Button 
+        <Button v-if="imageSrc"
             :class="s.choseFileButton"
             @click="imageSrc = ''"
+            :is-important="false" 
             text="remove" />
     </div>
     
@@ -96,6 +97,8 @@ function handleFiles(event: Event) {
         width: 100%
         flex: 1
         outline: solid
+        outline-color: rgba(0, 0, 0, .2);
+        outline-offset: -3px
         padding: 1rem
         box-sizing: border-box
         overflow: hidden
@@ -116,7 +119,7 @@ function handleFiles(event: Event) {
             height: 100%
 
             border-radius: 3px
-            background: var(--accent)
+            background: var(--base)
 
 
         .dropHint
