@@ -3,6 +3,7 @@ import { SVGImage, SVGRes } from "@/core/SVGLoader";
 import { useCssModule } from "vue";
 import IconCubeButton from "../../input/buttons/IconCubeButton.vue";
 import { useI18n } from "vue-i18n";
+import CubeDropdown from "../../input/dropdowns/CubeDropdown.vue";
 
 const { t } = useI18n()
 const s = useCssModule()
@@ -15,7 +16,7 @@ const s = useCssModule()
         <h1 :class="s.title">Frames</h1>
         <p :class="s.count">2 / 5</p>
     </div>
-    <IconCubeButton :class="s.button" :svg="new SVGImage(SVGRes.MoreDots)"/>
+    <CubeDropdown :class="s.button" :svg="new SVGImage(SVGRes.MoreDots)"/>
 </div>
 </template>
 
@@ -35,6 +36,7 @@ const s = useCssModule()
     .button
         margin-left: auto
         height: 28px
+        width: 28px
 
     .type
         @include main.f-size-very-small

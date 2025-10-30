@@ -42,8 +42,6 @@ const { t } = useI18n()
 .container
     display: flex
     flex-direction: column
-    background: rgba(0, 0, 0, .3)
-    background: var(--surface)
     @include main.font
 
     .header
@@ -56,7 +54,7 @@ const { t } = useI18n()
         max-height: 2.5rem
         padding: .25rem 0.5rem
         box-sizing: border-box
-        background: var(--surface)
+        background: white
         border-top: 4px solid var(--light)
         // border-bottom: 1px solid rgba(0, 0, 0, .1)
         box-shadow: 0 2px 5px 0 rgba(0, 0, 0, .1)
@@ -75,11 +73,9 @@ const { t } = useI18n()
         display: flex
         flex-direction: column
         height: calc(100% - 2.5rem)
-        margin: 1rem
+        margin-top: .5rem
         gap: .5rem
         box-sizing: border-box
-        background: white
-        border-radius: 3px
         overflow: auto
 
 
@@ -87,6 +83,8 @@ const { t } = useI18n()
             flex: 1 
             display: flex
             min-height: 0 // prevents flexbox from overflowing
+            border-radius: 3px
+            overflow: hidden
             
             img
                 width: 100%
@@ -96,8 +94,11 @@ const { t } = useI18n()
         .tags
             display: flex
             gap: 2px
-            padding: 0 .5rem
+            padding: .5rem
             min-height: 4rem
+            background: white
+            border-radius: 3px
+            overflow: hidden
             
             
             .tag

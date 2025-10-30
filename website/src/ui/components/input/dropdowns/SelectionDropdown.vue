@@ -1,113 +1,70 @@
 <script setup lang="ts">
-import { computed, nextTick, onUnmounted, reactive, ref, Teleport, toRef, useCssModule, watch } from 'vue';
+import { computed, onMounted, reactive, ref, Teleport, useCssModule, watch } from 'vue';
 import { AnimatePresence, motion } from 'motion-v';
 import { SVGImage, SVGRes } from '@/core/SVGLoader';
-import { onClickOutside, useToggle } from '@vueuse/core';
 import SVGComponent from '../../SVGComponent.vue';
 import type { DropdownOptions } from '../../../../core/Interfaces';
-import { autoUpdate, computePosition, flip, offset, shift } from '@floating-ui/vue';
 import type { FieldValidator } from '@/core/composables/field/useField';
+import { useFloatingUI } from '@/core/composables/field/useFloatingUI';
 
 const s = useCssModule()
 const props = withDefaults(defineProps<{
     title: string
     zIndex?: number
-    svg?: SVGImage
-    onClick?: () => void
-    options: DropdownOptions[]
     isRequiried?: boolean
+    svg?: SVGImage
+    options: DropdownOptions[]
+    onClick?: () => void
 }>(), {
     zIndex: 0,
-    svg: () => new SVGImage(SVGRes.House),
     isRequiried: false,
-    options: () => [{
-            text: 'option1',
-            svg: new SVGImage(SVGRes.House),
-            color: ''
-        },
+    svg: () => new SVGImage(SVGRes.House),
+    options: () => [
         {
-            text: 'option2',
+            text: 'option',
             svg: new SVGImage(SVGRes.House),
             color: ''
         },
     ]
 })
-
 const selected = defineModel('selected')
-
 const dropdown = ref()
 const dropdownList = ref()
 const isListShown = ref(false)
 const selectedChoiceHover = ref<Number>()
 const allOptions = computed(() => [
-    { text: "None" } as DropdownOptions,
     ...props.options,
 ])
 const MotionSVG = motion.create(SVGComponent)
-
-onClickOutside(dropdownList, () => isListShown.value = false, { ignore: [dropdown]})
-
-var cleanup: () => void
-function onShow() {
-    const listDomEl = dropdownList.value?.$el as HTMLElement
-    
-    cleanup = autoUpdate(dropdown.value, listDomEl, () => {
-        requestAnimationFrame(() => {
-            computePosition(dropdown.value, listDomEl, {
-                middleware: [
-                    flip(),      // flip to the opposite side if not enough space
-                    shift()     // keep it horizontally on screen
-                ]
-            }).then(({x, y}) => {
-                Object.assign(listDomEl.style, {
-                    left: `${x}px`,
-                    top: `${y}px`,
-                    width: `${dropdown.value!.offsetWidth}px`,
-                    boxSizing: 'border-box',
-                    zIndex: props.zIndex
-                });
-            });
-        })
-    });
-}
-
-function onItemClick(button: DropdownOptions) {
-    isListShown.value = false
-    selected.value = button.text
-}
-
-watch(isListShown, async (newValue, oldValue) => {
-    if (newValue === oldValue) return
-
-    if (newValue) {
-        await nextTick() // wait for dropdownList to exist in the DOM
-        onShow()
-    } else {
-        cleanup()
-        selectedChoiceHover.value = -1
-    }
-})
 
 const validator = reactive<FieldValidator>({ isValid: true, error: ""})
 const emit = defineEmits<{
     validator: [FieldValidator]
 }>()
 
+function onItemClick(button: DropdownOptions) {
+    isListShown.value = false
+    selected.value = button.text
+}
+
 function validateInput() {
     validator.isValid = Boolean(selected.value)
     emit('validator', validator)
 }
-watch(selected, (newVal) => {
-        if (props.isRequiried) {
-            validateInput()
-        } else  {
-            validator.isValid = true
-            validator.error = ""
-            emit('validator', validator)
-        }
-    }, { immediate: true })
 
-onUnmounted(() => cleanup?.())
+watch(selected, (newVal) => {
+    if (props.isRequiried) {
+        validateInput()
+    } else  {
+        validator.isValid = true
+        validator.error = ""
+        emit('validator', validator)
+    }
+}, { immediate: true })
+
+onMounted(async () => {
+    useFloatingUI(dropdown, dropdownList, isListShown, props.zIndex)
+})
 </script>
 
 <template>
@@ -161,15 +118,10 @@ onUnmounted(() => cleanup?.())
     position: absolute
     display: inline-flex
     flex-direction: column
-    top: 100%
-    width: inherit
-    
     background: var(--surface)
     padding: 1rem
     border-radius: 0 0 3px 3px
-    // box-shadow: 0px 0px 10px rgba(0, 0, 0, .5)
     border: 1px solid rgba(0,0,0,.1)
-
 
     .li
         all: unset

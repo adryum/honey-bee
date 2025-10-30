@@ -1,7 +1,7 @@
 import { storeToRefs } from "pinia";
 import { useHiveStore } from "@/core/stores/HiveStore";
 
-export function useCreateNote() {
+export function useNoteCreate() {
     const store = useHiveStore()
     const { isNoteLoading } = storeToRefs(store)
 

@@ -4,6 +4,8 @@ import IconCubeButton from "../../input/buttons/IconCubeButton.vue";
 import { SVGImage, SVGRes } from "@/core/SVGLoader";
 import { useI18n } from "vue-i18n";
 import Note from './Note.vue'
+import { createPopup } from "@/core/utils/components";
+import NoteCreatePopup from "../../popups/NoteCreatePopup.vue";
 
 const s = useCssModule()
 const { t } = useI18n()
@@ -15,7 +17,11 @@ const { t } = useI18n()
     <div :class="s.header">
         <h1>{{ t("hiveOverview.notes") }}</h1>
         <div :class="s.buttons">
-            <IconCubeButton :class="s.button" :svg="new SVGImage(SVGRes.Pluss)"/>
+            <IconCubeButton 
+                :class="s.button" 
+                :svg="new SVGImage(SVGRes.Pluss)"
+                @click="createPopup(NoteCreatePopup)"
+            />
             <IconCubeButton :class="s.button" :svg="new SVGImage(SVGRes.MoreDots)"/>
         </div>
     </div>
@@ -40,7 +46,6 @@ const { t } = useI18n()
     display: flex
     flex-direction: column
     @include main.font
-    background: var(--surface)
 
     .header
         @include main.button-font
@@ -52,7 +57,7 @@ const { t } = useI18n()
         max-height: 2.5rem
         padding: .25rem 0.5rem
         box-sizing: border-box
-        background: var(--surface)
+        background: white
         border-top: 4px solid var(--light)
         // border-bottom: 1px solid rgba(0, 0, 0, .1)
         box-shadow: 0 2px 5px 0 rgba(0, 0, 0, .1)
@@ -77,7 +82,7 @@ const { t } = useI18n()
         display: flex
         flex-direction: column
 
-        padding: 1rem
+        padding-top: .5rem
         gap: .5rem
         box-sizing: border-box
         overflow: auto

@@ -6,79 +6,121 @@ import PopupFrame from './PopupFrame.vue'
 import SelectionDropdown from '../input/dropdowns/SelectionDropdown.vue';
 import type { DropdownOptions } from '@/core/Interfaces';
 import type { PopupFunctions, PopupInfo } from '@/core/utils/components';
-import FieldMultiple from '../input/fields/FieldMultiple.vue';
-import { useCreateNote } from '@/core/composables/hive/useCreateNote';
+import { useNoteCreate } from '@/core/composables/hive/useCreateNote';
+import type { NoteCreateRequestModel } from '@/core/models/NoteModels';
+import type { CallbackModel } from '@/core/models/SupperModels';
+import type { FieldOptions, FieldValidator } from '@/core/composables/field/useField';
+import TitledFieldMultiple from '../input/fields/TitledFieldMultiple.vue';
 
 const s = useCssModule()
 const props = defineProps<{
-    onCreate?: () => {}, 
     popupFunctions: PopupFunctions
     popupInfo: PopupInfo
+    onCreate?: () => {}
 }>()
-
-const { isNoteLoading, createNote } = useCreateNote();
+const { isNoteLoading, createNote } = useNoteCreate();
 const closeFunction = ref<(() => void) | null>(null)
 const type = ref('')
 const title = ref('')
 const content = ref('')
-const dropdownOptions = [
-    { text: "INFORMATION" },
-    { text: "WARNING" },
-] as DropdownOptions[]
+const dropdownOptions: DropdownOptions[] = [
+    { text: "Information" },
+    { text: "Warning" },
+]
 
-const isValid = computed(() => {
-    return Boolean(type.value) && Boolean(title.value) && Boolean(content.value)
+// validators
+const titleValidator = ref<FieldValidator>()
+const contentValidator = ref<FieldValidator>()
+const typeValidator = ref<FieldValidator>()
+const isEverythingValid = computed(() => {
+    return titleValidator.value?.isValid 
+    && contentValidator.value?.isValid
+    && typeValidator.value?.isValid
 })
+
+const titleRule: FieldOptions = {
+    isRequired: true,
+    maxLength: 40
+}
+const contentRule: FieldOptions = {
+    isRequired: true,
+    maxLength: 200
+}
 
 function closePopup() {
     if (closeFunction.value) closeFunction.value();
 }
 
 async function create() {
-    if (!isValid.value) return
+    if (!isEverythingValid.value) return
 
-    await createNote(
-        {
-            type: type.value,
-            title: title.value,
-            content: content.value
+    const createNoteModel: NoteCreateRequestModel = {
+        type: type.value,
+        title: title.value,
+        content: content.value
+    }
+
+    const callbackModel: CallbackModel = {
+        onSuccess() {
+            props.onCreate?.()
+            closePopup()
         },
-        {
-            onSuccess() {
-                props.onCreate?.()
-                closePopup()
-            },
-            onFailure(error) {
-                
-            },
-        }
-    )
+        onFailure(error) {
+            
+        },
+    }
+
+    await createNote(createNoteModel, callbackModel)
 }
 </script>
 
 <template>
-<PopupFrame title="Create supper" :popup-functions="popupFunctions" :popup-info="popupInfo" v-on:close="(fun) => closeFunction = fun">
+<PopupFrame 
+    title="Create Note" 
+    :popup-functions="popupFunctions" 
+    :popup-info="popupInfo" 
+    v-on:close="(fun) => closeFunction = fun"
+>
     <template #body>
         <div :class="s.grid">
-            <SelectionDropdown :class="s.dropdown" title="Type" :options="dropdownOptions" />
             <TitledField 
-                :class="s.frames" 
-                :is-required="true" 
                 title="Title"
-                v-model="title"/>
-            <FieldMultiple 
-                :class="s.frames" 
-                :is-required="true" 
+                :class="s.title" 
+                :is-required="true"
+                :field-options="titleRule"
+                v-on:validator="v => titleValidator = v"
+                v-model="title"
+            />
+            <TitledFieldMultiple 
                 title="Content"
-                v-model="content"/>
-            <Button 
-                :class="s.create" 
-                @click="create" 
-                text="Create" />
-            <Button 
-                :class="s.cancel" 
-                @click="closePopup" 
-                text="cancel" />
+                :class="s.content" 
+                :is-required="true" 
+                :field-options="contentRule"
+                v-on:validator="v => contentValidator = v"
+                v-model="content"
+            />
+            <SelectionDropdown 
+                title="Type" 
+                :class="s.dropdown" 
+                :options="dropdownOptions"
+                :is-requiried="true"
+                :z-index="popupInfo.zIndex.value"
+                v-on:validator="v => typeValidator = v"
+            />
+            <div :class="s.buttons">
+                <Button 
+                    text="cancel" 
+                    :class="s.cancel"
+                    :is-important="false"
+                    @click="closePopup" 
+                />
+                <Button 
+                    text="Create" 
+                    :class="s.create"
+                    :is-disabled="!isEverythingValid" 
+                    @click="create" 
+                />
+            </div>
         </div>
     </template>
 </PopupFrame>
@@ -89,21 +131,26 @@ async function create() {
 @use '@/assets/main.sass' as main
         
 .grid
-    display: grid
-    grid-template-areas: 'drop frames' 'cancel create' 
-    grid-template-columns: repeat(2, 10rem)
-    
+    display: flex
+    flex-direction: column
+    width: 30rem
     gap: 1rem
 
-    .dropdown
-        grid-area: drop
+    .firstRow
+        display: flex
+        gap: 1rem
 
-    .fields
-        grid-area: fields
+        .dropdown
+            flex: 1
 
-    .cancel
-        grid-area: cancel
+        .title
+            flex: 5
 
-    .create
-        grid-area: create
+    .buttons
+        display: flex
+        gap: 1rem
+
+        & > *
+            flex: 1
+    
 </style>

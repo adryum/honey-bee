@@ -42,7 +42,6 @@ onMounted(() => {
     height: 28px
 .container
     @include main.font
-    position: relative
     display: flex
     flex-direction: column
     background: white

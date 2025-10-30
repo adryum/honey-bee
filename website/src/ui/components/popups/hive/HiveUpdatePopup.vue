@@ -11,8 +11,8 @@ import PopupFrame from '../PopupFrame.vue';
 import type { PopupFunctions, PopupInfo } from '@/core/utils/components';
 import { useHiveUpdate } from '@/core/composables/hive/useHiveUpdate';
 import type { FieldValidator, FieldOptions } from '@/core/composables/field/useField';
-import FieldMultiple from '../../input/fields/FieldMultiple.vue';
 import TitledFieldMultiple from '../../input/fields/TitledFieldMultiple.vue';
+import type { CallbackModel } from '@/core/models/SupperModels';
 
 const s = useCssModule()
 const props = defineProps<{
@@ -29,7 +29,7 @@ const tempDescription = ref('')
 const tempType = ref('')
 const tempImage = ref<File>()
 
-// valid fields
+//  field validators
 const nameValidator = ref<FieldValidator>()
 const descriptionValidator = ref<FieldValidator>()
 const typeValidator = ref<FieldValidator>({ isValid: true, error: ""})
@@ -40,6 +40,15 @@ const isEverythingValid = computed(() => {
     && typeValidator.value?.isValid 
     && locationValidator.value?.isValid
 })
+
+const ruleName: FieldOptions = {
+    isRequired: true,
+    minLength: 3,
+    maxLength: 20,
+}
+const ruleDescription: FieldOptions = {
+    maxLength: 250,
+}
 
 // dropdowns
 const typeOptions: DropdownOptions[] = [
@@ -87,83 +96,84 @@ async function fireUpdateHive() {
         description: tempDescription.value
     }
 
-    await updateHive(
-        hiveUpdateModel,
-        {
-            onSuccess(hive) {
-                
-            },
-            onFailure(error) {
-                
-            },
+    const callbackModel: CallbackModel = {
+        onSuccess: function (message: string): void {
+
+        },
+        onFailure: function (error: unknown): void {
+
         }
-        
-    )
+    }
+
+    await updateHive(hiveUpdateModel, callbackModel)
 }
 
 onMounted(() => {
-    console.log("Hive :: : ");
-    console.log(props.hive);
-    
     // set temp field values
     tempName.value = props.hive.name
-    console.log(tempName.value);
-    
     tempLocation.value = props.hive.location
     tempDescription.value = props.hive.description
     tempApiaryId.value = props.hive.apiaryId
     tempType.value = props.hive.type
 })
-const ruleName = {
-    isRequired: true,
-    minLength: 3,
-    maxLength: 20,
-} as FieldOptions
-const ruleDescription = {
-    maxLength: 250,
-} as FieldOptions
 </script>
 
 <template>
 <PopupFrame title="Update hive" :popupFunctions="popupFunctions" :popupInfo="popupInfo">
     <template #body>
-    <motion.div :class="s.grid">
-        <ImageDropZone :class="s.image" v-model:image-file="tempImage"/>
-        <div :class="s.fields">
-            <div :class="s.field">
-                
-                <TitledField 
-                    :class="s.name" 
-                    title="Name"
-                    :field-options="ruleName"
-                    v-model:text="tempName"
-                    @validator="e => nameValidator = e"/>
-                
-                <div :class="s.dropdowns">
-                    <SelectionDropdown :class="s.typeDrop" 
-                        title="Type" :options="typeOptions" v-model:selected="tempType" :z-index="popupInfo.zIndex.value"
+        <motion.div :class="s.grid">
+            <ImageDropZone :class="s.image" v-model:image-file="tempImage"/>
+            <div :class="s.fields">
+                <div :class="s.field">
+                    
+                    <TitledField 
+                        title="Name"
+                        :class="s.name" 
+                        :field-options="ruleName"
+                        v-model:text="tempName"
+                        v-on:validator="e => nameValidator = e"
                     />
-                    <SelectionDropdown :class="s.apiaryDrop" 
-                        title="Apiary" :options="apiaryOptions" v-model:selected="tempApiaryId" :z-index="popupInfo.zIndex.value"
+                    
+                    <div :class="s.dropdowns">
+                        <SelectionDropdown 
+                            title="Type" 
+                            :class="s.typeDrop" 
+                            :options="typeOptions" 
+                            :z-index="popupInfo.zIndex.value"
+                            v-model:selected="tempType" 
+                        />
+                        <SelectionDropdown 
+                            title="Apiary" 
+                            :class="s.apiaryDrop" 
+                            :options="apiaryOptions" 
+                            :z-index="popupInfo.zIndex.value"
+                            v-model:selected="tempApiaryId" 
+                        />
+                    </div>
+                    <TitledField 
+                        title="Location"
+                        v-model:text="tempLocation"
+                        :class="s.location" 
+                        v-on:validator="e => locationValidator = e"
+                    />
+                    <TitledFieldMultiple
+                        title="Description" 
+                        :class="s.description"
+                        :field-options="ruleDescription"
+                        v-model:text="tempDescription"
+                        v-on:validator="e => descriptionValidator = e"
                     />
                 </div>
-                <TitledField 
-                    :class="s.location" 
-                    title="Location"
-                    v-model:text="tempLocation"
-                    @validator="e => locationValidator = e"/>
-                <TitledFieldMultiple
-                    :class="s.description"
-                    :field-options="ruleDescription"
-                    title="Description" 
-                    v-model:text="tempDescription"
-                    @validator="e => descriptionValidator = e"/>
+                <div :class="s.buttonPart">
+                    <Button 
+                        text="Save" 
+                        :isDisabled="!isEverythingValid || !isDifferent" 
+                        :class="s.button"
+                        @click="fireUpdateHive"
+                    />
+                </div>
             </div>
-            <div :class="s.buttonPart">
-                <Button :isDisabled="!isEverythingValid || !isDifferent" :class="s.button" text="Save" @click="fireUpdateHive"/>
-            </div>
-        </div>
-    </motion.div>
+        </motion.div>
     </template>
 </PopupFrame>
 </template>
@@ -178,7 +188,6 @@ const ruleDescription = {
     
     gap: 1rem
     width: 50rem
-
 
     .fields
         grid-area: fields
@@ -210,6 +219,4 @@ const ruleDescription = {
         width: 100%
         height: 100%
         object-fit: cover
-
-    
 </style>

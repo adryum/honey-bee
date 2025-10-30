@@ -1,12 +1,12 @@
 <script setup lang="ts">
-import { ref, useCssModule, watch } from 'vue';
+import { onMounted, ref, useCssModule, watch } from 'vue';
 import { AnimatePresence, motion } from 'motion-v';
-import { onClickOutside, useToggle } from '@vueuse/core';
+import { useToggle } from '@vueuse/core';
 import SVGComponent from '../../SVGComponent.vue';
 import IconCubeButton from '../buttons/IconCubeButton.vue';
 import type { DropdownOptions } from '../../../../core/Interfaces';
 import { SVGImage, SVGRes } from '@/core/SVGLoader';
-
+import { useFloatingUI } from '@/core/composables/field/useFloatingUI';
 
 const s = useCssModule()
 const props = withDefaults(defineProps<{
@@ -32,7 +32,6 @@ const dropdown = ref()
 const button = ref()
 const selectedChoice = ref<Number>()
 const [isShown] = useToggle()
-onClickOutside(dropdown, () => isShown.value = false, { ignore: [button]})
 
 function onItemClick(button: DropdownOptions) {
     isShown.value = false
@@ -42,36 +41,34 @@ function onItemClick(button: DropdownOptions) {
 watch(isShown, () => {
     selectedChoice.value = -1
 })
+
+onMounted(async () => {
+    useFloatingUI(button, dropdown, isShown, 0, false, 10)
+})
 </script>
 
 <template>
     <div :class="s.container">
         <IconCubeButton ref="button" @click="isShown = !isShown" :svg="svg"/>
-        <AnimatePresence>
+        <AnimatePresence><Teleport to="body">
         <motion.ol ref="dropdown" @click.stop
             v-if="isShown"
-            :class="s.dropdown"
+            class="dropdown"
             :initial="{ opacity: 0, x: '5px' }"
             :animate="{ opacity: 1, x: '0px'  }"
             :exit="{ opacity: 0, x: '5px' }"
             >
             <motion.li v-for="(button, i) in options" :key="i" 
-                :class="s.li" 
+                class="li" 
                 @click="() => onItemClick(button)" 
-                @mouseover="selectedChoice = i"
-                :while-press="{ scale: 0.9 }">
-                <SVGComponent :class="s.icon" :svg="button.svg" />
-                <p :class="s.text" :style="{ color: button.color ?? 'black' }">{{ button.text }}</p> 
-
-                <motion.div
-                    v-if="i === selectedChoice"
-                    :class="s.selected"
-                    layoutId="selected1"
-                    :transition="{ duration: 0.4, ease: [0, 0.71, 0.2, 1.01], type: 'spring' }"
-                    />
+                :while-press="{ scale: 0.9 }"
+                :while-hover="{ backgroundColor: 'var(--base)', transition: { duration: .1 } }"
+            >
+                <SVGComponent class="icon" :svg="button.svg" />
+                <p class="text" :style="{ color: button.color ?? 'black' }">{{ button.text }}</p> 
             </motion.li>
     
-        </motion.ol>
+        </motion.ol></Teleport>
         </AnimatePresence>
 
     </div>
@@ -84,49 +81,5 @@ watch(isShown, () => {
     position: relative
     display: inline-block
 
-    .dropdown
-        @include main.button-font
-        position: absolute
-        display: inline-flex
-        flex-direction: column
-        top: 100%
-        right: 0
-        margin-top: 1rem
-        background: var(--surface)
-        padding: 1rem
-        border-radius: 3px
-        box-shadow: 0px 0px 10px rgba(0, 0, 0, .5)
-
-        .li
-            all: unset
-            position: relative
-            display: flex
-            @include main.f-size-very-small
-            padding: .5rem 1rem
-            gap: 1rem
-            cursor: pointer
-
-            .icon
-                z-index: 2
-                width: 1rem
-                aspect-ratio: 1
-
-            .text
-                position: relative
-                z-index: 2
-                box-sizing: border-box
-
-            .selected
-                z-index: 1
-                position: absolute
-                top: 0
-                right: 0
-                height: 100%
-                width: 100%
-
-                border-radius: 3px
-                background: var(--light)
-
-
-
+    
 </style>

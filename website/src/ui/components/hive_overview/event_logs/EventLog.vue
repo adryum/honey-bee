@@ -45,7 +45,6 @@ const { t } = useI18n()
 .container
     display: flex
     flex-direction: column
-    background: var(--surface)
     overflow: hidden
 
     .header
@@ -58,7 +57,7 @@ const { t } = useI18n()
         max-height: 2.5rem
         padding: .25rem 0.5rem
         box-sizing: border-box
-        background: var(--surface)
+        background: white
         border-top: 4px solid var(--light)
         // border-bottom: 1px solid rgba(0, 0, 0, .1)
         box-shadow: 0 2px 5px 0 rgba(0, 0, 0, .1)
@@ -78,7 +77,7 @@ const { t } = useI18n()
         display: flex
         flex-direction: column
 
-        padding: 1rem
+        padding-top: .5rem
         gap: .5rem
         box-sizing: border-box
         overflow: auto

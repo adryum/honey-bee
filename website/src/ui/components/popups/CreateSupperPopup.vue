@@ -24,9 +24,9 @@ const typeValidator = ref<FieldValidator>()
 const frameValidator = ref<FieldValidator>()
 const frameCount = ref(0)
 const dropdownOptions = [
-    { text: "deep" },
-    { text: "medium" },
-    { text: "small" },
+    { text: "Deep" },
+    { text: "Medium" },
+    { text: "Small" },
 ] as DropdownOptions[]
 
 const frameOptions: FieldOptions = {
@@ -66,34 +66,43 @@ async function create() {
 </script>
 
 <template>
-<PopupFrame title="Create supper" :popup-functions="popupFunctions" :popup-info="popupInfo" v-on:close="(fun) => closeFunction = fun">
+<PopupFrame 
+    title="Create supper" 
+    :popup-functions="popupFunctions" 
+    :popup-info="popupInfo" 
+    v-on:close="(fun) => closeFunction = fun"
+>
     <template #body>
         <div :class="s.grid">
             <SelectionDropdown 
-                :class="s.dropdown" 
                 title="Type" 
+                v-model:selected="type"
+                :class="s.dropdown" 
                 :options="dropdownOptions" 
                 :z-index="popupInfo.zIndex.value" 
                 :is-requiried="true"
-                v-model:selected="type"
-                @validator="validator => typeValidator = validator" />
+                @validator="validator => typeValidator = validator" 
+            />
             <TitledField 
-                :class="s.frames" 
-                :is-required="true" 
                 title="Frames"
                 v-model:text="frameCount"
+                :class="s.frames" 
+                :is-required="true" 
                 :field-options="frameOptions"
-                @validator="validator => frameValidator = validator"/>
+                @validator="validator => frameValidator = validator"
+            />
             <Button 
+                text="Create" 
                 :class="s.create" 
-                @click="create" 
                 :is-disabled="!isEverythingValid"
-                text="Create" />
+                @click="create" 
+            />
             <Button 
-                :class="s.cancel" 
-                @click="closePopup" 
                 text="cancel"
-                :is-important="false" />
+                :class="s.cancel" 
+                :is-important="false" 
+                @click="closePopup" 
+            />
         </div>
     </template>
 </PopupFrame>

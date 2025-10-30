@@ -89,7 +89,7 @@ const { screenSize, biggerThan } = useScreenSize()
         max-height: 2.5rem
         padding: .25rem 0.5rem
         box-sizing: border-box
-        background: var(--surface)
+        background: white
         border-top: 4px solid var(--light)
         box-shadow: 0 2px 5px 0 rgba(0, 0, 0, .1)
 
@@ -115,11 +115,9 @@ const { screenSize, biggerThan } = useScreenSize()
 
         max-height: calc(100% - 2.5rem)
 
-
-        padding: 1rem
+        padding-top: .5rem
         gap: 1rem
         box-sizing: border-box
-        background: var(--surface)
         overflow: auto
 
         .entry
@@ -164,7 +162,7 @@ const { screenSize, biggerThan } = useScreenSize()
             .tasks
                 display: flex
                 flex-direction: column
-                gap: 1rem
+                gap: .5rem
                 height: 100%
                 overflow: auto
 
