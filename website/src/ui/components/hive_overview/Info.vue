@@ -39,7 +39,7 @@ const hive =
         <div :class="s.dataSide">
             <TitledText :class="s.entry" title="Name" content="Hive name"/>
             <TitledText :class="s.entry" title="Type" content="Movable"/>
-            <TitledText :class="s.entry" title="Location" content="D'arciems"/>
+            <TitledText :class="s.entry" title="Location" content="Dārzciems"/>
             <TitledText :class="[s.entry, s.description]" title="Description" content="Big yellow, has a lot of bees. Quite comfy and warm. Has a lot of honney :)))))"/>
         </div>
     </div>

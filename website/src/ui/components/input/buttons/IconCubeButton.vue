@@ -31,6 +31,11 @@ const s = useCssModule()
     justify-content: center
     cursor: pointer
 
+    min-width: 28px
+    min-height: 28px
+    max-height: 28px
+    max-width: 28px
+
     padding: .2rem
     border-radius: 3px
     box-sizing: border-box

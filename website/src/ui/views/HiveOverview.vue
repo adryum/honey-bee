@@ -47,7 +47,7 @@ const props = defineProps({
     
     @media (min-width: base.$xxl) 
         grid-template-columns: repeat(10, 1fr)
-        grid-template-areas: "genInfo genInfo genInfo genInfo upcomingEvents upcomingEvents upcomingEvents upcomingEvents notes notes" "eventLog eventLog stimulants stimulants suppers suppers queen queen notes notes"
+        grid-template-areas: "genInfo genInfo genInfo genInfo suppers suppers queen queen  notes notes" "eventLog eventLog stimulants stimulants upcomingEvents upcomingEvents upcomingEvents upcomingEvents notes notes"
         grid-template-rows: repeat(2, 1fr)
         max-height: calc( 100vh - 3rem )
 

@@ -6,6 +6,8 @@ import { useI18n } from "vue-i18n";
 import Note from './Note.vue'
 import { createPopup } from "@/core/utils/components";
 import NoteCreatePopup from "../../popups/NoteCreatePopup.vue";
+import SmallSearchbar from "../../input/fields/SmallSearchbar.vue";
+import ExtendableSearchbar from "../../input/searchbars/ExtendableSearchbar.vue";
 
 const s = useCssModule()
 const { t } = useI18n()
@@ -22,6 +24,7 @@ const { t } = useI18n()
                 :svg="new SVGImage(SVGRes.Pluss)"
                 @click="createPopup(NoteCreatePopup)"
             />
+            <ExtendableSearchbar />
             <IconCubeButton :class="s.button" :svg="new SVGImage(SVGRes.MoreDots)"/>
         </div>
     </div>
@@ -59,9 +62,7 @@ const { t } = useI18n()
         box-sizing: border-box
         background: white
         border-top: 4px solid var(--light)
-        // border-bottom: 1px solid rgba(0, 0, 0, .1)
         box-shadow: 0 2px 5px 0 rgba(0, 0, 0, .1)
-
 
     .buttons
         margin-left: auto
@@ -75,7 +76,6 @@ const { t } = useI18n()
 
             &.left
                 rotate: 180deg 0 0 1
-
 
     .body
         flex: 1

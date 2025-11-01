@@ -26,11 +26,12 @@ const props = withDefaults(defineProps<{
     ></input>
 
     <motion.button 
-    :while-press=" {filter: 'brightness(0.8)'}" 
-    @mousedown="isHoldingAction = true" 
-    @mouseup="isHoldingAction = false" 
-    @click="() => onClick(text)"
-    :class="s.action">
+        :class="s.action"
+        :while-press=" {filter: 'brightness(0.8)'}" 
+        @mousedown="isHoldingAction = true" 
+        @mouseup="isHoldingAction = false" 
+        @click="() => onClick(text)"
+    >
         <motion.p :animate="isHoldingAction ? { scale: 0.95} : {scale: 1}">{{ actionText }}</motion.p>
     </motion.button>
 </div>
