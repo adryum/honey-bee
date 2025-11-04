@@ -129,18 +129,19 @@ CREATE TABLE IF NOT EXISTS `hives` (
   CONSTRAINT `FK_hives_apiaries` FOREIGN KEY (`apiary_id`) REFERENCES `apiaries` (`id`) ON DELETE SET NULL,
   CONSTRAINT `FK_hives_queen_bee` FOREIGN KEY (`queen_bee_id`) REFERENCES `queen_bees` (`id`),
   CONSTRAINT `FK_hives_users` FOREIGN KEY (`user_id`) REFERENCES `users` (`id`) ON DELETE CASCADE
-) ENGINE=InnoDB AUTO_INCREMENT=34 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
+) ENGINE=InnoDB AUTO_INCREMENT=59 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
 
--- Dumping data for table honey_bee.hives: ~8 rows (approximately)
+-- Dumping data for table honey_bee.hives: ~9 rows (approximately)
 INSERT INTO `hives` (`id`, `name`, `image_path`, `location`, `type`, `weight`, `frames`, `description`, `queen_bee_id`, `apiary_id`, `user_id`) VALUES
-	(1, 'Box', 'Hive1.jpg', NULL, 'Movable', 23, 1, NULL, 2, 71, 2),
-	(2, 'Box2', 'Hive3.jpg', NULL, 'Tower', 234.6, 8, NULL, 1, 84, 2),
-	(3, 'Bisumaja', 'Hive2.jpeg', NULL, 'Movable', 23, 1, NULL, 1, 71, 2),
-	(4, 'Klucis', 'Hive4.webp', NULL, 'Movable', 1, 2, NULL, 1, 71, 2),
-	(5, 'kartonas', 'Hive5.webp', NULL, 'Tower', 2, 3, NULL, NULL, 84, 2),
-	(6, 'asdasda', 'Hive6.jpg', NULL, 'Movable', 34, NULL, NULL, NULL, 71, 2),
-	(7, 'ageyusfsdgu', 'Hive7.jpeg', NULL, 'Movable', NULL, NULL, NULL, NULL, 84, 2),
-	(30, 'Halva', '', 'Rīga', 'Stationary', NULL, NULL, 'Liela māja kokā', NULL, 71, 2);
+	(2, 'Box2', 'Hive3.jpg', NULL, 'Tower', 234.6, 8, NULL, 1, 83, 2),
+	(43, 'adw2123', NULL, NULL, 'Tower', NULL, NULL, NULL, NULL, 84, 2),
+	(52, 'Bitemelna', 'https://res.cloudinary.com/dj8lvgcxl/image/upload/v1757615696/apiaries/User:2_Apiary:52.jpg', NULL, 'Movable', NULL, NULL, NULL, NULL, 84, 2),
+	(53, 'New bees', 'https://res.cloudinary.com/dj8lvgcxl/image/upload/v1757966104/apiaries/User:2_Apiary:53.png', NULL, 'Stationary', NULL, NULL, NULL, NULL, 84, 2),
+	(54, 'Supa bees', 'https://res.cloudinary.com/dj8lvgcxl/image/upload/v1757966125/apiaries/User:2_Apiary:54.png', NULL, 'Movable', NULL, NULL, NULL, NULL, 84, 2),
+	(55, 'Zemenes', 'https://res.cloudinary.com/dj8lvgcxl/image/upload/v1757966142/apiaries/User:2_Apiary:55.png', NULL, 'Tower', NULL, NULL, NULL, NULL, 84, 2),
+	(56, 'Griķu strops', 'https://res.cloudinary.com/dj8lvgcxl/image/upload/v1757966162/apiaries/User:2_Apiary:56.png', NULL, 'Tower', NULL, NULL, NULL, NULL, 84, 2),
+	(57, 'Sunisu strops', 'https://res.cloudinary.com/dj8lvgcxl/image/upload/v1757966195/apiaries/User:2_Apiary:57.png', NULL, 'Stationary', NULL, NULL, NULL, NULL, 70, 2),
+	(58, 'akropoles strops', 'https://res.cloudinary.com/dj8lvgcxl/image/upload/v1757966212/apiaries/User:2_Apiary:58.png', NULL, 'Stationary', NULL, NULL, NULL, NULL, 84, 2);
 
 -- Dumping structure for table honey_bee.inventory
 CREATE TABLE IF NOT EXISTS `inventory` (
@@ -185,8 +186,8 @@ CREATE TABLE IF NOT EXISTS `notes` (
   `id` bigint NOT NULL DEFAULT (0),
   `title` varchar(30) CHARACTER SET utf8mb4 COLLATE utf8mb4_0900_ai_ci DEFAULT NULL,
   `content` varchar(500) DEFAULT NULL,
-  `creation_date` date DEFAULT NULL,
-  `color` varchar(6) DEFAULT NULL,
+  `creation_date` datetime DEFAULT NULL,
+  `type` varchar(6) CHARACTER SET utf8mb4 COLLATE utf8mb4_0900_ai_ci DEFAULT NULL,
   `user_id` bigint NOT NULL DEFAULT '0',
   PRIMARY KEY (`id`),
   KEY `FK_notes_users` (`user_id`),
@@ -194,30 +195,9 @@ CREATE TABLE IF NOT EXISTS `notes` (
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
 
 -- Dumping data for table honey_bee.notes: ~2 rows (approximately)
-INSERT INTO `notes` (`id`, `title`, `content`, `creation_date`, `color`, `user_id`) VALUES
-	(0, 'Apēst Medu', 'Ar lielu karoti ātri jāēd no stropa augšās, lai bites nepaspētu apjēgties, kas notiek!', '2025-06-11', 'FF1234', 2),
-	(2, 'Pabarot bites', 'Paņemt cukuru un pabarot stropus', '2025-06-09', 'FF1236', 2);
-
--- Dumping structure for table honey_bee.note_place
-CREATE TABLE IF NOT EXISTS `note_place` (
-  `id` bigint NOT NULL AUTO_INCREMENT,
-  `note_id` bigint DEFAULT NULL,
-  `queen_bee` int DEFAULT NULL,
-  `hive` bigint DEFAULT NULL,
-  `apiary` int DEFAULT NULL,
-  `inventory` int DEFAULT NULL,
-  PRIMARY KEY (`id`),
-  KEY `FK__queen_bee` (`queen_bee`),
-  KEY `FK__apiary1` (`apiary`),
-  KEY `FK__inventory` (`inventory`),
-  KEY `FK_note_place_hives` (`hive`),
-  KEY `FK_note_place_note` (`note_id`)
-) ENGINE=InnoDB AUTO_INCREMENT=3 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
-
--- Dumping data for table honey_bee.note_place: ~2 rows (approximately)
-INSERT INTO `note_place` (`id`, `note_id`, `queen_bee`, `hive`, `apiary`, `inventory`) VALUES
-	(1, NULL, NULL, NULL, NULL, 1),
-	(2, NULL, 2, NULL, NULL, NULL);
+INSERT INTO `notes` (`id`, `title`, `content`, `creation_date`, `type`, `user_id`) VALUES
+	(0, 'Apēst Medu', 'Ar lielu karoti ātri jāēd no stropa augšās, lai bites nepaspētu apjēgties, kas notiek!', '2025-06-11 00:00:00', 'FF1234', 2),
+	(2, 'Pabarot bites', 'Paņemt cukuru un pabarot stropus', '2025-06-09 00:00:00', 'FF1236', 2);
 
 -- Dumping structure for table honey_bee.note_place__hive
 CREATE TABLE IF NOT EXISTS `note_place__hive` (
@@ -232,9 +212,6 @@ CREATE TABLE IF NOT EXISTS `note_place__hive` (
 ) ENGINE=InnoDB AUTO_INCREMENT=5 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
 
 -- Dumping data for table honey_bee.note_place__hive: ~2 rows (approximately)
-INSERT INTO `note_place__hive` (`id`, `note_id`, `hive_id`) VALUES
-	(3, 2, 4),
-	(4, 0, 4);
 
 -- Dumping structure for table honey_bee.queen_bees
 CREATE TABLE IF NOT EXISTS `queen_bees` (
@@ -270,6 +247,22 @@ CREATE TABLE IF NOT EXISTS `queen_bee_species` (
 INSERT INTO `queen_bee_species` (`id`, `name_latin`, `description`, `image`, `life_span_years`) VALUES
 	(1, 'Bigus bitus', 'Very big bee', NULL, 100),
 	(2, 'Western honey bee', 'Like all honey bee species, the western honey bee is eusocial, creating colonies with a single fertile female (or "queen"), many normally non-reproductive females or "workers", and a small proportion of fertile males or "drones". Individual colonies can house tens of thousands of bees. Colony activities are organized by complex communication between individuals, through both pheromones and the waggle dance.', NULL, 2);
+
+-- Dumping structure for table honey_bee.suppers
+CREATE TABLE IF NOT EXISTS `suppers` (
+  `id` bigint NOT NULL AUTO_INCREMENT,
+  `type` varchar(50) NOT NULL DEFAULT '',
+  `frames` int NOT NULL DEFAULT (0),
+  `hive_id` bigint NOT NULL,
+  `user_id` bigint DEFAULT NULL,
+  PRIMARY KEY (`id`),
+  KEY `FK_suppers_hives` (`hive_id`),
+  KEY `FK_suppers_users` (`user_id`),
+  CONSTRAINT `FK_suppers_hives` FOREIGN KEY (`hive_id`) REFERENCES `hives` (`id`) ON DELETE CASCADE,
+  CONSTRAINT `FK_suppers_users` FOREIGN KEY (`user_id`) REFERENCES `users` (`id`) ON DELETE CASCADE
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
+
+-- Dumping data for table honey_bee.suppers: ~0 rows (approximately)
 
 -- Dumping structure for table honey_bee.users
 CREATE TABLE IF NOT EXISTS `users` (
