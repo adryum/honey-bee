@@ -102,7 +102,6 @@ const toggleSearch = () => {
 
         padding: .3rem
         box-sizing: border-box
-        border-radius: 0 3px 3px 0
         cursor: pointer
         transition: .1s
 

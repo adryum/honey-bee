@@ -1,13 +1,45 @@
 <script setup lang="ts">
 import { useCssModule } from "vue";
-import TitledField from "../input/fields/TitledField.vue";
-import IconCubeButton from "../input/buttons/IconCubeButton.vue";
 import { SVGImage, SVGRes } from "@/core/SVGLoader";
-import TitledText from "../paragrafs/TitledText.vue";
 import { useI18n } from "vue-i18n";
+import type { DropdownItem } from "@/core/Interfaces";
+import CubeDropdown from "../input/dropdowns/CubeDropdown.vue";
+import { createPopup } from "@/core/utils/components";
+import QueenBeeCreatePopup, { type QueenBeeCreatePopupProps } from "../popups/QueenBeeCreatePopup.vue";
+import AreYouSurePopup, { type AreYouSurePopupProps } from "../popups/AreYouSurePopup.vue";
+import QueenBeeMovePopup, { type QueenBeeMovePopupProps } from "../popups/QueenBeeMovePopup.vue";
 
 const s = useCssModule()
 const { t } = useI18n()
+const queenBeeAddPopupProps: QueenBeeCreatePopupProps = {
+    hiveId: 0
+}
+const areYouSurePopupProps: AreYouSurePopupProps = {
+    title: "Delete Queen bee?",
+    description: "This action will permanetly delete this queen!",
+    onYes: function (): void {
+    },
+    onNo: function (): void {
+    }
+}
+const queenBeeMoveProps: QueenBeeMovePopupProps = {
+    queenBeeId: 0
+}
+const dropdownItems: DropdownItem[] = [
+    {
+        text: "Create Queen",
+        onClick: () => createPopup(QueenBeeCreatePopup, { queenBeeAddPopupProps })
+    },
+    {
+        text: "Move Queen",
+        onClick: () => createPopup(QueenBeeMovePopup, { queenBeeMoveProps })
+    },
+    {
+        text: "Remove Queen",
+        color: "Red",
+        onClick: () => createPopup(AreYouSurePopup, { areYouSurePopupProps })
+    }
+]
 
 </script>
 
@@ -16,24 +48,38 @@ const { t } = useI18n()
     <div :class="s.header">
         <h1>{{ t("hiveOverview.queen") }}</h1>
         <div :class="s.buttons">
-            <IconCubeButton :class="s.button" :svg="new SVGImage(SVGRes.MoreDots)"/>
+            <CubeDropdown 
+                :class="s.button" 
+                :svg="new SVGImage(SVGRes.MoreDots)"
+                :dropdownItems="dropdownItems"
+            />
         </div>
     </div>
-    <div :class="s.body">
-         <div :class="s.imageContainer">
-            <img src="/src/assets/images/queen1.jpg" alt="">
-        </div>
-        <div :class="s.tags">
-            <div :class="[s.tag, s.firstTag]">
-                <h2 :class="s.title">Species</h2>
-                <p :class="s.date">Tetragonula carbonaria</p>
-            </div>
-            <div :class="[s.tag, s.lastTag]">
-                <h2 :class="s.title">Age</h2>
-                <p :class="s.date">23 weeks</p>
-            </div>
-        </div>
-    </div>
+
+    <ol :class="s.body">
+        <!-- <p :class="s.top">Queen bee</p> -->
+        <li :class="s.row">
+            <p :class="s.title">Queen bee age</p>
+            <p :class="s.value">34 weeks</p>
+        </li>
+        <hr :class="s.spacer">
+        <li :class="s.row">
+            <p :class="s.title">Species</p>
+            <p :class="s.value">Apple bees</p>
+        </li>
+    </ol>
+
+    <ol :class="s.body">
+        <li :class="s.row">
+            <p :class="s.title">Bee temper</p>
+            <p :class="s.value">Agressive</p>
+        </li>
+        <hr :class="s.spacer">
+        <li :class="s.row">
+            <p :class="s.title">Bee health</p>
+            <p :class="s.value">Sick - Ticks</p>
+        </li>
+    </ol>
 </div>
 </template>
 
@@ -70,63 +116,62 @@ const { t } = useI18n()
                 height: 100%
 
     .body
+        all: unset
+
         display: flex
         flex-direction: column
-        height: calc(100% - 2.5rem)
-        margin-top: .5rem
-        gap: .5rem
+        margin-top: .5em
+        padding: .5rem
+
         box-sizing: border-box
-        overflow: auto
+        border-radius: 2px
+        background: white
 
-
-        .imageContainer
-            flex: 1 
-            display: flex
-            min-height: 0 // prevents flexbox from overflowing
-            border-radius: 3px
-            overflow: hidden
-            
-            img
-                width: 100%
-                height: 100%
-                object-fit: cover
-
-        .tags
-            display: flex
-            gap: 2px
+        .top
+            @include main.font
+            @include main.f-size-small
+            font-weight: 700
             padding: .5rem
-            min-height: 4rem
-            background: white
-            border-radius: 3px
-            overflow: hidden
-            
-            
-            .tag
-                flex: 1
+
+        .row
+            all: unset
+            display: grid
+            grid-template-areas: "title value"
+            grid-template-columns: 1fr 1fr
+            padding: .5rem
+
+            box-sizing: border-box
+            border-radius: 2px
+            transition: .1s
+
+            &:hover
+                backdrop-filter: brightness(95%)
+
+            & > *
                 display: flex
-                flex-direction: column
-                gap: .25rem
-                box-sizing: border-box
+                align-items: center
 
-                &.lastTag .title
-                    border-radius: 0 10px 10px 0
+                @include main.font
+                @include main.f-size-very-small
 
-                &.middleTag .title
+            .title
+                grid-area: title
+                font-weight: 700
+                letter-spacing: .02em
 
-                &.firstTag .title
-                    border-radius: 10px 0 0 10px
+                padding-left: 1rem
+                box-sizing: border-box 
+            .value
+                grid-area: value
 
+        .spacer
+            all: unset
+            margin: auto
+            width: calc(100% - 1rem)
+            margin: .5rem
+            min-height: 2px
+            max-height: 2px
+            border-radius: 100rem
 
-                .title
-                    @include main.f-size-very-small
-                    font-weight: 700
-                    letter-spacing: 0.02em
-                    // border: 1px solid
-                    padding: .25rem .5rem 
-                    background: var(--grayishOnWhite)
-
-                .date
-                    @include main.f-size-very-small
-                    letter-spacing: 0.02em
-                    padding: .25rem .5rem 
+            background: rgba(0, 0, 0, .1)
 </style>

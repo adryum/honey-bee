@@ -1,99 +1,84 @@
-<script setup>
+<script setup lang="ts">
 import { onMounted, ref, useCssModule } from 'vue';
-import IconCubeButton from '../input/buttons/IconCubeButton.vue';
-import { removePopup } from '@/core/popups';
-import PathTitle from '../PathTitle.vue';
-import RegistrationButton from '../input/buttons/RegistrationButton.vue';
+import type { PopupFunctions, PopupInfo } from '@/core/utils/components';
+import PopupFrame from './PopupFrame.vue';
+import Button from '../input/buttons/Button.vue';
 
-const props = defineProps({
-    id: String,
-    apiaryId: Number,
-    title: String,
-    description: String,
-    onYes: Function,
-    onAsyncYes: Function
-})
-
-async function onYesClick() {
-    if (props.onYes) props.onYes()
-    if (props.onAsyncYes) await props.onAsyncYes()
-
-    removePopup(props.id)
+export type AreYouSurePopupProps = {
+    title: string
+    description: string
+    onYes?: () => void
+    onNo?: () => void
 }
 
 const s = useCssModule()
+const props = defineProps<{
+    popupFunctions: PopupFunctions
+    popupInfo: PopupInfo
+    areYouSurePopupProps: AreYouSurePopupProps
+}>()
+const closeFun = ref<(() => void) | null>(null)
+
+async function onYesClick() {
+    const fun = props.areYouSurePopupProps.onYes
+    if (fun) await fun()
+
+    closeFun.value?.()
+}
+
+function onNoClick() {
+    const fun = props.areYouSurePopupProps.onNo
+    if (fun) fun()
+
+    closeFun.value?.()
+}
 </script>
 
 <template>
-<div :class="s.container">
-    <div :class="s.header">
-        <PathTitle :title="title"/>
-        <div :class="s['vt-linebreak']"></div>
-        <IconCubeButton @click="removePopup(id)" :class="s['button-special']" res="fa-solid fa-xmark"/>
-    </div>
-    <div :class="s.body">
-        <p :class="s.description">{{ description }}</p>
-        
-        <RegistrationButton :class="s.yes" text="Yes" @click="onYesClick()"/>
-        <RegistrationButton :class="s.no" text="No" @click="removePopup(id)"/>
-    </div>
-</div>
+    <PopupFrame 
+        :title="areYouSurePopupProps.title"
+        :popup-functions="popupFunctions"
+        :popup-info="popupInfo"
+        @on-close="fun => closeFun = fun"
+    >
+        <template #body>
+            <div :class="s.body">
+                <p :class="s.description">{{ areYouSurePopupProps.description }}</p>
+                <Button
+                    text="No" 
+                    :class="s.no"
+                    :is-important="false"
+                    @click="onNoClick"
+                />
+                <Button 
+                    text="Yes" 
+                    :class="s.yes" 
+                    @click="onYesClick"
+                />
+            </div>  
+        </template>
+    </PopupFrame>
 </template>
 
 <style module lang='sass'>
-@use '@/assets/_colors.sass' as main
-.container 
-    display: flex
-    flex-direction: column
+@use '@/assets/main.sass' as main
+.body
+    @include main.font
+    display: grid
+    grid-template-areas: 'description description' 'no yes'
+    grid-template-columns: repeat(2, 10rem)
+    grid-template-rows: minmax(2rem, 1fr) 2rem
+    gap: 1rem
 
-    box-sizing: border-box
-    margin: 6px
-
-
-    border-radius: 4px
-    box-shadow: 0px 0px 10px rgba(0, 0, 0, 0.21)
-    background: #FFECC8
-
-    .body
-        display: grid
-        grid-template-areas: 'desk desk' 'yes no'
-        grid-template-columns: 1fr 1fr
-        grid-template-rows: 1fr 1fr
-        column-gap: 1rem
-
-        box-sizing: border-box
-        padding: .6rem
-
-        .description
-            grid-area: desk
-            font-size: 20px
-        .yes
-            grid-area: yes
-        .no
-            grid-area: no
-.header
-    display: flex
-    align-items: center
-    gap: .4rem
-
-    height: 5rem
-
-    box-sizing: border-box
-    padding: .4rem
-    border-radius: 4px
-    box-shadow: 0px 0px 10px rgba(0, 0, 0, 0.21)
-    background: #EDEDED
-
-    .vt-linebreak
-        width: 6px
-        height: 100%
-        border-radius: 4px
-        background: #D9D9D9
-        margin-left: auto 
-
-    .button-special
-        background: main.$button-special
-@media (max-width: 600px) 
-    .container
-        width: 100%
+    .description
+        @include main.f-size-small
+        grid-area: description
+        display: flex
+        justify-content: center
+        align-items: center
+        text-align: center
+    .yes
+        grid-area: yes
+    .no
+        grid-area: no
 </style>

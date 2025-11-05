@@ -25,11 +25,11 @@ const s = useCssModule()
 .container
     display: flex
     background: white
-    border-radius: 3px
+    border-radius: 2px
     align-items: center
 
     box-sizing: border-box
-    padding: .5rem .5rem 
+    padding: .5rem 
     gap: .5rem
 
     // border: 1px solid var(--base)

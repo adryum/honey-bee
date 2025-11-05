@@ -5,7 +5,7 @@ import TitledField from '../../input/fields/TitledField.vue';
 import ImageDropZone from '../../input/fields/ImageDropZone.vue';
 import SelectionDropdown from '../../input/dropdowns/SelectionDropdown.vue';
 import Button from '../../input/buttons/Button.vue';
-import type { DropdownOptions } from '../../../../core/Interfaces';
+import type { DropdownItem } from '../../../../core/Interfaces';
 import type { HiveModel, HiveUpdateModel } from '@/core/models/HiveModels';
 import PopupFrame from '../PopupFrame.vue';
 import type { PopupFunctions, PopupInfo } from '@/core/utils/components';
@@ -22,11 +22,12 @@ const props = defineProps<{
 }>()
 const { updateHive, isHiveLoading, apiaries } = useHiveUpdate()
 // temp vals
-const tempApiaryId = ref<undefined | number>(undefined)
-const tempName = ref('')
-const tempLocation = ref('')
-const tempDescription = ref('')
-const tempType = ref('')
+const tempApiaryId = ref<number | undefined>(undefined)
+const tempApiaryName = ref<string | undefined>(undefined)
+const tempName = ref<string>('')
+const tempLocation = ref<string>('')
+const tempDescription = ref<string>('')
+const tempType = ref<string>('')
 const tempImage = ref<File>()
 
 //  field validators
@@ -39,6 +40,7 @@ const isEverythingValid = computed(() => {
     && descriptionValidator.value?.isValid 
     && typeValidator.value?.isValid 
     && locationValidator.value?.isValid
+    && Boolean(tempApiaryId.value) && tempApiaryId.value! > -1
 })
 
 const ruleName: FieldOptions = {
@@ -51,12 +53,12 @@ const ruleDescription: FieldOptions = {
 }
 
 // dropdowns
-const typeOptions: DropdownOptions[] = [
+const typeOptions: DropdownItem[] = [
     { text: 'Stationary' }, 
     { text: 'Tower' }, 
     { text: 'Movable' } 
 ]
-const apiaryOptions: DropdownOptions[] = [
+const apiaryOptions: DropdownItem[] = [
     ...apiaries.value.map(apiary => 
         ({ 
             text: apiary.name,
@@ -88,7 +90,7 @@ async function fireUpdateHive() {
 
     const hiveUpdateModel: HiveUpdateModel = {
         id: props.hive.id,
-        apiaryId: tempApiaryId.value,
+        apiaryId: tempApiaryId.value!,
         name: tempName.value,
         imageFile: tempImage.value,
         type: tempType.value,
@@ -114,6 +116,7 @@ onMounted(() => {
     tempLocation.value = props.hive.location
     tempDescription.value = props.hive.description
     tempApiaryId.value = props.hive.apiaryId
+    tempApiaryName.value = props.hive.apiaryName
     tempType.value = props.hive.type
 })
 </script>
@@ -138,17 +141,17 @@ onMounted(() => {
                         <SelectionDropdown 
                             title="Type" 
                             :class="s.typeDrop" 
-                            :options="typeOptions" 
+                            :dropdownItems="typeOptions" 
                             :z-index="popupInfo.zIndex.value"
                             v-model:selected="tempType" 
                         />
                         <SelectionDropdown 
                             title="Apiary" 
                             :class="s.apiaryDrop" 
-                            :options="apiaryOptions" 
+                            :dropdownItems="apiaryOptions" 
                             :z-index="popupInfo.zIndex.value"
-                            v-model:selected="tempApiaryId" 
-                        />
+                            v-model:selected="tempApiaryName" 
+                        /> 
                     </div>
                     <TitledField 
                         title="Location"
@@ -159,7 +162,7 @@ onMounted(() => {
                     <TitledFieldMultiple
                         title="Description" 
                         :class="s.description"
-                        :field-options="ruleDescription"
+                        :fieldRules="ruleDescription"
                         v-model:text="tempDescription"
                         v-on:validator="e => descriptionValidator = e"
                     />

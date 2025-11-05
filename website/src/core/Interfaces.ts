@@ -1,6 +1,6 @@
 import type { SVGImage } from "./SVGLoader";
 
-export type DropdownOptions = {
+export type DropdownItem = {
     text: string
     svg?: SVGImage 
     color?: string 

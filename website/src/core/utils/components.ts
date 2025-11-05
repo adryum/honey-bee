@@ -32,7 +32,7 @@ export type PopupInfo = {
 
 export function createPopup(
     component: Component, // <-- loose type
-    props: Record<string, any> = {},
+    props: Object
 ) {
     // useless wrapper just to later 'safely and correctly' unmount created
     const container = document.createElement('div')

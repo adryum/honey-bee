@@ -22,7 +22,9 @@ const { style } = useDraggable(container, {
     handle: handle,
     initialValue: { x: 100, y: 100  }
 })
-const emit = defineEmits(['close'])
+const emit = defineEmits<{
+    onClose: [() => void]
+}>()
 
 function startExiting() {
   isExiting.value = true
@@ -38,7 +40,7 @@ function handleMotions() {
 }
 
 onMounted(() => {
-  emit('close', startExiting)
+  emit('onClose', startExiting)
 })
 </script>
 

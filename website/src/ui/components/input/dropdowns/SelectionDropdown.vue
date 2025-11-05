@@ -3,7 +3,7 @@ import { computed, onMounted, reactive, ref, Teleport, useCssModule, watch } fro
 import { AnimatePresence, motion } from 'motion-v';
 import { SVGImage, SVGRes } from '@/core/SVGLoader';
 import SVGComponent from '../../SVGComponent.vue';
-import type { DropdownOptions } from '../../../../core/Interfaces';
+import type { DropdownItem } from '../../../../core/Interfaces';
 import type { FieldValidator } from '@/core/composables/field/useField';
 import { useFloatingUI } from '@/core/composables/field/useFloatingUI';
 
@@ -13,7 +13,7 @@ const props = withDefaults(defineProps<{
     zIndex?: number
     isRequiried?: boolean
     svg?: SVGImage
-    options: DropdownOptions[]
+    dropdownItems: DropdownItem[]
     onClick?: () => void
 }>(), {
     zIndex: 0,
@@ -32,8 +32,8 @@ const dropdown = ref()
 const dropdownList = ref()
 const isListShown = ref(false)
 const selectedChoiceHover = ref<Number>()
-const allOptions = computed(() => [
-    ...props.options,
+const allDropdownItems = computed(() => [
+    ...props.dropdownItems,
 ])
 const MotionSVG = motion.create(SVGComponent)
 
@@ -42,9 +42,12 @@ const emit = defineEmits<{
     validator: [FieldValidator]
 }>()
 
-function onItemClick(button: DropdownOptions) {
+function onItemClick(button: DropdownItem) {
     isListShown.value = false
     selected.value = button.text
+
+    const fun = button.onClick
+    if (fun) fun()
 }
 
 function validateInput() {
@@ -92,16 +95,16 @@ onMounted(async () => {
             :exit="{ opacity: 0, y: '-1px', transition: { duration: .05 }}"
             @click.stop
         >
-            <motion.li v-for="(option, i) in allOptions" :key="i" 
+            <motion.li v-for="(item, i) in allDropdownItems" :key="i" 
                 class="li" 
-                @click="() => onItemClick(option)" 
+                @click="() => onItemClick(item)" 
                 @mouseover="selectedChoiceHover = i"
-                :animate="option.text === selected ? { backgroundColor: 'var(--light)'} : {}"
-                :while-hover="option.text != selected ? { transition: { duration: .1 }, backgroundColor: 'var(--base)'} : {}"
+                :animate="item.text === selected ? { backgroundColor: 'var(--light)'} : {}"
+                :while-hover="item.text != selected ? { transition: { duration: .1 }, backgroundColor: 'var(--base)'} : {}"
                 :while-press="{ scale: 0.9 }"
             >
-                <SVGComponent class="icon" :svg="option.svg" />
-                <p class="text">{{ option.text }}</p> 
+                <SVGComponent class="icon" :svg="item.svg" />
+                <p class="text">{{ item.text }}</p> 
             </motion.li>
     
         </motion.ol></AnimatePresence></Teleport>

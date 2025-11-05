@@ -4,7 +4,7 @@ import { AnimatePresence, motion } from 'motion-v';
 import { useToggle } from '@vueuse/core';
 import SVGComponent from '../../SVGComponent.vue';
 import IconCubeButton from '../buttons/IconCubeButton.vue';
-import type { DropdownOptions } from '../../../../core/Interfaces';
+import type { DropdownItem as DropdownItem } from '../../../../core/Interfaces';
 import { SVGImage, SVGRes } from '@/core/SVGLoader';
 import { useFloatingUI } from '@/core/composables/field/useFloatingUI';
 
@@ -12,10 +12,10 @@ const s = useCssModule()
 const props = withDefaults(defineProps<{
     svg?: SVGImage
     onClick?: () => void
-    options?: DropdownOptions[]
+    dropdownItems?: DropdownItem[]
 }>(), {
     svg: () => new SVGImage(SVGRes.House),
-    options: () => [{
+    dropdownItems: () => [{
             text: 'option1',
             svg: new SVGImage(SVGRes.House),
             color: 'black'
@@ -33,7 +33,7 @@ const button = ref()
 const selectedChoice = ref<Number>()
 const [isShown] = useToggle()
 
-function onItemClick(button: DropdownOptions) {
+function onItemClick(button: DropdownItem) {
     isShown.value = false
     button.onClick?.()
 }
@@ -58,7 +58,7 @@ onMounted(async () => {
             :animate="{ opacity: 1, x: '0px'  }"
             :exit="{ opacity: 0, x: '5px' }"
             >
-            <motion.li v-for="(button, i) in options" :key="i" 
+            <motion.li v-for="(button, i) in dropdownItems" :key="i" 
                 class="li" 
                 @click="() => onItemClick(button)" 
                 :while-press="{ scale: 0.9 }"

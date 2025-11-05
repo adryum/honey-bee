@@ -5,7 +5,7 @@ import Button from '../input/buttons/Button.vue';
 import PopupFrame from './PopupFrame.vue'
 import { useCreateSupper } from '@/core/composables/hive/useCreateSupper';
 import SelectionDropdown from '../input/dropdowns/SelectionDropdown.vue';
-import type { DropdownOptions } from '@/core/Interfaces';
+import type { DropdownItem } from '@/core/Interfaces';
 import type { PopupFunctions, PopupInfo } from '@/core/utils/components';
 import { isNumber } from '@/core/utils/others';
 import type { FieldOptions, FieldValidator } from '@/core/composables/field/useField';
@@ -27,7 +27,7 @@ const dropdownOptions = [
     { text: "Deep" },
     { text: "Medium" },
     { text: "Small" },
-] as DropdownOptions[]
+] as DropdownItem[]
 
 const frameOptions: FieldOptions = {
     onlyNumbers: true,
@@ -78,7 +78,7 @@ async function create() {
                 title="Type" 
                 v-model:selected="type"
                 :class="s.dropdown" 
-                :options="dropdownOptions" 
+                :dropdownItems="dropdownOptions" 
                 :z-index="popupInfo.zIndex.value" 
                 :is-requiried="true"
                 @validator="validator => typeValidator = validator" 

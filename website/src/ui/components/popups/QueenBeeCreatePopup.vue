@@ -1,49 +1,47 @@
 <script setup lang="ts">
 import { computed, ref, useCssModule } from 'vue';
-import TitledField from '../input/fields/TitledField.vue';
 import Button from '../input/buttons/Button.vue';
 import PopupFrame from './PopupFrame.vue'
 import SelectionDropdown from '../input/dropdowns/SelectionDropdown.vue';
 import type { DropdownItem } from '@/core/Interfaces';
 import type { PopupFunctions, PopupInfo } from '@/core/utils/components';
-import { useNoteCreate } from '@/core/composables/hive/useCreateNote';
-import type { NoteCreateRequestModel } from '@/core/models/NoteModels';
 import type { CallbackModel } from '@/core/models/SupperModels';
 import type { FieldOptions, FieldValidator } from '@/core/composables/field/useField';
 import TitledFieldMultiple from '../input/fields/TitledFieldMultiple.vue';
+import { useQueenBeeCreate } from '@/core/composables/hive/useQueenBeeCreate';
+
+export type QueenBeeCreatePopupProps = {
+    hiveId: number
+}
+
+export type QueenBeeCreateRequestModel = {
+
+}
 
 const s = useCssModule()
 const props = defineProps<{
     popupFunctions: PopupFunctions
     popupInfo: PopupInfo
+    queenBeeCreateProps: QueenBeeCreatePopupProps
     onCreate?: () => {}
 }>()
-const { isNoteLoading, createNote } = useNoteCreate();
 const closeFunction = ref<(() => void) | null>(null)
-const type = ref('')
-const title = ref('')
-const content = ref('')
-const dropdownOptions: DropdownItem[] = [
-    { text: "Information" },
-    { text: "Warning" },
+const { isQueenBeeLoading, createQueenBee } = useQueenBeeCreate();
+const species = ref('')
+const additionalInfo = ref('')
+const dropdownSpeciesItems: DropdownItem[] = [
+    { text: "Bigus bitus" },
+    { text: "Honey bee" },
 ]
 
 // validators
-const titleValidator = ref<FieldValidator>()
-const contentValidator = ref<FieldValidator>()
-const typeValidator = ref<FieldValidator>()
+const additionalInfoValidator = ref<FieldValidator>()
+const speciesValidator = ref<FieldValidator>()
 const isEverythingValid = computed(() => {
-    return titleValidator.value?.isValid 
-    && contentValidator.value?.isValid
-    && typeValidator.value?.isValid
+    return additionalInfoValidator.value?.isValid
+    && speciesValidator.value?.isValid
 })
-
-const titleRule: FieldOptions = {
-    isRequired: true,
-    maxLength: 40
-}
-const contentRule: FieldOptions = {
-    isRequired: true,
+const additionalInfoRules: FieldOptions = {
     maxLength: 200
 }
 
@@ -54,10 +52,9 @@ function closePopup() {
 async function create() {
     if (!isEverythingValid.value) return
 
-    const createNoteModel: NoteCreateRequestModel = {
-        type: type.value,
-        title: title.value,
-        content: content.value
+    const createQueenBeeModel: QueenBeeCreateRequestModel = {
+        species: species.value,
+        additionalInfo: additionalInfo
     }
 
     const callbackModel: CallbackModel = {
@@ -70,42 +67,34 @@ async function create() {
         },
     }
 
-    await createNote(createNoteModel, callbackModel)
+    await createQueenBee(createQueenBeeModel, callbackModel)
 }
 </script>
 
 <template>
 <PopupFrame 
-    title="Create Note" 
+    title="Add Queen" 
     :popup-functions="popupFunctions" 
     :popup-info="popupInfo" 
-    v-on:close="(fun) => closeFunction = fun"
+    @on-close="fun => closeFunction = fun"
 >
     <template #body>
         <div :class="s.grid">
-            <TitledField 
-                title="Title"
-                :class="s.title" 
-                :is-required="true"
-                :field-options="titleRule"
-                v-on:validator="v => titleValidator = v"
-                v-model="title"
-            />
-            <TitledFieldMultiple 
-                title="Content"
-                :class="s.content" 
-                :is-required="true" 
-                :fieldRules="contentRule"
-                v-on:validator="v => contentValidator = v"
-                v-model="content"
-            />
             <SelectionDropdown 
                 title="Type" 
                 :class="s.dropdown" 
-                :dropdownItems="dropdownOptions"
+                :dropdownItems="dropdownSpeciesItems"
                 :is-requiried="true"
                 :z-index="popupInfo.zIndex.value"
-                v-on:validator="v => typeValidator = v"
+                v-on:validator="v => speciesValidator = v"
+            />
+            <TitledFieldMultiple 
+                title="Aditional Info"
+                :class="s.content" 
+                :is-required="false" 
+                :fieldRules="additionalInfoRules"
+                v-on:validator="v => additionalInfoValidator = v"
+                v-model="additionalInfo"
             />
             <div :class="s.buttons">
                 <Button 

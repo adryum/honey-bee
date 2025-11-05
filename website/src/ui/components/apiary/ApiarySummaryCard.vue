@@ -2,7 +2,7 @@
 import { ref, useCssModule } from "vue"
 import { SVGImage, SVGRes } from "../../../core/SVGLoader";
 import { motion, rgba } from "motion-v"
-import type { DropdownOptions } from "../../../core/Interfaces";
+import type { DropdownItem } from "../../../core/Interfaces";
 import CubeDropdown from "../input/dropdowns/CubeDropdown.vue";
 import type { ApiaryResponseModel } from "../../../core/api/models/ResponseModels";
 import type { ApiaryModel } from "@/core/models/Models";
@@ -14,7 +14,7 @@ const props = defineProps<{
 }>()
 
 const MotionIconCubeDropdown = motion.create(CubeDropdown)
-const dropdownActions: DropdownOptions[] = [
+const dropdownActions: DropdownItem[] = [
     {
         text: 'Overview',
         svg: new SVGImage(SVGRes.OpenWindow),

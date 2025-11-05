@@ -5,7 +5,7 @@ import TitledField from '../../input/fields/TitledField.vue';
 import ImageDropZone from '../../input/fields/ImageDropZone.vue';
 import SelectionDropdown from '../../input/dropdowns/SelectionDropdown.vue';
 import Button from '../../input/buttons/Button.vue';
-import type { DropdownOptions } from '@/core/Interfaces';
+import type { DropdownItem } from '@/core/Interfaces';
 import { useHiveCreate } from '@/core/composables/hive/useHiveCreate';
 import type { HiveCreateModel } from '@/core/models/HiveModels';
 
@@ -20,7 +20,7 @@ const location = ref('')
 const description = ref('')
 const type = ref('')
 const image = ref<File>()
-const typeOptions: DropdownOptions[] = [
+const typeOptions: DropdownItem[] = [
     {
         text: 'Stationary',
         color: ''
@@ -103,7 +103,7 @@ async function startCreatingHive() {
             title="Description" 
             v-model="description"/>
         <SelectionDropdown :class="s.tag" 
-            title="Type" :options="typeOptions" v-model:selected="type"
+            title="Type" :dropdownItems="typeOptions" v-model:selected="type"
         />
         <Button :class="s.button" text="Add" @click="startCreatingHive"/>
     </div>

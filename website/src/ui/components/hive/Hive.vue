@@ -3,7 +3,7 @@ import { useCssModule } from 'vue';
 import CubeDropdown from '../input/dropdowns/CubeDropdown.vue';
 import { SVGImage, SVGRes } from '@/core/SVGLoader';
 import { useHive } from '@/core/composables/hive/useHive';
-import type { DropdownOptions } from '@/core/Interfaces';
+import type { DropdownItem } from '@/core/Interfaces';
 import { createComponentInstance } from '@/core/utils/components';
 import AssignToApiaryPopup from '../popups/AssignToApiaryPopup.vue';
 import type { HiveModel } from '@/core/models/HiveModels';
@@ -16,7 +16,7 @@ const props = withDefaults(defineProps<{
     showApiary: false
 })
 const { isDeletingHive, deleteHive, updateHives } = useHive()
-const moreOptions: DropdownOptions[] = [
+const moreOptions: DropdownItem[] = [
     {
         text: 'Delete',
         svg: new SVGImage(SVGRes.Trashcan),
@@ -59,7 +59,7 @@ const moreOptions: DropdownOptions[] = [
             <CubeDropdown  
                 :svg="new SVGImage(SVGRes.MoreDots, 'black')" 
                 :class="s.options"
-                :options="moreOptions"/>
+                :dropdownItems="moreOptions"/>
         </div>
 
         <div :class="s.body">

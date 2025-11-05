@@ -13,7 +13,7 @@ const emit = defineEmits<{
 const props = withDefaults(defineProps<{
     title?: string
     hint?: string
-    fieldOptions?: FieldOptions
+    fieldRules?: FieldOptions
 }>(),
 {
     title: '{ TITLE }',
@@ -30,9 +30,9 @@ function onValidatorUpdate(event: FieldValidator) {
 <div :class="s.container">
     <div :class="s.title">
         <h1>{{ title }}</h1>
-        <p :class="s.error">{{ ((fieldOptions?.isRequired) ? "* " : " ") + validator.error }}</p>
+        <p :class="s.error">{{ ((fieldRules?.isRequired) ? "* " : " ") + validator.error }}</p>
     </div>
-    <FieldMultiple :class="s.field" :hint="hint" :field-options="fieldOptions"
+    <FieldMultiple :class="s.field" :hint="hint" :field-options="fieldRules"
         v-model:text="text" 
         @validator="onValidatorUpdate"
         />
