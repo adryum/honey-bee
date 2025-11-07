@@ -99,6 +99,7 @@ const dropdownItems: DropdownItem[] = [
         min-height: 2.5rem
         max-height: 2.5rem
         padding: .25rem 0.5rem
+        border-radius: 2px
         box-sizing: border-box
         background: white
         border-top: 4px solid var(--light)

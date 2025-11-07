@@ -18,7 +18,7 @@ console.log(today);
 <template>
     <div :class="s.container">
         <CalendarGrid :searchDate="searchDate" :class="s.calendar" />
-        <CalendarToolBarVertical :today="today" :searchable-date="searchDate" :class="s.calendarBar"/>
+        <!-- <CalendarToolBarVertical :today="today" :searchable-date="searchDate" :class="s.calendarBar"/> -->
     </div>
 </template>
 
@@ -33,7 +33,8 @@ console.log(today);
     box-sizing: border-box
 
     .calendar
-        flex: 7
+        height: 600px
+        width: 100%
 
 
     .calendarBar

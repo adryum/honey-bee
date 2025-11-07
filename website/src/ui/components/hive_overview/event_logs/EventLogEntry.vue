@@ -22,7 +22,7 @@ const s = useCssModule()
     display: flex
     background: white
     padding: .5rem
-    border-radius: 3px
+    border-radius: 2px
 
     .header
         display: flex

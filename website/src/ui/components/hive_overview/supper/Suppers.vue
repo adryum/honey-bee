@@ -21,12 +21,12 @@ const { t } = useI18n()
         </div>
     </div>
     <div :class="s.body">
-        <supper :class="s.supper"/>
-        <supper :class="s.supper"/>
-        <supper :class="s.supper"/>
-        <supper :class="s.supper"/>
-        <supper :class="s.supper"/>
-        <supper :class="s.supper"/>
+        <Supper :is-brooding="false" :class="s.supper"/>
+        <supper :is-brooding="false" :class="s.supper"/>
+        <supper :is-brooding="false" :class="s.supper"/>
+        <supper :is-brooding="false" :class="s.supper"/>
+        <supper :is-brooding="false" :class="s.supper"/>
+        <supper :is-brooding="true" :class="s.supper"/>
     </div>
 </div>
 </template>

@@ -21,11 +21,11 @@ const s = useCssModule()
     letter-spacing: .02em
     
 
-    border-radius: 3px
+    border-radius: 2px
     padding: 0.5rem 1rem
     box-sizing: border-box
-    background: white 
+    background: var(--surface)
     // border-bottom: 8px solid var(--accent) 
-    border-left: 8px solid var(--accent) 
+    // border-left: 8px solid var(--accent) 
     
 </style>

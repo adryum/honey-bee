@@ -7,14 +7,17 @@ import CubeDropdown from "../../input/dropdowns/CubeDropdown.vue";
 
 const { t } = useI18n()
 const s = useCssModule()
+const props = defineProps<{
+    isBrooding: boolean
+}>()
 </script>
 
 <template>
 <div :class="s.container">
-    <div :class="s.type">Deep</div>
+    <div :class="s.type" :style="isBrooding ? { background: '#B3826C'} : { background: 'var(--accent)'}">Deep</div>
     <div :class="s.frames">
-        <h1 :class="s.title">Frames</h1>
-        <p :class="s.count">2 / 5</p>
+        <h1 :class="s.title" >Frames</h1>
+        <p :class="s.count">2 / 12</p>
     </div>
     <CubeDropdown :class="s.button" :svg="new SVGImage(SVGRes.MoreDots)"/>
 </div>
@@ -45,11 +48,12 @@ const s = useCssModule()
         display: flex
         height: 100%
         padding: .5rem 1rem
+        // border: 2px solid var(--accent)
         border-radius: 3px
         box-sizing: border-box
         align-items: center
         justify-content: center
-        background: var(--light)
+
 
     .frames
         flex: 1
@@ -63,7 +67,7 @@ const s = useCssModule()
         padding: .5rem 1rem
         border-radius: 3px
         box-sizing: border-box
-        background: var(--grayishOnWhite)
+        // background: var(--grayishOnWhite)
 
         .title
             @include main.f-size-very-small

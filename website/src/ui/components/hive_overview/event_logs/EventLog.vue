@@ -59,6 +59,7 @@ const { t } = useI18n()
         box-sizing: border-box
         background: white
         border-top: 4px solid var(--light)
+        border-radius: 2px
         // border-bottom: 1px solid rgba(0, 0, 0, .1)
         box-shadow: 0 2px 5px 0 rgba(0, 0, 0, .1)
 

@@ -92,10 +92,12 @@ onMounted(() => {
 
     box-shadow: 0px 0px 50px 2px rgba(0, 0, 0, 0.4)
     background: var(--surface)
+    border-radius: 2px
     // border: 1px solid  var(--light)
     
     max-height: 90vh
     max-width: 90vw
+    overflow: hidden
 
     .handle
         display: flex

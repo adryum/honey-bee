@@ -89,7 +89,7 @@ onMounted(async () => {
         </div>
         
         <Teleport to="body"><AnimatePresence><motion.ol  ref="dropdownList" v-if="isListShown"
-            class="dropdown"
+            class="selection-dropdown"
             :initial="{ opacity: 0, y: '-1px' }"
             :animate="{ opacity: 1, y: '0px', transition: { duration: .1 } }"
             :exit="{ opacity: 0, y: '-1px', transition: { duration: .05 }}"
@@ -100,7 +100,7 @@ onMounted(async () => {
                 @click="() => onItemClick(item)" 
                 @mouseover="selectedChoiceHover = i"
                 :animate="item.text === selected ? { backgroundColor: 'var(--light)'} : {}"
-                :while-hover="item.text != selected ? { transition: { duration: .1 }, backgroundColor: 'var(--base)'} : {}"
+                :while-hover="item.text != selected ? { transition: { duration: .1 }, filter: 'brightness(90%)'} : {}"
                 :while-press="{ scale: 0.9 }"
             >
                 <SVGComponent class="icon" :svg="item.svg" />
@@ -115,16 +115,18 @@ onMounted(async () => {
 <style lang="sass">
 @use '/src/assets/_colors.sass' as colors
 @use '/src/assets/main.sass' as main
-.dropdown
+.selection-dropdown
     all: unset
     @include main.button-font
     position: absolute
     display: inline-flex
     flex-direction: column
-    background: var(--surface)
-    padding: 1rem
-    border-radius: 0 0 3px 3px
+    background: white
+    padding: .5rem
+    gap: .25rem
+    border-radius: 0 0 2px 2px
     border: 1px solid rgba(0,0,0,.1)
+    border-top: none
 
     .li
         all: unset
@@ -132,10 +134,13 @@ onMounted(async () => {
         display: flex
         @include main.f-size-very-small
         padding: .5rem 1rem
-        border-radius: 3px
+        border-radius: 6px
         gap: 1rem
         cursor: pointer
-        background: var(--surface)
+        transition: .1s
+        background: white
+
+            
 
         .icon
             z-index: 2

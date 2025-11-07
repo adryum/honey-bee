@@ -62,7 +62,6 @@ onMounted(async () => {
                 class="li" 
                 @click="() => onItemClick(button)" 
                 :while-press="{ scale: 0.9 }"
-                :while-hover="{ backgroundColor: 'var(--base)', transition: { duration: .1 } }"
             >
                 <SVGComponent class="icon" :svg="button.svg" />
                 <p class="text" :style="{ color: button.color ?? 'black' }">{{ button.text }}</p> 
@@ -74,12 +73,63 @@ onMounted(async () => {
     </div>
 </template>
 
+<style lang="sass">
+@use '/src/assets/_colors.sass' as colors
+@use '/src/assets/main.sass' as main
+.dropdown
+    all: unset
+    @include main.button-font
+    position: absolute
+    display: inline-flex
+    flex-direction: column
+    background: white
+    padding: .5rem
+    gap: .25rem
+    border-radius: 6px
+    border: 1px solid rgba(0,0,0,.2)
+
+    .li
+        all: unset
+        position: relative
+        display: flex
+        @include main.f-size-very-small
+        padding: .5rem 1rem
+        border-radius: 6px
+        gap: 1rem
+        cursor: pointer
+        transition: .1s
+        // background: var(--surface)
+
+        &:hover
+            backdrop-filter: brightness(90%)
+            
+
+        .icon
+            z-index: 2
+            width: 1rem
+            aspect-ratio: 1
+
+        .text
+            position: relative
+            z-index: 2
+            box-sizing: border-box
+
+        .selected
+            z-index: 1
+            position: absolute
+            top: 0
+            right: 0
+            height: 100%
+            width: 100%
+
+            border-radius: 3px
+            background: var(--surface)
+</style>
+
 <style module lang='sass'>
 @use '/src/assets/_colors.sass' as colors
 @use '/src/assets/main.sass' as main
 .container
     position: relative
-    display: inline-block
-
-    
+    display: inline-block    
 </style>
