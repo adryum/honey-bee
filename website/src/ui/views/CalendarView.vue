@@ -16,27 +16,12 @@ console.log(today);
 </script>
 
 <template>
-    <div :class="s.container">
-        <CalendarGrid :searchDate="searchDate" :class="s.calendar" />
-        <!-- <CalendarToolBarVertical :today="today" :searchable-date="searchDate" :class="s.calendarBar"/> -->
-    </div>
+    <CalendarGrid :searchDate="searchDate" :class="s.calendar" />
 </template>
 
 <style module lang='sass'>
 @use '@/assets/_colors.sass' as colors
-.container
-    display: flex
 
-    padding: 1rem
-    gap: 1rem
-    height: 100%
-    box-sizing: border-box
-
-    .calendar
-        height: 600px
-        width: 100%
-
-
-    .calendarBar
-        flex: 2
+.calendar
+    flex: 1
 </style>

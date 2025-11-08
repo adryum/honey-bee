@@ -47,7 +47,7 @@ const currentCalendar = computed(() => {
             align-items: center
             justify-content: center
             flex: 1
-            background: var(--accent)
+            background: white
 
     .grid
         display: grid

@@ -24,8 +24,8 @@ const components = [
 const grid = ref<HTMLDivElement | null>(null)
 const { style: gridStyle } = useFlexibleGrid({ 
     gridRef: grid,
-    itemWidth: 250,
-    gapPixels: 10
+    itemMinWidthPx: 250,
+    gapPx: 10
 })
 
 function searchHives() {

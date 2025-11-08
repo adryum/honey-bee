@@ -29,19 +29,36 @@ export function clamp(value: number, min: number, max: number): number {
   return Math.min(Math.max(value, min), max)
 }
 
-export function useFlexibleGrid({gridRef, itemWidth, gapPixels }: { gridRef: Ref<HTMLDivElement | null>, itemWidth: number, gapPixels: number }) {
+export type FlexibleGridOptions = {
+    gridRef: Ref<HTMLDivElement | null>, 
+    itemMinWidthPx: number, 
+    itemMinHeightPx?: number, 
+    gapPx: number
+}
+export function useFlexibleGrid(options: FlexibleGridOptions) {
     const style = ref<CSSProperties>({
         display: 'grid',
-        gap: gapPixels + "px",
+        gap: options.gapPx + "px",
         gridTemplateColumns: 'repeat(1, 1fr)',
+        gridTemplateRows: (options.itemMinHeightPx !== undefined) ? 'repeat(1, 1fr)' : '',
     })
 
-    onResize(gridRef, (element) => {
+    onResize(options.gridRef, (element) => {
         // possible columns
-        const possibleColumns = Math.max(1, Math.floor(element.contentRect.width / itemWidth))
+        const possibleColumns = Math.max(1, Math.floor(element.contentRect.width / options.itemMinWidthPx))
         // adds gaps to consideration
-        const columns = Math.max(1, Math.floor((element.contentRect.width - gapPixels * (possibleColumns - 1)) / itemWidth))
+        const columns = Math.max(1, Math.floor((element.contentRect.width - options.gapPx * (possibleColumns - 1)) / options.itemMinWidthPx))
+
         style.value.gridTemplateColumns = `repeat(${columns}, 1fr)`
+
+        if (options.itemMinHeightPx !== undefined) {
+            // possible rows
+            const possibleRows = Math.max(1, Math.floor(element.contentRect.height / options.itemMinHeightPx))
+            // adds gaps to consideration
+            const rows = Math.max(1, Math.floor((element.contentRect.height - options.gapPx * (possibleRows - 1)) / options.itemMinHeightPx))
+
+            style.value.gridTemplateRows = `repeat(${rows}, 1fr)`
+        }
     })
 
     return {

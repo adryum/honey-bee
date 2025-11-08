@@ -36,7 +36,7 @@ function switchTab(tab: string) {
                         :class="s.selected"
                         layoutId="Selected_add_hive_tab"
                         :transition="{ duration: 0.4, ease: [0, 0.71, 0.2, 1.01], type: 'spring' }"
-                    />
+                    </motion.div>
                 </motion.button>
             </div>
 

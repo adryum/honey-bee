@@ -74,7 +74,7 @@ onMounted(() => {
     flex-direction: column
     padding: 1rem
     box-sizing: border-box
-    background: var(--light)
+    background: white
 
     transition: .1s
     overflow: hidden
@@ -88,11 +88,11 @@ onMounted(() => {
         height: 100%
 
         opacity: 0.6
-        background: repeating-linear-gradient( -45deg, var(--base) 1px, var(--base) 5px, transparent 5px, transparent 35px )
+        // background: repeating-linear-gradient( -45deg, var(--base) 1px, var(--base) 5px, transparent 5px, transparent 35px )
 
     &:hover
         z-index: 1
-        box-shadow: 0 0 10px rgba(0, 0, 0, .5)
+        box-shadow: 0 0 10px rgba(0, 0, 0, .2)
 
     .day
         @include main.f-size-very-small
@@ -124,13 +124,14 @@ onMounted(() => {
 .thisMonthDate
 
 .notThisMonthDate
-    opacity: 0.3
-    background: var(--accent)
+    opacity: 0.5
+    background: var(--surface)
+
 
 .today
-    background: rgba(20, 100, 20, .5)
+    background: var(--light)
     // border: 5px solid rgba(20, 180, 20, .2)
 
 .weekend
-    background: var(--accent)
+    background: var(--surface)
 </style>

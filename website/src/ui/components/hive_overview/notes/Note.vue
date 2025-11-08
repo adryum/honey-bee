@@ -47,6 +47,7 @@ onMounted(() => {
     background: white
     border-radius: 3px
     // border-;: 4px solid var(--accent)
+    height: 300px
 
     .body
         display: flex

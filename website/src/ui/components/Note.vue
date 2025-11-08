@@ -47,7 +47,7 @@ const s = useCssModule()
 
         h1
             all: unset    
-            font-size: main.$font-size-heading
+            // font-size: main.$font-size-heading
         h2
             all: unset    
             font-size: main.$font-size-text
