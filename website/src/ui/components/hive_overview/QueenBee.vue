@@ -102,7 +102,7 @@ const dropdownItems: DropdownItem[] = [
         border-radius: 2px
         box-sizing: border-box
         background: white
-        border-top: 4px solid var(--light)
+        border-top: 4px solid var(--light-gray)
         // border-bottom: 1px solid rgba(0, 0, 0, .1)
         box-shadow: 0 2px 5px 0 rgba(0, 0, 0, .1)
 

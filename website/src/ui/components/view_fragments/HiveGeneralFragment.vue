@@ -19,8 +19,8 @@ const s = useCssModule()
 @use '@/assets/main.sass' as main
 .container
     display: grid
-    grid-template-columns: 1fr 1fr
-    grid-template-rows: 1fr 1fr
+    grid-template-columns: 1fr 1.5fr
+    grid-template-rows: 1fr 1.5fr
     grid-template-areas: 'info profit' 'log else'
     gap: 1rem
 

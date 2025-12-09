@@ -8,6 +8,7 @@ import HiveMedicineFragment from '../components/view_fragments/HiveMedicineFragm
 import HiveGeneralFragment from '../components/view_fragments/HiveGeneralFragment.vue';
 import HiveNoteFragment from '../components/view_fragments/HiveNoteFragment.vue';
 import CalendarView from './CalendarView.vue';
+import { Destinations, type DestinationProps } from '@/core/models/OtherModels';
 
 const s = useCssModule()
 const props = defineProps({
@@ -34,21 +35,6 @@ function changeDestination(destination: Destinations) {
 }
 </script>
 
-<script lang="ts">
-export enum Destinations {
-    General = "General",
-    Calendar = "Calendar",
-    Notes = "Notes",
-    Medicine = "Sickness and Remedies"
-}
-
-export type DestinationProps = {
-    destination: Destinations
-    fragmentComponent: Component
-    fragmentToolbarComponents: Component[]
-}
-</script>
-
 <template>
     <div :class="s.toolbar">
         <div :class="s.shared">
@@ -62,7 +48,7 @@ export type DestinationProps = {
             </motion.button>
             <Button :style="{ marginLeft: 'auto'}" text="Add Inspection"></Button>
         </div>
-        <div :class="[s.fragmentSpecific, hasSelectedFragmentComponents && s.selected]">
+        <div :class="[s.fragmentSpecific, hasSelectedFragmentComponents && s.shown]">
             <component 
                 v-for="component in selectedDestinationProps.fragmentToolbarComponents" 
                 :class="s.toolbarComponent" 
@@ -87,71 +73,76 @@ export type DestinationProps = {
 
 .toolbarComponent
     align-self: center
+
 .toolbar
     margin: 1rem
     margin-bottom: 0
 
     display: flex
     flex-direction: column
-    border-radius: 2px
-    background: var(--surface)
+    border-radius: var(--border-radius-small)
+    background: var(--white)
 
     .fragmentSpecific
         display: flex
-        gap: .5rem
         height: 0
         transition: .1s
         opacity: 0
 
         box-sizing: border-box
-        padding: 0 .5rem
+        gap: .2rem
 
-        &.selected
+        &.shown
             height: 2.5rem
             max-height: 2.5rem
             opacity: 1
+            padding: .2rem
+
 
     .shared
         display: flex
         min-height: 2.5rem
         max-height: 2.5rem
         align-items: center
-        border-bottom: 1px solid rgba(0, 0, 0, .1)
+        font-family: var(--font-family)
+        font-size: var(--font-size-medium)
+        font-weight: 500
+
+        padding: .25rem
+        box-sizing: border-box
+        gap: .25rem
 
         .button
             all: unset
-            @include main.f-size-small
-            @include main.font
             position: relative
             height: 100%
             box-sizing: border-box
             padding: .5rem 1rem
+            height: 2rem
             border-radius: 2px
             cursor: pointer
-            transition: .1s
-            opacity: .8
-            font-weight: 500
+            transition: .2s
+            opacity: .7
             letter-spacing: .02em
 
-            // &::before
-            //     content: ''
-            //     position: absolute
-            //     left: 0
-            //     right: 0
-            //     bottom: -4px
-            //     height: 4px
-            //     background: var(--light)
-            //     display: none  // optional, if you only want it visible when selected
+            &::before
+                position: absolute
+                content: ''
+                width: 100%
+                height: 2px
+                
+                left: 0
+                bottom: 0
+                transition: .2s
+                border-radius: 100rem
 
-            // &.selected::before
-            //     display: block  // show when selected
 
             &.selected
-                background: var(--accent)
-                color: white
                 opacity: 1
-                &:hover
-                    backdrop-filter: none
+                
+                &::before
+                    background: var(--orange)
+
 
             &:hover
                 opacity: 1

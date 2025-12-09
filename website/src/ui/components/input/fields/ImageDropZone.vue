@@ -119,7 +119,7 @@ function handleFiles(event: Event) {
             height: 100%
 
             border-radius: 3px
-            background: var(--base)
+            background: var(--gray)
 
 
         .dropHint

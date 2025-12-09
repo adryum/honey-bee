@@ -44,7 +44,7 @@ function searchApiaries() {
 
 const grid = ref<HTMLDivElement>()
 const gridColumns = ref(0)
-const minHiveWidth = 350
+const minHiveWidth = 550
 
 onResize(grid, (element) => {
     const rect = element.contentRect
@@ -59,11 +59,17 @@ onMounted(() => {
 <template>
     <div :class="s.container">
         <ToolBar name="Apiaries" :components="components"/>
-        <div :style="{ gridTemplateColumns: `repeat(${gridColumns}, 1fr)` }" :class="s.appiaries" ref="grid">
-            <ApiarySummaryCard v-for="apiary in apiaries"
+        <div 
+            ref="grid"
+            :class="s.appiaries" 
+            :style="{ gridTemplateColumns: `repeat(${gridColumns}, 1fr)` }" 
+        >
+            <ApiarySummaryCard 
+                v-for="apiary in apiaries"
+                :class="s.apiary" 
+                :apiary="apiary" :onDelete="searchApiaries"
                 @click="$router.push('/apiaryHives/' + apiary!.id)"
-                class="item" 
-                :apiary="apiary" :onDelete="searchApiaries"/>
+            />
         </div>
     </div>
 </template>
@@ -82,4 +88,9 @@ onMounted(() => {
     .appiaries
         display: grid
         gap: 20px
+
+        .apiary
+            transition: .2s
+            &:hover
+                transform: translateY(-4px)
 </style>

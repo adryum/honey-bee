@@ -35,7 +35,6 @@ const dropdownActions: DropdownItem[] = [
     <img :class="s.image" :src="apiary.imagePath" alt="apiary image">
     <hr :class="s.linearDim">
     <MotionIconCubeDropdown
-        :style="{ background: 'rgba(0,0,0, 0.3)'}"
         :svg="new SVGImage(SVGRes.MoreDots)" :class="[s.options]"
         :options="dropdownActions"
          />
@@ -43,11 +42,9 @@ const dropdownActions: DropdownItem[] = [
     <ul :class="s.info">
         <div :class="s.entry">
             <p :class="s.value">{{ apiary.hiveCount }}</p>
-            <hr>
+            <hr :class="s.HRhorizontal">
             <p :class="s.title">Hives</p>
         </div>
-        <!-- <div :class="s.entry"></div>
-        <div :class="s.entry"></div> -->
     </ul>
 
 </div>
@@ -56,6 +53,12 @@ const dropdownActions: DropdownItem[] = [
 <style module lang="sass">
 @use '@/assets/_colors.sass' as colors
 @use '@/assets/main.sass' as main
+
+.HRhorizontal
+    height: 2px
+    width: 100%
+    background: var(--white)
+    border: none
 .container
     @include main.font
     position: relative
@@ -66,17 +69,12 @@ const dropdownActions: DropdownItem[] = [
     height: 450px
     box-sizing: border-box
     overflow: hidden
-    // border-radius: 5px
     transition: .3s ease-out
     cursor: pointer
-    border: 1px solid rgba(0,0,0,0.2)
-
-    &:hover
-        box-shadow: 2px 2px 10px rgba(0, 0, 0, .3)
-        transform: translateY(-3px)
+    border-radius: var(--border-radius-tiny)
 
     &:hover .image
-        scale: 1.1
+        transform: scale(1.01)
     &:hover .options
         opacity: 1
 
@@ -88,9 +86,9 @@ const dropdownActions: DropdownItem[] = [
         margin: 1em
         
     .name
-        font-size: 3.5em
+        font-size: var(--font-size-huge)
         font-weight: 800
-        
+        letter-spacing: .02em
         margin: 0
         z-index: 0
         padding: 0 2rem
@@ -111,18 +109,14 @@ const dropdownActions: DropdownItem[] = [
         justify-content: space-between
         align-items: center
 
-        // background: rgba(0, 0, 0, .4)
-        // padding: .5rem 1rem 
-        // box-sizing: border-box  
-        // border-radius: 10px      
         .value
             color: white
-            @include main.f-size-very-small
+            font-size: var(--font-size-medium)
             font-weight: 700
 
         .title
             color: white
-            @include main.f-size-very-small
+            font-size: var(--font-size-medium)
             font-weight: 400
             letter-spacing: .8px
 
@@ -140,9 +134,9 @@ const dropdownActions: DropdownItem[] = [
         all: unset
         position: absolute
         bottom: 0
-        height: 40%
+        height: 60%
         width: 100%
 
-        background: linear-gradient( rgba(0, 0, 0, 0) 0%, rgba(0, 0, 0, .65) 100%)
+        background: linear-gradient( rgba(0, 0, 0, 0) 0%, rgba(0, 0, 0, .15) 100%)
 </style>
         

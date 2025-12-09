@@ -15,7 +15,7 @@ const s = useCssModule()
 </script>
 
 <template>
-<motion.button :class="[s.container, isImportant && s.important, isDisabled && s.disabled]"
+<motion.button :class="[s.container, isImportant ? s.important : s.unimportnat, isDisabled && s.disabled]"
     :while-press="isDisabled ? {} : {scale: 0.98}"
     :disabled="isDisabled"
 >
@@ -33,19 +33,35 @@ const s = useCssModule()
     justify-content: center
     align-items: center
 
-    padding: .5rem 1rem
-    border-radius: 3px
+    height: 2rem
+    max-height: 2rem
+    padding: 0 1rem
     box-sizing: border-box
-    border: 2px solid rgba(0,0,0,.2)
-    
-    .text
-        @include main.button-font
+    border-radius: var(--border-radius-tiny)
+    font-size: var(--font-size-medium)
+    transition: .1s
+    outline-color: white
 
+    .text
+        font-family: var(--font-family)
+        font-weight: 500
+        letter-spacing: .02em
+
+.unimportnat
+    border: 1px solid rgba(0, 0, 0, .6)
+    color: black
+    opacity: .6
+
+    &:hover
+        opacity: 1
+        border-color: black
 
 .important
-    border: 2px solid var(--accent)
-    border-bottom: 2px solid rgba(0,0,0,.2)
-    background: var(--accent)
+    background: var(--orange)
+    color: white
+
+    &:hover
+        background: var(--darker-orange)
 
 .disabled
     opacity: .5

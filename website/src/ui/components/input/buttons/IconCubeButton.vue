@@ -31,20 +31,21 @@ const s = useCssModule()
     justify-content: center
     cursor: pointer
 
-    min-width: 28px
-    min-height: 28px
-    max-height: 28px
-    max-width: 28px
+    min-width: 2rem
+    min-height: 2rem
+    max-height: 2rem
+    max-width: 2rem
 
     padding: .2rem
-    border-radius: 3px
     box-sizing: border-box
 
-    // box-shadow: inset 0 -2px rgba(0,0,0, .3)
-    transition: .2s
+    transition: .1s
+    border-radius: var(--border-radius-tiny)
+    background: var(--white)
 
     &:hover
-        background: rgba(0,0,0, .1)
+        background: var(--orange)
+        filter: brightness(98%)
     
     .icon
         height: 100%

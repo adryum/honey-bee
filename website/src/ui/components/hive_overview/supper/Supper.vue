@@ -14,7 +14,7 @@ const props = defineProps<{
 
 <template>
 <div :class="s.container">
-    <div :class="s.type" :style="isBrooding ? { background: '#B3826C'} : { background: 'var(--accent)'}">Deep</div>
+    <div :class="s.type" :style="isBrooding ? { background: '#B3826C'} : { background: 'var(--orange)'}">Deep</div>
     <div :class="s.frames">
         <h1 :class="s.title" >Frames</h1>
         <p :class="s.count">2 / 12</p>
@@ -35,7 +35,7 @@ const props = defineProps<{
     padding: .5rem 
     gap: .5rem
 
-    // border: 1px solid var(--base)
+    // border: 1px solid var(--gray)
     .button
         margin-left: auto
         height: 28px
@@ -48,7 +48,7 @@ const props = defineProps<{
         display: flex
         height: 100%
         padding: .5rem 1rem
-        // border: 2px solid var(--accent)
+        // border: 2px solid var(--orange)
         border-radius: 3px
         box-sizing: border-box
         align-items: center

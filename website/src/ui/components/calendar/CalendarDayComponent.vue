@@ -88,7 +88,7 @@ onMounted(() => {
         height: 100%
 
         opacity: 0.6
-        // background: repeating-linear-gradient( -45deg, var(--base) 1px, var(--base) 5px, transparent 5px, transparent 35px )
+        // background: repeating-linear-gradient( -45deg, var(--gray) 1px, var(--gray) 5px, transparent 5px, transparent 35px )
 
     &:hover
         z-index: 1
@@ -113,7 +113,7 @@ onMounted(() => {
             all: unset
             
             padding: .2rem .5rem 
-            background: var(--base)
+            background: var(--gray)
             border-left: 4px solid rgba(0, 0, 0, .5)
             box-sizing: border-box
 
@@ -129,7 +129,7 @@ onMounted(() => {
 
 
 .today
-    background: var(--light)
+    background: var(--light-gray)
     // border: 5px solid rgba(20, 180, 20, .2)
 
 .weekend

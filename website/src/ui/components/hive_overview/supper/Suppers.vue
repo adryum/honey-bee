@@ -1,32 +1,55 @@
 <script setup lang="ts">
-import { useCssModule } from "vue";
-import IconCubeButton from "../../input/buttons/IconCubeButton.vue";
-import { SVGImage, SVGRes } from "@/core/SVGLoader";
-import Supper from './Supper.vue'
-import { useI18n } from "vue-i18n";
-import { createPopup } from "@/core/utils/components";
-import CreateSupperPopup from "../../popups/CreateSupperPopup.vue";
+import { ref, useCssModule } from "vue";
 
 const s = useCssModule()
-const { t } = useI18n()
+const series = ref([{ name: 'series1', data: [31,40,28,51,42,109,100] }]);
+
+const chartOptions = ref({
+    chart: {
+        type: 'area',
+        height: '100%',
+        animations: {
+            enabled: true
+        }
+    },
+    dataLabels: {
+        enabled: false
+    },
+    stroke: {
+        curve: 'smooth'
+    },
+    colors: ['#ffbf44'], // <-- change line colors here
+
+    fill: {
+        type: 'gradient',
+        gradient: {
+        shadeIntensity: .7,
+        opacityFrom: 0.4,
+        opacityTo: 0.4,
+        stops: [0, 90, 100]
+        }
+    },
+    xaxis: {
+        type: 'datetime',
+        categories: ["2018-09-19T00:00:00.000Z", "2018-09-19T01:30:00.000Z", "2018-09-19T02:30:00.000Z", "2018-09-19T03:30:00.000Z", "2018-09-19T04:30:00.000Z", "2018-09-19T05:30:00.000Z", "2018-09-19T06:30:00.000Z"]
+    },
+    tooltip: {
+        x: {
+        format: 'dd/MM/yy HH:mm'
+        },
+    },
+});
 </script>
 
 <template>
-<div :class="s.container">
+<div id="inenesums" :class="s.container">
     <div :class="s.header">
-        <h1>{{ t("hiveOverview.suppers") }}</h1>
-        <div :class="s.buttons">
-            <IconCubeButton @click="createPopup(CreateSupperPopup)" :class="s.button" :svg="new SVGImage(SVGRes.Pluss)"/>
-            <IconCubeButton :class="s.button" :svg="new SVGImage(SVGRes.MoreDots)"/>
-        </div>
+        <label :class="s.label" for="inenesums">
+            Iensesums
+        </label>
     </div>
     <div :class="s.body">
-        <Supper :is-brooding="false" :class="s.supper"/>
-        <supper :is-brooding="false" :class="s.supper"/>
-        <supper :is-brooding="false" :class="s.supper"/>
-        <supper :is-brooding="false" :class="s.supper"/>
-        <supper :is-brooding="false" :class="s.supper"/>
-        <supper :is-brooding="true" :class="s.supper"/>
+        <ApexChart :class="s.body" :series="series" :options="chartOptions" type="area" height="100%"/>
     </div>
 </div>
 </template>
@@ -36,13 +59,10 @@ const { t } = useI18n()
 .container
     display: flex
     flex-direction: column
-    @include main.font
-    // background: var(--surface)
-    overflow: hidden
-
+    font-family: var(--font-family)
+    gap: .5rem
 
     .header
-        @include main.button-font
         position: relative
         display: flex
         align-items: center
@@ -52,29 +72,18 @@ const { t } = useI18n()
         padding: .25rem 0.5rem
         box-sizing: border-box
         background: white
-        border-top: 4px solid var(--light)
-        // border-bottom: 1px solid rgba(0, 0, 0, .1)
-        box-shadow: 0 2px 5px 0 rgba(0, 0, 0, .1)
+        border-radius: var(--border-radius-small)
 
-        .buttons
-            margin-left: auto
-            display: flex
-            align-items: center
-            gap: .2rem
-            height: 100%
-
-            .button
-                height: 100%
+        .label
+            font-size: var(--font-size-medium)
 
     .body
-        @include main.font
         flex: 1
         display: flex
-        flex-direction: column
-
-        padding-top: .5rem
-        gap: .5rem
         box-sizing: border-box
-        overflow: auto
+        padding: .5rem 0
+
+        background: var(--white)
+        border-radius: var(--border-radius-small)
         
 </style>

@@ -50,6 +50,7 @@ onMounted(async () => {
 <template>
     <div :class="s.container">
         <IconCubeButton ref="button" @click="isShown = !isShown" :svg="svg"/>
+        
         <AnimatePresence><Teleport to="body">
         <motion.ol ref="dropdown" @click.stop
             v-if="isShown"

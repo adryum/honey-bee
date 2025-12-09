@@ -24,7 +24,7 @@ const s = useCssModule()
 
     box-sizing: border-box
     background: white
-    border-top: 6px solid var(--accent)
+    border-top: 6px solid var(--orange)
 
     .title
         @include main.f-size-very-small

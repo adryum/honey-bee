@@ -61,7 +61,7 @@ const { t } = useI18n()
         padding: .25rem 0.5rem
         box-sizing: border-box
         background: white
-        border-top: 4px solid var(--light)
+        border-top: 4px solid var(--light-gray)
         box-shadow: 0 2px 5px 0 rgba(0, 0, 0, .1)
 
     .buttons

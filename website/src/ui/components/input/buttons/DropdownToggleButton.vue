@@ -23,7 +23,7 @@ function toggleBool() {
 .top {
   display: flex;
   padding: 8px;
-  background: var(--lighter-dark-color);
+  background: var(--light-grayer-dark-color);
 }
 .top > button {
   aspect-ratio: 1/1;

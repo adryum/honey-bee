@@ -11,29 +11,55 @@ import hiveRoute from "./routes/Hives"
 import apiaryRoute from "./routes/Apiaries"
 import noteRoute from "./routes/Notes"
 import supperRoute from "./routes/Suppers"
+
+import session from 'express-session';
+import { RedisStore } from "connect-redis";
+import { connectRedis, redisClient } from "./config/RedisClient";
 const app = express();
 const port = 5000;
 
-app.use(cors()); // Enable CORS to allow your Vue app to communicate with this backend
-app.use(express.json()); // Parse JSON data in request bodies
+async function startServer() {
+    await connectRedis()
 
-// middle man between request and resposne
-app.use((req, res, next) => {
-    console.log('Incoming request:', req.method, req.url);
-    console.log('body: ', req.body);
-    
-    next();
-});
+    app.use(session({
+        store: new RedisStore({ client: redisClient }),
+        secret: process.env.SESSION_COOKIE_SECRET as string,
+        resave: false,
+        saveUninitialized: false,
+        cookie: { 
+            secure: false, 
+            httpOnly: true, 
+            sameSite: 'lax', 
+            maxAge: 1000 * 60 * 60 * 24 // 24 hour 
+        },
+    }));
 
-app.use("/registration", registrationRoute)
-app.use("/admin", adminRoute)
-app.use("/hive", hiveRoute)
-app.use("/apiary", apiaryRoute)
-app.use("/note", noteRoute)
-app.use("/supper", supperRoute)
+    app.use(cors()); // Enable CORS to allow your Vue app to communicate with this backend
+    app.use(express.json()); // Parse JSON data in request bodies
 
-app.listen(port, () => {
-    console.log(`Server running at http://localhost:${port}`);
-});
+    // middle man between request and resposne
+    app.use((req, res, next) => {
+        console.log("----------- INCOMING --------------");
+        console.log('Incoming request:', req.method, req.url);
+        console.log('body: ', req.body);
+        console.log("-----------------------------------");
+        
+        next();
+    });
 
-testConnection()
+    app.use("/registration", registrationRoute)
+    app.use("/admin", adminRoute)
+    app.use("/hive", hiveRoute)
+    app.use("/apiary", apiaryRoute)
+    app.use("/note", noteRoute)
+    app.use("/supper", supperRoute)
+
+    // starts express server
+    app.listen(port, () => {
+        console.log(`Server running at http://localhost:${port}`);
+    });
+
+    testConnection()
+}
+
+startServer()

@@ -25,7 +25,7 @@ const s = useCssModule()
     padding: 0.5rem 1rem
     box-sizing: border-box
     background: var(--surface)
-    // border-bottom: 8px solid var(--accent) 
-    // border-left: 8px solid var(--accent) 
+    // border-bottom: 8px solid var(--orange) 
+    // border-left: 8px solid var(--orange) 
     
 </style>

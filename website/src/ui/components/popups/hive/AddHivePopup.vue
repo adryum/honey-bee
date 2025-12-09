@@ -71,7 +71,7 @@ function switchTab(tab: string) {
 
             box-sizing: border-box
             padding: 0 .5rem
-            background: var(--accent)
+            background: var(--orange)
             backdrop-filter: brightness(95%)
 
             .text
@@ -87,5 +87,5 @@ function switchTab(tab: string) {
                 top: 0
                 width: 100%
                 height: 100%
-                background: var(--light)
+                background: var(--light-gray)
 </style>

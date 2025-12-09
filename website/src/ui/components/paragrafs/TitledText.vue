@@ -21,18 +21,20 @@ const props = withDefaults(defineProps<{
 <style module lang="sass">
 @use '@/assets/main.sass' as main
 .container
-    @include main.font
     display: flex
     flex-direction: column
     gap: .5rem
+    font-family: var(--font-family)
 
     .title
-        @include main.f-size-very-small
+        font-size: var(--font-size-small)
         font-weight: 700
         letter-spacing: 0.02em
 
     .content
-        @include main.f-size-very-small
+        font-size: var(--font-size-small)
+        font-weight: 500
         letter-spacing: 0.02em
+        opacity: .8
 
 </style>

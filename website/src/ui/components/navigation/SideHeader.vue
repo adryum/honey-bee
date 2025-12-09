@@ -136,18 +136,19 @@ onMounted(() => {
     flex-direction: column
     width: 4rem
     height: 100vh
-    background: var(--surface)
 
     .tip
         height: 3rem
         width: 100%
-        background: #ffaa66
+        background: var(--white)
+        border-bottom: 2px solid var(--light-gray)
 
     .list
         all: unset
         display: flex
         flex-direction: column
         padding: 1rem .5rem 
+        gap: .2rem
 
         .tab
             z-index: 0
@@ -195,7 +196,7 @@ onMounted(() => {
                 width: 200%
 
                 border-radius: 3px
-                background: #ffaa66
+                background: var(--orange)
 
     .extender
         all: unset
@@ -203,7 +204,7 @@ onMounted(() => {
         display: flex
         justify-content: center
         align-items: center
-        background: var(--accent)
+        background: var(--orange)
         width: 2rem
         height: 2rem
 

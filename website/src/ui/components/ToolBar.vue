@@ -32,11 +32,10 @@ const s = useCssModule()
     width: 100%
     height: 3rem
 
-    background: #f9f8f3
+    background: var(--white)
     padding: .5rem 1rem
     box-sizing: border-box
-
-    box-shadow: 0 2px 1px 0 rgba(0, 0, 0, .2)
+    border-radius: var(--border-radius-tiny)
 
     .workComponents
         margin-left: auto

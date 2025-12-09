@@ -6,12 +6,17 @@ import App from './App.vue'
 import router from './core/router'
 import { createPinia } from 'pinia'
 import i18n from './core/locales/i18n'
+import VueApexCharts from "vue3-apexcharts";
 
 axios.defaults.baseURL = import.meta.env.VITE_API;
 console.log('Base URL set to:', axios.defaults.baseURL);
 
 const app = createApp(App)
 const pinia = createPinia()
+
+
+app.use(VueApexCharts);
+app.component('ApexChart', VueApexCharts);
 
 app.use(pinia)
 app.use(router)

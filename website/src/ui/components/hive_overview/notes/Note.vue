@@ -46,7 +46,7 @@ onMounted(() => {
     flex-direction: column
     background: white
     border-radius: 3px
-    // border-;: 4px solid var(--accent)
+    // border-;: 4px solid var(--orange)
     height: 300px
 
     .body
@@ -71,7 +71,7 @@ onMounted(() => {
                 align-items: center
                 max-width: max-content
                 border-radius: 30px
-                color: var(--accent)
+                color: var(--orange)
 
         .innerbody
             padding: 0 1rem 1rem 1rem

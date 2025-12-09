@@ -94,7 +94,7 @@ const moreOptions: DropdownItem[] = [
 
         box-sizing: border-box
         padding: 0 .5rem 
-        background: var(--light)
+        background: var(--light-gray)
 
         .options 
             margin-left: auto
@@ -114,7 +114,7 @@ const moreOptions: DropdownItem[] = [
 
     .body
         position: relative
-        background: var(--accent)
+        background: var(--orange)
         width: 95%
         height: calc(100% - 4.1rem)
         border: 1px solid rgba(0, 0, 0, .2)

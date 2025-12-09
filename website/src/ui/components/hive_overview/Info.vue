@@ -7,11 +7,12 @@ import { SVGImage, SVGRes } from "@/core/SVGLoader";
 import { createPopup } from "@/core/utils/components";
 import HiveUpdatePopup from "../popups/hive/HiveUpdatePopup.vue";
 import type { HiveModel } from "@/core/models/HiveModels";
+import IconTextButton from '../input/buttons/IconTextButton.vue'
+import { SVG } from "@/assets/svgs/SVGLoader";
 
 const s = useCssModule()
 const { t } = useI18n()
 const hive = 
-
   {
     apiaryId: 84,
     apiaryImagePath: "https://res.cloudinary.com/dj8lvgcxl/image/upload/v1757347829/apiaries/User:2_Apiary:84.png",
@@ -27,9 +28,13 @@ const hive =
 <template>
 <div :class="s.container">
     <div :class="s.header">
-        <p>{{ t("hiveOverview.info") }}</p>
+        <label :class="s.label">{{ t("hiveOverview.info") }}</label>
         <div :class="s.buttons">
-            <IconCubeButton :class="s.button" :svg="new SVGImage(SVGRes.ArrowHead)" @click="createPopup(HiveUpdatePopup, { hive: hive })"/>
+            <IconTextButton 
+                text="Edit"
+                :svg="SVG.Pencil"
+                @click="createPopup(HiveUpdatePopup, { hive: hive })"
+            />
         </div>
     </div>
     <div :class="s.body">
@@ -51,10 +56,8 @@ const hive =
 .container
     display: flex
     flex-direction: column
-    // background: var(--surface)
 
     .header
-        @include main.button-font
         position: relative
         display: flex
         align-items: center
@@ -62,25 +65,23 @@ const hive =
         min-height: 2.5rem
         max-height: 2.5rem
         padding: .25rem 0.5rem
+
         box-sizing: border-box
-        background: white
-        border-top: 4px solid var(--light)
-        border-radius: 2px
-        // border-bottom: 1px solid rgba(0, 0, 0, .1)
-        box-shadow: 0 2px 5px 0 rgba(0, 0, 0, .1)
+
+        background: var(--white)
+        border-radius: var(--border-radius-small)
+
+        font-family: var(--font-family)
+        letter-spacing: .02em
+
+        .label
+            font-size: var(--font-size-medium)
+            font-weight: 500
 
         .buttons
-            margin-left: auto
             display: flex
-            align-items: center
             gap: .2rem
-            height: 100%
-
-            .button
-                height: 100%
-
-                &.left
-                    rotate: 180deg 0 0 1
+            margin-left: auto
     .body
         flex: 1
         display: grid
@@ -88,7 +89,7 @@ const hive =
         grid-template-columns: repeat(2, 1fr)
 
         padding-top: .5rem
-        gap: 1rem
+        gap: .5rem
         box-sizing: border-box
         overflow: auto
 
@@ -98,7 +99,7 @@ const hive =
             background: rgba(0, 0, 0, .3)
 
             img
-                border-radius: 2px
+                border-radius: var(--border-radius-tiny)
                 width: 100%
                 height: 100%
                 object-fit: cover
@@ -116,6 +117,6 @@ const hive =
 
             .entry
                 padding: .5rem
-                background: white
-                border-radius: 2px
+                background: var(--white)
+                border-radius: var(--border-radius-tiny)
 </style>
