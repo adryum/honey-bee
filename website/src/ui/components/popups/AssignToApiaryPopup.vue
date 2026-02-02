@@ -1,7 +1,7 @@
 <script setup lang="ts">
 import { useHiveAssignToApiary } from '@/core/composables/apiary/useApiaryAssignHive';
 import type { ApiaryModel } from '@/core/models/Models';
-import { createComponentWithProps, type PopupFunctions, type PopupInfo } from '@/core/utils/components';
+import { createComponent, type PopupFunctions, type PopupInfo } from '@/core/utils/components';
 import { useCssModule, ref, watch, onMounted } from 'vue';
 import SmallSearchbar from '../input/fields/SmallSearchbar.vue';
 import { motion } from 'motion-v';
@@ -18,7 +18,7 @@ const props = defineProps<{
 }>()
 const searchWord = ref<string>('')
 const components = [
-    createComponentWithProps(SmallSearchbar, { onClick: (searchText: string) => searchWord.value = searchText }),
+    createComponent(SmallSearchbar, { onClick: (searchText: string) => searchWord.value = searchText }),
 ]
 const apiaries = ref<ApiaryModel[]>()
 const { assignHive, isAssigningHive, searchForApiaries } = useHiveAssignToApiary()

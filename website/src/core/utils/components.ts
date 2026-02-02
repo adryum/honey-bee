@@ -1,18 +1,25 @@
-import { createVNode, ref, render, type Component, type DefineComponent, type ExtractPropTypes, type Ref, type VNode} from "vue";
+import { createVNode, ref, render, type Component, type DefineComponent, type ExtractPropTypes, type Ref, type StyleValue, type VNode} from "vue";
 import { focusPopup } from "./PopupHiarchy";
 
-export interface ComponentWithProps {
+export interface ComponentWithPropsNStyle {
   component: Component
   props?: Record<string, unknown>
+  css?: VueCSS
 }
 
-export function createComponentWithProps<
+type VueCSS = {
+  class?: string | string[] | Record<string, boolean>
+  style?: StyleValue
+}
+
+export function createComponent<
   C extends Component,
-  P extends Record<string, any> = C extends { __propDef: { props: infer PP } }
-    ? ExtractPropTypes<PP>
-    : Record<string, unknown>
->(component: C, props: P) {
-  return { component, props }
+  P =
+    C extends { __propDef: { props: infer PP } }
+      ? ExtractPropTypes<PP>
+      : Record<string, unknown>
+>(component: C, props: P, css?: VueCSS) {
+  return { component, props, css }
 }
 
 type ExtraPopupProps = {

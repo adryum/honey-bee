@@ -10,5 +10,5 @@ export enum Destinations {
 export type DestinationProps = {
     destination: Destinations
     fragmentComponent: Component
-    fragmentToolbarComponents: Component[]
+    fragmentToolbarComponent?: Component
 }

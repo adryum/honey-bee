@@ -1,7 +1,7 @@
 <script setup lang="ts">
 import { useCssModule } from 'vue';
 import Icon from '../../Icon.vue'
-import { SVG } from '@/assets/svgs/SVGLoader';
+import { IconType, SVG } from '@/assets/svgs/SVGLoader';
 
 const props = withDefaults(defineProps<{
     svg?: SVG
@@ -28,7 +28,11 @@ const s = useCssModule()
     :disabled="isDisabled"
     @click="onClick"
 >
-    <Icon :class="s.icon" :svg="svg"/>
+    <Icon 
+        :class="s.icon" 
+        :svg="svg"
+        :type="IconType.SMALL"
+    />
     <p :class="s.text">{{ text }}</p>
 </button>
 </template>
@@ -55,9 +59,6 @@ const s = useCssModule()
     &:hover
         background: var(--orange)
         border: 1px solid var(--orange)
-    .icon
-        width: 1rem
-        height: 1rem
 
     .text
         padding: 0
@@ -65,6 +66,7 @@ const s = useCssModule()
         font-size: var(--font-size-small)
         color: var(--black)
         letter-spacing: .02em
+        white-space: nowrap
 
 .disabled
     opacity: .5

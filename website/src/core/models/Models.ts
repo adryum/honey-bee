@@ -1,3 +1,6 @@
+import type { MaybeRef } from "vue"
+import type { FieldValidationOptions } from "../composables/validators/UseFieldValidator"
+
 export type UserLoginModel = {
     email: string
     password: string
@@ -46,4 +49,24 @@ export type LogModel = {
     creator: string
     creationDate: string
     message: string
+}
+
+export type StringDropdownOptions<T> = {
+    initialValue?: MaybeRef<T> 
+    showIcon?: MaybeRef<boolean>
+    items?: MaybeRef<T[]>
+    placeholder?: MaybeRef<string>
+    noItemsText?: string
+    maxListHeightInItems?: MaybeRef<number>
+    maxSuggestedItemCount?: MaybeRef<number>
+    clearOnListExpansion?: MaybeRef<boolean>
+    closeOnEmptyInput?: MaybeRef<boolean>
+    openOnEmptyInput?: MaybeRef<boolean>
+    openOnFilledInput?: MaybeRef<boolean>
+    suggestItems?: MaybeRef<boolean>
+    validatorOptions?: FieldValidationOptions<T>
+    zIndex?: MaybeRef<number>
+    onInputChange?: (value: string) => void
+    onItemSelection?: (item: T) => void
+    onItemClick?: () => void
 }

@@ -2,8 +2,8 @@
 import { useCssModule } from "vue";
 import Medicine from './MedicineEntry.vue'
 import IconCubeButton from "../../input/buttons/IconCubeButton.vue";
-import { SVGImage, SVGRes } from "@/core/SVGLoader";
 import { useI18n } from "vue-i18n";
+import { SVG } from "@/assets/svgs/SVGLoader";
 
 const s = useCssModule()
 const { t } = useI18n()
@@ -15,8 +15,8 @@ const { t } = useI18n()
     <div :class="s.header">
         <h1>{{ t("hiveOverview.medicine") }}</h1>
         <div :class="s.buttons">
-            <IconCubeButton :class="s.button" :svg="new SVGImage(SVGRes.Pluss)"/>
-            <IconCubeButton :class="s.button" :svg="new SVGImage(SVGRes.MoreDots)"/>
+            <IconCubeButton :class="s.button" :svg="SVG.Confirm"/>
+            <IconCubeButton :class="s.button" :svg="SVG.Confirm"/>
         </div>
     </div>
     <div :class="s.body">

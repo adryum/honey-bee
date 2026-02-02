@@ -1,28 +1,28 @@
 <script setup lang="ts">
 import { computed, onMounted, reactive, ref, Teleport, useCssModule, watch } from 'vue';
 import { AnimatePresence, motion } from 'motion-v';
-import { SVGImage, SVGRes } from '@/core/SVGLoader';
-import SVGComponent from '../../SVGComponent.vue';
 import type { DropdownItem } from '../../../../core/Interfaces';
 import type { FieldValidator } from '@/core/composables/field/useField';
 import { useFloatingUI } from '@/core/composables/field/useFloatingUI';
+import { SVG } from '@/assets/svgs/SVGLoader';
+import Icon from '../../Icon.vue';
 
 const s = useCssModule()
 const props = withDefaults(defineProps<{
     title: string
     zIndex?: number
     isRequiried?: boolean
-    svg?: SVGImage
+    svg?: SVG
     dropdownItems: DropdownItem[]
     onClick?: () => void
 }>(), {
     zIndex: 0,
     isRequiried: false,
-    svg: () => new SVGImage(SVGRes.House),
+    svg: SVG.Confirm,
     options: () => [
         {
             text: 'option',
-            svg: new SVGImage(SVGRes.House),
+            svg: SVG.Confirm,
             color: ''
         },
     ]
@@ -35,7 +35,7 @@ const selectedChoiceHover = ref<Number>()
 const allDropdownItems = computed(() => [
     ...props.dropdownItems,
 ])
-const MotionSVG = motion.create(SVGComponent)
+const MotionSVG = motion.create(Icon)
 
 const validator = reactive<FieldValidator>({ isValid: true, error: ""})
 const emit = defineEmits<{
@@ -85,7 +85,7 @@ onMounted(async () => {
             <p :class="s.selection">{{ selected }}</p>
             <MotionSVG 
                 :initial="{ rotateZ: 270 }" 
-                :animate="isListShown ? { rotateZ: 270 } : { rotateZ: 90 }" :class="s.icon" :svg="new SVGImage(SVGRes.ArrowHead)"/>
+                :animate="isListShown ? { rotateZ: 270 } : { rotateZ: 90 }" :class="s.icon" :svg="SVG.Confirm"/>
         </div>
         
         <Teleport to="body"><AnimatePresence><motion.ol  ref="dropdownList" v-if="isListShown"

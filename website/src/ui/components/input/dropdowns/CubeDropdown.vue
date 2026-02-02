@@ -2,27 +2,27 @@
 import { onMounted, ref, useCssModule, watch } from 'vue';
 import { AnimatePresence, motion } from 'motion-v';
 import { useToggle } from '@vueuse/core';
-import SVGComponent from '../../SVGComponent.vue';
 import IconCubeButton from '../buttons/IconCubeButton.vue';
 import type { DropdownItem as DropdownItem } from '../../../../core/Interfaces';
-import { SVGImage, SVGRes } from '@/core/SVGLoader';
 import { useFloatingUI } from '@/core/composables/field/useFloatingUI';
+import { SVG } from '@/assets/svgs/SVGLoader';
+import Icon from '../../Icon.vue';
 
 const s = useCssModule()
 const props = withDefaults(defineProps<{
-    svg?: SVGImage
+    svg?: SVG
     onClick?: () => void
     dropdownItems?: DropdownItem[]
 }>(), {
-    svg: () => new SVGImage(SVGRes.House),
+    svg: SVG.Confirm,
     dropdownItems: () => [{
             text: 'option1',
-            svg: new SVGImage(SVGRes.House),
+            svg: SVG.Confirm,
             color: 'black'
         },
         {
             text: 'option2',
-            svg: new SVGImage(SVGRes.House),
+            svg: SVG.Confirm,
             color: 'red'
         },
     ]
@@ -31,7 +31,7 @@ const props = withDefaults(defineProps<{
 const dropdown = ref()
 const button = ref()
 const selectedChoice = ref<Number>()
-const [isShown] = useToggle()
+const isShown = ref(false)
 
 function onItemClick(button: DropdownItem) {
     isShown.value = false
@@ -43,7 +43,13 @@ watch(isShown, () => {
 })
 
 onMounted(async () => {
-    useFloatingUI(button, dropdown, isShown, 0, false, 10)
+    useFloatingUI({
+        anchorElement: button, 
+        floatingElement: dropdown,
+        isShown: isShown,
+        floaterOffset: 0, 
+        zIndex: 10
+    })
 })
 </script>
 
@@ -64,7 +70,7 @@ onMounted(async () => {
                 @click="() => onItemClick(button)" 
                 :while-press="{ scale: 0.9 }"
             >
-                <SVGComponent class="icon" :svg="button.svg" />
+                <Icon class="icon" :svg="button.svg" />
                 <p class="text" :style="{ color: button.color ?? 'black' }">{{ button.text }}</p> 
             </motion.li>
     

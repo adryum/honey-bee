@@ -1,10 +1,10 @@
 <script setup lang="ts">
-import { SVGImage, SVGRes } from "@/core/SVGLoader";
 import { useCssModule } from "vue";
 import IconCubeButton from "../../input/buttons/IconCubeButton.vue";
 import CalendarHiveEventEntry from './CalendarHiveEventEntry.vue'
 import { useI18n } from "vue-i18n";
 import { ScreenSize, useScreenSize } from "@/core/ScreenSizes";
+import { SVG } from "@/assets/svgs/SVGLoader";
 
 const s = useCssModule()
 const { t } = useI18n()
@@ -18,10 +18,10 @@ const { screenSize, biggerThan } = useScreenSize()
         <h1>{{ t("hiveOverview.calendarEvents") }}</h1>
 
         <div :class="s.navigator">
-            <IconCubeButton :class="[s.iconButton, s.left]" :svg="new SVGImage(SVGRes.ArrowHead)"/>
+            <IconCubeButton :class="[s.iconButton, s.left]" :svg="SVG.Confirm"/>
             <p>current date 2025.</p>
-            <IconCubeButton :class="s.iconButton" :svg="new SVGImage(SVGRes.ArrowHead)"/>
-            <IconCubeButton :class="s.iconButton" :svg="new SVGImage(SVGRes.MoreDots)"/>
+            <IconCubeButton :class="s.iconButton" :svg="SVG.Confirm"/>
+            <IconCubeButton :class="s.iconButton" :svg="SVG.Confirm"/>
         </div>
     </div>
     <div :class="s.body">
@@ -35,11 +35,11 @@ const { screenSize, biggerThan } = useScreenSize()
                 <p :class="s.eventCount">3 e.</p>
             </div>
             <div :class="s.tasks">
+                <!-- <CalendarHiveEventEntry />
                 <CalendarHiveEventEntry />
                 <CalendarHiveEventEntry />
                 <CalendarHiveEventEntry />
-                <CalendarHiveEventEntry />
-                <CalendarHiveEventEntry />
+                <CalendarHiveEventEntry /> -->
             </div>
         </div>
         <div :class="s.entry">

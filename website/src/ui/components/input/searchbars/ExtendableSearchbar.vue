@@ -1,8 +1,7 @@
 <script setup lang="ts">
 import { ref, useCssModule } from "vue";
-import { motion } from 'motion-v';
-import SVGComponent from "../../SVGComponent.vue";
-import { SVGImage, SVGRes } from "@/core/SVGLoader";
+import Icon from "../../Icon.vue";
+import { SVG } from "@/assets/svgs/SVGLoader";
 
 const s = useCssModule()
 const text = defineModel('text')
@@ -38,7 +37,7 @@ const toggleSearch = () => {
             :class="s.close"    
             @click="toggleSearch"
         >
-            <SVGComponent :class="s.svg" :svg="new SVGImage(SVGRes.Cross)"/>
+            <Icon :class="s.svg" :svg="SVG.Confirm"/>
         </button>
     </div>
         
@@ -47,7 +46,7 @@ const toggleSearch = () => {
         :style="isExtended ? { backdropFilter: 'brightness(90%)', borderRadius: '0 3px 3px 0' } : { borderRadius: '3px' }"    
         @click="isExtended ? searchWord() : toggleSearch()"
     >
-        <SVGComponent :class="s.svg" :svg="new SVGImage(SVGRes.Apiaries)"/>
+        <Icon :class="s.svg" :svg="SVG.Confirm"/>
     </button>
 </div>
 </template>

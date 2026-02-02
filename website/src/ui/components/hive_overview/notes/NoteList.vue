@@ -1,13 +1,12 @@
 <script setup lang="ts">
 import { useCssModule } from "vue";
 import IconCubeButton from "../../input/buttons/IconCubeButton.vue";
-import { SVGImage, SVGRes } from "@/core/SVGLoader";
 import { useI18n } from "vue-i18n";
 import Note from './Note.vue'
 import { createPopup } from "@/core/utils/components";
 import NoteCreatePopup from "../../popups/NoteCreatePopup.vue";
-import SmallSearchbar from "../../input/fields/SmallSearchbar.vue";
 import ExtendableSearchbar from "../../input/searchbars/ExtendableSearchbar.vue";
+import { SVG } from "@/assets/svgs/SVGLoader";
 
 const s = useCssModule()
 const { t } = useI18n()
@@ -21,11 +20,11 @@ const { t } = useI18n()
         <div :class="s.buttons">
             <IconCubeButton 
                 :class="s.button" 
-                :svg="new SVGImage(SVGRes.Pluss)"
+                :svg="SVG.Confirm"
                 @click="createPopup(NoteCreatePopup)"
             />
             <ExtendableSearchbar />
-            <IconCubeButton :class="s.button" :svg="new SVGImage(SVGRes.MoreDots)"/>
+            <IconCubeButton :class="s.button" :svg="SVG.Confirm"/>
         </div>
     </div>
     <div :class="s.body">

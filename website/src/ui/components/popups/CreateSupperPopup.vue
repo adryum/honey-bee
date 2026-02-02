@@ -70,7 +70,7 @@ async function create() {
     title="Create supper" 
     :popup-functions="popupFunctions" 
     :popup-info="popupInfo" 
-    v-on:close="(fun) => closeFunction = fun"
+    v-on:close="(fun: (() => void) | null) => closeFunction = fun"
 >
     <template #body>
         <div :class="s.grid">

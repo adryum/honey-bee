@@ -17,24 +17,38 @@ const s = useCssModule()
 <style module lang='sass'>
 @use '@/assets/main.sass' as main
 .container
-    @include main.f-size-very-small
-    @include main.font
-    display: flex
+    display: inline-flex
     background: white
-    padding: .5rem
-    border-radius: 2px
+    padding: .25rem
+    box-sizing: border-box
+    border-radius: 50px
+    // overflow: hidden
+
 
     .header
         display: flex
         flex-direction: column
         gap: .2rem
+        align-items: center
+        justify-content: center
 
-        min-width: 30%
-        max-width: 30% 
+        min-width: 20%
+        max-width: 20% 
+        border-radius: 4px 0 0 4px
+
+        // background: var(--orange)
+        font-size: var(--font-size-medium)
+
 
         .name
             font-weight: 900
             letter-spacing: 0.02em
     .content
         flex: 1
+        // background: var(--gray)
+        // border-left: 2px solid var(--faint-border)
+        padding: .5rem
+        box-sizing: border-box
+        line-height: 1rem
+        font-size: var(--font-size-medium)
 </style>

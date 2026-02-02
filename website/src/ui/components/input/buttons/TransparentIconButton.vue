@@ -1,15 +1,15 @@
 <script setup lang="ts">
 import { useCssModule } from 'vue';
-import SVGComponent from '../../SVGComponent.vue';
 import { motion } from 'motion-v';
-import { SVGImage, SVGRes } from '@/core/SVGLoader';
+import { SVG } from '@/assets/svgs/SVGLoader';
+import Icon from '../../Icon.vue';
 
 
 const props = withDefaults(defineProps<{
-    svg?: SVGImage
+    svg?: SVG
     onClick?: () => void
 }>(), {
-    svg: () => new SVGImage(SVGRes.House)
+    svg: SVG.Confirm
 })
 const s = useCssModule()
 </script>
@@ -18,7 +18,7 @@ const s = useCssModule()
 <motion.button :class="s.container" @click="onClick"
     :while-press="{scale: 0.9}"
 >
-    <SVGComponent :class="s.icon" :svg="svg"/>
+    <Icon :class="s.icon" :svg="svg"/>
 </motion.button>
 </template>
 
@@ -29,9 +29,12 @@ const s = useCssModule()
     all: unset
     display: flex
     align-items: center
+    justify-content: center
+    height: 2rem
+    width: 2rem
+
     cursor: pointer
 
-    padding: .5rem 1rem
     box-sizing: border-box
 
     background: transparent
@@ -40,9 +43,9 @@ const s = useCssModule()
     transition: .2s
 
     &:hover
-        background: #98392c
+        background: var(--red)
     
     .icon
-        height: 100%
-        aspect-ratio: 1
+        width: 1rem
+        height: 1rem
 </style>

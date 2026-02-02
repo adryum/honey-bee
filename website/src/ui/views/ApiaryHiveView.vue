@@ -2,8 +2,7 @@
 import Hive from '../components/hive/Hive.vue';
 import { onMounted, ref, useCssModule } from "vue";
 import ToolBar from '../components/ToolBar.vue';
-import { SVGImage, SVGRes } from '../../core/SVGLoader.js';
-import { createComponentWithProps, createComponentInstance } from '../../core/utils/components.js';
+import { createComponent, createComponentInstance } from '../../core/utils/components.js';
 import IconTextButton from '../components/input/buttons/IconTextButton.vue';
 import SmallSearchbar from '../components/input/fields/SmallSearchbar.vue';
 import AddHivePopup from '../components/popups/hive/AddHivePopup.vue';
@@ -11,6 +10,7 @@ import { useApiaryView } from '@/core/composables/apiary/useApiaryView.js';
 import { useFlexibleGrid } from '@/core/utils/others.js';
 import type { HiveSearchOptions } from '@/core/models/HiveModels.js';
 import { useApiaryHiveView } from '@/core/composables/apiary/useApiaryHiveView.js';
+import StringSearchDropdown from '../components/input/dropdowns/StringSearchDropdown.vue';
 
 const s = useCssModule()
 const props = defineProps<{
@@ -38,22 +38,35 @@ async function searchHives() {
 }
 
 const components = [
-    createComponentWithProps(IconTextButton, { 
-        text: 'add hive',
-        svg: new SVGImage(SVGRes.Pluss),
-        onClick: () => {
-            createComponentInstance(AddHivePopup, { apiaryId: props.apiaryId, onAssign: searchHives }, true)
-        }
-    }),
-    createComponentWithProps(SmallSearchbar, { onClick: (searchText: string) => {
-            searchWord.value = searchText
-            searchHives()
+    // createComponentWithProps(IconTextButton, { 
+    //     text: 'add hive',
+    //     svg: new SVGImage(SVGRes.Pluss),
+    //     onClick: () => {
+    //         createComponentInstance(AddHivePopup, { apiaryId: props.apiaryId, onAssign: searchHives }, true)
+    //     }
+    // }),
+    createComponent(
+        StringSearchDropdown, 
+        { 
+            options: {
+                initialValue: '',
+                placeholder: 'Search by name...',
+                async onInputChange(value: string) {
+                    searchWord.value = value
+                    await searchHives()
+                }
+            }
+        },
+    {
+        style: {
+            minWidth: '15rem'
         }
     }),
 ]
+const asd = ref()
 const grid = ref<HTMLDivElement | null>(null)
 const { style: gridStyle } = useFlexibleGrid({ 
-    gridRef: grid,
+    gridRef: asd,
     itemMinWidthPx: 400,
     gapPx: 10
 })
@@ -67,11 +80,16 @@ onMounted(() => {
 </script>
 
 <template>
-<div :class="s.container">
+<div ref="asd"
+
+:class="s.container">
         <ToolBar :name="apiaryName" :components="components"/>
         <div :class="s.appiaries" :style="gridStyle" ref="grid">
-            <Hive v-for="hive in apiaryHives"  class="item" 
-                :hive="hive"/>
+            <Hive 
+                v-for="hive in apiaryHives"  
+                class="item" 
+                :hive="hive"
+            />
         </div>
 </div>
 </template>

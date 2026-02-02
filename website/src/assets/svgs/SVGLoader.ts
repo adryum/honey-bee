@@ -12,4 +12,20 @@ export enum SVG {
     Cross = "Cross",
     Confirm = "Confirm",
     Pencil = "Pencil",
+    MoreDots = "MoreDots",
+    InfoSquere = "InfoSquere",
+    InfoCircle = "InfoCircle",
+    HoneyHive = "HoneyHive",
+    Home = "Home",
+    Apiaries = "Apiaries",
+    Calendar = "Calendar",
+    Key = "Key",
+    Plus = "Plus",
+}
+
+export enum IconType {
+    SMALL,
+    MEDIUM,
+    BIG,
+    OTHER
 }

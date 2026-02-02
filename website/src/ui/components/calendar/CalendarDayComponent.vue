@@ -2,6 +2,8 @@
 import { computed, onMounted, ref, useCssModule, watch } from "vue";
 import { CalendarDate } from "../../../core/Calendar";
 import { useWindowSize } from "@vueuse/core";
+import Icon from "../Icon.vue";
+import { IconType, SVG } from "@/assets/svgs/SVGLoader";
 
 const s = useCssModule()
 const props = withDefaults(defineProps<{
@@ -56,11 +58,12 @@ onMounted(() => {
     ]"> 
     <p :class="s.day">{{ thisDate.day }}{{ thisDate.isToday() ? " Today" : "" }} </p>
     <ul :class="s.taskList">
-        <li v-for="i in availableRows" :class="s.task">
-            {{ tasks[i - 1] }}
-        </li>
+        <button :class="s.button">
+            <Icon :class="s.icon" :type="IconType.SMALL" :svg="SVG.Dollar" />
+            <p :class="s.number">2</p>
+        </button>
     </ul>
-    <p :class="s.hint" v-if="tasks.length > availableRows">{{ tasks.length - availableRows }} more</p>
+    <!-- <p :class="s.hint" v-if="tasks.length > availableRows">{{ tasks.length - availableRows }} more</p> -->
 
     <div v-if="!thisDate.isThisMonth(searchDate.month)" :class="s.patern"></div>
 </div>
@@ -77,27 +80,20 @@ onMounted(() => {
     background: white
 
     transition: .1s
+    border-radius: var(--border-radius-small)
     overflow: hidden
-
-    .patern
-        z-index: auto
-        position: absolute
-        top: 0
-        left: 0
-        width: 100%
-        height: 100%
-
-        opacity: 0.6
-        // background: repeating-linear-gradient( -45deg, var(--gray) 1px, var(--gray) 5px, transparent 5px, transparent 35px )
 
     &:hover
         z-index: 1
-        box-shadow: 0 0 10px rgba(0, 0, 0, .2)
+        box-shadow: 0 0 5px rgba(0, 0, 0, .2)
+        // background: green
+        transform: scale(1.01)
 
     .day
-        @include main.f-size-very-small
-        font-weight: 600
+        font-size: var(--font-size-medium)
+        font-weight: 500
         margin-bottom: .8rem
+        letter-spacing: .02em
 
     .taskList
         all: unset
@@ -107,7 +103,35 @@ onMounted(() => {
         flex-direction: column
         margin-top: auto
         gap: .2rem
-        @include main.f-size-tiny
+
+        .button
+            all: unset
+            margin: 0
+            padding: 0
+            position: relative
+
+            display: flex
+            align-items: center
+            justify-content: center
+            width: 2rem
+            height: 2rem
+            min-width: 2rem
+            min-height: 2rem
+            max-height: 2rem
+            max-width: 2rem
+
+
+            background: beige
+            border-radius: var(--border-radius-small)
+            box-shadow: 0 1px 1px 0 var(--faint-border)
+
+            .number
+                position: absolute
+                top: -.3rem
+                right: -.1rem
+                line-height: 1rem
+                font-weight: 500
+            
 
         .task
             all: unset
@@ -124,14 +148,14 @@ onMounted(() => {
 .thisMonthDate
 
 .notThisMonthDate
-    opacity: 0.5
-    background: var(--surface)
+    opacity: 0.6
+    background: var(--light-gray)
 
 
 .today
-    background: var(--light-gray)
+    background: var(--yellow)
     // border: 5px solid rgba(20, 180, 20, .2)
 
 .weekend
-    background: var(--surface)
+    background: var(--faint-border)
 </style>

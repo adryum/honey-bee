@@ -1,11 +1,11 @@
 <script setup lang="ts">
 import { ref, useCssModule } from "vue"
-import { SVGImage, SVGRes } from "../../../core/SVGLoader";
 import { motion, rgba } from "motion-v"
 import type { DropdownItem } from "../../../core/Interfaces";
 import CubeDropdown from "../input/dropdowns/CubeDropdown.vue";
 import type { ApiaryResponseModel } from "../../../core/api/models/ResponseModels";
 import type { ApiaryModel } from "@/core/models/Models";
+import { SVG } from "@/assets/svgs/SVGLoader";
 
 const s = useCssModule()
 const props = defineProps<{
@@ -17,13 +17,13 @@ const MotionIconCubeDropdown = motion.create(CubeDropdown)
 const dropdownActions: DropdownItem[] = [
     {
         text: 'Overview',
-        svg: new SVGImage(SVGRes.OpenWindow),
+        svg: SVG.Info,
         onClick: () => { },
         color: ""
     },
     {
         text: 'Delete',
-        svg: new SVGImage(SVGRes.Cross),
+        svg: SVG.Cross,
         onClick: () => { },
         color: "#963B28"
     },
@@ -35,7 +35,7 @@ const dropdownActions: DropdownItem[] = [
     <img :class="s.image" :src="apiary.imagePath" alt="apiary image">
     <hr :class="s.linearDim">
     <MotionIconCubeDropdown
-        :svg="new SVGImage(SVGRes.MoreDots)" :class="[s.options]"
+        :svg="SVG.Pounds" :class="[s.options]"
         :options="dropdownActions"
          />
     <h1 :class="[s.name]">{{ apiary!.name }}</h1>
@@ -60,7 +60,7 @@ const dropdownActions: DropdownItem[] = [
     background: var(--white)
     border: none
 .container
-    @include main.font
+    font-family: var(--font-family)
     position: relative
     display: flex
     flex-direction: column
@@ -71,7 +71,7 @@ const dropdownActions: DropdownItem[] = [
     overflow: hidden
     transition: .3s ease-out
     cursor: pointer
-    border-radius: var(--border-radius-tiny)
+    border-radius: var(--border-radius-small)
 
     &:hover .image
         transform: scale(1.01)

@@ -1,7 +1,7 @@
 <script setup lang="ts">
 import { useCssModule } from "vue";
 import IconCubeButton from "../../input/buttons/IconCubeButton.vue";
-import { SVGImage, SVGRes } from "@/core/SVGLoader";
+import { SVG } from "@/assets/svgs/SVGLoader";
 
 const s = useCssModule()
 </script>
@@ -10,7 +10,7 @@ const s = useCssModule()
 <div :class="s.container">
     <div :class="s.header">
         <h1 :class="s.name">Trens</h1>
-        <IconCubeButton :class="s.button" :svg="new SVGImage(SVGRes.MoreDots)"/>
+        <IconCubeButton :class="s.button" :svg="SVG.Confirm"/>
     </div>
     <!-- <TitledText title="Description"/> -->
     <div :class="s.tags">

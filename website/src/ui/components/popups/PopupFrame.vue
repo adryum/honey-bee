@@ -3,8 +3,8 @@ import { useDraggable } from '@vueuse/core';
 import { AnimatePresence, motion } from 'motion-v';
 import { onMounted, ref, useCssModule } from 'vue';
 import TransparentIconButton from '../input/buttons/TransparentIconButton.vue';
-import { SVGImage, SVGRes } from '../../../core/SVGLoader';
 import type { PopupFunctions, PopupInfo } from '@/core/utils/components';
+import { SVG } from '@/assets/svgs/SVGLoader';
 
 const s = useCssModule()
 const container = ref()
@@ -63,7 +63,7 @@ onMounted(() => {
                 <slot name="header">
                     
                 </slot>
-                <TransparentIconButton :svg="new SVGImage(SVGRes.Cross, 'black')" @click="startExiting" :class="s.button"/>
+                <TransparentIconButton :svg="SVG.Cross" @click="startExiting" :class="s.button"/>
             </div>
 
             <div :class="s.body">
@@ -90,8 +90,8 @@ onMounted(() => {
 
     box-sizing: border-box
 
-    box-shadow: 0px 0px 50px 2px rgba(0, 0, 0, 0.4)
-    background: var(--surface)
+    box-shadow: 0px 0px 30px 2px rgba(0, 0, 0, 0.4)
+    background: var(--gray)
     border-radius: 2px
     // border: 1px solid  var(--light-gray)
     

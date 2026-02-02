@@ -1,7 +1,7 @@
 <script setup lang="ts">
 import { useCssModule } from 'vue';
 import IconCubeButton from '../input/buttons/IconCubeButton.vue'
-import { SVGImage, SVGRes } from '@/core/SVGLoader';
+import { SVG } from '@/assets/svgs/SVGLoader';
 
 
 const s = useCssModule()
@@ -15,7 +15,7 @@ const s = useCssModule()
             <p :class="s.name">Ieva Rūtiņa</p>
             <p :class="s.email">ieva.rutina@gmail.com</p>
         </div>
-        <IconCubeButton :svg="new SVGImage(SVGRes.ArrowHead)"/>
+        <IconCubeButton :svg="SVG.Confirm"/>
     </div>
 </div>
 </template>

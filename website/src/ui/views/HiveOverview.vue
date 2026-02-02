@@ -9,6 +9,7 @@ import HiveGeneralFragment from '../components/view_fragments/HiveGeneralFragmen
 import HiveNoteFragment from '../components/view_fragments/HiveNoteFragment.vue';
 import CalendarView from './CalendarView.vue';
 import { Destinations, type DestinationProps } from '@/core/models/OtherModels';
+import NoteFragmentToolbarPart from '../components/view_fragments/NoteFragmentToolbarPart.vue';
 
 const s = useCssModule()
 const props = defineProps({
@@ -17,17 +18,17 @@ const props = defineProps({
 
 const currentDestination = ref<Destinations>(Destinations.Notes)
 const destinatonProps: DestinationProps[] = [
-    { destination: Destinations.General, fragmentComponent: HiveGeneralFragment, fragmentToolbarComponents: []},
-    { destination: Destinations.Calendar, fragmentComponent: CalendarView, fragmentToolbarComponents: [Button]},
-    { destination: Destinations.Notes, fragmentComponent: HiveNoteFragment, fragmentToolbarComponents: [Button, Button, Button] },
-    { destination: Destinations.Medicine, fragmentComponent:  HiveMedicineFragment, fragmentToolbarComponents: [Button] }
+    { destination: Destinations.General, fragmentComponent: HiveGeneralFragment, fragmentToolbarComponent: undefined},
+    { destination: Destinations.Calendar, fragmentComponent: CalendarView, fragmentToolbarComponent: undefined},
+    { destination: Destinations.Notes, fragmentComponent: HiveNoteFragment, fragmentToolbarComponent: NoteFragmentToolbarPart },
+    { destination: Destinations.Medicine, fragmentComponent:  HiveMedicineFragment, fragmentToolbarComponent: undefined }
 ]
 
 const selectedDestinationProps = computed(() => {
     return destinatonProps.find(val => val.destination === currentDestination.value)!
 })
 const hasSelectedFragmentComponents = computed(() => {
-    return selectedDestinationProps.value.fragmentToolbarComponents.length > 0
+    return selectedDestinationProps.value.fragmentToolbarComponent
 })
 
 function changeDestination(destination: Destinations) {
@@ -50,9 +51,8 @@ function changeDestination(destination: Destinations) {
         </div>
         <div :class="[s.fragmentSpecific, hasSelectedFragmentComponents && s.shown]">
             <component 
-                v-for="component in selectedDestinationProps.fragmentToolbarComponents" 
                 :class="s.toolbarComponent" 
-                :is="component"
+                :is="selectedDestinationProps.fragmentToolbarComponent"
             />
         </div>
     </div>
@@ -60,7 +60,8 @@ function changeDestination(destination: Destinations) {
     <component 
         :class="s.container"
         :style="{ maxHeight: `calc(100vh - ${hasSelectedFragmentComponents ? '9rem' : '6.5rem' })` }" 
-        :is="selectedDestinationProps.fragmentComponent" />
+        :is="selectedDestinationProps.fragmentComponent" 
+    />
 </template>
 
 <style module lang='sass'>
@@ -75,6 +76,8 @@ function changeDestination(destination: Destinations) {
     align-self: center
 
 .toolbar
+    box-shadow: 0 0 1px 0 var(--faint-border)
+
     margin: 1rem
     margin-bottom: 0
 
@@ -90,14 +93,16 @@ function changeDestination(destination: Destinations) {
         opacity: 0
 
         box-sizing: border-box
+        box-shadow: inset 0 1px 1px 0 var(--faint-border)
+
         gap: .2rem
 
         &.shown
-            height: 2.5rem
-            max-height: 2.5rem
+            height: 2.3rem
+            max-height: 2.3rem
             opacity: 1
             padding: .2rem
-
+            padding-top: calc( .2rem + 1px  )
 
     .shared
         display: flex

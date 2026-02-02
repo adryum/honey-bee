@@ -48,8 +48,14 @@ const chartOptions = ref({
             Iensesums
         </label>
     </div>
+    <hr :style="{
+        height: '1px',
+        border: 'none',
+        background: 'rgba(0,0,0,.2)',
+        margin: 0
+    }">
     <div :class="s.body">
-        <ApexChart :class="s.body" :series="series" :options="chartOptions" type="area" height="100%"/>
+        <ApexChart :class="s.graph" :series="series" :options="chartOptions" type="area" height="100%"/>
     </div>
 </div>
 </template>
@@ -60,30 +66,34 @@ const chartOptions = ref({
     display: flex
     flex-direction: column
     font-family: var(--font-family)
-    gap: .5rem
+    gap: .25rem
+    background: var(--white)
+    padding: .25rem
+    box-sizing: border-box
+    border-radius: var(--border-radius-small)
+    box-shadow: 0 0 1px 0 var(--faint-border)
 
     .header
-        position: relative
         display: flex
         align-items: center
         width: 100%
-        min-height: 2.5rem
-        max-height: 2.5rem
-        padding: .25rem 0.5rem
+        min-height: 2rem
+        max-height: 2rem
+        height: 2rem
         box-sizing: border-box
-        background: white
         border-radius: var(--border-radius-small)
 
         .label
             font-size: var(--font-size-medium)
+            line-height: 1rem
+            padding-left: .5rem
 
     .body
         flex: 1
-        display: flex
         box-sizing: border-box
-        padding: .5rem 0
 
-        background: var(--white)
-        border-radius: var(--border-radius-small)
+        .graph
+            box-sizing: border-box
+
         
 </style>

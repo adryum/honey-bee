@@ -1,7 +1,8 @@
 <script setup lang="ts">
 import { onMounted, ref, useCssModule } from "vue";
 import IconCubeButton from "../../input/buttons/IconCubeButton.vue";
-import { SVGImage, SVGRes } from "@/core/SVGLoader";
+import { IconType, SVG } from "@/assets/svgs/SVGLoader";
+import Icon from "../../Icon.vue";
 
 const s = useCssModule()
 const randomRotation = ref(0)
@@ -14,21 +15,35 @@ onMounted(() => {
 
 <template>
 <div :class="s.container">
-    <div :class="s.body">
-        <div :Class="s.tags">
-            <p :class="s.information">Information</p>
-            <IconCubeButton :class="s.button" :svg="new SVGImage(SVGRes.MoreDots)"/>
+    <div :Class="s.header">
+        <div :class="s.iconWrapper">
+            <Icon 
+                :type="IconType.SMALL"
+                :svg="SVG.InfoCircle"
+            />
         </div>
-
-        <div :class="s.innerbody">
-            <h1 :class="s.title">
-                <p>Beeweere Bees!!!</p>
-            </h1>
-            <p :class="s.content">One day i stumbled accross this beehive and hit it with my ball. Not safe to say that everything is not okey. After that masive hit all hive inhabitants started attacking ME!!! Didnt know that they're were going to be so pissed tf??!! Like chill out dude its not that serious.</p>
-            <div :class="s.footer">
-                <p>Andrea Biggie</p>
-                <p>22 sep. 2046.</p>
-            </div>
+        <p :class="s.date">22th Sep, 2046</p>
+        <IconCubeButton 
+            :class="s.button" 
+            :svg="SVG.MoreDots" 
+        />
+    </div>
+    
+    <div :class="s.body">
+        <label 
+            for=""
+            :class="s.label"
+        >
+            Bees to reees
+        </label>
+        <p 
+            :class="s.content"
+        >
+            One day i stumbled accross this beehive and hit it with my ball. Not safe to say that everything is not okey. After that masive hit all hive inhabitants started attacking ME!!! Didnt know that they're were going to be so pissed tf??!! Like chill out dude its not that serious.
+        </p>
+        <div :class="s.footer">
+            <!-- <p>Andrea Biggie</p>
+            <p :class="s.information">Information</p> -->
         </div>
     </div>
 
@@ -39,62 +54,61 @@ onMounted(() => {
 @use '@/assets/main.sass' as main
 .button
     margin-left: auto
-    height: 28px
 .container
-    @include main.font
     display: flex
     flex-direction: column
-    background: white
-    border-radius: 3px
-    // border-;: 4px solid var(--orange)
-    height: 300px
+
+    font-family: var(--font-family)
+
+    box-sizing: border-box
+    padding: 1rem
+    background: var(--light-gray)
+    border-radius: var(--border-radius-small)
+    box-shadow: 0 0 1px 0 var(--faint-border)
+
+    .header
+        display: flex
+        align-items: center
+        gap: .5rem
+
+        .iconWrapper
+            display: flex
+            align-items: center
+            justify-content: center
+            height: 2rem
+            width: 2rem
+
+            background: var(--yellow)
+            border-radius: var(--border-radius-small)
+            box-shadow: 0 1px 1px 0 var(--faint-border)
+
+
+        .date
+            color: #66656c
+            font-weight: 300
+            letter-spacing: .02em
+            line-height: 2rem
+            font-size: var(--font-size-small)
 
     .body
         display: flex
         flex-direction: column
-        box-sizing: border-box
+        .label
+            color: var(--black)
+            font-size: var(--font-size-big)
+            letter-spacing: .02em
+            margin-top: .7rem
+            margin-bottom: .6rem
+            font-weight: 500
+            line-height: 2rem
 
-        .tags
-            display: flex
-            // background: 
-            padding: .5rem .5rem .25rem 1rem 
-            // border-radius: 3px
-            
-            align-items: center
-            .information
-                // @include main.mono-font
-                @include main.f-size-tiny
-                font-weight: 700
-                // text-transform: uppercase
-                letter-spacing: 0.02em
-                display: inline-flex
-                align-items: center
-                max-width: max-content
-                border-radius: 30px
-                color: var(--orange)
+        .content
+            color: #6a6b76
+            font-weight: 300
+            letter-spacing: .02em
+            line-height: 1.5rem
+            font-size: var(--font-size-medium)
 
-        .innerbody
-            padding: 0 1rem 1rem 1rem
+    .footer
 
-            .footer
-                display: flex
-                justify-content: space-between
-                margin-top: .5rem
-
-                @include main.f-size-tiny
-
-
-            .title
-                display: flex
-                align-items: center
-                justify-content: space-between
-                @include main.f-size-small
-                font-weight: 700
-                letter-spacing: .02em
-                margin-bottom: .2rem
-
-                
-
-            .content
-                @include main.f-size-very-small
 </style>

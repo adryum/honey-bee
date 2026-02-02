@@ -1,21 +1,26 @@
 import { autoUpdate, computePosition, flip, offset, shift } from "@floating-ui/vue";
-import { nextTick, onUnmounted, watch, type Ref } from "@vue/runtime-dom";
+import { nextTick, onUnmounted, ref, watch, type Ref } from "@vue/runtime-dom";
 import { onClickOutside } from "@vueuse/core";
 
-export async function useFloatingUI(
-    anchorElement: Ref<HTMLElement>, 
-    floatingElement: Ref<HTMLElement>,
-    isShown: Ref<boolean>,
-    zIndex: number = 0,
-    takeWidthFromAnchor: boolean = true,
-    floaterOffset: number = 0
+export type UseFloatingModel = {
+    anchorElement?: Ref<HTMLElement> 
+    floatingElement?: Ref<HTMLElement>
+    isShown?: Ref<boolean>
+    takeWidthFromAnchor?: boolean
+    zIndex?: number
+    floaterOffset?: number
+}
+
+export function useFloatingUI(
+    options: UseFloatingModel
 ) {
     // to stop expensive position calculations
     var cleanup: () => void
+    const floaterStyle = ref({})
 
     function onShow() {
-        var anchor = getElementFromMotionProxy(anchorElement)
-        var floating = getElementFromMotionProxy(floatingElement)
+        var anchor = getElementFromMotionProxy(options.anchorElement)
+        var floating = getElementFromMotionProxy(options.floatingElement)
 
         if (!floating || !anchor) {
             console.log(anchor);
@@ -23,9 +28,9 @@ export async function useFloatingUI(
             return
         }
 
-        const widthProps = (takeWidthFromAnchor)
+        const widthProps = (options.takeWidthFromAnchor)
             ? { width: `${anchor!.offsetWidth}px` }
-            : { width: `inherit` }
+            : { }
 
         cleanup = autoUpdate(anchor, floating, () => {
             requestAnimationFrame(() => {
@@ -33,35 +38,42 @@ export async function useFloatingUI(
                     middleware: [
                         flip(),      // flip to the opposite side if not enough space
                         shift(),     // keep it horizontally on screen
-                        offset(floaterOffset)
+                        offset(options.floaterOffset)
                     ],
                     placement: 'bottom-end'
                 }).then(({x, y}) => {
-                    Object.assign(floating!.style, {
+                    floaterStyle.value = {
                         left: `${x}px`,
                         top: `${y}px`,
                         boxSizing: 'border-box',
-                        zIndex: zIndex,
+                        zIndex: options.zIndex,
                         ...widthProps
-                    });
+                    }
+                    // Object.assign(floating!.style, );
                 });
             })
         });
     }
 
-    watch(isShown, async (newValue, oldValue) => {
-        if (newValue === oldValue) return
+    if (options.isShown)
+        watch(options.isShown, async (newValue, oldValue) => {
+            if (newValue === oldValue) return
 
-        if (newValue) {
-            await nextTick() // wait for refs to get their value from hidden elements
-            onShow()
-        } else {
-            cleanup?.()
-        }
-    })
+            if (newValue) {
+                await nextTick() // wait for refs to get their value from hidden elements
+                onShow()
+            } else {
+                cleanup?.()
+            }
+        })
 
     onUnmounted(() => cleanup?.())
-    onClickOutside(floatingElement, () => isShown.value = false, { ignore: [anchorElement]})
+    if (options.isShown)
+        onClickOutside(options.floatingElement, () => options.isShown!.value = false, { ignore: [options.anchorElement]})
+
+    return {
+        floaterStyle
+    }
 }
 
 export function getElementFromMotionProxy(elRef: any): HTMLElement | null {

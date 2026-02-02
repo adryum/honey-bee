@@ -5,34 +5,47 @@ import ToolBar from '../components/ToolBar.vue';
 import SmallSearchbar from '../components/input/fields/SmallSearchbar.vue';
 import IconButton from '../components/input/buttons/IconTextButton.vue';
 import CreateApiaryPopup from '../components/popups/CreateApiaryPopup.vue';
-import { SVGImage, SVGRes } from '../../core/SVGLoader';
-import { createComponentWithProps, createComponentInstance } from '../../core/utils/components';
+import { createComponent, createComponentInstance } from '../../core/utils/components';
 import { useApiaryView } from '../../core/composables/apiary/useApiaryView';
 import type { ApiaryModel } from '../../core/models/Models';
 import { onResize } from '@/core/utils/Hooks';
+import StringSearchDropdown from '../components/input/dropdowns/StringSearchDropdown.vue';
+import { SVG } from '@/assets/svgs/SVGLoader';
 
 const s = useCssModule()
 const { searchForApiaries } = useApiaryView()
 const apiaries = ref<ApiaryModel[]>()
 const searchWord = ref<string>('')
 const components = [
-    createComponentWithProps(IconButton, { 
-        text: 'add apiary',
-        svg: new SVGImage(SVGRes.Pluss),
+    createComponent(IconButton, { 
+        text: 'Add apiary',
+        svg: SVG.Key,
         onClick: () => {
             createComponentInstance(CreateApiaryPopup, {
                 onCreate: () => {
                     searchApiaries()
                 } 
-            }, true)
+            })
         }
     }),
-    createComponentWithProps(SmallSearchbar, { 
-        onClick: (value: string) => {
-            searchWord.value = value
-            searchApiaries() 
-        } 
-    }),
+    createComponent(
+        StringSearchDropdown, 
+        { 
+            options: {
+                initialValue: '',
+                placeholder: 'Search by name...',
+                onInputChange(value: string) {
+                    searchWord.value = value
+                    searchApiaries() 
+                }
+            }
+        },
+        {
+            style: {
+                minWidth: '15rem'
+            }
+        }
+    ),
 ]
 
 function searchApiaries() {

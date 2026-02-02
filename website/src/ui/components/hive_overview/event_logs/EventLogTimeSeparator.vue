@@ -13,19 +13,17 @@ const s = useCssModule()
 <style module lang='sass'>
 @use '@/assets/main.sass' as main
 .container
-    @include main.font
-    @include main.f-size-very-small
     width: 100%
     text-align: center
-    font-weight: 900
+    font-weight: 700
     letter-spacing: .02em
     
 
     border-radius: 2px
     padding: 0.5rem 1rem
     box-sizing: border-box
-    background: var(--surface)
-    // border-bottom: 8px solid var(--orange) 
-    // border-left: 8px solid var(--orange) 
-    
+    font-size: var(--font-size-medium)
+    font-family: var(--font-family)
+    background: var(--gray)
+    box-shadow: inset 0 0 1px 0 var(--faint-border)
 </style>

@@ -4,7 +4,7 @@ import { motion } from 'motion-v';
 import Hive from '../../hive/Hive.vue';
 import ToolBar from '../../ToolBar.vue';
 import { useHiveStore } from '../../../../core/stores/HiveStore';
-import { createComponentWithProps } from '../../../../core/utils/components';
+import { createComponent } from '../../../../core/utils/components';
 import SmallSearchbar from '../../input/fields/SmallSearchbar.vue'
 import { useFlexibleGrid } from '@/core/utils/others';
 import type { HiveModel } from '@/core/models/HiveModels';
@@ -18,7 +18,7 @@ const hiveStore = useHiveStore()
 const hives = ref<HiveModel[]>([...hiveStore.hives])
 const searchWord = ref<string>('')
 const components = [
-    createComponentWithProps(SmallSearchbar, { onClick: (searchText: string) => searchWord.value = searchText }),
+    createComponent(SmallSearchbar, { onClick: (searchText: string) => searchWord.value = searchText }),
 ]
 
 const grid = ref<HTMLDivElement | null>(null)

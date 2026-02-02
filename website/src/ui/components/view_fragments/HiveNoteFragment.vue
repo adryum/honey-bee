@@ -8,7 +8,7 @@ const s = useCssModule()
 const grid = ref<HTMLDivElement | null>(null)
 const { style: gridStyle } = useFlexibleGrid({ 
     gridRef: grid,
-    itemMinWidthPx: 300,
+    itemMinWidthPx: 350,
     gapPx: 16
 })
 </script>

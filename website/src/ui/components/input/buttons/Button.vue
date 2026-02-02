@@ -41,6 +41,7 @@ const s = useCssModule()
     font-size: var(--font-size-medium)
     transition: .1s
     outline-color: white
+    box-shadow: 0 1px 1px 0 var(--faint-border)
 
     .text
         font-family: var(--font-family)

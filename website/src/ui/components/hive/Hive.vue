@@ -1,12 +1,13 @@
 <script setup lang="ts">
 import { useCssModule } from 'vue';
 import CubeDropdown from '../input/dropdowns/CubeDropdown.vue';
-import { SVGImage, SVGRes } from '@/core/SVGLoader';
 import { useHive } from '@/core/composables/hive/useHive';
 import type { DropdownItem } from '@/core/Interfaces';
 import { createComponentInstance } from '@/core/utils/components';
 import AssignToApiaryPopup from '../popups/AssignToApiaryPopup.vue';
 import type { HiveModel } from '@/core/models/HiveModels';
+import { IconType, SVG } from '@/assets/svgs/SVGLoader';
+import Icon from '../Icon.vue';
 
 const s = useCssModule()
 const props = withDefaults(defineProps<{
@@ -19,7 +20,7 @@ const { isDeletingHive, deleteHive, updateHives } = useHive()
 const moreOptions: DropdownItem[] = [
     {
         text: 'Delete',
-        svg: new SVGImage(SVGRes.Trashcan),
+        svg: SVG.Confirm,
         color: 'var(--red)',
         onClick: async () => {
             await deleteHive({
@@ -34,43 +35,56 @@ const moreOptions: DropdownItem[] = [
             })
         },
     },
-    {
-        text: 'Move',
-        svg: new SVGImage(SVGRes.ArrowHead),
-        onClick: async () => {
-            createComponentInstance(AssignToApiaryPopup, {
-                hiveId: props.hive.id,
-                onAssign: () => {
-                    updateHives({ apiaryId: props.hive.apiaryId!, options: {} })
-                } 
-            }, true)
-        },
-    }
+    // {
+    //     text: 'Move',
+    //     svg: new SVGImage(SVGRes.ArrowHead),
+    //     onClick: async () => {
+    //         createComponentInstance(AssignToApiaryPopup, {
+    //             hiveId: props.hive.id,
+    //             onAssign: () => {
+    //                 updateHives({ apiaryId: props.hive.apiaryId!, options: {} })
+    //             } 
+    //         }, true)
+    //     },
+    // }
 ]
 </script>
 
 <template>
    <div :class="s.container">
-        <div :class="s.header">
+        <div :class="s.body">
+            <div 
+                v-if="hive.type" 
+                :class="s.type"
+            >
+                <Icon 
+                    :class="s.icon" 
+                    :type="IconType.MEDIUM" 
+                    :svg="SVG.HoneyHive" 
+                />
+            </div>
+            <img 
+                v-if="hive.imagePath" 
+                :class="s.hiveImage" 
+                :src="hive.imagePath" 
+                alt="hive image"
+            >
+            <Icon 
+                v-else
+                :class="s.icon" 
+                :type="IconType.BIG" 
+                :svg="SVG.HoneyHive" 
+            />
+        </div>
+        <div :class="s.footer">
             <div :class="s.title">
                 <p :class="s.name">{{ hive.name }}</p>
                 <p v-if="showApiary" :class="s.apiaryName">{{ hive.apiaryName }}</p>
             </div>
             <CubeDropdown  
-                :svg="new SVGImage(SVGRes.MoreDots, 'black')" 
+                :svg="SVG.MoreDots" 
                 :class="s.options"
                 :dropdownItems="moreOptions"/>
-        </div>
-
-        <div :class="s.body">
-            
-            <div :class="s.queen">
-                <div :class="s.image"></div>
-                <p :class="s.queenbeeSpecies">Bigususus Bitususus</p>
-            </div>
-            <div v-if="hive.type" :class="s.type">{{ hive.type }}</div>
-            <hr :class="s.imgShadow">
-            <img :class="s.hiveImage" :src="hive.imagePath" alt="hive image">
         </div>
    </div>
 </template>
@@ -78,101 +92,80 @@ const moreOptions: DropdownItem[] = [
 <style module lang='sass'>
 @use '@/assets/main.sass' as main
 .container
-    @include main.font
     display: flex
     flex-direction: column
-    align-items: center
-    aspect-ratio: 1 / .75
+    height: 25rem
 
-    .header
+    box-shadow: 0 0 1px 0 var(--faint-border)
+    font-family: var(--font-family)
+    background: var(--light-gray)
+    overflow: hidden
+    border-radius: var(--border-radius-medium)
+    transition: .2s
+
+    &:hover
+        transform: translateY(-2px)
+
+    .footer
         display: flex
-        position: relative
-        z-index: 1
         align-items: center
-        height: 4rem
+        height: 3rem
+        max-height: 3rem
         width: 100%
 
         box-sizing: border-box
-        padding: 0 .5rem 
-        background: var(--light-gray)
+        padding: .5rem 
+        // box-shadow: inset 0 0 0 1px var(--faint-border)
 
         .options 
             margin-left: auto
 
+
         .title
             display: flex
             flex-direction: column
+            padding-left: .5rem
             .name
                 all: unset
-                @include main.f-size-small
-                font-weight: 700
-
-            .apiaryName
-                @include main.f-size-very-small
-                font-weight: 400
-                letter-spacing: .5px
+                font-size: var(--font-size-medium)
+                font-weight: 600
+                letter-spacing: .02em
+                line-height: 2rem
 
     .body
         position: relative
-        background: var(--orange)
-        width: 95%
-        height: calc(100% - 4.1rem)
-        border: 1px solid rgba(0, 0, 0, .2)
-        border-top: none
+        min-height: 0
+        flex: 1
+        box-sizing: border-box
+        // padding: .5rem
+        padding-bottom: 0 
+        cursor: pointer
+
 
         .type
-            @include main.f-size-very-small
-            font-weight: 400
-            letter-spacing: .5px
             position: absolute
-            top: 0
-            right: 0
-            background: var(--dark)
-            color: white
-            border-radius: 100vh
-            padding: .25rem .5rem
-            margin: .5rem
-
-        .queen
-            position: absolute
-            bottom: 0
-            left: 0
-            right: 0
-
             display: flex
             align-items: center
-            gap: 1rem
-            padding: .5rem
-            background: linear-gradient(to top, rgba(255, 255, 255, .4) 0%, rgba(255, 255, 255, 0) 100%);
+            justify-content: center
 
-            .image
-                width: 4rem
-                height: 4rem
-                background: rgba(0,0,0,.5)
-            .queenbeeSpecies
-                @include main.f-size-small
-                font-weight: 500
-                
-        .imgShadow
-            margin: 0
-            border: none
-            position: absolute
-            top: 0
-            width: 100%
-            height: 5px
-            background: linear-gradient(to bottom, rgba(0, 0, 0, .4) 0%, rgba(0, 0, 0, 0) 100%);
+            width: 2rem
+            height: 2rem
+            margin: .5rem
+            background: var(--yellow)
+            border-radius: var(--border-radius-big)
+            box-shadow: 0 1px 0 0 var(--faint-border)
 
         .hiveImage
+            display: flex
+            min-height: 0
+            min-width: 0
             width: 100%
             height: 100%
-            display: block
+            max-height: 100%
             object-fit: cover
             box-sizing: border-box
-            
+            // border-radius: var(--border-radius-small)
+            background: var(--yellow)
+            box-shadow: inset 0 0 1px 0 var(--faint-border)
 
-
-.wood
-    width: 100%
-    height: 100%
-    object-fit: cover
 </style>
