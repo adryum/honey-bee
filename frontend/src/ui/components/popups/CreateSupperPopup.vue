@@ -6,9 +6,9 @@ import PopupFrame from './PopupFrame.vue'
 import { useCreateSupper } from '@/core/composables/hive/useCreateSupper';
 import SelectionDropdown from '../input/dropdowns/SelectionDropdown.vue';
 import type { DropdownItem } from '@/core/Interfaces';
-import type { PopupFunctions, PopupInfo } from '@/core/utils/components';
 import { isNumber } from '@/core/utils/others';
 import type { FieldOptions, FieldValidator } from '@/core/composables/field/useField';
+import type { PopupFunctions, PopupInfo } from '@/core/utils/PopupHiarchy';
 
 const s = useCssModule()
 const props = defineProps<{

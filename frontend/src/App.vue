@@ -21,9 +21,9 @@ watch(isAuthenticated, (newVal: any) => {
 
 <template>
     <div :class="s.skelet">
-        <SideHeader v-if="isAuthenticated"/>
+        <TopHeader v-if="isAuthenticated"/>
         <div :class="s.flex">
-            <TopHeader v-if="isAuthenticated"/>
+            <SideHeader v-if="isAuthenticated"/>
             <RouterView />
         </div> 
     </div>
@@ -32,10 +32,10 @@ watch(isAuthenticated, (newVal: any) => {
 <style module lang="sass">
 .skelet
     display: flex
-    flex-direction: row
+    flex-direction: column
 
 .flex
     flex: 1
     display: flex
-    flex-direction: column
+    flex-direction: row
 </style>

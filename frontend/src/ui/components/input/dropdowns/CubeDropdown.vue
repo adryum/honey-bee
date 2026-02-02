@@ -5,7 +5,7 @@ import { useToggle } from '@vueuse/core';
 import IconCubeButton from '../buttons/IconCubeButton.vue';
 import type { DropdownItem as DropdownItem } from '../../../../core/Interfaces';
 import { useFloatingUI } from '@/core/composables/field/useFloatingUI';
-import { SVG } from '@/assets/svgs/SVGLoader';
+import { IconType, SVG } from '@/assets/svgs/SVGLoader';
 import Icon from '../../Icon.vue';
 
 const s = useCssModule()
@@ -70,7 +70,11 @@ onMounted(async () => {
                 @click="() => onItemClick(button)" 
                 :while-press="{ scale: 0.9 }"
             >
-                <Icon class="icon" :svg="button.svg" />
+                <Icon 
+                    class="icon" 
+                    :svg="button.svg"
+                    :type="IconType.SMALL"
+                />
                 <p class="text" :style="{ color: button.color ?? 'black' }">{{ button.text }}</p> 
             </motion.li>
     

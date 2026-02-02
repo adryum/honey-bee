@@ -1,69 +1,47 @@
 <script setup lang="ts">
 import { useDraggable } from '@vueuse/core';
-import { AnimatePresence, motion } from 'motion-v';
-import { onMounted, ref, useCssModule } from 'vue';
-import TransparentIconButton from '../input/buttons/TransparentIconButton.vue';
-import type { PopupFunctions, PopupInfo } from '@/core/utils/components';
-import { SVG } from '@/assets/svgs/SVGLoader';
+import { ref, useCssModule } from 'vue';
+import { IconType, SVG } from '@/assets/svgs/SVGLoader';
+import type { PopupFrameModel } from '@/core/utils/PopupHiarchy';
 
 const s = useCssModule()
+const props = defineProps<{
+    isResizable?: boolean,
+}>()
+const frameModel = defineModel<PopupFrameModel | undefined>('frameModel')
 const container = ref()
 const handle = ref()
-const isExiting = ref(false)
-const hasEntered = ref(false)
-const props = defineProps<{
-    title: string,
-    isResizable?: boolean,
-    popupFunctions: PopupFunctions
-    popupInfo: PopupInfo
-}>()
 
 const { style } = useDraggable(container, {
     handle: handle,
     initialValue: { x: 100, y: 100  }
 })
-const emit = defineEmits<{
-    onClose: [() => void]
-}>()
-
-function startExiting() {
-  isExiting.value = true
-  console.log("Closing popup")
-}
-
-function handleMotions() {
-    if (isExiting.value)
-        props.popupFunctions.unmount()
-
-    if (!hasEntered.value)
-        hasEntered.value = true
-}
-
-onMounted(() => {
-  emit('onClose', startExiting)
-})
 </script>
 
 <template>
-<AnimatePresence>
-    <motion.div v-if="!isExiting" 
+    <div 
         :class="s.wrapper"
-        :initial="{y: -100 , opacity: 0}"
-        :animate="{y: 0, opacity: 1, transition: {duration: .1}} "
-        :exit="{y: 800 , opacity: 0}"
-        @motioncomplete="handleMotions"
-        >
-        <div @mousedown="popupFunctions.focus" 
+    >
+        <div @mousedown="frameModel?.functions.focus" 
             ref="container"
             :style="style"
             :class="[s.container]" 
             >
             <div ref="handle" :class="s.handle">
-                <h1 :class="s.popupName">{{ title }}</h1>
+                <h1 :class="s.popupName">{{ frameModel?.label ?? 'NO_LABEL' }}</h1>
                 <slot name="header">
                     
                 </slot>
-                <TransparentIconButton :svg="SVG.Cross" @click="startExiting" :class="s.button"/>
+                <button 
+                    :class="s.button"
+                    @click="frameModel?.functions.unmount()" 
+                >
+                    <SVGIcon 
+                        :class="s.icon" 
+                        :type="IconType.SMALL"
+                        :svg="SVG.Cross" 
+                    /> 
+                </button> 
             </div>
 
             <div :class="s.body">
@@ -72,13 +50,10 @@ onMounted(() => {
                 </slot>
             </div>
         </div>
-    </motion.div>
-</AnimatePresence>
+    </div>
 </template>
 
 <style module lang="sass">
-@use '@/assets/_colors.sass' as colors
-@use '@/assets/main.sass' as main
 .wrapper
     top: 0
     position: fixed
@@ -90,10 +65,12 @@ onMounted(() => {
 
     box-sizing: border-box
 
-    box-shadow: 0px 0px 30px 2px rgba(0, 0, 0, 0.4)
-    background: var(--gray)
-    border-radius: 2px
-    // border: 1px solid  var(--light-gray)
+    box-shadow: 0px 0px 10px 0 rgba(0, 0, 0, 0.1)
+    // background: var(--blue)
+    background: var(--white)
+    // padding: .5rem
+
+    border-radius: var(--border-radius-medium)
     
     max-height: 90vh
     max-width: 90vw
@@ -102,22 +79,37 @@ onMounted(() => {
     .handle
         display: flex
         align-items: center
-        height: 2rem
-        background: var(--orange)
+        height: 2.5rem
+        background: var(--blue)
         
-        padding-left: .5rem
+        // padding: .5rem
+        padding-left: 1rem
+        // border-bottom: 2px solid var(--blue)
 
         .popupName
             all: unset
-            @include main.mono-font
-            text-transform: uppercase;
-
-            @include main.f-size-very-small
-            font-weight: 900
-
+            text-transform: capitalize;
+            font-family: var(--font-family)
+            font-size: var(--font-size-medium)
+            letter-spacing: 0.02em
+            line-height: 1rem
+            font-weight: 700
 
         .button
+            all: unset
+            display: flex
+            align-items: center
+            justify-content: center
+
             margin-left: auto
+            height: 100%
+            width: 4rem
+
+            transition: .1s
+
+            &:hover
+                opacity: 1
+                background: var(--red)
 
     .body
         padding: 1rem

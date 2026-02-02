@@ -1,8 +1,9 @@
 <script setup lang="ts">
 import { onMounted, ref, useCssModule } from 'vue';
-import type { PopupFunctions, PopupInfo } from '@/core/utils/components';
+
 import PopupFrame from './PopupFrame.vue';
 import Button from '../input/buttons/Button.vue';
+import type { PopupFunctions, PopupInfo } from '@/core/utils/PopupHiarchy';
 
 export type AreYouSurePopupProps = {
     title: string
@@ -39,7 +40,7 @@ function onNoClick() {
         :title="areYouSurePopupProps.title"
         :popup-functions="popupFunctions"
         :popup-info="popupInfo"
-        @on-close="fun => closeFun = fun"
+        @on-close="(fun: (() => void) | null) => closeFun = fun"
     >
         <template #body>
             <div :class="s.body">

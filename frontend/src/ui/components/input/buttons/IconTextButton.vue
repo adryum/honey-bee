@@ -8,6 +8,7 @@ const props = withDefaults(defineProps<{
     text: string,
     isImportant?: boolean
     isDisabled?: boolean
+    border?: boolean
     onClick?: () => void
 }>(), {
     text: 'button',
@@ -23,7 +24,8 @@ const s = useCssModule()
     :class="[
         s.container, 
         isImportant && s.important, 
-        isDisabled && s.disabled
+        isDisabled && s.disabled,
+        border && s.border
     ]" 
     :disabled="isDisabled"
     @click="onClick"
@@ -52,13 +54,11 @@ const s = useCssModule()
     max-height: 2rem
 
     border-radius: var(--border-radius-tiny)
-    border: 1px solid var(--gray)
     box-sizing: border-box
     transition: .1s
 
     &:hover
-        background: var(--orange)
-        border: 1px solid var(--orange)
+        background: var(--gray)
 
     .text
         padding: 0
@@ -67,6 +67,10 @@ const s = useCssModule()
         color: var(--black)
         letter-spacing: .02em
         white-space: nowrap
+
+.border
+    box-shadow: 0 0 0 1px var(--faint-border)
+
 
 .disabled
     opacity: .5

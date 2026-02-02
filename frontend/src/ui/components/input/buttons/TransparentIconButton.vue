@@ -1,7 +1,7 @@
 <script setup lang="ts">
 import { useCssModule } from 'vue';
 import { motion } from 'motion-v';
-import { SVG } from '@/assets/svgs/SVGLoader';
+import { IconType, SVG } from '@/assets/svgs/SVGLoader';
 import Icon from '../../Icon.vue';
 
 
@@ -18,7 +18,11 @@ const s = useCssModule()
 <motion.button :class="s.container" @click="onClick"
     :while-press="{scale: 0.9}"
 >
-    <Icon :class="s.icon" :svg="svg"/>
+    <Icon 
+        :class="s.icon" 
+        :svg="svg"
+        :type="IconType.SMALL"
+    />
 </motion.button>
 </template>
 

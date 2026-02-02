@@ -5,12 +5,12 @@ import Button from '../input/buttons/Button.vue';
 import PopupFrame from './PopupFrame.vue'
 import SelectionDropdown from '../input/dropdowns/SelectionDropdown.vue';
 import type { DropdownItem } from '@/core/Interfaces';
-import type { PopupFunctions, PopupInfo } from '@/core/utils/components';
 import { useNoteCreate } from '@/core/composables/hive/useCreateNote';
 import type { NoteCreateRequestModel } from '@/core/models/NoteModels';
 import type { CallbackModel } from '@/core/models/SupperModels';
 import type { FieldOptions, FieldValidator } from '@/core/composables/field/useField';
 import TitledFieldMultiple from '../input/fields/TitledFieldMultiple.vue';
+import { usePopupCreator, type PopupFunctions, type PopupInfo } from '@/core/utils/PopupHiarchy';
 
 const s = useCssModule()
 const props = defineProps<{
@@ -72,6 +72,8 @@ async function create() {
 
     await createNote(createNoteModel, callbackModel)
 }
+
+
 </script>
 
 <template>
@@ -79,7 +81,7 @@ async function create() {
     title="Create Note" 
     :popup-functions="popupFunctions" 
     :popup-info="popupInfo" 
-    v-on:close="(fun) => closeFunction = fun"
+    v-on:close="(fun: (() => void) | null) => closeFunction = fun"
 >
     <template #body>
         <div :class="s.grid">

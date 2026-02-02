@@ -66,7 +66,12 @@ watch(selected, (newVal) => {
 }, { immediate: true })
 
 onMounted(async () => {
-    useFloatingUI(dropdown, dropdownList, isListShown, props.zIndex)
+    useFloatingUI({
+        anchorElement: dropdown, 
+        floatingElement: dropdownList, 
+        isShown: isListShown, 
+        zIndex: props.zIndex
+    })
 })
 </script>
 

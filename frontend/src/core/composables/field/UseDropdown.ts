@@ -1,6 +1,6 @@
 import { isNumber } from "@/core/utils/others";
 import { onClickOutside, type MaybeElement } from "@vueuse/core";
-import { computed, ref, shallowRef, unref, watch, type MaybeRef, type Ref, type ShallowRef } from "vue";
+import { computed, onMounted, ref, shallowRef, unref, watch, type MaybeRef, type Ref, type ShallowRef } from "vue";
 
 export type UseDropdownModel<T> = {
     searchInput?: Ref<string>
@@ -23,7 +23,9 @@ export type UseDropdownModel<T> = {
 export function useDropdown<T>(
     dropdown: UseDropdownModel<T>
 ) {
+    const { searchInput } = dropdown
     const isOpened: Ref<boolean> = ref(false)
+    const isEmpty = ref<boolean>(false)
     const selectedItem: ShallowRef<T | undefined> = shallowRef(unref(dropdown.initialValue))
     dropdown.onInitialItemSet?.(selectedItem.value);
 
@@ -42,9 +44,10 @@ export function useDropdown<T>(
         else return []
     })
 
-    function reInitialize() {
-        console.log('reinitialized');
+    function initialize() {
+        console.log('initialized');
         
+        isEmpty.value = !searchInput?.value
         isOpened.value = false
         selectedItem.value = unref(dropdown.initialValue)
         dropdown.onInitialItemSet?.(selectedItem.value);
@@ -94,6 +97,10 @@ export function useDropdown<T>(
 
     if (dropdown.searchInput)
         watch(dropdown.searchInput, (newVal) => {
+            isEmpty.value = !newVal
+            console.log(isEmpty.value);
+            
+
             if (unref(dropdown.closeOnEmptyInput) && newVal === '') close()
                 
             const isInputDifferentFromSelectedItem = newVal !== selectedItem.value
@@ -103,10 +110,15 @@ export function useDropdown<T>(
     if (dropdown.closeOnClickOutside && dropdown.container)
         onClickOutside(dropdown.container, () => close())
 
+    onMounted(() => {
+        initialize()
+    })
+
     return {
         isOpened,
         filteredItems,
         selectedItem,
+        isEmpty,
         plainOpen,
         open,
         close,
@@ -114,6 +126,6 @@ export function useDropdown<T>(
         selectItem,
         removeSelectedItem,
         setToFirstSuggestion,
-        reInitialize,
+        reInitialize: initialize,
     }
 }

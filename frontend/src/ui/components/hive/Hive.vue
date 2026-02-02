@@ -3,8 +3,6 @@ import { useCssModule } from 'vue';
 import CubeDropdown from '../input/dropdowns/CubeDropdown.vue';
 import { useHive } from '@/core/composables/hive/useHive';
 import type { DropdownItem } from '@/core/Interfaces';
-import { createComponentInstance } from '@/core/utils/components';
-import AssignToApiaryPopup from '../popups/AssignToApiaryPopup.vue';
 import type { HiveModel } from '@/core/models/HiveModels';
 import { IconType, SVG } from '@/assets/svgs/SVGLoader';
 import Icon from '../Icon.vue';

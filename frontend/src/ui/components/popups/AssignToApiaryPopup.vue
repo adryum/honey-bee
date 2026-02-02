@@ -1,13 +1,13 @@
 <script setup lang="ts">
 import { useHiveAssignToApiary } from '@/core/composables/apiary/useApiaryAssignHive';
 import type { ApiaryModel } from '@/core/models/Models';
-import { createComponent, type PopupFunctions, type PopupInfo } from '@/core/utils/components';
 import { useCssModule, ref, watch, onMounted } from 'vue';
 import SmallSearchbar from '../input/fields/SmallSearchbar.vue';
 import { motion } from 'motion-v';
 import ApiarySummaryCard from '../apiary/ApiarySummaryCard.vue';
 import ToolBar from '../ToolBar.vue';
 import PopupFrame from './PopupFrame.vue';
+import type { PopupFunctions, PopupInfo } from '@/core/utils/PopupHiarchy';
 
 const s = useCssModule()
 const props = defineProps<{
@@ -17,9 +17,9 @@ const props = defineProps<{
     popupInfo: PopupInfo
 }>()
 const searchWord = ref<string>('')
-const components = [
-    createComponent(SmallSearchbar, { onClick: (searchText: string) => searchWord.value = searchText }),
-]
+// const components = [
+//     // createComponent(SmallSearchbar, { onClick: (searchText: string) => searchWord.value = searchText }),
+// ]
 const apiaries = ref<ApiaryModel[]>()
 const { assignHive, isAssigningHive, searchForApiaries } = useHiveAssignToApiary()
 
@@ -45,7 +45,7 @@ onMounted(() => {
 <PopupFrame title="Move hive" :popup-functions="popupFunctions" :popup-info="popupInfo">
     <template #body>
         <motion.div :class="s.container">
-            <ToolBar name="Your apiaries" :components="components" />
+            <!-- <ToolBar name="Your apiaries" :components="components" /> -->
             <div :class="s.apiaries">
                 <ApiarySummaryCard v-for="apiary in apiaries" 
                     :apiary="apiary"

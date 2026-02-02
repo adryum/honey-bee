@@ -92,7 +92,6 @@ onMounted(() => {
     :variants="containerVariants"
     :animate="isExtended ? 'expanded' : 'collapsed'"
   >
-    <div :class="s.tip"></div>
     <button :class="s.extender" :style="toggleStyle" @click="toggleExtension()">
         <!-- icon here -->
     </button>

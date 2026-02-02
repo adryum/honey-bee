@@ -2,10 +2,6 @@
 import Hive from '../components/hive/Hive.vue';
 import { onMounted, ref, useCssModule } from "vue";
 import ToolBar from '../components/ToolBar.vue';
-import { createComponent, createComponentInstance } from '../../core/utils/components.js';
-import IconTextButton from '../components/input/buttons/IconTextButton.vue';
-import SmallSearchbar from '../components/input/fields/SmallSearchbar.vue';
-import AddHivePopup from '../components/popups/hive/AddHivePopup.vue';
 import { useApiaryView } from '@/core/composables/apiary/useApiaryView.js';
 import { useFlexibleGrid } from '@/core/utils/others.js';
 import type { HiveSearchOptions } from '@/core/models/HiveModels.js';
@@ -37,7 +33,7 @@ async function searchHives() {
     })
 }
 
-const components = [
+// const components = [
     // createComponentWithProps(IconTextButton, { 
     //     text: 'add hive',
     //     svg: new SVGImage(SVGRes.Pluss),
@@ -45,24 +41,24 @@ const components = [
     //         createComponentInstance(AddHivePopup, { apiaryId: props.apiaryId, onAssign: searchHives }, true)
     //     }
     // }),
-    createComponent(
-        StringSearchDropdown, 
-        { 
-            options: {
-                initialValue: '',
-                placeholder: 'Search by name...',
-                async onInputChange(value: string) {
-                    searchWord.value = value
-                    await searchHives()
-                }
-            }
-        },
-    {
-        style: {
-            minWidth: '15rem'
-        }
-    }),
-]
+    // createComponent(
+    //     StringSearchDropdown, 
+    //     { 
+    //         options: {
+    //             initialValue: '',
+    //             placeholder: 'Search by name...',
+    //             async onInputChange(value: string) {
+    //                 searchWord.value = value
+    //                 await searchHives()
+    //             }
+    //         }
+    //     },
+    // {
+    //     style: {
+    //         minWidth: '15rem'
+    //     }
+    // }),
+// ]
 const asd = ref()
 const grid = ref<HTMLDivElement | null>(null)
 const { style: gridStyle } = useFlexibleGrid({ 
@@ -83,7 +79,7 @@ onMounted(() => {
 <div ref="asd"
 
 :class="s.container">
-        <ToolBar :name="apiaryName" :components="components"/>
+        <ToolBar :name="apiaryName"/>
         <div :class="s.appiaries" :style="gridStyle" ref="grid">
             <Hive 
                 v-for="hive in apiaryHives"  

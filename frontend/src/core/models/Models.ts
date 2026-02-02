@@ -54,6 +54,7 @@ export type LogModel = {
 export type StringDropdownOptions<T> = {
     initialValue?: MaybeRef<T> 
     showIcon?: MaybeRef<boolean>
+    onHoverEffects?: MaybeRef<boolean>
     items?: MaybeRef<T[]>
     placeholder?: MaybeRef<string>
     noItemsText?: string

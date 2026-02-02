@@ -1,32 +1,22 @@
 <script setup lang="ts">
 import { onMounted, useCssModule } from "vue";
-import type { ComponentWithPropsNStyle } from "../../core/utils/components";
 
 const props = withDefaults(defineProps<{
     name?: string,
-    components?: ComponentWithPropsNStyle[]
 }>(), {
     name: "{ PAGE }",
 })
 
 const s = useCssModule()
-
-onMounted(() => console.log(props.components)
-)
 </script>
 
 <template>
 <div :class="s.container">
     <h1 :class="[s.name]">{{ name }}</h1>
     <div :class="s.workComponents">
-        <component 
-            v-for="(component, i) in components" 
-            :key="i"
-            :is="component.component"
-            :class="[component.props?.class, component.css?.class]"
-            :style="[component.props?.style, component.css?.style]"
-            v-bind="component.props"
-        />
+        <slot>
+            
+        </slot>
     </div>
 </div>
 </template>

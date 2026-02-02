@@ -3,10 +3,10 @@ import { useCssModule } from "vue";
 import IconCubeButton from "../../input/buttons/IconCubeButton.vue";
 import { useI18n } from "vue-i18n";
 import Note from './Note.vue'
-import { createPopup } from "@/core/utils/components";
 import NoteCreatePopup from "../../popups/NoteCreatePopup.vue";
 import ExtendableSearchbar from "../../input/searchbars/ExtendableSearchbar.vue";
 import { SVG } from "@/assets/svgs/SVGLoader";
+import { createPopup } from "@/core/utils/PopupHiarchy";
 
 const s = useCssModule()
 const { t } = useI18n()
@@ -21,7 +21,7 @@ const { t } = useI18n()
             <IconCubeButton 
                 :class="s.button" 
                 :svg="SVG.Confirm"
-                @click="createPopup(NoteCreatePopup)"
+                @click="createPopup({component: NoteCreatePopup})"
             />
             <ExtendableSearchbar />
             <IconCubeButton :class="s.button" :svg="SVG.Confirm"/>

@@ -5,7 +5,7 @@ import Button from '../input/buttons/Button.vue';
 import ImageDropZone from '../input/fields/ImageDropZone.vue';
 import PopupFrame from './PopupFrame.vue'
 import { useApiaryCreate } from '@/core/composables/apiary/useApiaryCreate';
-import type { PopupFunctions, PopupInfo } from '@/core/utils/components';
+import type { PopupFunctions, PopupInfo } from '@/core/utils/PopupHiarchy';
 
 const s = useCssModule()
 const props = defineProps<{

@@ -19,10 +19,13 @@ const search = ref('')
 const isDropdownFocused = ref(false)
 const dropdown = ref()
 const list = ref()
+const input = ref()
+
 const { 
     isOpened, 
     selectedItem, 
     filteredItems,
+    isEmpty,
     setToFirstSuggestion, 
     removeSelectedItem,
     selectItem,
@@ -70,6 +73,8 @@ const showHint = computed(() => {
 })
 watch(search , (newVal) => {
     props.options.onInputChange?.(newVal)
+    console.log(search);
+    
 })
 </script>
 
@@ -82,7 +87,8 @@ watch(search , (newVal) => {
             :class="[
                 s.row, 
                 isDropdownFocused && s.focussed,
-                !validator.isValid && showValidatorBorders && s.invalid
+                !validator.isValid && showValidatorBorders && s.invalid,
+                options.onHoverEffects && !isDropdownFocused && s.onHoverEffects
             ]"
             tabindex="0"
             @click="showValidatorBorders = true; options.openOnEmptyInput && open()"
@@ -92,8 +98,10 @@ watch(search , (newVal) => {
                 :class="s.icon"
                 :type="IconType.SMALL"
                 :svg="SVG.Search"
+                @click="input.focus()"
             />
             <input 
+                ref="input"
                 v-if="!selectedItem"
                 :placeholder="unref(options.placeholder) ?? '...'"
                 :class="[s.input]"
@@ -112,12 +120,15 @@ watch(search , (newVal) => {
                 </p>
             </div>
             <button 
+                v-if="!isEmpty"
                 type="button"
                 :class="s.button"
                 @click="removeSelectedItem"
             >
                 <Icon
-                    :class="s.clearIcon"
+                    :class="[
+                        s.clearIcon,
+                    ]"
                     :type="IconType.SMALL"
                     :svg="SVG.Cross"
                 />
@@ -164,6 +175,13 @@ watch(search , (newVal) => {
 </template>
 
 <style module lang='sass'>
+.onHoverEffects
+    &:hover
+        background: var(--gray)
+.noOpacity
+    display: none
+    opacity: 0 !important
+
 .container
     position: relative
     display: flex
@@ -180,7 +198,7 @@ watch(search , (newVal) => {
         height: 2rem
         
         box-sizing: border-box
-        box-shadow: inset 0 0 0 1px var(--faint-border)
+        // box-shadow: inset 0 0 0 1px var(--faint-border)
         border-radius: var(--border-radius-small)
         // border: 1px solid var(--blue)
         overflow: hidden
@@ -191,7 +209,7 @@ watch(search , (newVal) => {
             box-shadow: inset 0 0 0 1px var(--red) !important
 
         &.focussed
-            box-shadow: inset 0 0 0 1px var(--orange) !important
+            box-shadow: inset 0 0 0 1px var(--gray) !important
 
         .icon
             width: 1rem

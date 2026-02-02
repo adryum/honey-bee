@@ -4,10 +4,10 @@ import Button from '../input/buttons/Button.vue';
 import PopupFrame from './PopupFrame.vue'
 import SelectionDropdown from '../input/dropdowns/SelectionDropdown.vue';
 import type { DropdownItem } from '@/core/Interfaces';
-import type { PopupFunctions, PopupInfo } from '@/core/utils/components';
 import type { CallbackModel } from '@/core/models/SupperModels';
 import type { FieldOptions, FieldValidator } from '@/core/composables/field/useField';
 import { useQueenBeeMove } from '@/core/composables/hive/useQueenBeeMove';
+import type { PopupFunctions, PopupInfo } from '@/core/utils/PopupHiarchy';
 
 export type QueenBeeMovePopupProps = {
     queenBeeId: number
@@ -78,7 +78,7 @@ async function move() {
     title="Add Queen" 
     :popup-functions="popupFunctions" 
     :popup-info="popupInfo" 
-    @on-close="fun => closeFunction = fun"
+    @on-close="(fun: (() => void) | null) => closeFunction = fun"
 >
     <template #body>
         <div :class="s.grid">

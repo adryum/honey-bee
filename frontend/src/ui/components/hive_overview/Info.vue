@@ -1,14 +1,12 @@
 <script setup lang="ts">
 import { useCssModule } from "vue";
-import TitledText from "../paragrafs/TitledText.vue";
 import { useI18n } from "vue-i18n";
-import IconCubeButton from "../input/buttons/IconCubeButton.vue";
-import { createPopup } from "@/core/utils/components";
 import HiveUpdatePopup from "../popups/hive/HiveUpdatePopup.vue";
 import type { HiveModel } from "@/core/models/HiveModels";
 import IconTextButton from '../input/buttons/IconTextButton.vue'
 import { IconType, SVG } from "@/assets/svgs/SVGLoader";
 import Icon from "../Icon.vue";
+import { createPopup } from "@/core/utils/PopupHiarchy";
 
 const s = useCssModule()
 const { t } = useI18n()
@@ -33,7 +31,10 @@ const hive =
             <IconTextButton 
                 text="Edit"
                 :svg="SVG.Pencil"
-                @click="createPopup(HiveUpdatePopup, { hive: hive })"
+                @click="createPopup({ 
+                    component: HiveUpdatePopup, 
+                    props: { hive: hive }
+                })"
             />
         </div>
     </div>

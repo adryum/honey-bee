@@ -1,7 +1,5 @@
 <script setup lang="ts">
 import { computed, ref, useCssModule, type Component, type DefineComponent } from 'vue';
-import NoteList from '../components/hive_overview/notes/NoteList.vue';
-import CalendarHiveEvents from '../components/hive_overview/calendar/CalendarHiveEvents.vue';
 import { motion } from 'motion-v';
 import Button from '../components/input/buttons/Button.vue';
 import HiveMedicineFragment from '../components/view_fragments/HiveMedicineFragment.vue';
@@ -37,37 +35,45 @@ function changeDestination(destination: Destinations) {
 </script>
 
 <template>
-    <div :class="s.toolbar">
-        <div :class="s.shared">
-            <motion.button 
-                v-for="props in destinatonProps" 
-                :class="[s.button, (props.destination === currentDestination) && s.selected]"
-                :while-press="{ scale: 0.98}"
-                @click="changeDestination(props.destination)"
-            >
-            {{ props.destination }}
-            </motion.button>
-            <Button :style="{ marginLeft: 'auto'}" text="Add Inspection"></Button>
-        </div>
-        <div :class="[s.fragmentSpecific, hasSelectedFragmentComponents && s.shown]">
-            <component 
-                :class="s.toolbarComponent" 
-                :is="selectedDestinationProps.fragmentToolbarComponent"
-            />
-        </div>
-    </div>
-
-    <component 
+    <section
         :class="s.container"
-        :style="{ maxHeight: `calc(100vh - ${hasSelectedFragmentComponents ? '9rem' : '6.5rem' })` }" 
-        :is="selectedDestinationProps.fragmentComponent" 
-    />
+    >
+        <div :class="s.toolbar">
+            <div :class="s.shared">
+                <motion.button 
+                    v-for="props in destinatonProps" 
+                    :class="[s.button, (props.destination === currentDestination) && s.selected]"
+                    :while-press="{ scale: 0.98}"
+                    @click="changeDestination(props.destination)"
+                >
+                {{ props.destination }}
+                </motion.button>
+                <Button :style="{ marginLeft: 'auto'}" text="Add Inspection"></Button>
+            </div>
+            <div :class="[s.fragmentSpecific, hasSelectedFragmentComponents && s.shown]">
+                <component 
+                    :class="s.toolbarComponent" 
+                    :is="selectedDestinationProps.fragmentToolbarComponent"
+                />
+            </div>
+        </div>
+    
+        <component 
+            :class="s.fragment"
+            :style="{ maxHeight: `calc(100vh - ${hasSelectedFragmentComponents ? '9rem' : '6.5rem' })` }" 
+            :is="selectedDestinationProps.fragmentComponent" 
+        />
+    </section>
 </template>
 
 <style module lang='sass'>
 @use '@/assets/main.sass' as main
 @use '@/assets/_base.sass' as base
 .container 
+    flex: 1
+    box-sizing: border-box
+
+.fragment
     flex: 1
     padding: 1rem
     box-sizing: border-box
