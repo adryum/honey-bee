@@ -13,5 +13,5 @@ export type SupperCreateResponseModel = SupperModel
 
 export type CallbackModel = {
     onSuccess: (message: string) => void
-    onFailure: (error: unknown) => void
+    onFailure: () => void
 }

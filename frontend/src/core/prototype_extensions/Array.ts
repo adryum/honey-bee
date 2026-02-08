@@ -12,6 +12,8 @@ declare global {
         remove(item: T): T[]
         /** Returns true if contains no items. */
         isEmpty(): boolean
+
+        replace(item: T, expression: (item: T) => boolean): void
     }
 }
 
@@ -38,3 +40,12 @@ Object.defineProperty(Array.prototype, 'lastIndex', {
     configurable: false,
     enumerable: true
 });
+
+Array.prototype.replace = function<T>(item: T, expression: (item: T) => boolean) {
+    var result = this.find(item => expression(item))
+
+    if (!result) return;
+
+    const index = this.indexOf(result)
+    this[index] = item
+}

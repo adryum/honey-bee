@@ -6,6 +6,7 @@ import type { DropdownItem } from '@/core/Interfaces';
 import type { HiveModel } from '@/core/models/HiveModels';
 import { IconType, SVG } from '@/assets/svgs/SVGLoader';
 import Icon from '../Icon.vue';
+import router from '@/core/router';
 
 const s = useCssModule()
 const props = withDefaults(defineProps<{
@@ -33,23 +34,13 @@ const moreOptions: DropdownItem[] = [
             })
         },
     },
-    // {
-    //     text: 'Move',
-    //     svg: new SVGImage(SVGRes.ArrowHead),
-    //     onClick: async () => {
-    //         createComponentInstance(AssignToApiaryPopup, {
-    //             hiveId: props.hive.id,
-    //             onAssign: () => {
-    //                 updateHives({ apiaryId: props.hive.apiaryId!, options: {} })
-    //             } 
-    //         }, true)
-    //     },
-    // }
 ]
 </script>
 
 <template>
-   <div :class="s.container">
+   <div 
+        :class="s.container"
+    >
         <div :class="s.body">
             <div 
                 v-if="hive.type" 

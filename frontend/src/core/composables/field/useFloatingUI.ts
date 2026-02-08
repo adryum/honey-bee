@@ -1,5 +1,5 @@
 import { autoUpdate, computePosition, flip, offset, shift } from "@floating-ui/vue";
-import { nextTick, onUnmounted, ref, watch, type Ref } from "@vue/runtime-dom";
+import { nextTick, onUnmounted, ref, watch, type CSSProperties, type Ref } from "@vue/runtime-dom";
 import { onClickOutside } from "@vueuse/core";
 
 export type UseFloatingModel = {
@@ -16,7 +16,7 @@ export function useFloatingUI(
 ) {
     // to stop expensive position calculations
     var cleanup: () => void
-    const floaterStyle = ref({})
+    const floaterStyle = ref<CSSProperties>({ visibility: 'hidden' })
 
     function onShow() {
         var anchor = getElementFromMotionProxy(options.anchorElement)
@@ -44,13 +44,13 @@ export function useFloatingUI(
                 }).then(({x, y}) => {
                     floaterStyle.value = {
                         position: 'absolute',
+                        visibility: hasAttached.value ? 'visible' : 'hidden',
                         left: `${x}px`,
                         top: `${y}px`,
                         boxSizing: 'border-box',
                         zIndex: options.zIndex,
                         ...widthProps
                     }
-                    // Object.assign(floating!.style, );
                 });
             })
         });
@@ -68,6 +68,17 @@ export function useFloatingUI(
             }
         })
 
+    const hasAttached = ref(false) // flag
+    watch(() => floaterStyle.value.left, async (newVal) => {
+        if (newVal !== undefined && newVal !== '0px' && hasAttached.value === false) {
+            hasAttached.value = true
+        }
+    }, {immediate: true})
+
+    watch(() => floaterStyle.value.visibility, async (newVal) => {
+        console.log("VISIBILIT: ", newVal);
+        
+    }, {immediate: true})
     onUnmounted(() => cleanup?.())
     if (options.isShown)
         onClickOutside(options.floatingElement, () => options.isShown!.value = false, { ignore: [options.anchorElement]})

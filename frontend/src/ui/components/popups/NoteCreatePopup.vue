@@ -10,15 +10,12 @@ import { usePopup, type PopupData } from '@/core/utils/PopupHiarchy';
 import LabeledInputField from '../input/fields/LabeledInputField.vue';
 import { useFormValidator } from '@/core/composables/validators/UseFormValidator';
 import LabeledTextareaField from '../input/fields/LabeledTextareaField.vue';
-import StringSearchDropdown from '../input/dropdowns/StringSearchDropdown.vue';
 import { NoteTypes } from '@/core/DatabaseEnums';
 import LabeledStringSearchDropdown from '../input/dropdowns/LabeledStringSearchDropdown.vue';
 import ModularDropdown from '../input/dropdowns/ModularDropdown.vue';
-import TransparentIconButton from '../input/buttons/TransparentIconButton.vue';
-import Icon from '../Icon.vue';
 import { IconType, SVG } from '@/assets/svgs/SVGLoader';
-import IconButton from '../input/buttons/IconButton.vue';
-import IconTextItem from '../input/dropdowns/dropdownItems/IconTextItem.vue';
+import SelectedTextHead from '../input/dropdowns/dropdownItems/top/SelectedTextHead.vue';
+import IconTextItem from '../input/dropdowns/dropdownItems/bottom/IconTextItem.vue';
 
 const s = useCssModule()
 const props = defineProps<{
@@ -33,7 +30,7 @@ const { isNoteLoading, createNote } = useNoteCreate();
 const type = ref('')
 const title = ref('')
 const content = ref('')
-const dropdownOptions: DropdownItem[] = [
+const dropdownItems: DropdownItem[] = [
     { text: "Information" },
     { text: "Warning" },
 ]
@@ -89,40 +86,24 @@ watch(formValidator.isFormValid, (newval) => {
                 }"
                 v-model:input="content"
             />
-            <LabeledStringSearchDropdown
+            <ModularDropdown
                 label="Type"
-                :big="true"
-                :options="{
-                    validatorOptions: {
-                        formValidator: formValidator,
-                        isRequired: true,
-                        mustBeOneOfSuggestions: true
-                    },
-                    items: [NoteTypes.INFORMATIONAL, NoteTypes.WARNING],
-                    openOnEmptyInput: true,
-                    zIndex: props.popupData.info.zIndex
-                }"
-                @on-selection="value => type = value || ''"
-            />
-
-            <ModularDropdown>
-                <template #head>
-                    <div :class="s.head">
-                        <p :class="s.text">Selection</p>
-                        <IconButton
-                            :class="s.button"
-                            :svg="SVG.DropdownArrow"
-                            :type="IconType.SMALL"
-                            :transparent="true"
-                        />
-                    </div>
+                :z-index="popupData.info.zIndex.value"
+            >
+                <template #head="{ dropdown }">
+                    <SelectedTextHead
+                        :selection="type"
+                        :dropdown="dropdown"
+                    />
                 </template>
-                <template #body>
+                <template #list="{ dropdown }">
                     <IconTextItem
+                        v-for="item in Object.values(NoteTypes)"
                         :options="{
                             svg: SVG.Apiaries,
-                            text: NoteTypes.INFORMATIONAL.toSentenceCase()
+                            text: item.toSentenceCase()
                         }"
+                        @click="type = item; dropdown.isShown.value = false"
                     />
                 </template>
             </ModularDropdown>
@@ -150,32 +131,10 @@ watch(formValidator.isFormValid, (newval) => {
 @use '@/assets/_colors.sass' as colors
 @use '@/assets/main.sass' as main
 
-.head
-    position: relative
-    display: flex
-    align-items: center
-    height: 2.5rem
-    padding: .75rem .9rem
-
-    font-family: var(--font-family)
-    font-size: var(--font-size-medium)
-    font-weight: 500
+.dropItem
+    width: 100%
 
 
-    box-sizing: border-box
-    box-shadow: inset 0 0 0 1px #E0E0E0
-    border-radius: var(--border-radius-small)
-
-    .text
-        line-height: 1rem
-
-    .button
-        position: absolute
-        right: .5rem
-        height: 2rem
-        width: 2rem
-
-        
 .grid
     display: flex
     flex-direction: column

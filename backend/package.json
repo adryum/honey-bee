@@ -17,7 +17,7 @@
     "express-session": "^1.18.2",
     "multer": "^2.0.2",
     "mysql2": "^3.14.1",
-    "redis": "^5.10.0"
+    "redis-server": "^1.2.2"
   },
   "devDependencies": {
     "@types/cors": "^2.8.19",

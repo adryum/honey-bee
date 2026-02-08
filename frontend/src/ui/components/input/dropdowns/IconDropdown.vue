@@ -62,13 +62,13 @@ const { floaterStyle } = useFloatingUI({
     flex-direction: column
     margin: 0
     padding: 0
-    background: white
+    background: var(--white)
     padding: .2rem
     box-sizing: border-box
     text-decoration: none
 
     font-family: var(--font-family)
 
-    box-shadow:  0 0 1px 1px var(--blue)
+    box-shadow:  0px 0px 1px 0px var(--faint-border)
     border-radius: var(--border-radius-tiny)
 </style>

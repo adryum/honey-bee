@@ -1,77 +1,73 @@
-import { createRouter, createWebHistory } from 'vue-router'
-import MainView from '@/ui/views/MainView.vue'
-import LoginView from '@/ui/views/registration/LoginView.vue'
-import AllHiveView from '@/ui/views/AllHiveView.vue'
-import ApiaryView from '@/ui/views/ApiaryView.vue'
-import SignUpView from '@/ui/views/registration/SignUpView.vue'
-import ApiaryHiveView from '@/ui/views/ApiaryHiveView.vue'
-import SettingsView from '@/ui/views/SettingsView.vue'
-import UsersView from '@/ui/views/UsersView.vue'
+import AdminView from '@/ui/views/AdminView.vue'
+import ApiariesView from '@/ui/views/ApiariesView.vue'
+import ApiaryHivesView from '@/ui/views/ApiaryHivesView.vue'
 import CalendarView from '@/ui/views/CalendarView.vue'
-import AllBeeView from '@/ui/views/AllBeeView.vue'
 import HiveOverview from '@/ui/views/HiveOverview.vue'
+import LoginView from '@/ui/views/registration/LoginView.vue'
+import SignUpView from '@/ui/views/registration/SignUpView.vue'
+import SettingsView from '@/ui/views/SettingsView.vue'
+import { createRouter, createWebHistory } from 'vue-router'
+
+export enum RouterViews {
+    Home = '/',
+    Login = "/login",
+    Signup = "/signup",
+    Hives = "/hives",
+    HiveOverview = "/hiveOverview",
+    Apiaries = "/apiaries",
+    ApiaryHives = "/apiaryHives",
+    Settings = "/settings",
+    Calendar = "/calendar",
+    Admin = "/admin"
+}
 
 const router = createRouter({
   history: createWebHistory(import.meta.env.BASE_URL),
   routes: [
     {
-      path: '/',
-      name: 'home',
-      component: HiveOverview,
+        path: RouterViews.Home,
+        name: 'home',
+        component: HiveOverview,
     },
     {
-        path: '/login',
+        path: RouterViews.Login,
         name: 'login',
         component: LoginView
     },
     {
-        path: '/signup',
+        path: RouterViews.Signup,
         name: 'signUp',
         component: SignUpView
     },
     {
-        path: '/hives',
-        name: 'hives',
-        component: AllHiveView
-    },
-    {
-        path: '/hives/:hiveId',
+        path: RouterViews.HiveOverview,
         name: 'Hive',
-        component: HiveOverview,
-        props: true
+        component: HiveOverview
     },
     {
-        path: '/apiaries',
+        path: RouterViews.Apiaries,
         name: 'apiaries',
-        component: ApiaryView
+        component: ApiariesView
     },
     {
-        path: '/apiaryHives/:apiaryId',
+        path: RouterViews.ApiaryHives,
         name: 'apiary hives',
-        component: ApiaryHiveView,
-        props: route => ({
-            apiaryId: Number(route.params.apiaryId) // convert to number here
-        })
+        component: ApiaryHivesView
     },
     {
-        path: '/settings',
+        path: RouterViews.Settings,
         name: 'settings',
         component: SettingsView
     },
     {
-        path: '/calendar',
+        path: RouterViews.Calendar,
         name: 'calendar',
         component: CalendarView
     },
     {
-        path: '/bees',
-        name: 'bees',
-        component: AllBeeView
-    },
-    {
-        path: '/users',
+        path: RouterViews.Admin,
         name: 'admin users',
-        component: UsersView
+        component: AdminView
     },
     // {
     //   path: '/about',

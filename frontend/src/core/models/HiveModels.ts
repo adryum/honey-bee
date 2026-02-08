@@ -30,10 +30,3 @@ export type HiveSearchOptions = {
     ignoreDifferentLetterCases?: boolean
 }
 
-export type HiveCreateModel = {
-    name: string
-    location?: string
-    description?: string
-    type: string
-    image?: File
-}

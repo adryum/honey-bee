@@ -1,11 +1,9 @@
 <script setup lang="ts">
 import { onMounted, ref, useCssModule } from "vue";
-import IconCubeButton from "../../input/buttons/IconCubeButton.vue";
 import { IconType, SVG } from "@/assets/svgs/SVGLoader";
 import Icon from "../../Icon.vue";
 import IconDropdown from "../../input/dropdowns/IconDropdown.vue";
-import IconTextButton from "../../input/buttons/IconTextButton.vue";
-import IconTextItem from "../../input/dropdowns/dropdownItems/IconTextItem.vue";
+import IconTextItem from "../../input/dropdowns/dropdownItems/bottom/IconTextItem.vue";
 
 const s = useCssModule()
 const randomRotation = ref(0)
@@ -17,7 +15,10 @@ onMounted(() => {
 </script>
 
 <template>
-<div :class="s.container">
+<div 
+    id="body" 
+    :class="s.container"
+>
     <div :Class="s.header">
         <div :class="s.iconWrapper">
             <Icon 
@@ -41,7 +42,7 @@ onMounted(() => {
     
     <div :class="s.body">
         <label 
-            for=""
+            for="body"
             :class="s.label"
         >
             Bees to reees

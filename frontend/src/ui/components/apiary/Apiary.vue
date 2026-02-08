@@ -1,15 +1,14 @@
 <script setup lang="ts">
-import { ref, useCssModule } from "vue"
-import { motion, rgba } from "motion-v"
+import { useCssModule } from "vue"
+import { motion } from "motion-v"
 import type { DropdownItem } from "../../../core/Interfaces";
 import CubeDropdown from "../input/dropdowns/CubeDropdown.vue";
-import type { ApiaryResponseModel } from "../../../core/api/models/ResponseModels";
-import type { ApiaryModel } from "@/core/models/Models";
 import { SVG } from "@/assets/svgs/SVGLoader";
+import type { ApiaryModelDB } from "@/core/stores/Models";
 
 const s = useCssModule()
 const props = defineProps<{
-    apiary: ApiaryModel,
+    apiary: ApiaryModelDB,
     onDelete?: Function
 }>()
 
@@ -32,7 +31,11 @@ const dropdownActions: DropdownItem[] = [
 </script>
 <template>
 <div :class="s.container" ref="container">
-    <img :class="s.image" :src="apiary.imagePath" alt="apiary image">
+    <img 
+        alt="apiary image"
+        :class="s.image" 
+        :src="apiary.image" 
+    >
     <hr :class="s.linearDim">
     <MotionIconCubeDropdown
         :svg="SVG.Pounds" :class="[s.options]"
@@ -41,7 +44,7 @@ const dropdownActions: DropdownItem[] = [
     <h1 :class="[s.name]">{{ apiary!.name }}</h1>
     <ul :class="s.info">
         <div :class="s.entry">
-            <p :class="s.value">{{ apiary.hiveCount }}</p>
+            <!-- <p :class="s.value">{{ apiary.hiveCount }}</p> -->
             <hr :class="s.HRhorizontal">
             <p :class="s.title">Hives</p>
         </div>

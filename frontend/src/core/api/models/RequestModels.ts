@@ -28,14 +28,6 @@ export type ApiaryHivesRequestModel = {
 }
 
 // hives
-export type HiveCreateRequestModel = {
-    identification: UserIdentificationModel
-    name: string, 
-    location: string, 
-    description: string,
-    imagePath: string,
-    type: string, 
-}
 
 export type HiveRequestModel = {
     searchWord: string

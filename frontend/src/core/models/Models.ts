@@ -1,4 +1,4 @@
-import type { MaybeRef } from "vue"
+import type { MaybeRef, Ref } from "vue"
 import type { FieldValidationOptions } from "../composables/validators/UseFieldValidator"
 import type { SVG } from "@/assets/svgs/SVGLoader"
 
@@ -32,12 +32,6 @@ export type ApiaryModel = {
     hiveCount: number
 }
 
-export type ApiaryCreateModel = {
-    name: string
-    description?: string
-    location?: string
-    imageFile?: File
-}
 
 export type ApiarySearchOptions = {
     searchWord?: string
@@ -78,4 +72,8 @@ export type IconTextDropdownItemModel = {
     svg: SVG
     text: string
     onClick?: () => void
+}
+
+export type DropdownModel = {
+    isShown: Ref<boolean>
 }

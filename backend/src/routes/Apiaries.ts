@@ -43,7 +43,7 @@ router.post('/hives', async (req: Request<{},{}, {
 })
 
 // returns all apiaries which start with given filter
-router.post('/apiaries', async (req: Request<{},{},{
+router.get('/get', async (req: Request<{},{},{
     identification: IUserIdentification
     searchWord: string
 }>, res: Response) => {

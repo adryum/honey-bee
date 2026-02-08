@@ -33,18 +33,18 @@ const props = defineProps<{
     margin: 0
     padding: 0
     text-decoration: none
-    min-height: 2rem
-    max-height: 2rem
-    height: 2rem
+    min-height: 2.5rem
+    max-height: 2.5rem
+    height: 2.5rem
     padding: 0 .75rem
     cursor: pointer
 
     transition: .1s
-
+    font-family: var(--font-family)
     border-radius: var(--border-radius-tiny)
 
     .text
-        font-size: var(--font-size-small)
+        font-size: var(--font-size-medium)
 
     &:hover
         background: var(--gray)

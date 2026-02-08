@@ -9,6 +9,7 @@ import i18n from './core/locales/i18n'
 import VueApexCharts from "vue3-apexcharts";
 import "@/core/prototype_extensions/StringExtensions"
 import "@/core/prototype_extensions/Array"
+import { useMainStore } from './core/stores/MainStore'
 
 axios.defaults.baseURL = import.meta.env.VITE_API;
 console.log('Base URL set to:', axios.defaults.baseURL);
@@ -25,3 +26,5 @@ app.use(router)
 app.use(i18n)
 
 app.mount('#app')
+
+await useMainStore().initialize()

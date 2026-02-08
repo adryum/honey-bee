@@ -66,14 +66,7 @@ export function useFlexibleGrid(options: FlexibleGridOptions) {
     }
 }
 
-export function replace<T>(arr: T[], item: T, expression: (item: T) => boolean) {
-    var result = arr.find(item => expression(item))
 
-    if (!result) return;
-
-    const index = arr.indexOf(result)
-    arr[index] = item
-}
 
 export function isValidValue(value: unknown): boolean {
     if (value === null || value === undefined) return false

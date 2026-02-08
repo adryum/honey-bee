@@ -1,98 +1,102 @@
 import { defineStore } from "pinia"
-import type { ApiaryCreateModel, ApiaryModel, ApiarySearchOptions } from "../models/Models"
-import { ApiaryApi } from "../api/ApiaryApi"
-import { isNumber } from '@/core/utils/others'
+import { isValidValue } from '@/core/utils/others'
+import type { ApiaryModelDB } from "./Models"
+import { ref } from "vue"
+import { useApiaryApiStore } from "../network/ApiaryApiStore"
+import type { ApiaryCreateRequestModel, HiveAssignRequestModel, HiveAssignResponseModel } from "../network/Models"
+import router, { RouterViews } from "../router"
 
-const apiaryApi = new ApiaryApi()
+export const useApiaryStore = defineStore("Apiary store", () => {
+    const apiaryApiStore = useApiaryApiStore()
 
-export const useApiaryStore = defineStore('apiary', { 
-    state: () => ({
-        apiaries: [] as ApiaryModel[],
-        showApiaryCreateLoading: false,
-        showApiaryFetchLoading: false
-    }),
-    actions: {
-        async init() {
-            await this.getApiaries()
-        },
-        async getApiaries(): Promise<void> {
-            try {
-                this.showApiaryFetchLoading = true
-                const response = await apiaryApi.getApiaries()
+    const apiaries = ref<ApiaryModelDB[]>([])
+    const selectedApiary = ref<ApiaryModelDB | undefined>(undefined)
 
-                if (response) {
-                    this.apiaries = response
-                } else {
-                    console.log('No apiaries');
-                }
-            } catch (error) {
-                console.error(error);
-            } finally {
-                this.showApiaryFetchLoading = false
-            }
-        },
-        async createApiary({
-                apiary,
-                onSuccess, 
-                onFailure
-            }: {
-                apiary: ApiaryCreateModel,
-                onSuccess: (apiary: ApiaryModel) => void, 
-                onFailure: (error: unknown) => void
-            }
-        ): Promise<ApiaryModel | undefined> {
-            try {
-                this.showApiaryCreateLoading = true
-                const response = await apiaryApi.createApiary(apiary)
-                
-                if (response) {
-                    this.apiaries.push(response)
-                    onSuccess(response)
-                }
+    const isCreatingApiary = ref(false)
 
-                return response
-            } catch (error) {
-                console.error(error);
-                onFailure(error)
-                return undefined
-            } finally {
-                this.showApiaryCreateLoading = false
-            }
-        },
-        assignHive({ apiaryId }: { apiaryId: number | undefined }) {
-            if (isNumber(apiaryId)) this.apiaries.find(apiary => apiary.id === apiaryId)!.hiveCount++
-        },
-        unassignHive({ apiaryId }: { apiaryId: number | undefined}) {
-            if (isNumber(apiaryId)) this.apiaries.find(apiary => apiary.id === apiaryId)!.hiveCount--
-        },
-        searchForApiaries(options: ApiarySearchOptions): ApiaryModel[] {
-            if (this.apiaries.length === 0) return [] as ApiaryModel[]
+    function openApiary(id: number) {
+        selectedApiary.value = apiaries.value.find(apiary => apiary.id === id)
+        router.push(RouterViews.ApiaryHives)
+    }
 
-            console.log(this.apiaries);
+    async function initialize() {
+        await getApiaries()
+    }
+
+    async function getApiaries() {
+        try {
+            const result = await apiaryApiStore.getApiaries()
+
+        } catch (error) {
             
-            return this.apiaries.filter(apiary => {
-                const wordMatches = (options.searchWord) 
-                    ? (options.ignoreDifferentLetterCases) 
-                        ? apiary.name.toLocaleUpperCase().startsWith(options.searchWord.toLocaleUpperCase())
-                        : apiary.name.startsWith(options.searchWord)
-                    : true
+        }
+    }
 
-                const countMatches = (typeof options.hiveCount === "number")
-                    ? options.hiveCount === apiary.hiveCount
-                    : true 
+    async function createApiary(
+        createApiaryModel: ApiaryCreateRequestModel
+    ): Promise<ApiaryModelDB | undefined> {
+        try {
+            const result = await apiaryApiStore.createApiary(createApiaryModel)
+            if (!result) throw new Error("Failed to create apiary");
 
-                const idMatches = (isNumber(options.id))
-                    ? options.id === apiary.id
-                    : true
+            apiaries.value.push(result)
+            
+            return result
+        } catch (error) {
+            console.error(error);
+        }
+    }
 
-                return wordMatches && countMatches && idMatches
-            })
-        },
-        getApiary(apiaryId: number): ApiaryModel | undefined {
-            if (this.apiaries.length === 0) return undefined
+    async function deleteApiary(
+        id: number
+    ) {
+        try {
+            const result = await apiaryApiStore.deleteApiary(id)
+            if (!isValidValue(result)) throw new Error("Failed to create apiary");
 
-            return this.apiaries.find(apiary => apiary.id === apiaryId)
-        },
-        
+            apiaries.value = apiaries.value.filter(apiary => apiary.id !== id)
+
+            return result
+        } catch (error) {
+            console.error(error)
+        }
+    }
+
+    async function assignHive(
+        assignRequest: HiveAssignRequestModel
+    ): Promise<HiveAssignResponseModel | undefined> {
+        try {
+            const result = await apiaryApiStore.assignHive(assignRequest)
+            if (!result) throw new Error("Failed to assign hive");
+
+            // change hive apiary id
+            return result
+        } catch (error) {
+            console.error(error)
+        }
+    }
+
+    async function unassignHive(
+        id: number
+    ): Promise<number | undefined> {
+        try {
+            const result = await apiaryApiStore.unassignHive(id)
+
+            if (!isValidValue(result)) throw new Error("Failed to unassign hive");
+
+            return result
+        } catch (error) {
+            console.error(error)
+        }
+    }
+
+    return {
+        apiaries,
+        createApiary,
+        deleteApiary,
+        assignHive,
+        unassignHive,
+        openApiary,
+        initialize
     }
 })
