@@ -43,6 +43,7 @@ export function useFloatingUI(
                     placement: 'bottom-end'
                 }).then(({x, y}) => {
                     floaterStyle.value = {
+                        position: 'absolute',
                         left: `${x}px`,
                         top: `${y}px`,
                         boxSizing: 'border-box',

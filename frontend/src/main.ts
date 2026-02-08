@@ -7,6 +7,8 @@ import router from './core/router'
 import { createPinia } from 'pinia'
 import i18n from './core/locales/i18n'
 import VueApexCharts from "vue3-apexcharts";
+import "@/core/prototype_extensions/StringExtensions"
+import "@/core/prototype_extensions/Array"
 
 axios.defaults.baseURL = import.meta.env.VITE_API;
 console.log('Base URL set to:', axios.defaults.baseURL);

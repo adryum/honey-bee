@@ -143,7 +143,7 @@ onMounted(() => {
     display: flex
     flex-direction: column
     width: 6rem
-    height: 100vh
+    height: calc(100vh - var(--header-height))
 
     .tip
         height: 3rem

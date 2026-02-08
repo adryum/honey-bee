@@ -1,5 +1,6 @@
 import type { MaybeRef } from "vue"
 import type { FieldValidationOptions } from "../composables/validators/UseFieldValidator"
+import type { SVG } from "@/assets/svgs/SVGLoader"
 
 export type UserLoginModel = {
     email: string
@@ -70,4 +71,11 @@ export type StringDropdownOptions<T> = {
     onInputChange?: (value: string) => void
     onItemSelection?: (item: T) => void
     onItemClick?: () => void
+}
+
+
+export type IconTextDropdownItemModel = {
+    svg: SVG
+    text: string
+    onClick?: () => void
 }

@@ -3,6 +3,7 @@ import { useDraggable } from '@vueuse/core';
 import { ref, useCssModule } from 'vue';
 import { IconType, SVG } from '@/assets/svgs/SVGLoader';
 import type { PopupFrameModel } from '@/core/utils/PopupHiarchy';
+import Icon from '../Icon.vue';
 
 const s = useCssModule()
 const props = defineProps<{
@@ -36,7 +37,7 @@ const { style } = useDraggable(container, {
                     :class="s.button"
                     @click="frameModel?.functions.unmount()" 
                 >
-                    <SVGIcon 
+                    <Icon 
                         :class="s.icon" 
                         :type="IconType.SMALL"
                         :svg="SVG.Cross" 
@@ -66,10 +67,7 @@ const { style } = useDraggable(container, {
     box-sizing: border-box
 
     box-shadow: 0px 0px 10px 0 rgba(0, 0, 0, 0.1)
-    // background: var(--blue)
     background: var(--white)
-    // padding: .5rem
-
     border-radius: var(--border-radius-medium)
     
     max-height: 90vh
@@ -80,7 +78,7 @@ const { style } = useDraggable(container, {
         display: flex
         align-items: center
         height: 2.5rem
-        background: var(--blue)
+        background: var(--yellow)
         
         // padding: .5rem
         padding-left: 1rem

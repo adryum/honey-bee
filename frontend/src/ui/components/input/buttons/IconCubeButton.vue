@@ -6,7 +6,6 @@ import { IconType, SVG } from '@/assets/svgs/SVGLoader';
 
 const props = withDefaults(defineProps<{
     svg?: SVG
-    onClick?: () => void
 }>(), {
     svg: SVG.Cross
 })
@@ -14,7 +13,7 @@ const s = useCssModule()
 </script>
 
 <template>
-<motion.button :class="s.container" @click="(e: Event) => { e.stopPropagation(); onClick?.() } "
+<motion.button :class="s.container"
     :while-press="{scale: 0.9}"
 >
     <Icon  

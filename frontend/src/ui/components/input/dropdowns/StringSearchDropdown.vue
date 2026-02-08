@@ -9,6 +9,7 @@ import Icon from '../../Icon.vue';
 
 const s = useCssModule()
 const props = withDefaults(defineProps<{
+    big?: boolean
     options: StringDropdownOptions<string>
 }>(), {
 })
@@ -68,9 +69,7 @@ const { validator, showValidatorBorders } = useFieldValidator(
     props.options.validatorOptions ?? {},
     () => removeSelectedItem()
 )
-const showHint = computed(() => {
-    
-})
+
 watch(search , (newVal) => {
     props.options.onInputChange?.(newVal)
     console.log(search);
@@ -88,7 +87,8 @@ watch(search , (newVal) => {
                 s.row, 
                 isDropdownFocused && s.focussed,
                 !validator.isValid && showValidatorBorders && s.invalid,
-                options.onHoverEffects && !isDropdownFocused && s.onHoverEffects
+                options.onHoverEffects && !isDropdownFocused && s.onHoverEffects,
+                big && s.big
             ]"
             tabindex="0"
             @click="showValidatorBorders = true; options.openOnEmptyInput && open()"
@@ -116,7 +116,7 @@ watch(search , (newVal) => {
                 :class="[s.userTag]"
             >
                 <p :class="s.name">
-                    {{ selectedItem }}
+                    {{ selectedItem.toSentenceCase() }}
                 </p>
             </div>
             <button 
@@ -139,7 +139,7 @@ watch(search , (newVal) => {
             <ol
                 v-if="isOpened"
                 ref="list"
-                class="userSearchList"
+                :class="$style.list"
                 :style="floaterStyle 
                     ?  
                     { 
@@ -163,10 +163,10 @@ watch(search , (newVal) => {
                 </li>
                 <li 
                     v-for="item in filteredItems"
-                    class="item"
+                    :class="$style.item"
                     @click="selectItem(item)"
                 >
-                    <p class="text">{{ item}}</p>
+                    {{ item.toSentenceCase() }}
                 </li>
             
             </ol>
@@ -175,6 +175,54 @@ watch(search , (newVal) => {
 </template>
 
 <style module lang='sass'>
+.big
+    min-height: 0
+    width: 100%
+    height: 2.5rem !important
+    max-height: 2.5rem !important
+
+    line-height: 1rem
+    padding: .75rem .90rem
+    box-sizing: border-box
+    font-size: var(--font-size-medium) !important
+    line-height: 1rem
+    font-family: var(--font-family)
+    box-shadow: inset 0 0 0 1px #E0E0E0
+
+.list
+    margin: 0
+    text-decoration: none
+    padding: 0
+
+    display: flex
+    flex-direction: column
+    gap: .25rem
+
+    background: white
+    box-shadow: 0 0 0 1px var(--yellow)
+    border-radius: var(--border-radius-small)
+    padding: .25rem
+    box-sizing: border-box
+
+    .item
+        all: unset
+        display: flex
+        align-items: center
+        height: 2rem
+        min-height: 2rem
+
+        font-family: var(--font-family)
+        font-size: var(--font-size-medium)
+        font-weight: 500
+        letter-spacing: .02em
+
+        padding: 0 .5rem 
+
+        &:hover
+            background: var(--gray)
+            cursor: pointer
+
+
 .onHoverEffects
     &:hover
         background: var(--gray)
@@ -209,7 +257,8 @@ watch(search , (newVal) => {
             box-shadow: inset 0 0 0 1px var(--red) !important
 
         &.focussed
-            box-shadow: inset 0 0 0 1px var(--gray) !important
+            box-shadow: inset 0 0 0 1px var(--yellow) !important
+            outline: 2px solid color-mix(in srgb, var(--yellow) 20%, transparent)
 
         .icon
             width: 1rem

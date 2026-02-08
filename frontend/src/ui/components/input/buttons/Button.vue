@@ -44,18 +44,25 @@ const s = useCssModule()
     box-shadow: 0 1px 1px 0 var(--faint-border)
 
     .text
+        transition: .3s
         font-family: var(--font-family)
         font-weight: 500
         letter-spacing: .02em
 
 .unimportnat
-    border: 1px solid rgba(0, 0, 0, .6)
     color: black
     opacity: .6
+    box-shadow: none
+    transition: .3s
 
-    &:hover
-        opacity: 1
-        border-color: black
+    &:hover    
+        background: var(--gray)
+
+        .text
+            opacity: 1
+            font-weight: 900
+            letter-spacing: 1em
+
 
 .important
     background: var(--orange)

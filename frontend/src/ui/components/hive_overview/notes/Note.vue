@@ -3,6 +3,9 @@ import { onMounted, ref, useCssModule } from "vue";
 import IconCubeButton from "../../input/buttons/IconCubeButton.vue";
 import { IconType, SVG } from "@/assets/svgs/SVGLoader";
 import Icon from "../../Icon.vue";
+import IconDropdown from "../../input/dropdowns/IconDropdown.vue";
+import IconTextButton from "../../input/buttons/IconTextButton.vue";
+import IconTextItem from "../../input/dropdowns/dropdownItems/IconTextItem.vue";
 
 const s = useCssModule()
 const randomRotation = ref(0)
@@ -23,10 +26,17 @@ onMounted(() => {
             />
         </div>
         <p :class="s.date">22th Sep, 2046</p>
-        <IconCubeButton 
+        <IconDropdown
             :class="s.button" 
             :svg="SVG.MoreDots" 
-        />
+        >
+            <IconTextItem
+                :options="{
+                    svg: SVG.Trash,
+                    text: 'Remove'
+                }"
+            />
+        </IconDropdown>
     </div>
     
     <div :class="s.body">
