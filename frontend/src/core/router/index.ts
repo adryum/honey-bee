@@ -7,11 +7,11 @@ import LoginView from '@/ui/views/registration/LoginView.vue'
 import SignUpView from '@/ui/views/registration/SignUpView.vue'
 import SettingsView from '@/ui/views/SettingsView.vue'
 import { createRouter, createWebHistory } from 'vue-router'
+import { useAuthenticationApiStore } from '../network/AuthenticationApiStore'
 
-export enum RouterViews {
+export enum RouterViewPaths {
     Home = '/',
-    Login = "/login",
-    Signup = "/signup",
+    Registration = "/registration",
     Hives = "/hives",
     HiveOverview = "/hiveOverview",
     Apiaries = "/apiaries",
@@ -25,47 +25,42 @@ const router = createRouter({
   history: createWebHistory(import.meta.env.BASE_URL),
   routes: [
     {
-        path: RouterViews.Home,
+        path: RouterViewPaths.Home,
         name: 'home',
         component: HiveOverview,
     },
     {
-        path: RouterViews.Login,
+        path: RouterViewPaths.Registration,
         name: 'login',
         component: LoginView
     },
     {
-        path: RouterViews.Signup,
-        name: 'signUp',
-        component: SignUpView
-    },
-    {
-        path: RouterViews.HiveOverview,
+        path: RouterViewPaths.HiveOverview,
         name: 'Hive',
         component: HiveOverview
     },
     {
-        path: RouterViews.Apiaries,
+        path: RouterViewPaths.Apiaries,
         name: 'apiaries',
         component: ApiariesView
     },
     {
-        path: RouterViews.ApiaryHives,
+        path: RouterViewPaths.ApiaryHives,
         name: 'apiary hives',
         component: ApiaryHivesView
     },
     {
-        path: RouterViews.Settings,
+        path: RouterViewPaths.Settings,
         name: 'settings',
         component: SettingsView
     },
     {
-        path: RouterViews.Calendar,
+        path: RouterViewPaths.Calendar,
         name: 'calendar',
         component: CalendarView
     },
     {
-        path: RouterViews.Admin,
+        path: RouterViewPaths.Admin,
         name: 'admin users',
         component: AdminView
     },
@@ -78,6 +73,16 @@ const router = createRouter({
     //   component: () => import('../views/AboutView.vue'),
     // },
   ],
+})
+
+router.beforeEach(async (to, from) => {
+
+    console.log("Routing to: ", to.name);
+
+    if (to.name !== "registration") {
+        const store = useAuthenticationApiStore()
+        await store.checkSession()
+    } 
 })
 
 export default router

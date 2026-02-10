@@ -4,7 +4,6 @@ import RegistrationInputField from "@/ui/components/input/fields/RegistrationInp
 import CheckboxWText from "@/ui/components/input/fields/CheckboxWText.vue";
 import RegistrationButton from "@/ui/components/input/buttons/RegistrationButton.vue";
 import FaintButton from "@/ui/components/input/buttons/FaintButton.vue";
-import { RegistrationRepository } from "../../../core/repositories/RegistrationRepository";
 
 const s = useCssModule()
 const username = ref("")
@@ -17,11 +16,11 @@ const hasAgreedToSpam = ref(false)
 async function signUp() {
     if (!isEverythingValid.value) return 
 
-    await RegistrationRepository.signUp({
-        username: username.value,
-        email: email.value,
-        password: password.value,
-    })
+    // await RegistrationRepository.signUp({
+    //     username: username.value,
+    //     email: email.value,
+    //     password: password.value,
+    // })
 }
 
 const isEverythingValid = computed(() => {

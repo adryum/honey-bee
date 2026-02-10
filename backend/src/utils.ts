@@ -1,4 +1,6 @@
 import { db } from "./config/Database";
+import { redisClient } from "./config/RedisClient";
+import { Role } from "./DatabaseEnums";
 
 export async function testConnection() {
   try {
@@ -28,4 +30,25 @@ export const toMySQLUTCDateTime = (date: Date): string => {
 
 export function getCurrentUTCDateString(): string {
     return toMySQLUTCDateTime(new Date())
+}
+
+export function isValidValue(value: unknown): boolean {
+    if (value === null || value === undefined) return false
+    if (typeof value === 'number') return !Number.isNaN(value)
+    if (typeof value === 'string') return value !== ''
+    if (typeof value === 'boolean') return value
+    return true
+}
+ 
+export async function updateUserSession(id: number, role?: Role) {
+    console.log("Updating user Redis session...");
+    if (!isValidValue(id)) throw new Error("Invalid user is passed: " + id);
+
+    if (role) {
+        await redisClient.hSet(`user:${id}`, {
+            role: role,
+        });
+    }
+    // eventEmitter.emit(`user_${id}`, ClientEvents.REFRESH_PAGE);
+    console.log("Done!");
 }

@@ -75,3 +75,9 @@ export function isValidValue(value: unknown): boolean {
     if (typeof value === 'boolean') return value
     return true
 }
+
+
+let counter = 0
+export function getUniqueThisSesionId(): number {
+    return ++counter
+}

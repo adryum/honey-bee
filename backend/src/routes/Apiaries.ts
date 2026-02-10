@@ -7,6 +7,8 @@ import { col } from "../utils";
 import { DEFAULT_PLACEHOLDER, uploadImage } from "../config/image_cloud/Cloudinary";
 import { PublicIdBuilder } from "../config/image_cloud/PublicIdBuilder";
 import { upload } from "../config/Multer";
+import { requireRole } from "../Middleware";
+import { Role } from "../DatabaseEnums";
 
 const router = Router()
 
@@ -43,14 +45,10 @@ router.post('/hives', async (req: Request<{},{}, {
 })
 
 // returns all apiaries which start with given filter
-router.get('/get', async (req: Request<{},{},{
-    identification: IUserIdentification
+router.get('/get', requireRole(Role.ANY), async (req: Request<{},{},{
     searchWord: string
 }>, res: Response) => {
-    let { identification, searchWord: searchFilter } = req.body
-
-    if (!identification.id) 
-        return res.status(401).send('incorrect credentials!') 
+    var {  searchWord: searchFilter } = req.body
 
     // sets default value
     searchFilter = (!searchFilter) ? '%' : searchFilter.concat('%')
@@ -69,7 +67,7 @@ router.get('/get', async (req: Request<{},{},{
             WHERE ${col(ApiaryT.tableName, ApiaryT.userId)} = ? AND ${col(ApiaryT.tableName, ApiaryT.name)} LIKE ?
             GROUP BY ${col(ApiaryT.tableName, ApiaryT.id)}
             `,
-            [identification.id, searchFilter]
+            [req.session.userId, searchFilter]
         )
 
         apiaries = apiaries.map(apiary => ({

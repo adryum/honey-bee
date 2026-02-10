@@ -1,6 +1,6 @@
 import { String_to_HiveType } from "./DatabaseEnums";
-import type { ApiaryCreateResponseModel, HiveCreateResponseModel } from "./network/Models";
-import type { ApiaryModelDB, HiveModelDB } from "./stores/Models";
+import type { ApiaryCreateResponseModel, HiveCreateResponseModel, UserProfileResponseModel } from "./network/Models";
+import type { ApiaryModelDB, HiveModelDB, UserProfileModel } from "./stores/Models";
 
 export function ApiaryCreateResponse_to_ApiaryModelDB(
     convertee: ApiaryCreateResponseModel
@@ -35,4 +35,16 @@ export function HiveCreateResponseArray_to_HiveModelDBArray(
     convertee: HiveCreateResponseModel[]
 ): HiveModelDB[] {
     return convertee.map(item => HiveCreateResponse_to_HiveModelDB(item))
+}
+
+export function UserProfileResponseModel_To_UserProfileModel(
+    convertee: UserProfileResponseModel
+): UserProfileModel {
+    return {
+        id: convertee.id,
+        username: convertee.username,
+        picture: convertee.picture,
+        email: convertee.email,
+        role: convertee.role
+    }
 }

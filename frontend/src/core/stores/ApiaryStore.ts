@@ -4,7 +4,7 @@ import type { ApiaryModelDB } from "./Models"
 import { ref } from "vue"
 import { useApiaryApiStore } from "../network/ApiaryApiStore"
 import type { ApiaryCreateRequestModel, HiveAssignRequestModel, HiveAssignResponseModel } from "../network/Models"
-import router, { RouterViews } from "../router"
+import router, { RouterViewPaths } from "../router"
 
 export const useApiaryStore = defineStore("Apiary store", () => {
     const apiaryApiStore = useApiaryApiStore()
@@ -16,7 +16,7 @@ export const useApiaryStore = defineStore("Apiary store", () => {
 
     function openApiary(id: number) {
         selectedApiary.value = apiaries.value.find(apiary => apiary.id === id)
-        router.push(RouterViews.ApiaryHives)
+        router.push(RouterViewPaths.ApiaryHives)
     }
 
     async function initialize() {

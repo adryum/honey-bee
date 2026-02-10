@@ -1,6 +1,5 @@
 <script setup lang="ts">
 import { onMounted, useCssModule, ref, watch } from 'vue';
-import { RegistrationRepository } from '../../../core/repositories/RegistrationRepository';
 
 const s = useCssModule()
 const rUsername = ref("")
@@ -25,10 +24,10 @@ function areValid() {
 }
 
 function areThereAnyChanges() {
-    const user = RegistrationRepository.user.value!
-    return (rUsername.value != user.username) 
-    // || (rProfilePicture.value != rUser.value.profile_picture)
-    || (rEmail.value != user.email)
+    // const user = RegistrationRepository.user.value!
+//     return (rUsername.value != user.username) 
+//     // || (rProfilePicture.value != rUser.value.profile_picture)
+//     || (rEmail.value != user.email)
 }
 
 </script>

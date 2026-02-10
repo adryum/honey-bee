@@ -5,9 +5,10 @@ import RegistrationInputField from "@/ui/components/input/fields/RegistrationInp
 import CheckboxWText from "@/ui/components/input/fields/CheckboxWText.vue";
 import RegistrationButton from "@/ui/components/input/buttons/RegistrationButton.vue";
 import FaintButton from "@/ui/components/input/buttons/FaintButton.vue";
-import { RegistrationRepository } from "../../../core/repositories/RegistrationRepository";
+import { useMainStore } from "@/core/stores/MainStore";
 
 const s = useCssModule()
+const mainStore = useMainStore()
 const email = ref('')
 const password = ref('') 
 const rememberMe = ref(false) 
@@ -19,18 +20,17 @@ const isEverythingValid = computed(() => {
 async function login() {
     if (!isEverythingValid.value) return
 
-    await RegistrationRepository.login({
-        email: email.value,
-        password: password.value
-    })
+    // await RegistrationRepository.login({
+    //     email: email.value,
+    //     password: password.value
+    // })
 }
 
 // auto login
 onMounted(async () => {
-    await RegistrationRepository.login({
-        email: 'admin@gmail.com',
-        password: 'Admin1'
-    })
+    await mainStore.authenticateUser()
+    window.location.href = import.meta.env.VITE_API + "/auth/google";
+
 })
 </script>
 

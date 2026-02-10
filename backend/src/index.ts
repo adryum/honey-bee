@@ -1,18 +1,19 @@
 import dotenv from "dotenv";
 dotenv.config()
-import "./config/image_cloud/Cloudinary"
 
-import express from "express";
-import cors from "cors";
+import "./config/image_cloud/Cloudinary"
 import { testConnection } from "./utils";
-import registrationRoute from "./routes/Registration"
+
+import authentication from "./routes/Authentication"
 import adminRoute from "./routes/Admin"
 import hiveRoute from "./routes/Hives"
 import apiaryRoute from "./routes/Apiaries"
 import noteRoute from "./routes/Notes"
 import supperRoute from "./routes/Suppers"
 
-import session from 'express-session';
+import express from "express";
+import cors from "cors";
+import session from "express-session";
 import { RedisStore } from "connect-redis";
 import { connectRedis, redisClient } from "./config/RedisClient";
 const app = express();
@@ -20,6 +21,13 @@ const port = 5000;
 
 async function startServer() {
     await connectRedis()
+
+    app.use(cors({
+        origin: process.env.WEBSITE_ORIGIN as string, // your SPA origin
+        credentials: true,
+        exposedHeaders: ['Content-Disposition'] // ondownload exposes file names to client (downloads apple.pdf => client sees apple.pdf)
+    })); // Enable CORS to allow your Vue app to communicate with this backend
+    app.use(express.json()); // Parse JSON data in request bodies
 
     app.use(session({
         store: new RedisStore({ client: redisClient }),
@@ -34,20 +42,32 @@ async function startServer() {
         },
     }));
 
-    app.use(cors()); // Enable CORS to allow your Vue app to communicate with this backend
-    app.use(express.json()); // Parse JSON data in request bodies
-
-    // middle man between request and resposne
     app.use((req, res, next) => {
-        console.log("----------- INCOMING --------------");
-        console.log('Incoming request:', req.method, req.url);
-        console.log('body: ', req.body);
-        console.log("-----------------------------------");
-        
+        // monkey-patches .json function
+
+        const originalJson = res.json;
+
+        res.json = function (body) {
+            console.log(">>> Exit!");
+            console.log('JSON response:', body);
+            return originalJson.call(this, body);
+        };
+
         next();
     });
 
-    app.use("/registration", registrationRoute)
+    // middle man between request and resposne
+    app.use((req, res, next) => {
+        console.log('------------ First Check -----------');
+        console.log('Incoming request:', req.method, req.url);
+        console.log('body: ', req.body);
+        console.log('------------------------------------');
+
+        next();
+    });
+
+
+    app.use("/auth", authentication)
     app.use("/admin", adminRoute)
     app.use("/hive", hiveRoute)
     app.use("/apiary", apiaryRoute)
@@ -56,7 +76,7 @@ async function startServer() {
 
     // starts express server
     app.listen(port, () => {
-        console.log(`Server running at http://localhost:${port}`);
+        console.log(`Server running at port: ${port}`);
     });
 
     testConnection()

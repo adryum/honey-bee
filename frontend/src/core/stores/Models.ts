@@ -1,4 +1,4 @@
-import type { HiveType } from "../DatabaseEnums"
+import type { HiveType, Role } from "../DatabaseEnums"
 
 export type ApiaryModelDB = {
     id:          number
@@ -21,4 +21,12 @@ export type HiveCreateModel = {
     description?: string
     type:         HiveType
     image?:       File
+}
+
+export type UserProfileModel = {
+    id:       number
+    username: string
+    picture:  string
+    email:    string
+    role:     Role
 }
