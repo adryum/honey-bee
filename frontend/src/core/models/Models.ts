@@ -32,7 +32,6 @@ export type ApiaryModel = {
     hiveCount: number
 }
 
-
 export type ApiarySearchOptions = {
     searchWord?: string
     ignoreDifferentLetterCases?: boolean

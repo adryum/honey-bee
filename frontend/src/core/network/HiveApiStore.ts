@@ -23,7 +23,13 @@ export const useHiveApiStore = defineStore("HiveApiStore", () => {
         model: HiveCreateRequestModel
     ): Promise<HiveModelDB | undefined> {
         try {
-            const result = await axios.post<HiveCreateResponseModel>("/hive/create", model)
+            const formData = new FormData()
+            formData.append("name", model.name)
+            formData.append("description", model.description)
+            formData.append("type", model.type)
+            if (model.image) formData.append("image", model.image)
+
+            const result = await axios.post<HiveCreateResponseModel>("/hive/create", formData)
             if (!result.data) throw new Error("Failed to create hive!");
             
             return HiveCreateResponse_to_HiveModelDB(result.data)
@@ -65,6 +71,6 @@ export const useHiveApiStore = defineStore("HiveApiStore", () => {
         getHives,
         updateHive,
         deleteHive,
-        createHive
+        createHive,
     }
 })

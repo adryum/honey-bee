@@ -1,77 +1,97 @@
 <script setup lang="ts">
-import { useCssModule } from 'vue';
-import Icon from '../../Icon.vue'
-import { IconType, SVG } from '@/assets/svgs/SVGLoader';
+import { useCssModule } from "vue";
+import { IconType, SVG } from "@/assets/svgs/SVGLoader";
+import Icon from "../../Icon.vue";
 
+const s = useCssModule()
 const props = withDefaults(defineProps<{
     svg?: SVG
-    text: string,
-    isImportant?: boolean
-    isDisabled?: boolean
-    border?: boolean
-    onClick?: () => void
+    text?: string
+    disabled?: boolean
+    isLoading?: boolean
 }>(), {
-    text: 'button',
-    isImportant: true,
-    isDisabled: false,
-    svg: SVG.Confirm
+    svg: SVG.Dollar,
+    text: 'BUTTON',
+    disabled: false
 })
-const s = useCssModule()
 </script>
 
 <template>
 <button 
+    type="button" 
     :class="[
         s.container, 
-        isImportant && s.important, 
-        isDisabled && s.disabled,
-        border && s.border
-    ]" 
-    :disabled="isDisabled"
-    @click="onClick"
+        disabled || isLoading ? s.disabled : s.enabled,
+    ]"
+    :disabled="disabled || isLoading"
 >
     <Icon 
-        :class="s.icon" 
-        :svg="svg"
-        :type="IconType.SMALL"
+        :class="[
+            s.icon,
+            isLoading && s.rotate
+        ]" 
+        :type="IconType.SMALL" 
+        :svg="isLoading ? SVG.Restart : svg"
     />
     <p :class="s.text">{{ text }}</p>
 </button>
 </template>
 
 <style module lang='sass'>
-@use '@/assets/_colors.sass' as colors
-@use '@/assets/main.sass' as main
-.container
-    all: unset
-    display: flex
-    align-items: center
-    cursor: pointer
+@keyframes rotate-clockwise 
+    0%
+        transform: rotateZ(0deg)
+    100% 
+        transform: rotateZ(360deg)
 
-    padding: .25rem .5rem
-    gap: .5rem
-    height: 2rem
-    max-height: 2rem
 
-    border-radius: var(--border-radius-tiny)
-    box-sizing: border-box
-    transition: .1s
-
-    &:hover
-        background: var(--gray)
-
-    .text
-        padding: 0
-        font-family: var(--font-family)
-        font-size: var(--font-size-small)
-        color: var(--black)
-        letter-spacing: .02em
-        white-space: nowrap
-
-.border
-    box-shadow: 0 0 0 1px var(--faint-border)
-
+.rotate
+    animation: rotate-clockwise
+    animation-duration: 1s
+    animation-timing-function: linear
+    animation-iteration-count: infinite
 
 .disabled
-    opacity: .5
+    pointer-events: none
+    & > *
+        opacity: .4
+
+.container
+    display: inline-flex
+    gap: .5rem
+    height: 2rem
+    min-height: 2rem
+    max-height: 2rem
+
+    font-family: var(--font-family)
+    font-size: var(--font-size-small)
+
+    padding: .25rem .5rem
+
+    background: white
+    border: 1px solid var(--blue)
+    border-radius: var(--border-radius-small)
+    box-sizing: border-box
+    transition: .1s
+    outline-color: var(--blue)
+
+    &.enabled
+        cursor: pointer
+
+        &:hover
+            filter: brightness(98%)
+            outline: 1px solid var(--blue)
+
+    .icon
+        align-self: center
+        max-height: 1rem
+        max-width: 1rem
+
+    .text
+        align-self: center
+        margin: 0
+        font-weight: 500
+        line-height: 1rem
+        color: var(--black)
+        white-space: nowrap
 </style>

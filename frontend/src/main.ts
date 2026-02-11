@@ -12,7 +12,7 @@ import "@/core/prototype_extensions/Array"
 import { useMainStore } from './core/stores/MainStore'
 
 axios.defaults.baseURL = import.meta.env.VITE_API;
-console.log('Base URL set to:', axios.defaults.baseURL);
+axios.defaults.withCredentials = true;
 
 const app = createApp(App)
 const pinia = createPinia()
@@ -26,5 +26,3 @@ app.use(router)
 app.use(i18n)
 
 app.mount('#app')
-
-await useMainStore().initialize()

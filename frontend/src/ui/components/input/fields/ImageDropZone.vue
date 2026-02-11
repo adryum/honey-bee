@@ -90,6 +90,7 @@ function handleFiles(event: Event) {
     justify-content: center
     align-items: center
     gap: 1rem
+    max-height: 100%
 
     .dropZone
         position: relative

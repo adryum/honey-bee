@@ -11,42 +11,51 @@ import { upload } from "../config/Multer";
 const router = Router()
 const hiveModelQuery =`
     SELECT 
-        ${col(HiveT.tableName, HiveT.id)} AS id, 
-        ${col(HiveT.tableName, HiveT.name)} as name,
-        ${col(HiveT.tableName, HiveT.imagePath)} as imagePath,
-        ${col(HiveT.tableName, HiveT.apiaryId)} as apiaryId,
-        ${col(HiveT.tableName, HiveT.type)} as type,
-        ${col(ApiaryT.tableName, ApiaryT.name)} as apiaryName,
-        ${col(ApiaryT.tableName, ApiaryT.imagePath)} as apiaryImagePath
-    FROM ${HiveT.tableName}
-    LEFT JOIN ${ApiaryT.tableName} ON ${col(HiveT.tableName, HiveT.apiaryId)} = ${col(ApiaryT.tableName, ApiaryT.id)}`
+        h.id, 
+        h.name,
+        h.image,
+        h.type,
+        h.apiaryId,
+        a.name as apiaryName,
+        a.image as apiaryImage
+    FROM hives as h
+    LEFT JOIN apiaries as a ON h.apiaryId = a.id`
 
 // returns all hives
-router.post('/hives', async (req: Request<{},{},{
-    identification: IUserIdentification
-    searchWord: string
-}>, res: Response) => {
-    
-    const { identification } = req.body
-    console.log(req.body);
-    var { searchWord } = req.body
-    // missing credentials
-    if (!identification.id) 
-        return res.status(401).send('incorrect credentials!') 
-
-    searchWord = handleSearchWord(searchWord)
-    console.log(searchWord);
+router.get('/get', async (
+    req: Request<{},{},{}>, 
+    res: Response
+) => {
+    console.log("# Get all hives");
     
     try {
-        const [hives] = await db.query(`
-            ${hiveModelQuery}
-            WHERE ${col(HiveT.tableName, HiveT.userId)} = ? AND ${col(HiveT.tableName, HiveT.name)} LIKE ?`, 
-            [identification.id, searchWord]
-        )
+        console.log("Getting hives...");
+        const [hiveGetResult] = await db.query(hiveModelQuery)
+        console.log("Done!");
+        res.status(200).json( hiveGetResult )
+    } catch (err) {
+        console.error(err);
+        res.status(500).send('Server error');
+    }
+})
 
-        console.log(hives);
-        
-        res.status(200).json( hives )
+router.get('/update', async (
+    req: Request<{},{},{
+        id:          number
+        name:        string
+        description: string
+        location:    string
+        type:        string
+    }>, 
+    res: Response
+) => {
+    console.log("# Update hive");
+    
+    try {
+        console.log("Updating hive...");
+        const [hiveGetResult] = await db.query(hiveModelQuery)
+        console.log("Done!");
+        res.status(200).json( hiveGetResult )
     } catch (err) {
         console.error(err);
         res.status(500).send('Server error');
@@ -54,7 +63,7 @@ router.post('/hives', async (req: Request<{},{},{
 })
 
 // returns hive overview
-router.post('/hive/overview', async (req: Request<{},{},{
+router.post('/overview', async (req: Request<{},{},{
     identification: IUserIdentification,
     hiveId: string
 }>, res: Response) => {

@@ -18,15 +18,15 @@ const props = withDefaults(defineProps<{
     isTransparent: false,
     readonly: false
 })
-const inputValue = defineModel<string>("inputValue", { default: '' })
+const input = defineModel<string>("input", { default: '' })
 const emit = defineEmits<{
     onMountedValidator: [ValidatorModel],
     matchingSuggestion: [string]
 }>()
 const { validator, showValidatorBorders } = useFieldValidator(
-    inputValue,
+    input,
     props.validatorOptions ?? {},
-    () => inputValue.value = ''
+    () => input.value = ''
 )
 
 onMounted(() => {
@@ -67,7 +67,7 @@ function setAdaptiveTextareaSize(textarea: HTMLTextAreaElement, checkAgainst100P
         }
     }
 }
-watch(inputValue, () => {
+watch(input, () => {
     if (textarea.value == null) return
 
     setAdaptiveTextareaSize(textarea.value, true)
@@ -91,7 +91,7 @@ onMounted(async () => {
         }"
         :readonly="readonly"
         @focus="showValidatorBorders = true"
-        v-model="inputValue"
+        v-model="input"
     ></textarea>
 </template>
 

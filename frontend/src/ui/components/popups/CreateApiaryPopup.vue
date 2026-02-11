@@ -1,75 +1,93 @@
 <script setup lang="ts">
-import { computed, ref, useCssModule } from 'vue';
-import TitledField from '../input/fields/TitledField.vue';
+import { computed, ref, useCssModule, watch } from 'vue';
 import Button from '../input/buttons/Button.vue';
 import ImageDropZone from '../input/fields/ImageDropZone.vue';
 import PopupFrame from './PopupFrame.vue'
-import { useApiaryCreate } from '@/core/composables/apiary/useApiaryCreate';
-import type { PopupFunctions, PopupInfo } from '@/core/utils/PopupHiarchy';
+import { usePopup, type PopupData } from '@/core/utils/PopupHiarchy';
+import LabeledInputField from '../input/fields/LabeledInputField.vue';
+import LabeledTextareaField from '../input/fields/LabeledTextareaField.vue';
+import { useFormValidator } from '@/core/composables/validators/UseFormValidator';
+import { useApiaryStore } from '@/core/stores/ApiaryStore';
+import IconTextButton from '../input/buttons/IconTextButton.vue';
+import { SVG } from '@/assets/svgs/SVGLoader';
 
 const s = useCssModule()
 const props = defineProps<{
-    onCreate?: () => {}, 
-    popupFunctions: PopupFunctions
-    popupInfo: PopupInfo
+    popupData: PopupData
 }>()
 
-const { showApiaryCreateLoading, createApiary } = useApiaryCreate()
+const apiaryStore = useApiaryStore()
+const formValidator = useFormValidator() 
+const { frameModel, close } = usePopup({
+    label: "Create hive",
+    functions: props.popupData.functions,
+    info: props.popupData.info
+})
+
 const imageFile = ref<File | undefined>()
 const name = ref('')
-const location = ref('')
 const description = ref('')
 
 async function create() {
-    if (!isValid.value) return
-
-    await createApiary({
-        apiary: {
-            name: name.value,
-            location: location.value,
-            description: description.value,
-            imageFile: imageFile.value
+    await apiaryStore.createApiary({
+        name:        name.value,
+        description: description.value,
+        image:       imageFile.value 
+    },
+    {
+        onSuccess() {
+            close()
         },
-        onSuccess(apiary) {
-            props.onCreate?.()
-            props.popupFunctions.unmount?.();
-        },
-        onFailure(error) {
+        onFailure() {
             
-        },
+        }
     })
 }
 
-const isValid = computed(() => {
-    return name.value
-})
+watch(formValidator.isFormValid, (newval) => {
+    console.log("is valid: ", newval);
+    
+}, { immediate: true })  
 </script>
 
 <template>
-<PopupFrame title="Create apiary" :popup-functions="popupFunctions" :popup-info="popupInfo">
+<PopupFrame
+    :frame-model="frameModel"
+>
     <template #body>
         <div :class="s.grid">
-            <ImageDropZone v-model:image-file="imageFile" :class="s.image"/>
-            
+            <ImageDropZone 
+                :class="s.image"
+                v-model:image-file="imageFile" 
+            />
             <div :class="s.fields">
-                <TitledField 
+                <LabeledInputField
+                    label="Name"
                     :class="s.name" 
-                    :is-required="true" 
-                    title="Name" 
-                    v-model="name"/>
-                <TitledField 
-                    :class="s.location" 
-                    title="Location" 
-                    v-model="location" 
-                    />
-                <TitledField 
+                    :options="{
+                        isRequired: true,
+                        formValidator: formValidator
+                    }"
+                    v-model:input="name"
+                />
+
+                <LabeledTextareaField
+                    label="Description"
                     :class="s.description" 
-                    title="Description" 
-                    v-model="description"/>
-                <Button 
+                    :options="{
+                        isRequired: true,
+                        formValidator: formValidator
+                    }"
+                    v-model:input="description"
+                />
+                <IconTextButton 
+                    text="Create" 
                     :class="s.button" 
+                    :svg="SVG.Plus"
+                    :is-loading="apiaryStore.isCreatingApiary"
+                    :disabled="!formValidator.isFormValid.value"
                     @click="create" 
-                    text="Create" />
+                />
             </div>
             
         </div>
@@ -105,4 +123,5 @@ const isValid = computed(() => {
 
     .button
         margin-top: auto
+        background: var(--yellow)
 </style>

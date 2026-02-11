@@ -1,5 +1,5 @@
 <script setup lang="ts">
-import { onMounted, ref, useCssModule} from "vue"
+import { computed, onMounted, ref, useCssModule} from "vue"
 import ToolBar from '../components/ToolBar.vue';
 import IconButton from '../components/input/buttons/IconTextButton.vue';
 import CreateApiaryPopup from '../components/popups/CreateApiaryPopup.vue';
@@ -9,10 +9,19 @@ import { createPopup } from '@/core/utils/PopupHiarchy';
 import { useApiaryStore } from '@/core/stores/ApiaryStore';
 import { storeToRefs } from 'pinia';
 import Apiary from '../components/apiary/Apiary.vue';
+import StringSearchDropdown from "../components/input/dropdowns/StringSearchDropdown.vue";
 
 const s = useCssModule()
 const apiaryStore = useApiaryStore()
 const { apiaries } = storeToRefs(apiaryStore)
+
+const searchWord = ref<string>('')
+
+const filteredApiaries = computed(() => {
+    return apiaries.value.filter(apiary => 
+        apiary.name.toLowerCase().includes(searchWord.value.toLowerCase())
+    )
+})
 
 function searchApiaries() {
     // apiaries.value = searchForApiaries({
@@ -43,6 +52,7 @@ onMounted(() => {
             <IconButton
                 text="Add apiary"
                 :svg="SVG.Key"
+                :class="s.button"
                 @click="createPopup({
                     component: CreateApiaryPopup, 
                     props: {
@@ -52,7 +62,7 @@ onMounted(() => {
                     }
                 })"
             />
-            <!-- <StringSearchDropdown
+            <StringSearchDropdown
                 :options="{
                     initialValue: '',
                     placeholder: 'Search by name...',
@@ -66,7 +76,7 @@ onMounted(() => {
                 :style="{
                     minWidth: '15rem'
                 }"
-            /> -->
+            />
         </ToolBar>
         <div 
             ref="grid"
@@ -74,7 +84,7 @@ onMounted(() => {
             :style="{ gridTemplateColumns: `repeat(${gridColumns}, 1fr)` }" 
         >
             <Apiary 
-                v-for="apiary in apiaries"
+                v-for="apiary in filteredApiaries"
                 :class="s.apiary" 
                 :apiary="apiary" 
                 :onDelete="searchApiaries"

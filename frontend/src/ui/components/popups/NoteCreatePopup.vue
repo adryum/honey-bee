@@ -2,59 +2,58 @@
 import { ref, useCssModule, watch } from 'vue';
 import Button from '../input/buttons/Button.vue';
 import PopupFrame from './PopupFrame.vue'
-import type { DropdownItem } from '@/core/Interfaces';
-import { useNoteCreate } from '@/core/composables/hive/useCreateNote';
-import type { NoteCreateRequestModel } from '@/core/models/NoteModels';
 import type { CallbackModel } from '@/core/models/SupperModels';
 import { usePopup, type PopupData } from '@/core/utils/PopupHiarchy';
 import LabeledInputField from '../input/fields/LabeledInputField.vue';
 import { useFormValidator } from '@/core/composables/validators/UseFormValidator';
 import LabeledTextareaField from '../input/fields/LabeledTextareaField.vue';
 import { NoteTypes } from '@/core/DatabaseEnums';
-import LabeledStringSearchDropdown from '../input/dropdowns/LabeledStringSearchDropdown.vue';
 import ModularDropdown from '../input/dropdowns/ModularDropdown.vue';
-import { IconType, SVG } from '@/assets/svgs/SVGLoader';
+import { SVG } from '@/assets/svgs/SVGLoader';
 import SelectedTextHead from '../input/dropdowns/dropdownItems/top/SelectedTextHead.vue';
 import IconTextItem from '../input/dropdowns/dropdownItems/bottom/IconTextItem.vue';
+import type { NoteCreateModelRequest } from '@/core/network/Models';
+import { useNoteStore } from '@/core/stores/NoteStore';
+import { useHiveStore } from '@/core/stores/HiveStore';
+import { isValidValue } from '@/core/utils/others';
 
 const s = useCssModule()
 const props = defineProps<{
     popupData: PopupData
 }>()
+
+const noteStore = useNoteStore()
+const hiveStore = useHiveStore()
 const { frameModel, close } = usePopup({
     label: 'Add note',
     functions: props.popupData.functions,
     info: props.popupData.info
 })
-const { isNoteLoading, createNote } = useNoteCreate();
-const type = ref('')
+const type = ref<NoteTypes | undefined>(undefined)
 const title = ref('')
 const content = ref('')
-const dropdownItems: DropdownItem[] = [
-    { text: "Information" },
-    { text: "Warning" },
-]
 
 const formValidator = useFormValidator()
 async function create() {
-    if (!formValidator.isFormValid.value) return
+    if (!formValidator.isFormValid.value && !isValidValue(hiveStore.selectedHive?.id)) return
 
-    const createNoteModel: NoteCreateRequestModel = {
-        type: type.value,
+    const createNoteModel: NoteCreateModelRequest = {
+        type: type.value!,
         title: title.value,
-        content: content.value
+        content: content.value,
+        hiveId: hiveStore.selectedHive?.id!
     }
 
     const callbackModel: CallbackModel = {
         onSuccess() {
             close()
         },
-        onFailure(error) {
+        onFailure() {
             
         },
     }
 
-    await createNote(createNoteModel, callbackModel)
+    await noteStore.createNote(createNoteModel, callbackModel)
 }
 
 watch(formValidator.isFormValid, (newval) => {
@@ -98,7 +97,7 @@ watch(formValidator.isFormValid, (newval) => {
                 </template>
                 <template #list="{ dropdown }">
                     <IconTextItem
-                        v-for="item in Object.values(NoteTypes)"
+                        v-for="item in Object.values(NoteTypes).filter(type => type !== NoteTypes.NOT_A_TYPE)"
                         :options="{
                             svg: SVG.Apiaries,
                             text: item.toSentenceCase()

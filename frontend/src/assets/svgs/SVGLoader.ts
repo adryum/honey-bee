@@ -21,6 +21,7 @@ export enum SVG {
     Calendar = "Calendar",
     Key = "Key",
     Plus = "Plus",
+    Restart = "Restart",
 }
 
 export enum IconType {

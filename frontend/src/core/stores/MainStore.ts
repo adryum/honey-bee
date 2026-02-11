@@ -5,9 +5,13 @@ import { ref } from "vue";
 import type { UserProfileModel } from "./Models";
 import router, { RouterViewPaths } from "../router";
 import { ActionNotification, useActionsStore } from "./ActionStore";
+import { useHiveStore } from "./HiveStore";
+import { useNoteStore } from "./NoteStore";
 
 export const useMainStore = defineStore("MainStore", () => {
     const apiaryStore = useApiaryStore()
+    const hiveStore = useHiveStore()
+    const noteStore = useNoteStore()
     const actionStore = useActionsStore()
     const authenticationApiStore = useAuthenticationApiStore()
 
@@ -15,6 +19,12 @@ export const useMainStore = defineStore("MainStore", () => {
 
     async function initialize() {
         await apiaryStore.initialize()
+        await hiveStore.initialize()
+        await noteStore.initialize()
+
+        apiaryStore.countHivesInApiaries()
+
+        console.log("Main store initialized!");
     }
 
     async function authenticateUser() {
@@ -35,6 +45,8 @@ export const useMainStore = defineStore("MainStore", () => {
     }
 
     async function onAuthentication() {
+        await initialize()
+
         // const createdInvoices = await invoiceApiStore.getInvoices()
         // if (createdInvoices) {
         //     invoices.value = createdInvoices

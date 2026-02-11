@@ -6,6 +6,7 @@ import { ResultSetHeader, RowDataPacket } from "mysql2";
 import { redisClient } from "../config/RedisClient";
 import { oauth2Client, scopes } from "../config/GoogleAuth";
 import { Role } from "../DatabaseEnums";
+import { isValidValue } from "../utils";
 const router = Router()
 
 router.get('/google', async (req: Request, res: Response) => {
@@ -228,12 +229,14 @@ router.get('/me', async (
     req: Request<{},{}, {}>, 
     res: Response
 ) => {
-    if (!req.session.userId) {
+    console.log("Checking session for user: ", req.session.userId);
+    if (!isValidValue(req.session.userId)) {
         console.log("Fuck out of here! (Banishes user)");
         return res.status(401).send();
     }
     res.status(200).send()
 })
+
 router.get('/profile', async (
     req: Request<{},{}, {}>, 
     res: Response
@@ -246,7 +249,7 @@ router.get('/profile', async (
         `SELECT 
             id,
             username,
-            profilePicture,
+            image,
             email,
             role
         FROM users

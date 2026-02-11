@@ -1,5 +1,5 @@
 <script setup lang="ts">
-import { useCssModule } from "vue";
+import { ref, useCssModule } from "vue";
 import IconTextButton from "../input/buttons/IconTextButton.vue";
 import { SVG } from "@/assets/svgs/SVGLoader";
 import StringSearchDropdown from "../input/dropdowns/StringSearchDropdown.vue";
@@ -11,6 +11,8 @@ const { create } = usePopupCreator({
     popupComponent: NoteCreatePopup,
     maxCount: 1
 })
+const searchText = defineModel('searchText', { default: '' })
+
 </script>
 
 <template>
@@ -26,7 +28,10 @@ const { create } = usePopupCreator({
         :options="{
             placeholder: 'Search by anything...',
             showIcon: true,
-            onHoverEffects: true
+            onHoverEffects: true,
+            onInputChange(value) {
+                searchText = value
+            }
         }"
     />
 </div>

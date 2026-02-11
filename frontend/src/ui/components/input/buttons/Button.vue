@@ -15,7 +15,8 @@ const s = useCssModule()
 </script>
 
 <template>
-<motion.button :class="[s.container, isImportant ? s.important : s.unimportnat, isDisabled && s.disabled]"
+<motion.button 
+    :class="[s.container, isImportant ? s.important : s.unimportnat, isDisabled && s.disabled]"
     :while-press="isDisabled ? {} : {scale: 0.98}"
     :disabled="isDisabled"
 >
@@ -72,5 +73,5 @@ const s = useCssModule()
         background: var(--darker-orange)
 
 .disabled
-    opacity: .5
+    opacity: .5 !important
 </style>

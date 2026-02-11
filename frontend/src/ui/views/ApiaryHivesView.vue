@@ -1,92 +1,67 @@
 <script setup lang="ts">
 import Hive from '../components/hive/Hive.vue';
-import { onMounted, ref, useCssModule } from "vue";
+import { computed, ref, useCssModule } from "vue";
 import ToolBar from '../components/ToolBar.vue';
-import { useApiaryView } from '@/core/composables/apiary/useApiaryView.js';
 import { useFlexibleGrid } from '@/core/utils/others.js';
-import type { HiveSearchOptions } from '@/core/models/HiveModels.js';
-import { useApiaryHiveView } from '@/core/composables/apiary/useApiaryHiveView.js';
-import StringSearchDropdown from '../components/input/dropdowns/StringSearchDropdown.vue';
+import { useApiaryStore } from '@/core/stores/ApiaryStore';
+import { storeToRefs } from 'pinia';
+import { useHiveStore } from '@/core/stores/HiveStore';
+import IconTextButton from '../components/input/buttons/IconTextButton.vue';
+import { usePopupCreator } from '@/core/utils/PopupHiarchy';
+import HiveAddPopup from '../components/popups/hive/HiveAddPopup.vue';
 
 const s = useCssModule()
-const props = defineProps<{
-    apiaryId: number
-}>()
-const { apiaryHives, updateHives } = useApiaryHiveView()
-const { searchForApiaries } = useApiaryView()
-const apiaryName = ref(searchForApiaries({
-    id: props.apiaryId
-})[0].name)
+const apiaryStore = useApiaryStore()
+const hiveStore = useHiveStore()    
+const { selectedApiary } = storeToRefs(apiaryStore)
 
+const filteredHives = computed(() => {
+    if (!selectedApiary.value) return []
+
+    return hiveStore.hives.filter(hive => 
+        hive.apiaryId === selectedApiary.value!.id && hive.name.toLowerCase().includes(searchWord.value.toLowerCase())
+    )
+})
 const searchWord = ref<string>('')
-
-async function searchHives() {
-    const options: HiveSearchOptions =  {
-        searchWord: searchWord.value,
-        apiaryId: props.apiaryId,
-        ignoreDifferentLetterCases: true
-    }
-
-    updateHives({
-        apiaryId: props.apiaryId,
-        options: options
-    })
-}
-
-// const components = [
-    // createComponentWithProps(IconTextButton, { 
-    //     text: 'add hive',
-    //     svg: new SVGImage(SVGRes.Pluss),
-    //     onClick: () => {
-    //         createComponentInstance(AddHivePopup, { apiaryId: props.apiaryId, onAssign: searchHives }, true)
-    //     }
-    // }),
-    // createComponent(
-    //     StringSearchDropdown, 
-    //     { 
-    //         options: {
-    //             initialValue: '',
-    //             placeholder: 'Search by name...',
-    //             async onInputChange(value: string) {
-    //                 searchWord.value = value
-    //                 await searchHives()
-    //             }
-    //         }
-    //     },
-    // {
-    //     style: {
-    //         minWidth: '15rem'
-    //     }
-    // }),
-// ]
-const asd = ref()
-const grid = ref<HTMLDivElement | null>(null)
+const grid = ref()
 const { style: gridStyle } = useFlexibleGrid({ 
-    gridRef: asd,
+    gridRef: grid,
     itemMinWidthPx: 400,
     gapPx: 10
 })
 
-onMounted(() => {
-    updateHives({
-        apiaryId: props.apiaryId,
-        options: {}
-    })
+const { create } = usePopupCreator({
+    popupComponent: HiveAddPopup, 
+    maxCount: 1
 })
 </script>
 
 <template>
-<div ref="asd"
-
-:class="s.container">
-        <ToolBar :name="apiaryName"/>
-        <div :class="s.appiaries" :style="gridStyle" ref="grid">
-            <Hive 
-                v-for="hive in apiaryHives"  
-                class="item" 
-                :hive="hive"
-            />
-        </div>
+<div 
+    ref="grid"
+    :class="s.container"
+>
+    <ToolBar 
+        :name="selectedApiary?.name"
+    >
+        <IconTextButton
+            text="Add hive"
+            :class="s.button"
+            @click="create"
+        />
+    </ToolBar>
+    <div 
+        ref="grid"
+        :class="s.appiaries" 
+        :style="gridStyle" 
+    >
+        <Hive 
+            v-for="hive in filteredHives"  
+            class="item" 
+            :hive="hive"
+            @click="hiveStore.openHive(hive)"
+        />
+    </div>
 </div>
 </template>
 

@@ -4,8 +4,14 @@ import { IconType, SVG } from "@/assets/svgs/SVGLoader";
 import Icon from "../../Icon.vue";
 import IconDropdown from "../../input/dropdowns/IconDropdown.vue";
 import IconTextItem from "../../input/dropdowns/dropdownItems/bottom/IconTextItem.vue";
+import type { NoteModelDB } from "@/core/stores/Models";
+import { useNoteStore } from "@/core/stores/NoteStore";
 
 const s = useCssModule()
+const noteStore = useNoteStore()
+const props = defineProps<{
+    note: NoteModelDB
+}>()
 const randomRotation = ref(0)
 
 onMounted(() => {
@@ -26,7 +32,9 @@ onMounted(() => {
                 :svg="SVG.InfoCircle"
             />
         </div>
-        <p :class="s.date">22th Sep, 2046</p>
+        <p :class="s.date">
+            {{ note.creationDate }}
+        </p>
         <IconDropdown
             :class="s.button" 
             :svg="SVG.MoreDots" 
@@ -36,6 +44,7 @@ onMounted(() => {
                     svg: SVG.Trash,
                     text: 'Remove'
                 }"
+                @click="noteStore.deleteNote(note.id)"
             />
         </IconDropdown>
     </div>
@@ -45,17 +54,13 @@ onMounted(() => {
             for="body"
             :class="s.label"
         >
-            Bees to reees
+            {{ note.title }}
         </label>
         <p 
             :class="s.content"
         >
-            One day i stumbled accross this beehive and hit it with my ball. Not safe to say that everything is not okey. After that masive hit all hive inhabitants started attacking ME!!! Didnt know that they're were going to be so pissed tf??!! Like chill out dude its not that serious.
+            {{ note.content || "Empty" }}
         </p>
-        <div :class="s.footer">
-            <!-- <p>Andrea Biggie</p>
-            <p :class="s.information">Information</p> -->
-        </div>
     </div>
 
 </div>

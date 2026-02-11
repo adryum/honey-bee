@@ -2,44 +2,36 @@ import { Router, type Request, type Response } from "express";
 import { type IUserIdentification } from "../Enums";
 import { NoteT } from "../TableColumnTitles";
 import { ResultSetHeader, RowDataPacket } from "mysql2";
-import { getCurrentUTCDateString, isNumber } from "../utils";
+import { getCurrentUTCDateString, isNumber, isValidValue } from "../utils";
 import { upload } from "../config/Multer";
 import { db } from "../config/Database";
+import { requireRole } from "../Middleware";
+import { Role } from "../DatabaseEnums";
 
 const router = Router()
 const getNotesQuery = `
     SELECT 
-        *,
-        (
-            SELECT COALESCE(
-                JSON_ARRAYAGG(
-                    JSON_OBJECT(
-                        'id', p.id,
-                    )
-                ),
-                JSON_ARRAY()
-            )
-            FROM note_place__hive AS hive
-            LEFT JOIN notes AS n ON hive.note_id = n.id
-        ) as hives
-    FROM ${NoteT.tableName}
+        id,
+        title,
+        content,
+        creationDate,
+        type,
+        userId,
+        hiveId
+    FROM notes
     `
  
-router.post('/', upload.none(), async (req: Request<{},{}, {
-    identification: IUserIdentification
-    hiveId: number
-}>, res: Response) => {
-    const { identification, hiveId } = req.body
-
-    if (!identification || !isNumber(hiveId))
-        return res.status(401).send('incorrect credentials!') 
-        
+router.get('/get', requireRole(Role.ANY), upload.none(), async (
+    req: Request<{},{}, {}>, 
+    res: Response
+) => {
+    console.log("# Get notes");
     try {
+        console.log("Getting notes...");
         const [notes] = await db.query<RowDataPacket[]>(
-            getNotesQuery + ` WHERE ${NoteT.userId} = ?`, 
-            [identification.id]
+            getNotesQuery,
         )
-        console.log(notes);
+        console.log("Done!");
         return res.status(200).json(notes);
     } catch (err) {
         console.error(err);
@@ -47,40 +39,37 @@ router.post('/', upload.none(), async (req: Request<{},{}, {
     }
 })
  
-router.post('/create', upload.none(), async (req: Request<{},{},{
-    identification: IUserIdentification
+router.post('/create', requireRole(Role.ANY), upload.none(), async (req: Request<{},{},{
     title: string
     content: string
     type: string
-
-    hiveIds: number[]
-    queenIds: number[] 
-    apiaryIds: number[] 
-    inventoryIds: number[] 
+    hiveId: number
 }>, res: Response) => {
-    let { identification, title, content, type, hiveIds, queenIds, apiaryIds, inventoryIds } = req.body
+    console.log("# Create note");
+    let { title, content, type, hiveId } = req.body
 
-    if (!identification.id || !title || !content || !type) 
+    if (!title || !type || !isValidValue(hiveId)) 
         return res.status(401).send('incorrect credentials!')
 
     const currentTime = getCurrentUTCDateString();
 
     try {
+        console.log("Inserting note...");
         const [noteInsertResult] = await db.query<ResultSetHeader>(`
-            INSERT INTO ${NoteT.tableName}
-            (${NoteT.title},${NoteT.content},${NoteT.creationDate},${NoteT.type},${NoteT.userId}) 
-            VALUES (?,?,?,?,?,?)`,
-            [title, content, currentTime, type, identification.id]
+            INSERT INTO notes
+            (title, content, creationDate, type, userId, hiveId) 
+            VALUES (?,?,?,?,?, ?)`,
+            [title, content, currentTime, type, req.session.userId, hiveId]
         )
-
-        const insertHivesResult = await insertHives(noteInsertResult.insertId, hiveIds)
+        console.log("Done!");
         
+        console.log("Getting insterted data...");
         const [[getNotesResult]] = await db.query<RowDataPacket[]>(
             getNotesQuery + " WHERE id = ?",
             [noteInsertResult.insertId]
         )
+        console.log("Done!");
         
-        console.log(getNotesResult);
         res.status(200).json(getNotesResult)
     } catch (err) {
         console.error(err);
@@ -88,23 +77,26 @@ router.post('/create', upload.none(), async (req: Request<{},{},{
     }
 })
 
-router.post('/delete', upload.none(), async (req: Request<{},{},{
-    identification: IUserIdentification
+router.post('/delete', requireRole(Role.ANY), upload.none(), async (req: Request<{},{},{
     id: number
 }>, res: Response) => {
-    let { identification, id } = req.body
+    console.log("# Delete note");
+    let { id } = req.body
 
-    if (!identification.id || !isNumber(id)) 
+    if (!isNumber(id)) 
         return res.status(401).send('incorrect credentials!')
 
     try {
-        const [noteDeleteResult] = await db.query<ResultSetHeader>(`
+        console.log("Deleting entry...");
+        
+        await db.query<ResultSetHeader>(`
             DELETE FROM ${NoteT.tableName}
-            WHERE id = ? AND user_id = ?`,
-            [id, identification.id]
+            WHERE id = ?`,
+            [id]
         )
+        console.log("Done!");
 
-        res.status(200).json(id)
+        res.status(200).json({ id: id })
     } catch (err) {
         console.error(err);
         res.status(500).send('Server error');

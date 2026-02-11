@@ -7,7 +7,6 @@ import SelectionDropdown from '../../input/dropdowns/SelectionDropdown.vue';
 import Button from '../../input/buttons/Button.vue';
 import type { DropdownItem } from '@/core/Interfaces';
 import { useHiveCreate } from '@/core/composables/hive/useHiveCreate';
-import type { HiveCreateModel } from '@/core/models/HiveModels';
 
 const s = useCssModule()
 const props = defineProps<{

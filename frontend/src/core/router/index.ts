@@ -76,10 +76,9 @@ const router = createRouter({
 })
 
 router.beforeEach(async (to, from) => {
-
     console.log("Routing to: ", to.name);
 
-    if (to.name !== "registration") {
+    if (to.name !== "login") {
         const store = useAuthenticationApiStore()
         await store.checkSession()
     } 

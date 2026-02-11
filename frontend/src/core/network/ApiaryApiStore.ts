@@ -20,7 +20,15 @@ export const useApiaryApiStore = defineStore("Apiary api store", () => {
         createApiaryModel: ApiaryCreateRequestModel
     ): Promise<ApiaryModelDB | undefined> {
         try {
-            const result = await axios.post<ApiaryCreateResponseModel>("/apiary/create", createApiaryModel)
+            const formData = new FormData()
+            formData.append("name", createApiaryModel.name)
+            formData.append("description", createApiaryModel.description)
+            if (createApiaryModel.image) formData.append("image", createApiaryModel.image)
+
+            const result = await axios.post<ApiaryCreateResponseModel>("/apiary/create", formData)
+
+            console.log("Gote apiaria : ", result.data);
+            
 
             if (result.data)
                 return ApiaryCreateResponse_to_ApiaryModelDB(result.data)

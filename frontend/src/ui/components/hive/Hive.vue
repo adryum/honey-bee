@@ -3,79 +3,58 @@ import { useCssModule } from 'vue';
 import CubeDropdown from '../input/dropdowns/CubeDropdown.vue';
 import { useHive } from '@/core/composables/hive/useHive';
 import type { DropdownItem } from '@/core/Interfaces';
-import type { HiveModel } from '@/core/models/HiveModels';
 import { IconType, SVG } from '@/assets/svgs/SVGLoader';
 import Icon from '../Icon.vue';
-import router from '@/core/router';
+import type { HiveModelDB } from '@/core/stores/Models';
+import { useHiveStore } from '@/core/stores/HiveStore';
 
 const s = useCssModule()
 const props = withDefaults(defineProps<{
-    hive: HiveModel,
+    hive: HiveModelDB,
     showApiary?: boolean
 }>(), {
     showApiary: false
 })
-const { isDeletingHive, deleteHive, updateHives } = useHive()
-const moreOptions: DropdownItem[] = [
-    {
-        text: 'Delete',
-        svg: SVG.Confirm,
-        color: 'var(--red)',
-        onClick: async () => {
-            await deleteHive({
-                hiveId: props.hive.id,
-                hiveName: props.hive.name,
-                onSuccess(hiveName) {
-                    
-                },
-                onFailure(error) {
-                    
-                },
-            })
-        },
-    },
-]
 </script>
 
 <template>
-   <div 
-        :class="s.container"
-    >
-        <div :class="s.body">
-            <div 
-                v-if="hive.type" 
-                :class="s.type"
-            >
-                <Icon 
-                    :class="s.icon" 
-                    :type="IconType.MEDIUM" 
-                    :svg="SVG.HoneyHive" 
-                />
-            </div>
-            <img 
-                v-if="hive.imagePath" 
-                :class="s.hiveImage" 
-                :src="hive.imagePath" 
-                alt="hive image"
-            >
+<div 
+    :class="s.container"
+>
+    <div :class="s.body">
+        <div 
+            v-if="hive.type" 
+            :class="s.type"
+        >
             <Icon 
-                v-else
                 :class="s.icon" 
-                :type="IconType.BIG" 
+                :type="IconType.MEDIUM" 
                 :svg="SVG.HoneyHive" 
             />
         </div>
-        <div :class="s.footer">
-            <div :class="s.title">
-                <p :class="s.name">{{ hive.name }}</p>
-                <p v-if="showApiary" :class="s.apiaryName">{{ hive.apiaryName }}</p>
-            </div>
-            <CubeDropdown  
-                :svg="SVG.MoreDots" 
-                :class="s.options"
-                :dropdownItems="moreOptions"/>
+        <img 
+            :class="s.hiveImage" 
+            :src="hive.image || 'src/assets/images/hive1.jpg'" 
+            alt="hive image"
+        >
+    </div>
+    <div :class="s.footer">
+        <div :class="s.title">
+            <p :class="s.name">{{ hive.name }}</p>
+            <p 
+                v-if="showApiary" 
+                :class="s.apiaryName"
+            >
+                {{ hive.apiaryName }}
+            </p>
         </div>
-   </div>
+        <!-- <CubeDropdown  
+            :svg="SVG.MoreDots" 
+            :class="s.options"
+            :dropdownItems="moreOptions"
+        /> -->
+    </div>
+</div>
 </template>
 
 <style module lang='sass'>

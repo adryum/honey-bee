@@ -14,6 +14,8 @@ const props = defineProps({
     hiveId: String,
 })
 
+const searchText = ref('')
+
 const currentDestination = ref<Destinations>(Destinations.Notes)
 const destinatonProps: DestinationProps[] = [
     { destination: Destinations.General, fragmentComponent: HiveGeneralFragment, fragmentToolbarComponent: undefined},
@@ -46,22 +48,42 @@ function changeDestination(destination: Destinations) {
                     :while-press="{ scale: 0.98}"
                     @click="changeDestination(props.destination)"
                 >
-                {{ props.destination }}
+                    {{ props.destination }}
                 </motion.button>
                 <Button :style="{ marginLeft: 'auto'}" text="Add Inspection"></Button>
             </div>
             <div :class="[s.fragmentSpecific, hasSelectedFragmentComponents && s.shown]">
-                <component 
-                    :class="s.toolbarComponent" 
-                    :is="selectedDestinationProps.fragmentToolbarComponent"
+                <NoteFragmentToolbarPart
+                    v-if="currentDestination === Destinations.Notes"
+                    v-model:searchText="searchText"
                 />
             </div>
         </div>
-    
-        <component 
+
+        <HiveGeneralFragment
+            v-if="currentDestination === Destinations.General"
             :class="s.fragment"
             :style="{ maxHeight: `calc(100vh - ${hasSelectedFragmentComponents ? '9rem' : '6.5rem' })` }" 
-            :is="selectedDestinationProps.fragmentComponent" 
+
+        /> 
+        <CalendarView
+            v-if="currentDestination === Destinations.Calendar"
+            :class="s.fragment"
+            :style="{ maxHeight: `calc(100vh - ${hasSelectedFragmentComponents ? '9rem' : '6.5rem' })` }" 
+
+        />
+        <HiveNoteFragment
+            v-if="currentDestination === Destinations.Notes"
+            :class="s.fragment"
+            :style="{ maxHeight: `calc(100vh - ${hasSelectedFragmentComponents ? '9rem' : '6.5rem' })` }" 
+            :search-text="searchText"
+        />
+
+        <HiveMedicineFragment
+            v-if="currentDestination === Destinations.Medicine"
+            :class="s.fragment"
+            :style="{ maxHeight: `calc(100vh - ${hasSelectedFragmentComponents ? '9rem' : '6.5rem' })` }" 
+        
         />
     </section>
 </template>

@@ -6,6 +6,8 @@ import CheckboxWText from "@/ui/components/input/fields/CheckboxWText.vue";
 import RegistrationButton from "@/ui/components/input/buttons/RegistrationButton.vue";
 import FaintButton from "@/ui/components/input/buttons/FaintButton.vue";
 import { useMainStore } from "@/core/stores/MainStore";
+import IconTextButton from "@/ui/components/input/buttons/IconTextButton.vue";
+import { SVG } from "@/assets/svgs/SVGLoader";
 
 const s = useCssModule()
 const mainStore = useMainStore()
@@ -18,19 +20,13 @@ const isEverythingValid = computed(() => {
 })
 
 async function login() {
-    if (!isEverythingValid.value) return
+    window.location.href = import.meta.env.VITE_API + "/auth/google";
 
-    // await RegistrationRepository.login({
-    //     email: email.value,
-    //     password: password.value
-    // })
 }
 
 // auto login
 onMounted(async () => {
     await mainStore.authenticateUser()
-    window.location.href = import.meta.env.VITE_API + "/auth/google";
-
 })
 </script>
 
@@ -49,6 +45,12 @@ onMounted(async () => {
             <FaintButton @click="$router.push('/recovery')" :class="s.left" text="Forgot Password!"/>
             <FaintButton @click="$router.push('/signup')" :class="s.right" text="Create an account"/>
         </div>
+
+        <IconTextButton
+            :svg="SVG.Confirm"
+            text="Login with Google"
+            @click="login"
+        />
     </form>
 </div>
 </template>

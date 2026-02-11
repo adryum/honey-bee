@@ -257,8 +257,8 @@ watch(search , (newVal) => {
             box-shadow: inset 0 0 0 1px var(--red) !important
 
         &.focussed
-            box-shadow: inset 0 0 0 1px var(--yellow) !important
-            outline: 2px solid color-mix(in srgb, var(--yellow) 20%, transparent)
+            // box-shadow: inset 0 0 0 1px var(--yellow) !important
+            // outline: 2px solid color-mix(in srgb, var(--yellow) 20%, transparent)
 
         .icon
             width: 1rem

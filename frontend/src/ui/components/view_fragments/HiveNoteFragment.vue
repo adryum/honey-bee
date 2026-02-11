@@ -1,11 +1,27 @@
 <script setup lang="ts">
-import { ref, useCssModule } from "vue";
-import MedicineList from "../hive_overview/medicine/MedicineList.vue";
+import { computed, ref, useCssModule } from "vue";
 import Note from '../hive_overview/notes/Note.vue'
 import { useFlexibleGrid } from "@/core/utils/others";
+import { useNoteStore } from "@/core/stores/NoteStore";
+import { storeToRefs } from "pinia";
 
 const s = useCssModule()
-const grid = ref<HTMLDivElement | null>(null)
+const props = defineProps<{
+    searchText: string
+}>()
+
+const noteStore = useNoteStore()
+const { notes } = storeToRefs(noteStore)
+const filteredNotes = computed(() => {
+    console.log("search: ", props.searchText);
+    
+    return notes.value.filter(note => 
+        note.title.toLowerCase().includes(props.searchText.toLowerCase()) ||
+        note.content.toLowerCase().includes(props.searchText.toLowerCase())
+    )
+})
+
+const grid = ref()
 const { style: gridStyle } = useFlexibleGrid({ 
     gridRef: grid,
     itemMinWidthPx: 350,
@@ -19,13 +35,11 @@ const { style: gridStyle } = useFlexibleGrid({
     :class="s.container"
     :style="gridStyle"
 >
-    <Note />
-    <Note />
-    <Note />
-    <Note />
-    <Note />
-    <Note />
-    <Note />
+    <Note 
+        v-for="note in filteredNotes"
+        :key="note.id"
+        :note="note"
+    />
 </div>
 </template>
 

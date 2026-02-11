@@ -2,13 +2,25 @@ import { Router, type Request, type Response } from "express";
 import { db } from "../config/Database";
 import { type IUserIdentification } from "../Enums";
 import { ApiaryT, HiveT } from "../TableColumnTitles";
-import { ResultSetHeader } from "mysql2";
+import { ResultSetHeader, RowDataPacket } from "mysql2";
 import { col } from "../utils";
 import { DEFAULT_PLACEHOLDER, uploadImage } from "../config/image_cloud/Cloudinary";
 import { PublicIdBuilder } from "../config/image_cloud/PublicIdBuilder";
 import { upload } from "../config/Multer";
 import { requireRole } from "../Middleware";
 import { Role } from "../DatabaseEnums";
+
+const getApiaryQuery = (where: string) => `
+SELECT 
+    a.id, 
+    a.name,
+    a.location,
+    a.description,
+    a.image,
+    COUNT(h.id) AS hiveCount
+FROM apiaries as a
+LEFT JOIN hives as h ON a.id = h.apiaryId
+`
 
 const router = Router()
 
@@ -45,66 +57,21 @@ router.post('/hives', async (req: Request<{},{}, {
 })
 
 // returns all apiaries which start with given filter
-router.get('/get', requireRole(Role.ANY), async (req: Request<{},{},{
-    searchWord: string
-}>, res: Response) => {
-    var {  searchWord: searchFilter } = req.body
-
-    // sets default value
-    searchFilter = (!searchFilter) ? '%' : searchFilter.concat('%')
-
+router.get('/get', requireRole(Role.ANY), async (
+    req: Request<{},{},{}>, 
+    res: Response
+) => {
     try {
+        console.log("# Getting apiaries...");
         var [apiaries] = await db.query<any[]>(`
-            SELECT 
-                ${col(ApiaryT.tableName, ApiaryT.id)} AS id, 
-                ${col(ApiaryT.tableName, ApiaryT.name)} AS name,
-                ${col(ApiaryT.tableName, ApiaryT.location)} AS location,
-                ${col(ApiaryT.tableName, ApiaryT.description)} AS description,
-                ${col(ApiaryT.tableName, ApiaryT.imagePath)} AS imagePath,
-                COUNT(${col(HiveT.tableName, HiveT.id)}) AS hiveCount
-            FROM ${ApiaryT.tableName}
-            LEFT JOIN ${HiveT.tableName} ON ${col(HiveT.tableName, HiveT.apiaryId)} = ${col(ApiaryT.tableName, ApiaryT.id)}
-            WHERE ${col(ApiaryT.tableName, ApiaryT.userId)} = ? AND ${col(ApiaryT.tableName, ApiaryT.name)} LIKE ?
-            GROUP BY ${col(ApiaryT.tableName, ApiaryT.id)}
+            ${getApiaryQuery("")}
+            WHERE a.userId = ? 
+            GROUP BY a.id
             `,
-            [req.session.userId, searchFilter]
+            [req.session.userId]
         )
-
-        apiaries = apiaries.map(apiary => ({
-            ...apiary,
-            imagePath: apiary.imagePath || DEFAULT_PLACEHOLDER
-        }))
-        
-        console.log(apiaries);
+        console.log("Done!");
         res.status(200).json(apiaries)
-    } catch (err) {
-        console.error(err);
-        res.status(500).send('Server error');
-    }
-})
-
-// returns apiary
-router.post('/', async (req: Request<{},{},{
-    identification: IUserIdentification
-    apiaryId: string
-}>, res: Response) => {
-    const { identification, apiaryId } = req.body
-
-    // missing credentials
-    if (!identification || apiaryId == null) 
-        return res.status(401).send('incorrect credentials!') 
-
-    try {
-        const [apiary] = await db.query(`
-            SELECT *
-            FROM ${ApiaryT.tableName}
-            WHERE ${ApiaryT.userId} = ? AND ${ApiaryT.id} = ?
-            LIMIT 1`, 
-            [identification.id, apiaryId]
-        )
-
-        console.log(apiary);
-        return res.status(200).json( (apiary as any[])[0] )
     } catch (err) {
         console.error(err);
         res.status(500).send('Server error');
@@ -113,49 +80,62 @@ router.post('/', async (req: Request<{},{},{
 
 // creates apiary
 router.post('/create', upload.single("image"), async (req: Request<{},{},{
-    identification: string
     name: string
     location: string
     description: string
 }>, res: Response) => {
-    console.log("req.body:", req.body);
-    console.log("req.file:", req.file);
+    console.log("# Create apiary");
     const { name, location, description } = req.body
     const file = req.file;
-    const identificationObj = JSON.parse(req.body.identification);
 
     // missing credentials
-    if (!identificationObj || !name) 
+    if (!name) 
         return res.status(400).send('incorrect information!') 
 
     try {
+        console.log("Inserting apirary...");
         const [result] = await db.query<ResultSetHeader>(`
-            INSERT INTO ${ApiaryT.tableName} (
-            ${ApiaryT.name}, 
-            ${ApiaryT.location}, 
-            ${ApiaryT.description}, 
-            ${ApiaryT.userId}
+            INSERT INTO apiaries (
+            name, 
+            location, 
+            description, 
+            userId
             )
             VALUES(?, ?, ?, ?)`, 
-            [name, location, description, identificationObj.id]
+            [name, location, description, req.session.userId]
         )
-
-        // add image
+        console.log("Done!");
+    
         if (file) {
-            const imageKey = new PublicIdBuilder(identificationObj.id).Apiary(result.insertId.toString()).getResource()
+            console.log("Uploading image to cloud...");
+            const imageKey = new PublicIdBuilder(req.session.userId!.toString()).Apiary(result.insertId.toString()).getResource()
 
             const url = await uploadImage(file, imageKey)
             console.log(url);
+            console.log("Done!");
+
+            console.log("Updating entry with image...");
             
-            const [updateRes] = await db.query<ResultSetHeader>(`
-                UPDATE ${ApiaryT.tableName} 
-                SET ${ApiaryT.imagePath} = ?
-                WHERE ${ApiaryT.id} = ?`,
+            await db.query<ResultSetHeader>(`
+                UPDATE apiaries
+                SET image = ?
+                WHERE id = ?`,
                 [url, result.insertId]
             )
+            console.log("Done!");
         }
+
+        console.log("Getting new entry data...");
+        var [[getNewApiary]] = await db.query<RowDataPacket[]>(`
+            ${getApiaryQuery("")}
+            WHERE a.id = ? 
+            GROUP BY a.id
+            LIMIT 1
+            `,
+            [result.insertId]
+        )
         
-        res.status(201).send()
+        res.status(201).json(getNewApiary)
     } catch (err) {
         console.error(err);
         res.status(500).send('Server error');
