@@ -9,6 +9,7 @@ import { useHiveStore } from '@/core/stores/HiveStore';
 import IconTextButton from '../components/input/buttons/IconTextButton.vue';
 import { usePopupCreator } from '@/core/utils/PopupHiarchy';
 import HiveAddPopup from '../components/popups/hive/HiveAddPopup.vue';
+import StringSearchDropdown from '../components/input/dropdowns/StringSearchDropdown.vue';
 
 const s = useCssModule()
 const apiaryStore = useApiaryStore()
@@ -49,6 +50,20 @@ const { create } = usePopupCreator({
             :class="s.button"
             @click="create"
         />
+        <StringSearchDropdown
+                :options="{
+                    initialValue: '',
+                    placeholder: 'Search by name...',
+                    showIcon: true,
+                    onHoverEffects: true,
+                    onInputChange(value: string) {
+                        searchWord = value
+                    }
+                }"   
+                :style="{
+                    minWidth: '15rem'
+                }"
+            />
     </ToolBar>
     <div 
         ref="grid"

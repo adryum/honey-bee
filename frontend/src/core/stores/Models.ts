@@ -9,14 +9,18 @@ export type ApiaryModelDB = {
 }
 
 export type HiveModelDB = {
-    id:          number
-    name:        string
-    description: string
-    image:       string
-    location:    string
-    type:        HiveType
-    apiaryId:    number
-    apiaryName:  string
+    id:           number
+    name:         string
+    description:  string
+    image:        string
+    location:     string
+    type:         HiveType
+    apiaryId:     number
+    creationDate: string
+    creatorId:    number
+    creatorName:  string
+    creatorImage: string
+    history:      HiveHistoryEntryDB[]
 }
 
 export type HiveCreateModel = {
@@ -42,4 +46,13 @@ export type NoteModelDB = {
     userId:       number
     hiveId:       number
     creationDate: string
+}
+
+export type HiveHistoryEntryDB = {
+    id:           number 
+    text:         string 
+    userId:       number 
+    username:     string 
+    userImage:    string 
+    creationDate: string 
 }

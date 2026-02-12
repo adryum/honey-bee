@@ -1,14 +1,15 @@
 import { defineStore } from "pinia"
 import type { CallbackModel } from "../models/SupperModels"
-import type { HiveUpdateModel } from "../models/HiveModels"
 import { ref } from "vue"
 import type { HiveCreateModel, HiveModelDB } from "./Models"
 import { useHiveApiStore } from "../network/HiveApiStore"
 import { isValidValue } from "../utils/others"
 import type { HiveCreateRequestModel, HiveUpdateRequestModel } from "../network/Models"
 import router, { RouterViewPaths } from "../router"
+import { useApiaryStore } from "./ApiaryStore"
 
 export const useHiveStore = defineStore("hiveStore", () => {
+    const apiaryStore = useApiaryStore()
     const hiveApiStore = useHiveApiStore()
     const hives = ref<HiveModelDB[]>([])
     const selectedHive = ref<HiveModelDB | undefined>(undefined)
@@ -45,6 +46,7 @@ export const useHiveStore = defineStore("hiveStore", () => {
             const result = await hiveApiStore.updateHive(payload);
             if (result) {
                 hives.value.replace(result, (hive) => hive.id === result.id)
+                apiaryStore.countHivesInApiaries()
                 callback?.onSuccess("")
             } else {
                 callback?.onFailure()
@@ -67,7 +69,7 @@ export const useHiveStore = defineStore("hiveStore", () => {
     }
 
     async function updateHive(
-        updateModel: HiveUpdateModel, 
+        updateModel: HiveUpdateRequestModel, 
         callback: CallbackModel
     ): Promise<HiveModelDB | undefined> {
         console.log("updating hive");
@@ -76,6 +78,8 @@ export const useHiveStore = defineStore("hiveStore", () => {
 
             if (result) {
                 callback.onSuccess("Updated hive")
+                console.log("Success bro@");
+                
                 hives.value.replace(result, (hive) => hive.id === result.id)
             } else {
                 callback.onFailure()
@@ -96,8 +100,9 @@ export const useHiveStore = defineStore("hiveStore", () => {
             const result = await hiveApiStore.createHive(hive)
             
             if (result) {
-                callback.onSuccess("")
                 hives.value.push(result)
+                apiaryStore.countHivesInApiaries()
+                callback.onSuccess("")
             } else {
                 callback.onFailure()
             }

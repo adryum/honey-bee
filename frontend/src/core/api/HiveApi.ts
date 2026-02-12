@@ -108,7 +108,7 @@ export class HiveApi {
             if (hive.type) formdata.append('type', hive.type)
             if (hive.location) formdata.append('location', hive.location)
             if (hive.description) formdata.append('description', hive.description)
-            if (hive.imageFile) formdata.append('image', hive.imageFile)
+            if (hive.image) formdata.append('image', hive.image)
       
             return await axios.post('/hive/update', formdata)
         } catch (error) {

@@ -23,13 +23,6 @@ const filteredApiaries = computed(() => {
     )
 })
 
-function searchApiaries() {
-    // apiaries.value = searchForApiaries({
-    //     searchWord: searchWord.value,
-    //     ignoreDifferentLetterCases: true
-    // })
-}
-
 const grid = ref<HTMLDivElement>()
 const gridColumns = ref(0)
 const minHiveWidth = 550
@@ -37,10 +30,6 @@ const minHiveWidth = 550
 onResize(grid, (element) => {
     const rect = element.contentRect
     gridColumns.value = Math.floor(rect.width / minHiveWidth)
-})
-
-onMounted(() => {
-    // apiaries.value = searchForApiaries({})
 })
 </script>
 
@@ -55,11 +44,6 @@ onMounted(() => {
                 :class="s.button"
                 @click="createPopup({
                     component: CreateApiaryPopup, 
-                    props: {
-                        onCreate: () => {
-                            searchApiaries()
-                        } 
-                    }
                 })"
             />
             <StringSearchDropdown
@@ -70,7 +54,6 @@ onMounted(() => {
                     onHoverEffects: true,
                     onInputChange(value: string) {
                         searchWord = value
-                        searchApiaries() 
                     }
                 }"   
                 :style="{
@@ -86,8 +69,7 @@ onMounted(() => {
             <Apiary 
                 v-for="apiary in filteredApiaries"
                 :class="s.apiary" 
-                :apiary="apiary" 
-                :onDelete="searchApiaries"
+                :apiary="apiary"
                 @click="apiaryStore.openApiary(apiary.id)"
             />
         </div>

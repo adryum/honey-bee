@@ -4,6 +4,7 @@ import Note from '../hive_overview/notes/Note.vue'
 import { useFlexibleGrid } from "@/core/utils/others";
 import { useNoteStore } from "@/core/stores/NoteStore";
 import { storeToRefs } from "pinia";
+import { useHiveStore } from "@/core/stores/HiveStore";
 
 const s = useCssModule()
 const props = defineProps<{
@@ -12,10 +13,13 @@ const props = defineProps<{
 
 const noteStore = useNoteStore()
 const { notes } = storeToRefs(noteStore)
+const { selectedHive } = storeToRefs(useHiveStore())
+const hiveNotes = computed(() => {
+    return notes.value.filter(note => note.hiveId === selectedHive.value!.id)
+})
 const filteredNotes = computed(() => {
     console.log("search: ", props.searchText);
-    
-    return notes.value.filter(note => 
+    return hiveNotes.value.filter(note => 
         note.title.toLowerCase().includes(props.searchText.toLowerCase()) ||
         note.content.toLowerCase().includes(props.searchText.toLowerCase())
     )
@@ -38,6 +42,7 @@ const { style: gridStyle } = useFlexibleGrid({
     <Note 
         v-for="note in filteredNotes"
         :key="note.id"
+        :class="s.note"
         :note="note"
     />
 </div>
@@ -45,6 +50,8 @@ const { style: gridStyle } = useFlexibleGrid({
 
 <style module lang='sass'>
 @use '@/assets/main.sass' as main
+.note
+    height: 15rem
 .container
     border-radius: 2px
     align-content: start;

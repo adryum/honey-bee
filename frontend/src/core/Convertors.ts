@@ -23,15 +23,19 @@ export function HiveCreateResponse_to_HiveModelDB(
     convertee: HiveCreateResponseModel
 ): HiveModelDB {
     return {
-    id:          convertee.id,
-    name:        convertee.name,
-    description: convertee.description,
-    image:       convertee.image,
-    location:    convertee.location,
-    type:        String_to_HiveType(convertee.type),
-    apiaryId:    convertee.apiaryId,
-    apiaryName:  convertee.apiaryName
-}
+        id:           convertee.id,
+        name:         convertee.name,
+        description:  convertee.description,
+        image:        convertee.image,
+        location:     convertee.location,
+        type:         String_to_HiveType(convertee.type),
+        apiaryId:     convertee.apiaryId,
+        creationDate: convertee.creationDate,
+        creatorId:    convertee.creatorId,
+        creatorName:  convertee.creatorName,
+        creatorImage: convertee.creatorImage,
+        history:      convertee.history
+    }
 }
 
 export function HiveCreateResponseArray_to_HiveModelDBArray(

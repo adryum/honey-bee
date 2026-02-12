@@ -8,12 +8,17 @@ import HiveNoteFragment from '../components/view_fragments/HiveNoteFragment.vue'
 import CalendarView from './CalendarView.vue';
 import { Destinations, type DestinationProps } from '@/core/models/OtherModels';
 import NoteFragmentToolbarPart from '../components/view_fragments/NoteFragmentToolbarPart.vue';
+import { useHiveStore } from '@/core/stores/HiveStore';
+import { storeToRefs } from 'pinia';
+import type { HiveModelDB } from '@/core/stores/Models';
 
 const s = useCssModule()
 const props = defineProps({
     hiveId: String,
 })
 
+const hiveStore = useHiveStore()
+const { selectedHive } = storeToRefs(hiveStore)
 const searchText = ref('')
 
 const currentDestination = ref<Destinations>(Destinations.Notes)
@@ -64,7 +69,7 @@ function changeDestination(destination: Destinations) {
             v-if="currentDestination === Destinations.General"
             :class="s.fragment"
             :style="{ maxHeight: `calc(100vh - ${hasSelectedFragmentComponents ? '9rem' : '6.5rem' })` }" 
-
+            :hive="selectedHive ?? {} as HiveModelDB"
         /> 
         <CalendarView
             v-if="currentDestination === Destinations.Calendar"

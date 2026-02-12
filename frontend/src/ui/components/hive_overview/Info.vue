@@ -1,25 +1,31 @@
 <script setup lang="ts">
-import { useCssModule } from "vue";
+import { computed, useCssModule } from "vue";
 import { useI18n } from "vue-i18n";
 import HiveUpdatePopup from "../popups/hive/HiveUpdatePopup.vue";
-import type { HiveModel } from "@/core/models/HiveModels";
 import IconTextButton from '../input/buttons/IconTextButton.vue'
-import { IconType, SVG } from "@/assets/svgs/SVGLoader";
-import Icon from "../Icon.vue";
-import { createPopup } from "@/core/utils/PopupHiarchy";
+import { SVG } from "@/assets/svgs/SVGLoader";
+import { usePopupCreator } from "@/core/utils/PopupHiarchy";
+import type { HiveModelDB } from "@/core/stores/Models";
+import { useApiaryStore } from "@/core/stores/ApiaryStore";
+import { storeToRefs } from "pinia";
 
 const s = useCssModule()
 const { t } = useI18n()
-const hive = 
-  {
-    apiaryId: 84,
-    apiaryImagePath: "https://res.cloudinary.com/dj8lvgcxl/image/upload/v1757347829/apiaries/User:2_Apiary:84.png",
-    apiaryName: "Hampter", 
-    id: 2,
-    imagePath: "Hive3.jpg",
-    name: "Box2",
-    type: "Tower"
-  } as HiveModel
+const props = defineProps<{
+    hive: HiveModelDB
+}>()
+
+const { apiaries } = storeToRefs(useApiaryStore())
+const { create } = usePopupCreator({
+    popupComponent: HiveUpdatePopup,
+    maxCount: 1,
+    props: {
+        hive: props.hive
+    }
+})
+const apiaryName = computed(() => {
+    return apiaries.value.find(item => item.id === props.hive.apiaryId)?.name ?? "No apiary" 
+})
 
 </script>
 
@@ -31,10 +37,7 @@ const hive =
             <IconTextButton 
                 text="Edit"
                 :svg="SVG.Pencil"
-                @click="createPopup({ 
-                    component: HiveUpdatePopup, 
-                    props: { hive: hive }
-                })"
+                @click="create"
             />
         </div>
     </div>
@@ -45,31 +48,54 @@ const hive =
         margin: 0
     }">
     <div :class="s.body">
-        <!-- <div :class="s.imageSide">
-            <img src="@/assets/images/apiary.jpg" alt="">
-        </div> -->
-        <div :class="s.dataSide">
+        <p
+            :class="s.name"
+        >
+            {{ hive.name }}
+        </p>
+        <p
+            :class="s.description"
+        >
+            {{ hive.description }}
+        </p>
 
-            <label for="grid" :class="s.labelGeneral">
-                <Icon :type="IconType.SMALL" :svg="SVG.InfoSquere" />
-                <p :class="s.labelText">
-                    General information
-                </p>            
-            </label>
-            <div id="grid" :class="s.grid">
-                <p :class="s.label">Name</p>
-                <p :class="s.text">Hive name</p>
-                
-                <p :class="s.label">Location</p>
-                <p :class="s.text">Hive Location here</p>
-                <p :class="s.label">Type</p>
-                <p :class="s.text">Hive_Type_here</p>
-                <!-- <TitledText :class="s.entry" title="Name" content="Hive name"/>
-                <TitledText :class="s.entry" title="Type" content="Movable"/>
-                <TitledText :class="s.entry" title="Location" content="Dārzciems"/> -->
-                <p :class="s.label">Description</p>
-                <p :class="[s.text, s.description]">Big yellow, has a lot of bees. Quite comfy and warm. Has a lot of honney :))))) Big yellow, has a lot of bees. Quite comfy and warm. Has a lot of honney :))))) Big yellow, has a lot of bees. Quite comfy and warm. Has a lot of honney :))))) Big yellow, has a lot of bees. Quite comfy and warm. Has a lot of honney :))))) Big yellow, has a lot of bees. Quite comfy and warm. Has a lot of honney :))))) Big yellow, has a lot of bees. Quite comfy and warm. Has a lot of honney :))))) Big yellow, has a lot of bees. Quite comfy and warm. Has a lot of honney :)))))</p>
-            </div>
+        <div 
+            :class="s.grid"
+        >
+            <label 
+                for="apiary"
+                :class="s.gridLabels"
+            >Apiary</label>
+            <p 
+                id="apiary"
+                :class="s.gridValues"    
+            >{{ apiaryName }}</p>
+            <label 
+                for="created"
+                :class="s.gridLabels"
+            >Created at</label>
+            <p 
+                id="created"
+                :class="s.gridValues"    
+            >{{ hive.creationDate }}</p>
+            <label 
+                for="type"
+                :class="s.gridLabels"
+            >Type</label>
+            <p 
+                id="type"
+                :class="s.gridValues"    
+            >{{ hive.type }}</p>
+
+            <label 
+                for="loacaion"
+                :class="s.gridLabels"
+            >Location</label>
+            <p 
+                id="loacaion"
+                :class="s.gridValues"
+            >{{ hive.location ?? "Not set"}}</p>
+
         </div>
     </div>
 </div>
@@ -77,6 +103,39 @@ const hive =
 
 <style module lang='sass'>
 @use '@/assets/main.sass' as main
+
+.name
+    margin-top: .5rem
+    font-size: var(--font-size-large)
+    font-weight: 700
+    letter-spacing: .02em
+.description
+    margin-top: 1rem
+    font-size: var(--font-size-small)
+    font-weight: 300
+    line-height: 1.5rem
+    letter-spacing: .02em
+
+.grid
+    margin-top: auto
+    display: grid
+    grid-template-columns: 10rem 1fr
+    gap: 1rem
+
+.gridLabels
+    font-size: var(--font-size-medium)
+    font-weight: 300
+    color: var(--black)
+    letter-spacing: .02em
+    opacity: .8
+
+.gridValues
+    font-size: var(--font-size-medium)
+    font-weight: 500
+    color: var(--black)
+    letter-spacing: .02em
+
+
 .container
     display: flex
     flex-direction: column
@@ -111,15 +170,18 @@ const hive =
             margin-left: auto
     .body
         flex: 1
-        display: grid
-        grid-template-areas: "data"
-        grid-template-columns: 1fr
+        display: flex
+        flex-direction: column
 
-        // padding-top: .5rem
+
+        padding: .5rem
         // gap: 1rem
         // gap: .5rem
         box-sizing: border-box
         overflow: auto
+
+        font-family: var(--font-family)
+        
 
         .imageSide
             grid-area: image

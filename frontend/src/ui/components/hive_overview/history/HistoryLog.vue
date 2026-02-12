@@ -2,12 +2,15 @@
 import { useCssModule } from 'vue';
 import { useI18n } from 'vue-i18n';
 import IconCubeButton from '../../input/buttons/IconCubeButton.vue';
-import EventLogEntry from '@/ui/components/hive_overview/event_logs/EventLogEntry.vue';
-import EventLogTimeSeparator from '@/ui/components/hive_overview/event_logs/EventLogTimeSeparator.vue';
 import { SVG } from '@/assets/svgs/SVGLoader';
+import HistoryLogEntry from './HistoryLogEntry.vue';
+import type { HiveModelDB } from '@/core/stores/Models';
 
 const s = useCssModule()
 const { t } = useI18n()
+const props = defineProps<{
+    hive: HiveModelDB
+}>()
 </script>
 
 <template>
@@ -27,30 +30,30 @@ const { t } = useI18n()
         margin: 0
     }">
     <div :class="s.fader"></div>
+    <hr :class="s.timelapseLine">
     <div :class="s.body">
-        <EventLogEntry/>
-        <EventLogEntry/>
-        <EventLogTimeSeparator />
-        <EventLogEntry/>
-        <EventLogEntry/>
-        <EventLogEntry/>
-        <EventLogEntry/>
-        <EventLogEntry/>
-        <EventLogEntry/>
-        <event-log-time-separator />
-        <EventLogEntry/>
-        <EventLogEntry/>
-        <EventLogEntry/>
-        <EventLogEntry/>
-        <EventLogEntry/>
-        <EventLogEntry/>
+        <HistoryLogEntry
+            v-for="entry in hive.history" 
+            :key="entry.id" 
+            :entry="entry"
+        />
     </div>
 </div>
 </template>
 
 <style module lang='sass'>
-@use '@/assets/main.sass' as main
+.timelapseLine
+    position: absolute
+    left: calc(2.5rem - 1px)
+    top: 2.8rem
+    bottom: 0
+
+    width: 2px
+    background: var(--yellow)
+    border: none
+
 .container
+    position: relative
     display: flex
     flex-direction: column
     overflow: hidden
@@ -91,7 +94,7 @@ const { t } = useI18n()
         display: flex
         flex-direction: column
 
-        gap: .25rem
+        gap: .5rem
         margin: .25rem
 
         box-sizing: border-box

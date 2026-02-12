@@ -1,28 +1,55 @@
 import { Router, type Request, type Response } from "express";
 import type { IUserIdentification } from "../Enums";
 import { db } from "../config/Database";
-import { ApiaryT, HiveT } from "../TableColumnTitles";
-import { col, handleSearchWord } from "../utils";
+import { HiveT } from "../TableColumnTitles";
+import { col, getCurrentUTCDateString } from "../utils";
 import type { ResultSetHeader, RowDataPacket } from "mysql2";
 import { uploadImage } from "../config/image_cloud/Cloudinary";
 import { PublicIdBuilder } from "../config/image_cloud/PublicIdBuilder";
 import { upload } from "../config/Multer";
+import { requireRole } from "../Middleware";
+import { Role } from "../DatabaseEnums";
 
 const router = Router()
 const hiveModelQuery =`
     SELECT 
         h.id, 
         h.name,
+        h.description,
         h.image,
+        h.location,
         h.type,
         h.apiaryId,
-        a.name as apiaryName,
-        a.image as apiaryImage
+        h.userId,
+        h.creationDate,
+        u.id as creatorId,
+        u.username as creatorName,
+        u.image as creatorImage,
+
+        COALESCE(
+            (
+                SELECT JSON_ARRAYAGG(
+                    JSON_OBJECT(
+                        'id', hh.id,
+                        'text', hh.text,
+                        'userId', hh.userId,
+                        'username', uh.username,
+                        'userImage', uh.image,
+                        'creationDate', hh.creationDate
+                    )
+                )
+                FROM hiveHistory hh
+                LEFT JOIN users uh ON hh.userId = uh.id
+                WHERE hh.hiveId = h.id
+            ),
+            JSON_ARRAY()
+        ) AS history
+
     FROM hives as h
-    LEFT JOIN apiaries as a ON h.apiaryId = a.id`
+    LEFT JOIN users AS u ON h.userId = u.id`
 
 // returns all hives
-router.get('/get', async (
+router.get('/get', requireRole(Role.ANY), async (
     req: Request<{},{},{}>, 
     res: Response
 ) => {
@@ -39,25 +66,192 @@ router.get('/get', async (
     }
 })
 
-router.get('/update', async (
+
+router.post('/history/create', requireRole(Role.ANY), async (
+    req: Request<{},{},{
+        hiveid:    number
+        text:      string
+        creatorId: number
+    }>, 
+    res: Response
+) => {
+    console.log("# Create hive history entry");
+    const { hiveid, creatorId, text } = req.body
+    const creationDate = getCurrentUTCDateString()
+    
+    try {
+        console.log("Creating history entry...");
+        const [hiveHistoryInsertResult] = await db.query<ResultSetHeader>(`
+            INSERT INTO hives
+            VALUES (
+                text = ?,
+                userId = ?,
+                hiveId = ?,
+                creationDate = ?
+            )`, 
+            [text, creatorId, hiveid, creationDate]
+        )
+        console.log("Done!");
+
+        console.log("Getting new entry data...");
+        const [[hiveHistoryGetResult]] = await db.query<RowDataPacket[]>(`
+            SELECT * 
+            FROM hiveHistory 
+            WHERE id = ?
+            LIMIT 1`,
+            [hiveHistoryInsertResult.insertId]
+        )
+        console.log("Done!");
+        
+        res.status(200).json( hiveHistoryGetResult )
+    } catch (err) {
+        console.error(err);
+        res.status(500).send('Server error');
+    }
+})
+
+router.post('/update', requireRole(Role.ANY), upload.single("image"), async (
     req: Request<{},{},{
         id:          number
         name:        string
         description: string
         location:    string
         type:        string
+        apiaryId:    number
     }>, 
     res: Response
 ) => {
     console.log("# Update hive");
+    const { id, name, description, location, type, apiaryId } = req.body
+    const image = req.file
     
     try {
         console.log("Updating hive...");
-        const [hiveGetResult] = await db.query(hiveModelQuery)
+        const [hiveUpdateReslut] = await db.query<ResultSetHeader>(`
+            UPDATE hives
+            SET 
+                name = ?,
+                description = ?,
+                location = ?,
+                type = ?,
+                apiaryId = ?
+            WHERE id = ?`, 
+            [name, description, location, type, apiaryId, id]
+        )
         console.log("Done!");
+
+        // insert image
+        if (image) {
+            console.log("Uplading image...");
+            const imageKey = new PublicIdBuilder(req.session.userId!.toString()).Apiary(hiveUpdateReslut.insertId.toString()).getResource()
+
+            const url = await uploadImage(image, imageKey)
+            console.log(url);
+            console.log("Done!");
+
+            console.log("Updating hive entry with image...");
+            await db.query<ResultSetHeader>(`
+                UPDATE hives
+                SET image = ?
+                WHERE id = ?`,
+                [url, hiveUpdateReslut.insertId]
+            )
+            console.log("Done!");
+        }
+
+        console.log("Getting new update info...");
+        const [[hiveGetResult]] = await db.query<RowDataPacket[]>(hiveModelQuery + ` WHERE h.id = ?`, [id])
+        console.log("Done!");
+        
         res.status(200).json( hiveGetResult )
     } catch (err) {
         console.error(err);
+        res.status(500).send('Server error');
+    }
+})
+
+// creates hive
+router.post('/create', requireRole(Role.ANY), upload.single("image"), async (req: Request<{},{},{
+    name:        string
+    description: string
+    type:        string
+    apiaryId:    number
+}>, 
+    res: Response
+) => {
+    console.log("# Create hive");
+    
+    const { name, description, type, apiaryId } = req.body
+    const image = req.file
+    
+    try {
+        console.log("Creating hive...");
+        const [createResult] = await db.query<ResultSetHeader>(`
+            INSERT INTO hives (
+                name, 
+                description, 
+                type, 
+                userId,
+                apiaryId
+            )
+            VALUES(?, ?, ?, ?, ?)`, 
+            [name, description, type, req.session.userId, apiaryId]
+        )
+        console.log("Done!");
+        
+        // insert image
+        if (image) {
+            console.log("Uplading image...");
+            const imageKey = new PublicIdBuilder(req.session.userId!.toString()).Apiary(createResult.insertId.toString()).getResource()
+
+            const url = await uploadImage(image, imageKey)
+            console.log(url);
+            console.log("Done!");
+
+            console.log("Updating hive entry with image...");
+            await db.query<ResultSetHeader>(`
+                UPDATE hives
+                SET image = ?
+                WHERE id = ?`,
+                [url, createResult.insertId]
+            )
+            console.log("Done!");
+        }
+
+        console.log("Getting new entry data...");
+        const [[hiveGetResult]] = await db.query<RowDataPacket[]>(
+            hiveModelQuery + `
+            WHERE h.id = ?
+            LIMIT 1`, 
+            [createResult.insertId]
+        )
+        console.log("Done!");
+        res.status(200).json(hiveGetResult)
+    } catch (error) {
+        console.error(error);
+        res.status(500).send('Server error');
+    }
+})
+
+// delete hive
+router.post('/delete', requireRole(Role.ANY), upload.none(), async (req: Request<{},{},{
+    id: string
+}>, res: Response) => {
+    console.log("# Delete hive");
+    const { id } = req.body
+
+    try {
+        console.log("Deleting hive...");
+        await db.query(`
+            DELETE FROM hives 
+            WHERE id = ?`, 
+            [id]
+        )
+        console.log("Done!");
+        
+        res.status(204).json(id)
+    } catch (error) {
+        console.error(error);
         res.status(500).send('Server error');
     }
 })
@@ -73,8 +267,6 @@ router.post('/overview', async (req: Request<{},{},{
     if (!identification || !hiveId) 
         return res.status(401).send('incorrect credentials!') 
 
-    
-      
     const [[overviewResults]] = await db.query<RowDataPacket[]>(`
         SELECT 
             ${HiveT.id} AS h_id, 
@@ -107,196 +299,6 @@ router.post('/overview', async (req: Request<{},{},{
         WHERE ${HiveT.userId} = ? AND ${HiveT.id} = ?`, 
         [identification.id, hiveId]
     )
-
-    // console.log(overviewResults);
-
-    // // group notes
-    // const notes = overviewResults!.filter(row => typeof row.n_id === 'number').map(row => ({ 
-    //     id: row.n_id,
-    //     author: row.n_author, 
-    //     title: row.n_title, 
-    //     content: row.n_content, 
-    //     creation_date: row.n_creation_date, 
-    //     color: row.n_color 
-    // }))
-
-    // const queen = (overviewObj.q_id) ? getQueenObj() : undefined
-    // const hive = getHiveObj()
-   
-    // console.log('hive: '); console.log(hive);
-    // console.log('notes: '); console.log(notes);
-    // console.log('queen: '); console.log(queen);
-
-    // function getHiveObj() {
-    //     const obj = {}
-    //     for (let key in overviewObj) {
-    //         if (key.startsWith('h_')) 
-    //             obj[key.slice(2)] = (overviewObj[key] === null) ? undefined : overviewObj[key]
-    //     }
-    //     return obj
-    // }
-    
-    // function getQueenObj() {
-    //     const obj = {}
-    //     for (let key in overviewObj) {
-    //         if (key.startsWith('q_')) obj[key.slice(2)] = overviewObj[key]
-    //     }
-    //     return obj
-    // }
-    
-    // res.status(201).json({
-    //     message: 'all good!',
-    //     hive: hive,
-    //     notes: notes,
-    //     queen: queen
-    // })
-})
-
-// assigns hive to an apiary
-router.post('/assign', async (req: Request<{},{},{
-    identification: IUserIdentification,
-    hiveId: string
-    apiaryId: string
-}>, res) => {
-    const { identification, hiveId, apiaryId } = req.body
-    
-    // missing credentials
-    if (!identification || !hiveId || !apiaryId) 
-        return res.status(401).send('incorrect credentials!') 
-      
-    try {
-        await db.query<ResultSetHeader>(`
-            UPDATE ${HiveT.tableName} 
-            SET ${HiveT.apiaryId} = ? 
-            WHERE ${HiveT.id} = ? AND ${HiveT.userId} = ?`, 
-            [apiaryId, hiveId, identification.id]
-        )
-
-        const [hive] = await db.query(`
-            ${hiveModelQuery}
-            WHERE ${col(HiveT.tableName, HiveT.userId)} = ? AND ${col(HiveT.tableName, HiveT.id)} LIKE ?`, 
-            [identification.id, hiveId])
-
-        console.log(hive);
-        
-
-        res.status(201).json(hive)
-    } catch (err) {
-        console.error(err);
-        res.status(500).send('Server error');
-    }
-})
-
-// un-assigns hive to an apiary
-router.post('/unassign', async (req: Request<{},{}, {
-    identification: IUserIdentification,
-    hiveId: string
-}>, res) => {
-    const { identification, hiveId } = req.body
-    
-    // missing credentials
-    if (!identification || !hiveId) 
-        return res.status(401).send('incorrect credentials!') 
-       
-    try {
-        const [hives] = await db.query(`
-            UPDATE ${HiveT.tableName} 
-            SET ${HiveT.apiaryId} = NULL 
-            WHERE ${HiveT.id}  = ? AND ${HiveT.userId}  = ?`, 
-            [hiveId, identification.id]
-        )
-
-        res.status(204).send()
-    } catch (error) {
-        console.error(error);
-        res.status(500).send('Server error');
-    }
-})
-
-
-// creates hive
-router.post('/create', upload.single("image"), async (req: Request<{},{},{
-    identification: string
-    name: string
-    location: string
-    description: string
-    type: string
-}>, res: Response) => {
-    const { name, location, description, type } = req.body
-    const image  = req.file
-    const identificationObj = JSON.parse(req.body.identification);
-
-    // missing credentials
-    if (!identificationObj.id || !name || !type)
-        return res.status(401).send('incorrect information!') 
-
-    try {
-        const [result] = await db.query<ResultSetHeader>(`
-            INSERT INTO ${HiveT.tableName} (
-                ${HiveT.name}, 
-                ${HiveT.location}, 
-                ${HiveT.description}, 
-                ${HiveT.type}, 
-                ${HiveT.userId}
-            )
-            VALUES(?, ?, ?, ?, ?)`, 
-            [name, location, description, type, identificationObj.id]
-        )
-
-        // insert image
-        if (image) {
-            const imageKey = new PublicIdBuilder(identificationObj.id).Apiary(result.insertId.toString()).getResource()
-
-            const url = await uploadImage(image, imageKey)
-            console.log(url);
-
-            const [updateRes] = await db.query<ResultSetHeader>(`
-                UPDATE ${HiveT.tableName}
-                SET ${HiveT.imagePath} = ?
-                WHERE ${HiveT.id} = ?`,
-                [url, result.insertId]
-            )
-        }
-
-        const [hive] = await db.query<any[]>(`
-            ${hiveModelQuery}
-            WHERE ${col(HiveT.tableName, HiveT.userId)} = ? AND ${col(HiveT.tableName, HiveT.id)} LIKE ?`, 
-            [identificationObj.id, result.insertId]
-        )
-
-        console.log(hive[0]);
-        res.status(200).json(hive[0])
-    } catch (error) {
-        console.error(error);
-        res.status(500).send('Server error');
-    }
-})
-
-// delete hive
-router.post('/delete', upload.none(), async (req: Request<{},{},{
-    identification: string
-    hiveId: string
-}>, res: Response) => {
-    const { hiveId } = req.body
-    const identificationObj = JSON.parse(req.body.identification);
-    console.log(hiveId);
-
-    // missing credentials
-    if (!identificationObj.id || !hiveId)
-        return res.status(401).send('incorrect information!') 
-
-    try {
-        const deleteQuery = await db.query(`
-            DELETE FROM ${HiveT.tableName} 
-            WHERE ${HiveT.id} = ? AND ${HiveT.userId} = ?`, 
-            [hiveId, identificationObj.id]
-        )
-
-        res.status(204).send()
-    } catch (error) {
-        console.error(error);
-        res.status(500).send('Server error');
-    }
 })
 
 export default router

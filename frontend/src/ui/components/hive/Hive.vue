@@ -12,6 +12,7 @@ const s = useCssModule()
 const props = withDefaults(defineProps<{
     hive: HiveModelDB,
     showApiary?: boolean
+    showShadow?: boolean
 }>(), {
     showApiary: false
 })
@@ -19,7 +20,10 @@ const props = withDefaults(defineProps<{
 
 <template>
 <div 
-    :class="s.container"
+    :class="[
+        s.container,
+        showShadow && s.shadow
+    ]"
 >
     <div :class="s.body">
         <div 
@@ -59,6 +63,9 @@ const props = withDefaults(defineProps<{
 
 <style module lang='sass'>
 @use '@/assets/main.sass' as main
+
+.shadow
+    box-shadow: 0 0 1px 1px var(--faint-border) !important
 .container
     display: flex
     flex-direction: column

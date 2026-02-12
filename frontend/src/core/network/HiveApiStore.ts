@@ -1,9 +1,8 @@
 import { defineStore } from "pinia";
-import type { ApiaryModelDB, HiveModelDB } from "../stores/Models";
+import type { HiveModelDB } from "../stores/Models";
 import axios from "axios";
-import type { HiveCreateRequestModel, HiveCreateResponseModel } from "./Models";
+import type { HiveCreateRequestModel, HiveCreateResponseModel, HiveUpdateRequestModel } from "./Models";
 import { HiveCreateResponse_to_HiveModelDB, HiveCreateResponseArray_to_HiveModelDBArray } from "../Convertors";
-import type { HiveUpdateModel } from "../models/HiveModels";
 import { isValidValue } from "../utils/others";
 
 export const useHiveApiStore = defineStore("HiveApiStore", () => {
@@ -27,6 +26,7 @@ export const useHiveApiStore = defineStore("HiveApiStore", () => {
             formData.append("name", model.name)
             formData.append("description", model.description)
             formData.append("type", model.type)
+            if (isValidValue(model.apiaryId)) formData.append("apiaryId", model.apiaryId.toString())
             if (model.image) formData.append("image", model.image)
 
             const result = await axios.post<HiveCreateResponseModel>("/hive/create", formData)
@@ -40,11 +40,22 @@ export const useHiveApiStore = defineStore("HiveApiStore", () => {
     }
 
     async function updateHive(
-        model: HiveUpdateModel
+        model: HiveUpdateRequestModel
     ): Promise<HiveModelDB | undefined> {
         try {
-            const result = await axios.post<HiveCreateResponseModel>("/hive/update", model)
+            const formData = new FormData()
+            formData.append("id", model.id.toString())
+            formData.append("name", model.name)
+            formData.append("description", model.description) 
+            formData.append("type", model.type) 
+            formData.append("apiaryId", isValidValue(model.apiaryId) ? model.apiaryId!.toString() : "") 
+            if (model.image) formData.append("image", model.image)
+
+            const result = await axios.post<HiveCreateResponseModel>("/hive/update", formData)
             if (!result.data) throw new Error("Failed to update hive!");
+
+            console.log(result.data);
+            
             
             return HiveCreateResponse_to_HiveModelDB(result.data)
         } catch (error) {

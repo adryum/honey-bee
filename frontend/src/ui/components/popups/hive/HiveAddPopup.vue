@@ -47,7 +47,8 @@ function createHive() {
         name: name.value,
         description: description.value,
         type: type.value!,
-        image: file.value
+        image: file.value,
+        apiaryId: selectedApiary.value!.id
     }, 
     {
         onSuccess() {
@@ -67,8 +68,8 @@ function switchTab(tab: string) {
 const grid = ref()
 const { style: gridStyle } = useFlexibleGrid({ 
     gridRef: grid,
-    itemMinWidthPx: 300,
-    gapPx: 2
+    itemMinWidthPx: 200,
+    gapPx: 4
 })
 </script>
 
@@ -110,6 +111,7 @@ const { style: gridStyle } = useFlexibleGrid({
                     :key="hive.id"
                     :class="s.hive"
                     :hive="hive"
+                    :showShadow="true"
                     @click="hiveStore.assignHive(hive, selectedApiary!.id)"
                 />
             </div>
@@ -177,15 +179,17 @@ const { style: gridStyle } = useFlexibleGrid({
 
 <style module lang='sass'>
 .existingHiveGrid
+    padding-top: 1rem
     overflow-y: scroll
 
 .hive
     // width: 20rem
-    // height: 20rem
+    height: 15rem
 
 .listDivider
     display: flex
     gap: 1rem
+    padding-top: 1rem
 
     .image
         flex: 1
@@ -201,7 +205,6 @@ const { style: gridStyle } = useFlexibleGrid({
 .body
     display: flex
     flex-direction: column
-    gap: 1rem
     height: 100%
     max-height: 30rem
 

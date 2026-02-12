@@ -1,4 +1,5 @@
 import type { HiveType, NoteTypes, Role } from "../DatabaseEnums"
+import type { HiveHistoryEntryDB } from "../stores/Models"
 
 export type ApiaryCreateRequestModel = {
     name:        string
@@ -24,14 +25,18 @@ export type HiveAssignRequestModel = {
 }
 
 export type HiveCreateResponseModel = {
-    id:          number
-    name:        string
-    description: string
-    image:       string
-    location:    string
-    type:        string
-    apiaryId:    number
-    apiaryName:  string
+    id:           number
+    name:         string
+    description:  string
+    image:        string
+    location:     string
+    type:         string
+    apiaryId:     number
+    creationDate: string
+    creatorId:    number
+    creatorName:  string
+    creatorImage: string
+    history:      HiveHistoryEntryDB[]
 }
 
 export type HiveCreateRequestModel = {
@@ -39,6 +44,7 @@ export type HiveCreateRequestModel = {
     description: string
     image?:      File
     type:        HiveType
+    apiaryId:    number
 }
 
 export type HiveUpdateRequestModel = {
@@ -47,7 +53,7 @@ export type HiveUpdateRequestModel = {
     description: string
     image?:      File
     type:        HiveType
-    apiaryId:    number
+    apiaryId?:   number
 }
 
 export type UserProfileResponseModel = {

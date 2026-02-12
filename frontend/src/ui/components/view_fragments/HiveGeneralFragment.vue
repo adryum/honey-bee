@@ -2,19 +2,26 @@
 import { useCssModule } from "vue";
 import Info from "../hive_overview/Info.vue";
 import HoneyProfitChart from "../hive_overview/supper/HoneyProfitChart.vue";
-import EventLog from "../hive_overview/event_logs/EventLog.vue";
+import HistoryLog from "../hive_overview/history/HistoryLog.vue";
+import type { HiveModelDB } from "@/core/stores/Models";
 
 const s = useCssModule()
+const props = defineProps<{
+    hive: HiveModelDB
+}>()
 </script>
 
 <template>
 <div :class="s.container">
-    <!-- <div :class="s.image">
-        <img :class="s.imageEl" src="@/assets/images/apiary.jpg" alt="">
-    </div> -->
-    <Info :class="s.info"/>
+    <Info 
+        :class="s.info"
+        :hive="hive"
+    />
     <HoneyProfitChart :class="s.profit"/>
-    <EventLog :class="s.log"/>
+    <HistoryLog 
+        :class="s.log"
+        :hive="hive"
+    />
 </div>
 </template>
 
