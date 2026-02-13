@@ -3,7 +3,7 @@ import type { CallbackModel } from "../models/SupperModels"
 import { ref } from "vue"
 import type { NoteModelDB } from "./Models"
 import { isValidValue } from "../utils/others"
-import type { NoteCreateModelRequest, NoteUpdateModelRequest } from "../network/Models"
+import type { NoteCreateModelRequest, NoteUpdateRequestModel } from "../network/Models"
 import { useNoteApiStore } from "../network/NoteApiStore"
 
 export const useNoteStore = defineStore("useNoteStore", () => {
@@ -28,7 +28,7 @@ export const useNoteStore = defineStore("useNoteStore", () => {
     }
 
     async function updateNote(
-        model: NoteUpdateModelRequest, 
+        model: NoteUpdateRequestModel, 
         callback: CallbackModel
     ): Promise<NoteModelDB | undefined> {
         console.log("updating hive");

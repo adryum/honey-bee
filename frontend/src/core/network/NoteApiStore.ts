@@ -1,5 +1,5 @@
 import { defineStore } from "pinia";
-import type { NoteCreateModelRequest, NoteCreateModelResponse, NoteUpdateModelRequest } from "./Models";
+import type { NoteCreateModelRequest, NoteCreateModelResponse, NoteUpdateRequestModel } from "./Models";
 import axios from "axios";
 import type { NoteModelDB } from "../stores/Models";
 import { NoteCreateModelResponse_to_NoteModelDB, NoteCreateModelResponseArray_to_NoteModelDBArray } from "../Convertors";
@@ -30,7 +30,7 @@ export const useNoteApiStore = defineStore("useNoteApiStore", () => {
     }
 
     async function updateNote(
-        model: NoteUpdateModelRequest
+        model: NoteUpdateRequestModel
     ): Promise<NoteModelDB | undefined> {
         try {
             const result = await axios.post<NoteCreateModelResponse>("/note/update", model)

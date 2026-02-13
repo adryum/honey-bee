@@ -14,6 +14,7 @@ router.get('/google', async (req: Request, res: Response) => {
     
     const authorizeUrl = oauth2Client.generateAuthUrl({
       access_type: 'offline',
+      prompt: 'consent',
       scope: scopes,
     });
 
@@ -70,7 +71,8 @@ router.get('/google/callback', async (req: Request, res: Response) => {
         const [[possibleUser]] = await db.query<RowDataPacket[]>(`
             SELECT 
                 id,
-                role
+                role,
+                googleRefreshToken
             FROM users
             WHERE providerSub = ? AND provider = ?
             `,
@@ -83,19 +85,21 @@ router.get('/google/callback', async (req: Request, res: Response) => {
             console.log(req.session.userId); // TypeScript should not complain
 
             req.session.userId = possibleUser.id;
+            req.session.accessToken = tokens.access_token!;
             console.log("============== Pos user Set user data");
             console.log(possibleUser.id);
             await redisClient.hSet(`user:${possibleUser.id}`, {
                 role: possibleUser.role,
+                accessToken: tokens.access_token!
             });
             req.session.save()
         } else {
             console.log("Creating new user...");
             const [user] = await db.query<ResultSetHeader>(`
                 INSERT INTO users
-                (username, image, email, providerSub, provider, role)
-                VALUES(?,?,?,?,?,?)`, 
-                [payload?.name, payload?.picture, payload?.email, payload?.sub, "GOOGLE", whitelistedUserQuery!.role]
+                (username, image, email, providerSub, provider, googleRefreshToken, role)
+                VALUES(?,?,?,?,?,?,?)`, 
+                [payload?.name, payload?.picture, payload?.email, payload?.sub, "GOOGLE", tokens.refresh_token, whitelistedUserQuery!.role]
             )
             console.log("Made new user!");
 
@@ -111,11 +115,13 @@ router.get('/google/callback', async (req: Request, res: Response) => {
             )
 
             req.session.userId = newUser!.id;
+            req.session.accessToken = tokens.access_token!;
 
             console.log("============== New user Set user data");
 
             await redisClient.hSet(`user:${newUser!.id}`, {
                 role: newUser!.role,
+                accessToken: tokens.access_token!
             });
             req.session.save()
         }
@@ -203,7 +209,7 @@ router.post('/signup', async (req: Request<{},{}, {
             role, 
             )
             VALUES (?, ?, ?, ?, ?, ?)`, 
-            [username, email, password, Role.ADMIN]
+            [username, email, password, Role.ADMINISTRATOR]
         )
 
         // get user info

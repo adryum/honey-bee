@@ -1,5 +1,4 @@
 import { Router, type Request, type Response } from "express";
-import { type IUserIdentification } from "../Enums";
 import { NoteT } from "../TableColumnTitles";
 import { ResultSetHeader, RowDataPacket } from "mysql2";
 import { getCurrentUTCDateString, isNumber, isValidValue } from "../utils";
@@ -21,7 +20,7 @@ const getNotesQuery = `
     FROM notes
     `
  
-router.get('/get', requireRole(Role.ANY), upload.none(), async (
+router.get('/get', requireRole([Role.ANY]), upload.none(), async (
     req: Request<{},{}, {}>, 
     res: Response
 ) => {
@@ -39,7 +38,7 @@ router.get('/get', requireRole(Role.ANY), upload.none(), async (
     }
 })
  
-router.post('/create', requireRole(Role.ANY), upload.none(), async (req: Request<{},{},{
+router.post('/create', requireRole([Role.ANY]), upload.none(), async (req: Request<{},{},{
     title: string
     content: string
     type: string
@@ -77,7 +76,7 @@ router.post('/create', requireRole(Role.ANY), upload.none(), async (req: Request
     }
 })
 
-router.post('/delete', requireRole(Role.ANY), upload.none(), async (req: Request<{},{},{
+router.post('/delete', requireRole([Role.ANY]), upload.none(), async (req: Request<{},{},{
     id: number
 }>, res: Response) => {
     console.log("# Delete note");
@@ -103,69 +102,68 @@ router.post('/delete', requireRole(Role.ANY), upload.none(), async (req: Request
     }
 })
 
-router.post('/update', upload.none(), async (req: Request<{},{},{
-    identification: IUserIdentification
-    id: number
-    title: string
-    content: string
-    type: string
+// router.post('/update', upload.none(), async (req: Request<{},{},{
+//     id: number
+//     title: string
+//     content: string
+//     type: string
 
-    removeHiveIds: number[]
-    removeQueenIds: number[] 
-    removeApiaryIds: number[] 
-    removeInventoryIds: number[]
-    addHiveIds: number[]
-    addQueenIds: number[] 
-    addApiaryIds: number[] 
-    addInventoryIds: number[] 
-}>, res: Response) => {
-    const { 
-        identification,
-        id,
-        title, 
-        content, 
-        type,
-        removeHiveIds,
-        removeApiaryIds,
-        removeInventoryIds,
-        removeQueenIds,
-        addApiaryIds,
-        addHiveIds,
-        addInventoryIds,
-        addQueenIds
-    } = req.body
+//     removeHiveIds: number[]
+//     removeQueenIds: number[] 
+//     removeApiaryIds: number[] 
+//     removeInventoryIds: number[]
+//     addHiveIds: number[]
+//     addQueenIds: number[] 
+//     addApiaryIds: number[] 
+//     addInventoryIds: number[] 
+// }>, res: Response) => {
+//     const { 
+//         identification,
+//         id,
+//         title, 
+//         content, 
+//         type,
+//         removeHiveIds,
+//         removeApiaryIds,
+//         removeInventoryIds,
+//         removeQueenIds,
+//         addApiaryIds,
+//         addHiveIds,
+//         addInventoryIds,
+//         addQueenIds
+//     } = req.body
 
-    if (!identification.id || !title || !content || !type) 
-        return res.status(401).send('incorrect credentials!')
+//     if (!identification.id || !title || !content || !type) 
+//         return res.status(401).send('incorrect credentials!')
 
-    try {
-        const [noteUpdateResult] = await db.query<ResultSetHeader>(`
-            UPDATE ${NoteT.tableName}
-            SET 
-            ${NoteT.title} = ?,
-            ${NoteT.content} = ?,
-            ${NoteT.type} = ?,
-            ) 
-            WHERE id = ? AND user_id = ?`,
-            [title, content, type, id, identification.id]
-        )
+//     try {
+//         const [noteUpdateResult] = await db.query<ResultSetHeader>(`
+//             UPDATE ${NoteT.tableName}
+//             SET 
+//             ${NoteT.title} = ?,
+//             ${NoteT.content} = ?,
+//             ${NoteT.type} = ?,
+//             ) 
+//             WHERE id = ? AND user_id = ?`,
+//             [title, content, type, id, identification.id]
+//         )
 
-        const insertHivesResult = await insertHives(id, addHiveIds)
+//         const insertHivesResult = await insertHives(id, addHiveIds)
 
-        const removeHivesResult = await removeHives(id, removeHiveIds)
+//         const removeHivesResult = await removeHives(id, removeHiveIds)
 
-        const [[getNotesResult]] = await db.query<RowDataPacket[]>(
-            getNotesQuery + " WHERE id = ?",
-            [id]
-        )
+//         const [[getNotesResult]] = await db.query<RowDataPacket[]>(
+//             getNotesQuery + " WHERE id = ?",
+//             [id]
+//         )
         
-        console.log(getNotesResult);
-        res.status(200).json(getNotesResult)
-    } catch (err) {
-        console.error(err);
-        res.status(500).send('Server error');
-    }
-})
+//         console.log(getNotesResult);
+//         res.status(200).json(getNotesResult)
+//     } catch (err) {
+//         console.error(err);
+//         res.status(500).send('Server error');
+//     }
+// })
 
 async function insertHives(noteId: number, hiveIds: number[]): Promise<ResultSetHeader | undefined> {
     var notePlaceHiveInsertResult: ResultSetHeader | undefined = undefined;

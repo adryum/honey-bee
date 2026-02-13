@@ -37,6 +37,7 @@ export type HiveCreateResponseModel = {
     creatorName:  string
     creatorImage: string
     history:      HiveHistoryEntryDB[]
+    calendarId:   string
 }
 
 export type HiveCreateRequestModel = {
@@ -81,10 +82,30 @@ export type NoteCreateModelResponse = {
     creationDate: string
 }
 
-export type  NoteUpdateModelRequest = {
+export type  NoteUpdateRequestModel = {
     id:      number
     title:   string
     content: string
     type:    string
     hiveId:  number
+}
+
+export type HiveCalendarEntryRequestModel = {
+    hiveId:       number
+    calendarId:   string
+    start:        string
+    end:          string
+    title:        string
+    description:  string
+    creatorEmail: string
+}
+
+export type HiveCalendarEntryResponseModel = {
+    hiveId:       number
+    calendarId:   string
+    start:        string
+    end:          string
+    title:        string
+    description:  string
+    creatorEmail: string
 }

@@ -79,6 +79,7 @@ export const useMainStore = defineStore("MainStore", () => {
     }
 
     return {
+        user,
         initialize,
         authenticateUser
     }

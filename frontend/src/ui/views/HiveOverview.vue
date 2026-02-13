@@ -11,6 +11,10 @@ import NoteFragmentToolbarPart from '../components/view_fragments/NoteFragmentTo
 import { useHiveStore } from '@/core/stores/HiveStore';
 import { storeToRefs } from 'pinia';
 import type { HiveModelDB } from '@/core/stores/Models';
+import IconTextButton from '../components/input/buttons/IconTextButton.vue';
+import { SVG } from '@/assets/svgs/SVGLoader';
+import { usePopupCreator } from '@/core/utils/PopupHiarchy';
+import CalendarCreateEventPopup from '../components/popups/CalendarCreateEventPopup.vue';
 
 const s = useCssModule()
 const props = defineProps({
@@ -39,6 +43,14 @@ const hasSelectedFragmentComponents = computed(() => {
 function changeDestination(destination: Destinations) {
     currentDestination.value = destination
 }
+
+const { create } = usePopupCreator({
+    popupComponent: CalendarCreateEventPopup,
+    maxCount: 1,
+    props: {
+        hive: selectedHive
+    }
+})
 </script>
 
 <template>
@@ -57,11 +69,21 @@ function changeDestination(destination: Destinations) {
                 </motion.button>
                 <Button :style="{ marginLeft: 'auto'}" text="Add Inspection"></Button>
             </div>
-            <div :class="[s.fragmentSpecific, hasSelectedFragmentComponents && s.shown]">
+            <div :class="[s.fragmentSpecific, s.shown]">
                 <NoteFragmentToolbarPart
                     v-if="currentDestination === Destinations.Notes"
                     v-model:searchText="searchText"
                 />
+                <div
+                    v-if="currentDestination === Destinations.Calendar"
+                >
+                    <IconTextButton
+                        text="Create Event" 
+                        :class="s.create"
+                        :svg="SVG.Pencil"
+                        @click="create"
+                    />
+                </div>
             </div>
         </div>
 

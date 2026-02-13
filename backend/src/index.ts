@@ -2,6 +2,7 @@ import dotenv from "dotenv";
 dotenv.config()
 
 import "./config/image_cloud/Cloudinary"
+import "./config/ServiceAcc"
 import { testConnection } from "./utils";
 
 import authentication from "./routes/Authentication"
@@ -9,7 +10,6 @@ import adminRoute from "./routes/Admin"
 import hiveRoute from "./routes/Hives"
 import apiaryRoute from "./routes/Apiaries"
 import noteRoute from "./routes/Notes"
-import supperRoute from "./routes/Suppers"
 
 import express from "express";
 import cors from "cors";
@@ -72,7 +72,6 @@ async function startServer() {
     app.use("/hive", hiveRoute)
     app.use("/apiary", apiaryRoute)
     app.use("/note", noteRoute)
-    app.use("/supper", supperRoute)
 
     // starts express server
     app.listen(port, () => {

@@ -4,7 +4,7 @@ import { ref } from "vue"
 import type { HiveCreateModel, HiveModelDB } from "./Models"
 import { useHiveApiStore } from "../network/HiveApiStore"
 import { isValidValue } from "../utils/others"
-import type { HiveCreateRequestModel, HiveUpdateRequestModel } from "../network/Models"
+import type { HiveCalendarEntryRequestModel, HiveCreateRequestModel, HiveUpdateRequestModel } from "../network/Models"
 import router, { RouterViewPaths } from "../router"
 import { useApiaryStore } from "./ApiaryStore"
 
@@ -23,6 +23,25 @@ export const useHiveStore = defineStore("hiveStore", () => {
     function openHive(hive: HiveModelDB) {
         selectedHive.value = hive
         router.push(RouterViewPaths.HiveOverview)
+    }
+
+    async function createCalendarEvent(
+        model: HiveCalendarEntryRequestModel,
+        callback?: CallbackModel
+    ) {
+        try {
+            const result = await hiveApiStore.createCalendarEvent(model)
+
+            if (result) {
+                callback?.onSuccess("")
+            } else {
+                callback?.onFailure()
+                throw new Error("Failed to create calendar event!");
+            }
+            return result
+        } catch (error) {
+            console.error(error);
+        }    
     }
 
     async function assignHive(
@@ -78,9 +97,9 @@ export const useHiveStore = defineStore("hiveStore", () => {
 
             if (result) {
                 callback.onSuccess("Updated hive")
-                console.log("Success bro@");
-                
                 hives.value.replace(result, (hive) => hive.id === result.id)
+
+                if (result.id === selectedHive.value?.id) selectedHive.value = result
             } else {
                 callback.onFailure()
             }
@@ -148,6 +167,7 @@ export const useHiveStore = defineStore("hiveStore", () => {
         createHive,
         deleteHive,
         openHive,
-        assignHive
+        assignHive,
+        createCalendarEvent
     }
 })

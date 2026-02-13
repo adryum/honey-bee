@@ -1,9 +1,9 @@
 import { Request, Response, NextFunction } from "express";
 import { redisClient } from "./config/RedisClient";
-import { Role } from "./DatabaseEnums";
+import { Role, String_to_Role } from "./DatabaseEnums";
 import { isValidValue } from "./utils";
 
-export function requireRole(requiredRole: Role) {
+export function requireRole(requiredRoles: Role[]) {
     return async (req: Request, res: Response, next: NextFunction)  => {
         const userId = req.session.userId;
 
@@ -15,7 +15,7 @@ export function requireRole(requiredRole: Role) {
         const role = await redisClient.hGet(`user:${userId}`, "role");
 
         // checks if role matches requirements
-        if (requiredRole !== Role.ANY && role !== requiredRole) {
+        if (!requiredRoles.includes(Role.ANY) && !requiredRoles.includes(String_to_Role(role ?? ""))) {
             return res.sendStatus(403);
         }
 

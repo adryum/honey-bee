@@ -1,11 +1,25 @@
 import { defineStore } from "pinia";
 import type { HiveModelDB } from "../stores/Models";
 import axios from "axios";
-import type { HiveCreateRequestModel, HiveCreateResponseModel, HiveUpdateRequestModel } from "./Models";
+import type { HiveCalendarEntryRequestModel, HiveCalendarEntryResponseModel, HiveCreateRequestModel, HiveCreateResponseModel, HiveUpdateRequestModel } from "./Models";
 import { HiveCreateResponse_to_HiveModelDB, HiveCreateResponseArray_to_HiveModelDBArray } from "../Convertors";
 import { isValidValue } from "../utils/others";
 
 export const useHiveApiStore = defineStore("HiveApiStore", () => {
+    async function createCalendarEvent(
+        model: HiveCalendarEntryRequestModel
+    ) {
+        try {
+            const result = await axios.post<HiveCalendarEntryResponseModel>("/hive/calendar/create", model)
+            if (!result.data) throw new Error("Failed to create calendar entry!");
+            
+            return result.data
+        } catch (error) {
+            console.error(error);
+            return undefined 
+        }
+    }
+
     async function getHives(): Promise<HiveModelDB[] | undefined> {
         try {
             const result = await axios.get<HiveCreateResponseModel[]>("/hive/get")
@@ -83,5 +97,6 @@ export const useHiveApiStore = defineStore("HiveApiStore", () => {
         updateHive,
         deleteHive,
         createHive,
+        createCalendarEvent
     }
 })

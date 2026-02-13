@@ -16,6 +16,7 @@ coverage
 *dump.rdb
 
 *.env
+google-calendar-service-acc.json
 
 /cypress/videos/
 /cypress/screenshots/
