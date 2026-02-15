@@ -21,13 +21,12 @@ const isEverythingValid = computed(() => {
 
 async function login() {
     window.location.href = import.meta.env.VITE_API + "/auth/google";
-
 }
 
 // auto login
-onMounted(async () => {
-    await mainStore.authenticateUser()
-})
+// onMounted(async () => {
+//     await mainStore.authenticateUser()
+// })
 </script>
 
 <template>

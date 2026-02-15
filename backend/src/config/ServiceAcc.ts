@@ -127,6 +127,12 @@ export async function createHiveEvent(
                 description: `[${model.creatorEmail}] ${model.description}`,
                 start: { dateTime: model.start },
                 end: { dateTime: model.end },
+                attendees: [
+                    { 
+                        email: model.creatorEmail, 
+                        responseStatus: 'accepted' // <--- 2. Automatically confirms it
+                    }
+                ],
             },
         });
         const data = response.data

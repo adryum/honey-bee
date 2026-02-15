@@ -5,7 +5,7 @@ import { db } from "../config/Database";
 import { ResultSetHeader, RowDataPacket } from "mysql2";
 import { redisClient } from "../config/RedisClient";
 import { oauth2Client, scopes } from "../config/GoogleAuth";
-import { Role } from "../DatabaseEnums";
+import { Role, String_to_Role } from "../DatabaseEnums";
 import { isValidValue } from "../utils";
 const router = Router()
 
@@ -79,21 +79,20 @@ router.get('/google/callback', async (req: Request, res: Response) => {
             [payload?.sub, "GOOGLE"]
         )
         console.log("Found this about user: ", possibleUser);
-        
-        // get session data
-        if (possibleUser) {
-            console.log(req.session.userId); // TypeScript should not complain
 
-            req.session.userId = possibleUser.id;
-            req.session.accessToken = tokens.access_token!;
-            console.log("============== Pos user Set user data");
-            console.log(possibleUser.id);
-            await redisClient.hSet(`user:${possibleUser.id}`, {
-                role: possibleUser.role,
-                accessToken: tokens.access_token!
-            });
-            req.session.save()
-        } else {
+        var userId: number | undefined
+        var role: Role | undefined
+        var accessToken: string | undefined
+
+        accessToken = tokens.access_token ?? undefined
+
+        if (possibleUser) {
+            role = String_to_Role(possibleUser.role)
+            userId = possibleUser.id
+        }
+
+        // get session data
+        if (!possibleUser) {
             console.log("Creating new user...");
             const [user] = await db.query<ResultSetHeader>(`
                 INSERT INTO users
@@ -114,17 +113,24 @@ router.get('/google/callback', async (req: Request, res: Response) => {
                 [payload?.sub, "GOOGLE"]
             )
 
-            req.session.userId = newUser!.id;
-            req.session.accessToken = tokens.access_token!;
-
-            console.log("============== New user Set user data");
-
-            await redisClient.hSet(`user:${newUser!.id}`, {
-                role: newUser!.role,
-                accessToken: tokens.access_token!
-            });
-            req.session.save()
+            role = String_to_Role(newUser!.role)
+            userId = newUser!.id
         }
+
+        console.log("Setting session...");
+        if (!tokens.access_token) throw new Error("Failed to get access_token!");
+        if (!isValidValue(userId)) throw new Error("Failed to get userId!");
+        if (!role) throw new Error("Failed to get role!");
+
+        req.session.userId = userId!;
+        await redisClient.hSet(`user:${userId!}`, {
+            role: role!,
+            accessToken: accessToken!
+        });
+        req.session.save()
+        console.log("Done!");
+
+
         console.log("Redirecting back to webistes origin...");
         // Redirect into your SPA
         return res.redirect(`${process.env.WEBSITE_ORIGIN}`);
@@ -235,12 +241,13 @@ router.get('/me', async (
     req: Request<{},{}, {}>, 
     res: Response
 ) => {
-    console.log("Checking session for user: ", req.session.userId);
+    console.log("# Checking session for user: ", req.session.userId);
     if (!isValidValue(req.session.userId)) {
         console.log("Fuck out of here! (Banishes user)");
         return res.status(401).send();
     }
-    res.status(200).send()
+    console.log("All good!");
+    return res.status(200).send()
 })
 
 router.get('/profile', async (

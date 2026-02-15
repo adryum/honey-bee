@@ -49,7 +49,7 @@ export function useFlexibleGrid(options: FlexibleGridOptions) {
         // adds gaps to consideration
         const columns = Math.max(1, Math.floor((element.contentRect.width - options.gapPx * (possibleColumns - 1)) / options.itemMinWidthPx))
 
-        console.log(columns);
+        // console.log(columns);
         // console.log((element.contentRect.width - options.gapPx * (possibleColumns - 1)) / options.itemMinWidthPx);
         
         style.value.gridTemplateColumns = `repeat(${columns}, 1fr)`

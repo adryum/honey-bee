@@ -10,6 +10,7 @@ import { requireRole } from "../Middleware";
 import { Role, String_to_Role } from "../DatabaseEnums";
 import { createHiveCalendar, createHiveEvent, getHiveEvents, shareHiveCalendarWithUser } from "../config/ServiceAcc";
 import { getValidToken } from "../config/GoogleAuth";
+import { redisClient } from "../config/RedisClient";
 
 const router = Router()
 const hiveModelQuery =`
@@ -56,21 +57,30 @@ router.get('/get', requireRole([Role.ANY]), async (
     res: Response
 ) => {
     console.log("# Get all hives");
-    
+    const role = String_to_Role(await redisClient.hGet(`user: ${req.session.userId}`, 'role') ?? "")
+    var hives: RowDataPacket[]
     try {
-        console.log("Getting hives...");
-        const [hiveGetResult] = await db.query<RowDataPacket[]>(hiveModelQuery)
+        console.log("Getting hives you have access to...");
+        switch (role) {
+            case Role.ADMINISTRATOR:
+                [hives] = await db.query<RowDataPacket[]>(hiveModelQuery)
+                break;
+            default:
+                [hives] = await db.query<RowDataPacket[]>(hiveModelQuery + `
+                    WHERE h.id IN (
+                        SELECT hiveId 
+                        FROM userHiveAccess 
+                        WHERE userId = ?
+                    )`,
+                    [req.session.userId]
+                )
+                break;
+        }
         console.log("Done!");
 
-        // find all hives with calendar proll all of em
-        for (const hive of hiveGetResult) {
-            if (hive.calendarId) {
-                 
-            }
-        }
-
+        console.log("Getting calendar events...");
         const hivesWithEvents = await Promise.all(
-            hiveGetResult.map(async (hive) => {
+            hives.map(async (hive) => {
                 // 1. Only fetch if there is a calendarId
                 if (!hive.calendarId) {
                     return { ...hive, events: [] }; // Return hive with empty events prop
@@ -87,10 +97,9 @@ router.get('/get', requireRole([Role.ANY]), async (
                 };
             })
         );
-        // fetch each calendar 
-        // append it to each one
+        console.log("Done!");
 
-        // send
+        
         res.status(200).json( hivesWithEvents )
     } catch (err) {
         console.error(err);
@@ -282,7 +291,7 @@ router.post('/create', requireRole([Role.ADMINISTRATOR, Role.APIARY_MAINTAINER])
         console.log("Giving user access to this hive...");
         await Promise.all(userArray.map(async (user) => {
             return await db.query<ResultSetHeader>(`
-                INSERT INTO usehiveaccess (userId, hiveId)
+                INSERT INTO userhiveaccess (userId, hiveId)
                 VALUES(?,?)`,
                 [user.id, createResult.insertId]
             );
@@ -369,10 +378,10 @@ router.post('/calendar/create', requireRole([Role.ANY]), async (req: Request<{},
         )
         console.log("Done!");
 
-        return { 
+        res.status(200).json({ 
             ...result, 
             hiveId: hiveId
-        }
+        })
     } catch (error) {
         console.error(error);
         res.status(500).send('Server error');

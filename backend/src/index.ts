@@ -10,6 +10,7 @@ import adminRoute from "./routes/Admin"
 import hiveRoute from "./routes/Hives"
 import apiaryRoute from "./routes/Apiaries"
 import noteRoute from "./routes/Notes"
+import eventRoute from "./routes/Events"
 
 import express from "express";
 import cors from "cors";
@@ -66,7 +67,7 @@ async function startServer() {
         next();
     });
 
-
+    app.use("/events", eventRoute)
     app.use("/auth", authentication)
     app.use("/admin", adminRoute)
     app.use("/hive", hiveRoute)

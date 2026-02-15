@@ -26,42 +26,42 @@ const router = createRouter({
   routes: [
     {
         path: RouterViewPaths.Home,
-        name: 'home',
+        name: RouterViewPaths.Home,
         component: HiveOverview,
     },
     {
         path: RouterViewPaths.Registration,
-        name: 'login',
+        name: RouterViewPaths.Registration,
         component: LoginView
     },
     {
         path: RouterViewPaths.HiveOverview,
-        name: 'Hive',
+        name: RouterViewPaths.HiveOverview,
         component: HiveOverview
     },
     {
         path: RouterViewPaths.Apiaries,
-        name: 'apiaries',
+        name: RouterViewPaths.Apiaries,
         component: ApiariesView
     },
     {
         path: RouterViewPaths.ApiaryHives,
-        name: 'apiary hives',
+        name: RouterViewPaths.ApiaryHives,
         component: ApiaryHivesView
     },
     {
         path: RouterViewPaths.Settings,
-        name: 'settings',
+        name: RouterViewPaths.Settings,
         component: SettingsView
     },
     {
         path: RouterViewPaths.Calendar,
-        name: 'calendar',
+        name: RouterViewPaths.Calendar,
         component: CalendarView
     },
     {
         path: RouterViewPaths.Admin,
-        name: 'admin users',
+        name: RouterViewPaths.Admin,
         component: AdminView
     },
     // {
@@ -78,7 +78,7 @@ const router = createRouter({
 router.beforeEach(async (to, from) => {
     console.log("Routing to: ", to.name);
 
-    if (to.name !== "login") {
+    if (to.name !== RouterViewPaths.Registration) {
         const store = useAuthenticationApiStore()
         await store.checkSession()
     } 
