@@ -79,8 +79,8 @@ const props = withDefaults(defineProps<{
         cursor: pointer
 
         &:hover
-            filter: brightness(98%)
-            outline: 1px solid var(--blue)
+            filter: brightness(95%)
+            // outline: 1px solid var(--blue)
 
     .icon
         align-self: center

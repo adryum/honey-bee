@@ -27,7 +27,7 @@ const router = createRouter({
     {
         path: RouterViewPaths.Home,
         name: RouterViewPaths.Home,
-        component: HiveOverview,
+        component: ApiariesView,
     },
     {
         path: RouterViewPaths.Registration,

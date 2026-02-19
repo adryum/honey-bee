@@ -23,6 +23,9 @@ export const useHiveStore = defineStore("hiveStore", () => {
     function openHive(hive: HiveModelDB) {
         selectedHive.value = hive
         router.push(RouterViewPaths.HiveOverview)
+
+        console.log(selectedHive.value.calendarEvents);
+        
     }
 
     async function createCalendarEvent(

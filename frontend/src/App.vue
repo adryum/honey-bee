@@ -3,13 +3,9 @@ import { RouterView } from 'vue-router'
 import { useCssModule } from 'vue';
 import SideHeader from './ui/components/navigation/SideHeader.vue';
 import TopHeader from './ui/components/navigation/TopHeader.vue';
-import { useMainStore } from './core/stores/MainStore';
 
 const s = useCssModule()
-const mainstore = useMainStore()    
-// onMounted(async () => {
-//     await mainstore.authenticateUser()
-// })
+
 </script>   
 
 <template>

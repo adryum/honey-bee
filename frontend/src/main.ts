@@ -3,13 +3,12 @@ import '/src/core/LightDarkMode.ts'
 import axios from 'axios'
 import { createApp } from 'vue'
 import App from './App.vue'
-import router from './core/router'
+import router, { RouterViewPaths } from './core/router'
 import { createPinia } from 'pinia'
 import i18n from './core/locales/i18n'
 import VueApexCharts from "vue3-apexcharts";
 import "@/core/prototype_extensions/StringExtensions"
 import "@/core/prototype_extensions/Array"
-import { useMainStore } from './core/stores/MainStore'
 
 axios.defaults.baseURL = import.meta.env.VITE_API;
 axios.defaults.withCredentials = true;
@@ -26,3 +25,4 @@ app.use(router)
 app.use(i18n)
 
 app.mount('#app')
+router.push(RouterViewPaths.Registration)

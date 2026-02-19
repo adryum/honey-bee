@@ -57,7 +57,8 @@ router.get('/get', requireRole([Role.ANY]), async (
     res: Response
 ) => {
     console.log("# Get all hives");
-    const role = String_to_Role(await redisClient.hGet(`user: ${req.session.userId}`, 'role') ?? "")
+    const role = String_to_Role(await redisClient.hGet(`user:${req.session.userId}`, 'role') ?? "")
+    console.log("Role: ", role);
     var hives: RowDataPacket[]
     try {
         console.log("Getting hives you have access to...");
@@ -88,6 +89,8 @@ router.get('/get', requireRole([Role.ANY]), async (
 
                 // 2. Fetch the data from Google
                 const events = await getHiveEvents(hive.calendarId);
+                console.table(events);
+                
 
                 // 3. Return a NEW object that has all original hive props 
                 // PLUS the new 'events' property (prop3)

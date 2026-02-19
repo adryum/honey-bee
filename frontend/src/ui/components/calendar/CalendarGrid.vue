@@ -2,15 +2,69 @@
 import { computed, useCssModule } from "vue";
 import { CalendarDate, Days, getMonthCalendar } from "../../../core/Calendar";
 import CalendarDayComponent from "./CalendarDayComponent.vue";
+import type { CalendarEventDB } from "@/core/stores/Models";
 
 const s = useCssModule()
 const props = defineProps<{
-    searchDate: CalendarDate
+    events: CalendarEventDB[]
 }>()
 
-const currentCalendar = computed(() => {
-    return getMonthCalendar(props.searchDate.year, props.searchDate.getHumanMonth()).flat()
-})
+// const currentCalendar = computed(() => {
+//     return getMonthCalendar(props.searchDate.year, props.searchDate.getHumanMonth()).flat()
+// })
+
+function getDatesInMonth(
+    year: number, 
+    month: number
+) {
+    const dates = [];
+    // Start at the 1st of the month
+    const date = new Date(year, month, 1, 12, 0 ,0);
+
+    // While we are still in the same month...
+    while (date.getMonth() === month) {
+        dates.push(new Date(date)); // Push a copy of the current date
+        date.setDate(date.getDate() + 1); // Move to the next day
+    }
+
+    return dates;
+}
+
+function getCalendarMonthWithDayPadding(
+    year: number, 
+    month: number, 
+    startOnMonday: boolean = false
+) {
+  const dates = [];
+  
+  // 1. Get the first day of the month (noon to avoid TZ issues)
+  const firstDayOfMonth = new Date(year, month, 1, 12, 0, 0);
+  
+  // 2. Calculate the "Back-shift"
+  // .getDay() is 0 (Sun) to 6 (Sat)
+  const dayOfWeek = firstDayOfMonth.getDay(); 
+  
+  let diff;
+  if (startOnMonday) {
+    // European: Mon=0, Tue=1 ... Sun=6
+    diff = (dayOfWeek === 0 ? 6 : dayOfWeek - 1);
+  } else {
+    // American: Sun=0, Mon=1 ... Sat=6
+    diff = dayOfWeek;
+  }
+
+  // 3. Set our start point
+  const current = new Date(firstDayOfMonth);
+  current.setDate(current.getDate() - diff);
+
+  // 4. Always grab exactly 42 days (6 rows * 7 columns)
+  for (let i = 0; i < 42; i++) {
+    dates.push(new Date(current));
+    current.setDate(current.getDate() + 1);
+  }
+
+  return dates;
+}
 </script>
 
 <template>
@@ -19,8 +73,9 @@ const currentCalendar = computed(() => {
         <p v-for="day in Days">{{ day }}</p>
     </div>
     <div ref="grid" :class="s.grid">
-        <CalendarDayComponent v-for="day in currentCalendar"
-            :searchDate="searchDate"
+        <CalendarDayComponent 
+            v-for="day in getCalendarMonthWithDayPadding(2026, 1)"
+            :events="[]"
             :this-date="day"
         />
     </div>

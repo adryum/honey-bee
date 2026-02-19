@@ -116,8 +116,6 @@ const { create } = usePopupCreator({
 </template>
 
 <style module lang='sass'>
-@use '@/assets/main.sass' as main
-@use '@/assets/_base.sass' as base
 .container 
     flex: 1
     box-sizing: border-box
@@ -153,8 +151,8 @@ const { create } = usePopupCreator({
         gap: .2rem
 
         &.shown
-            height: 2.3rem
-            max-height: 2.3rem
+            height: 2.5rem
+            max-height: 2.5rem
             opacity: 1
             padding: .2rem
             padding-top: calc( .2rem + 1px  )

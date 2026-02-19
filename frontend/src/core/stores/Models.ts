@@ -22,6 +22,7 @@ export type HiveModelDB = {
     creatorImage: string
     history:      HiveHistoryEntryDB[]
     calendarId:   string
+    calendarEvents: CalendarEventDB[]
 }
 
 export type HiveCreateModel = {
@@ -58,3 +59,12 @@ export type HiveHistoryEntryDB = {
     creationDate: string 
 }
 
+export type CalendarEventDB = {
+    id:          string
+    start:       string
+    end:         string
+    title:       string
+    description: string
+    color:       string
+    type:        string
+}

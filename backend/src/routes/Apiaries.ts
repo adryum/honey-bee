@@ -6,7 +6,8 @@ import { uploadImage } from "../config/image_cloud/Cloudinary";
 import { PublicIdBuilder } from "../config/image_cloud/PublicIdBuilder";
 import { upload } from "../config/Multer";
 import { requireRole } from "../Middleware";
-import { Role } from "../DatabaseEnums";
+import { Role, String_to_Role } from "../DatabaseEnums";
+import { redisClient } from "../config/RedisClient";
 
 const getApiaryQuery = (where: string) => `
 SELECT 
@@ -14,10 +15,8 @@ SELECT
     a.name,
     a.location,
     a.description,
-    a.image,
-    COUNT(h.id) AS hiveCount
+    a.image
 FROM apiaries as a
-LEFT JOIN hives as h ON a.id = h.apiaryId
 `
 
 const router = Router()
@@ -26,16 +25,37 @@ router.get('/get', requireRole([Role.ANY]), async (
     req: Request<{},{},{}>, 
     res: Response
 ) => {
+    console.log("# Get apiaries");
+    const role = String_to_Role(await redisClient.hGet(`user:${req.session.userId}`, 'role') ?? "")
+    console.log("Role: ", role);
+    var apiaries: RowDataPacket[]
     try {
-        console.log("# Getting apiaries...");
-        var [apiaries] = await db.query<any[]>(`
-            ${getApiaryQuery("")}
-            WHERE a.userId = ? 
-            GROUP BY a.id
-            `,
-            [req.session.userId]
-        )
+        console.log("Getting apiaries you have access to...");
+        switch (role) {
+            case Role.ADMINISTRATOR:
+                [apiaries] = await db.query<RowDataPacket[]>(getApiaryQuery(""))
+                break;
+            default:
+                [apiaries] = await db.query<RowDataPacket[]>(getApiaryQuery("") + `
+                    WHERE a.id IN (
+                        SELECT apiaryId 
+                        FROM userApiaryAccess 
+                        WHERE userId = ?
+                    )`,
+                    [req.session.userId]
+                )
+                break;
+        }
         console.log("Done!");
+    // // try {
+    // //     var [apiaries] = await db.query<any[]>(`
+    // //         ${getApiaryQuery("")}
+    // //         WHERE a.userId = ? 
+    // //         GROUP BY a.id
+    // //         `,
+    // //         [req.session.userId]
+    // //     )
+    //     console.log("Done!");
         res.status(200).json(apiaries)
     } catch (err) {
         console.error(err);

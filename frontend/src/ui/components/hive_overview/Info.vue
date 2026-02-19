@@ -111,6 +111,7 @@ const apiaryName = computed(() => {
     letter-spacing: .02em
 .description
     margin-top: 1rem
+    margin-bottom: 1rem
     font-size: var(--font-size-small)
     font-weight: 300
     line-height: 1.5rem
