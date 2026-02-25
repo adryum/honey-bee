@@ -30,10 +30,13 @@ CREATE TABLE IF NOT EXISTS `apiaries` (
   `creationDate` timestamp NULL DEFAULT NULL,
   PRIMARY KEY (`id`),
   KEY `FK_apiary_user` (`userId`) USING BTREE,
-  CONSTRAINT `FK_apiaries_users` FOREIGN KEY (`userId`) REFERENCES `users` (`id`) ON DELETE CASCADE
-) ENGINE=InnoDB AUTO_INCREMENT=95 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
+  CONSTRAINT `FK_apiaries_users` FOREIGN KEY (`userId`) REFERENCES `users` (`id`) ON DELETE SET NULL
+) ENGINE=InnoDB AUTO_INCREMENT=97 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
 
 -- Dumping data for table honey_bee.apiaries: ~2 rows (approximately)
+INSERT INTO `apiaries` (`id`, `name`, `image`, `location`, `description`, `userId`, `creationDate`) VALUES
+	(95, 'supra', NULL, NULL, 'all hives', NULL, NULL),
+	(96, 'Nothe one', NULL, NULL, 'x', NULL, NULL);
 
 -- Dumping structure for table honey_bee.hivehistory
 CREATE TABLE IF NOT EXISTS `hivehistory` (
@@ -49,7 +52,7 @@ CREATE TABLE IF NOT EXISTS `hivehistory` (
   CONSTRAINT `FK_hivehistory_users` FOREIGN KEY (`userId`) REFERENCES `users` (`id`) ON DELETE CASCADE
 ) ENGINE=InnoDB AUTO_INCREMENT=4 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
 
--- Dumping data for table honey_bee.hivehistory: ~0 rows (approximately)
+-- Dumping data for table honey_bee.hivehistory: ~1 rows (approximately)
 
 -- Dumping structure for table honey_bee.hives
 CREATE TABLE IF NOT EXISTS `hives` (
@@ -72,10 +75,10 @@ CREATE TABLE IF NOT EXISTS `hives` (
 
 -- Dumping data for table honey_bee.hives: ~4 rows (approximately)
 INSERT INTO `hives` (`id`, `name`, `image`, `location`, `type`, `description`, `apiaryId`, `userId`, `creationDate`, `calendarId`) VALUES
-	(73, 'niga', NULL, NULL, 'Stationary', 'fr', NULL, NULL, NULL, '95ef0835061e39b4b4fca24b8445cab54b32db312011a68754f4dccd78a6f761@group.calendar.google.com'),
-	(74, '123', NULL, NULL, 'Stationary', '123', NULL, NULL, NULL, '973b2fc67ade434668e041fbf479bf8e49e5b022deec2a1107ffbb91be1cf103@group.calendar.google.com'),
-	(75, '123', NULL, NULL, 'Stationary', '123', NULL, NULL, NULL, '0203fd148f850f4f3b703e34ba1a494edf94baecbb9a3df1bdb18459c50e80fb@group.calendar.google.com'),
-	(76, 'qwe', 'https://res.cloudinary.com/dj8lvgcxl/image/upload/v1771171940/apiaries/User:18_Apiary:76.jpg', NULL, 'Stationary', 'qwe', NULL, NULL, NULL, '426a6399cbdae5cb6a5b9bb7d2091a1ea5a43c8431370125f176d58066e7d5ae@group.calendar.google.com');
+	(73, 'niga', NULL, NULL, 'Stationary', 'fr', 95, NULL, NULL, '95ef0835061e39b4b4fca24b8445cab54b32db312011a68754f4dccd78a6f761@group.calendar.google.com'),
+	(74, '124', NULL, NULL, 'Stationary', '123', 95, NULL, NULL, '973b2fc67ade434668e041fbf479bf8e49e5b022deec2a1107ffbb91be1cf103@group.calendar.google.com'),
+	(75, '123', NULL, NULL, 'Stationary', '123', 95, NULL, NULL, '0203fd148f850f4f3b703e34ba1a494edf94baecbb9a3df1bdb18459c50e80fb@group.calendar.google.com'),
+	(76, 'qwe', 'https://res.cloudinary.com/dj8lvgcxl/image/upload/v1771171940/apiaries/User:18_Apiary:76.jpg', NULL, 'Stationary', 'qwe', 96, NULL, NULL, '426a6399cbdae5cb6a5b9bb7d2091a1ea5a43c8431370125f176d58066e7d5ae@group.calendar.google.com');
 
 -- Dumping structure for table honey_bee.notes
 CREATE TABLE IF NOT EXISTS `notes` (
@@ -89,11 +92,13 @@ CREATE TABLE IF NOT EXISTS `notes` (
   PRIMARY KEY (`id`),
   KEY `FK_notes_users` (`userId`) USING BTREE,
   KEY `FK_notes_hives` (`hiveId`),
-  CONSTRAINT `FK_notes_hives` FOREIGN KEY (`hiveId`) REFERENCES `hives` (`id`) ON DELETE CASCADE,
+  CONSTRAINT `FK_notes_hives` FOREIGN KEY (`hiveId`) REFERENCES `hives` (`id`) ON DELETE SET NULL,
   CONSTRAINT `FK_notes_users` FOREIGN KEY (`userId`) REFERENCES `users` (`id`) ON DELETE SET NULL
-) ENGINE=InnoDB AUTO_INCREMENT=9 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
+) ENGINE=InnoDB AUTO_INCREMENT=10 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
 
 -- Dumping data for table honey_bee.notes: ~0 rows (approximately)
+INSERT INTO `notes` (`id`, `title`, `content`, `creationDate`, `type`, `userId`, `hiveId`) VALUES
+	(9, 'Super hive ', 'Just like it ... notin else', '2026-02-19 10:44:17', 'INFORMATIONAL', NULL, 73);
 
 -- Dumping structure for table honey_bee.userapiaryaccess
 CREATE TABLE IF NOT EXISTS `userapiaryaccess` (
@@ -121,7 +126,7 @@ CREATE TABLE IF NOT EXISTS `userhiveaccess` (
   CONSTRAINT `FK_userhiveaccess_users` FOREIGN KEY (`userId`) REFERENCES `users` (`id`) ON DELETE CASCADE
 ) ENGINE=InnoDB AUTO_INCREMENT=3 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
 
--- Dumping data for table honey_bee.userhiveaccess: ~1 rows (approximately)
+-- Dumping data for table honey_bee.userhiveaccess: ~0 rows (approximately)
 
 -- Dumping structure for table honey_bee.users
 CREATE TABLE IF NOT EXISTS `users` (
@@ -135,9 +140,9 @@ CREATE TABLE IF NOT EXISTS `users` (
   `providerSub` varchar(255) DEFAULT NULL,
   `googleRefreshToken` text,
   PRIMARY KEY (`id`)
-) ENGINE=InnoDB AUTO_INCREMENT=19 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
+) ENGINE=InnoDB AUTO_INCREMENT=20 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
 
--- Dumping data for table honey_bee.users: ~1 rows (approximately)
+-- Dumping data for table honey_bee.users: ~0 rows (approximately)
 
 -- Dumping structure for table honey_bee.whitelist
 CREATE TABLE IF NOT EXISTS `whitelist` (

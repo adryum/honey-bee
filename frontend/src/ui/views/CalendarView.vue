@@ -16,7 +16,10 @@ console.log(today);
 </script>
 
 <template>
-    <CalendarGrid :searchDate="searchDate" :class="s.calendar" />
+    <CalendarGrid 
+        :class="s.calendar" 
+        :events="[]"
+    />
 </template>
 
 <style module lang='sass'>

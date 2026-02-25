@@ -61,10 +61,15 @@ export type HiveHistoryEntryDB = {
 
 export type CalendarEventDB = {
     id:          string
-    start:       string
-    end:         string
+    start:       Date
+    end:         Date
     title:       string
     description: string
     color:       string
     type:        string
+}
+
+export type CalendarDayModel = {
+    date:   Date
+    events: CalendarEventDB[]
 }

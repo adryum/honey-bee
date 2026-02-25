@@ -3,28 +3,28 @@ import { computed, onMounted, ref, useCssModule, watch } from "vue";
 import { useWindowSize } from "@vueuse/core";
 import Icon from "../Icon.vue";
 import { IconType, SVG } from "@/assets/svgs/SVGLoader";
-import type { CalendarEventDB } from "@/core/stores/Models";
+import type { CalendarDayModel, CalendarEventDB } from "@/core/stores/Models";
 
 const s = useCssModule()
 const props = withDefaults(defineProps<{
-    thisDate: Date
-    events: CalendarEventDB[]
+    day: CalendarDayModel
 }>(), {
 
 })
 
 const isToday = computed(() => {
-    return props.thisDate.toDateString() === new Date().toDateString()
+    const date = props.day.date 
+    return date.toDateString() === new Date().toDateString()
 })
 const isWeekend = computed(() => {
-    const day = props.thisDate.getDay() 
+    const date = props.day.date 
+    const day = date.getDay() 
     return day === 0 || day === 6
 })
 const isThisMonth = computed(() => {
-    return props.thisDate.getMonth() === new Date().getMonth()
+    const date = props.day.date 
+    return date.getMonth() === new Date().getMonth()
 })
-
-
 
 const { width, height } = useWindowSize()
 const tasks = ['one', 'two', 'three', 'fout', 'fiver', 'sixer', 'sevener']
@@ -74,13 +74,13 @@ onMounted(() => {
     <p 
         :class="s.dayLabel"
     >
-        {{ thisDate.getUTCDate() + (isToday ? " Today" : "") }} 
+        {{ day.date.getUTCDate() + (isToday ? " Today" : "") }} 
     </p>
     <ul 
         :class="s.taskList"
     >
         <button 
-            v-for="event in events"
+            v-for="event in day.events"
             :class="s.button"
         >
             <Icon :class="s.icon" :type="IconType.SMALL" :svg="SVG.Dollar" />

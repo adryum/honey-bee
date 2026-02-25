@@ -1,34 +1,49 @@
 <script setup lang="ts">
-import { computed, useCssModule } from "vue";
-import { CalendarDate, Days, getMonthCalendar } from "../../../core/Calendar";
+import { computed, ref, useCssModule } from "vue";
+import { Days } from "../../../core/Calendar";
 import CalendarDayComponent from "./CalendarDayComponent.vue";
-import type { CalendarEventDB } from "@/core/stores/Models";
+import type { CalendarDayModel, CalendarEventDB } from "@/core/stores/Models";
 
 const s = useCssModule()
-const props = defineProps<{
-    events: CalendarEventDB[]
-}>()
+const props = withDefaults(defineProps<{
+    events:       CalendarEventDB[]
+    lookedAtDate: Date
+    isMacdonalds: boolean
+}>(), {
+    lookedAtDate: () => new Date()
+})
 
-// const currentCalendar = computed(() => {
-//     return getMonthCalendar(props.searchDate.year, props.searchDate.getHumanMonth()).flat()
-// })
+const currentMonthDays = computed((): CalendarDayModel[] => {
+    const date = props.lookedAtDate
+    const day = date.getDate()
+    const month = date.getMonth()
+    const year = date.getFullYear()
+    const calendarDays = getCalendarMonthWithDayPadding(year, month, props.isMacdonalds) 
 
-function getDatesInMonth(
-    year: number, 
-    month: number
-) {
-    const dates = [];
-    // Start at the 1st of the month
-    const date = new Date(year, month, 1, 12, 0 ,0);
+    return calendarDays.map<CalendarDayModel>(date=> ({
+        date:   date,
+        events: props.events.filter(event => date >= event.start && date <= event.end) || []
+    })) 
+})
 
-    // While we are still in the same month...
-    while (date.getMonth() === month) {
-        dates.push(new Date(date)); // Push a copy of the current date
-        date.setDate(date.getDate() + 1); // Move to the next day
-    }
 
-    return dates;
-}
+
+// function getDatesInMonth(
+//     year: number, 
+//     month: number
+// ) {
+//     const dates = [];
+//     // Start at the 1st of the month
+//     const date = new Date(year, month, 1, 12, 0 ,0);
+
+//     // While we are still in the same month...
+//     while (date.getMonth() === month) {
+//         dates.push(new Date(date)); // Push a copy of the current date
+//         date.setDate(date.getDate() + 1); // Move to the next day
+//     }
+
+//     return dates;
+// }
 
 function getCalendarMonthWithDayPadding(
     year: number, 
@@ -74,9 +89,8 @@ function getCalendarMonthWithDayPadding(
     </div>
     <div ref="grid" :class="s.grid">
         <CalendarDayComponent 
-            v-for="day in getCalendarMonthWithDayPadding(2026, 1)"
-            :events="[]"
-            :this-date="day"
+            v-for="day in currentMonthDays"
+            :day="day"
         />
     </div>
 </div>
