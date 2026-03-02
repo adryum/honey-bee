@@ -62,7 +62,7 @@ function onNoClick() {
 </template>
 
 <style module lang='sass'>
-@use '@/assets/main.sass' as main
+ 
 .body
     @include main.font
     display: grid

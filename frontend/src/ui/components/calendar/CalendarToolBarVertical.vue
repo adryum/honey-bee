@@ -42,9 +42,8 @@ function goToToday() {
 </template>
 
 <style module lang='sass'>
-@use '@/assets/main.sass' as main
+ 
 .container
-    @include main.font
     display: flex
     flex-direction: column
     gap: 1rem
@@ -58,7 +57,6 @@ function goToToday() {
         gap: .5rem
 
         .month
-            @include main.f-size-medium
             margin: 0 auto 0 0
 
     .goTo

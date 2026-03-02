@@ -13,6 +13,7 @@ import { useMainStore } from '@/core/stores/MainStore';
 const s = useCssModule()
 const props = defineProps<{
     popupData: PopupData,
+    selectedDate: Date
 }>()
 
 const { frameModel, close } = usePopup({
@@ -33,12 +34,11 @@ const description = ref('')
 function createEvent() {
     if (!formValidator.isFormValid.value) return
 
-    
     hiveStore.createCalendarEvent({
         hiveId: hiveStore.selectedHive!.id,
         calendarId:  hiveStore.selectedHive!.calendarId,
-        start: start.value,
-        end: end.value,
+        start: props?.selectedDate?.toISOString() ?? start.value,
+        end: props?.selectedDate?.toISOString() ?? end.value,
         title: title.value,
         description: description.value,
         creatorEmail: user.value?.email!
@@ -63,7 +63,10 @@ function createEvent() {
             :class="s.form"
             @submit.prevent
         >
-            <div :class="s.row">
+            <div
+                v-if="!props.selectedDate" 
+                :class="s.row"
+            >
                 <LabeledInputField
                     label="Start"
                     :options="{
@@ -136,6 +139,8 @@ function createEvent() {
     flex-direction: column
     gap: 1.5rem
     max-height: 35rem
+    width: 30rem
+    height: 25rem
 
 .image
     width: 50%

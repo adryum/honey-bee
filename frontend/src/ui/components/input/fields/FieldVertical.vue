@@ -24,7 +24,7 @@ const s = useCssModule()
 </template>
 
 <style module lang='sass'>
-@use '@/assets/main.sass' as main
+ 
 .container
     display: grid
     grid-template-rows: 3.4rem 1fr

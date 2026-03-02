@@ -26,7 +26,6 @@ const s = useCssModule()
 
 <style module lang='sass'>
 @use '@/assets/_colors.sass' as colors
-@use '@/assets/main.sass' as main
 .container
     all: unset
     display: inline-flex

@@ -61,7 +61,7 @@ const chartOptions = ref({
 </template>
 
 <style module lang='sass'>
-@use '@/assets/main.sass' as main
+ 
 .container
     display: flex
     flex-direction: column

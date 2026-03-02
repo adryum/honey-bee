@@ -371,8 +371,8 @@ router.post('/calendar/create', requireRole([Role.ANY]), async (req: Request<{},
         const result = await createHiveEvent(
             {
                 calendarId: calendarId,
-                start: new Date().toISOString(),
-                end: new Date().toISOString(),
+                start: start,
+                end: end,
                 title: title,
                 description: description,
                 creatorEmail: creatorEmail

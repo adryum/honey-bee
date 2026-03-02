@@ -25,7 +25,10 @@ export const useHiveStore = defineStore("hiveStore", () => {
         router.push(RouterViewPaths.HiveOverview)
 
         console.log(selectedHive.value.calendarEvents);
-        
+    }
+
+    function closeHive() {
+        selectedHive.value = undefined
     }
 
     async function createCalendarEvent(
@@ -171,6 +174,7 @@ export const useHiveStore = defineStore("hiveStore", () => {
         deleteHive,
         openHive,
         assignHive,
-        createCalendarEvent
+        createCalendarEvent,
+        closeHive
     }
 })

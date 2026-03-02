@@ -69,8 +69,6 @@ export function useFlexibleGrid(options: FlexibleGridOptions) {
     }
 }
 
-
-
 export function isValidValue(value: unknown): boolean {
     if (value === null || value === undefined) return false
     if (typeof value === 'number') return !Number.isNaN(value)
@@ -78,8 +76,6 @@ export function isValidValue(value: unknown): boolean {
     if (typeof value === 'boolean') return value
     return true
 }
-
-
 let counter = 0
 export function getUniqueThisSesionId(): number {
     return ++counter

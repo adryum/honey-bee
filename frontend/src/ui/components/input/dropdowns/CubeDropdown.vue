@@ -86,10 +86,8 @@ onMounted(async () => {
 
 <style lang="sass">
 @use '/src/assets/_colors.sass' as colors
-@use '/src/assets/main.sass' as main
 .dropdown
     all: unset
-    @include main.button-font
     position: absolute
     display: inline-flex
     flex-direction: column
@@ -103,7 +101,6 @@ onMounted(async () => {
         all: unset
         position: relative
         display: flex
-        @include main.f-size-very-small
         padding: .5rem 1rem
         border-radius: 6px
         gap: 1rem
@@ -139,7 +136,6 @@ onMounted(async () => {
 
 <style module lang='sass'>
 @use '/src/assets/_colors.sass' as colors
-@use '/src/assets/main.sass' as main
 .container
     position: relative
     display: inline-block    

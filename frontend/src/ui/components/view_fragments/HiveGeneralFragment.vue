@@ -26,7 +26,6 @@ const props = defineProps<{
 </template>
 
 <style module lang='sass'>
-@use '@/assets/main.sass' as main
 .container
     display: grid
     grid-template-columns: 1.5fr 1fr 1fr

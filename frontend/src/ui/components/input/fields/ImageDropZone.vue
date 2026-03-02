@@ -81,10 +81,8 @@ function handleFiles(event: Event) {
 </template>
 
 <style module lang='sass'>
-@use '@/assets/main.sass' as main
+ 
 .container
-    @include main.font
-
     display: flex
     flex-direction: column
     justify-content: center

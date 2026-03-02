@@ -102,8 +102,6 @@ const apiaryName = computed(() => {
 </template>
 
 <style module lang='sass'>
-@use '@/assets/main.sass' as main
-
 .name
     margin-top: .5rem
     font-size: var(--font-size-large)

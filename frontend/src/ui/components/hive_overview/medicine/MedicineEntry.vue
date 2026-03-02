@@ -31,7 +31,7 @@ const s = useCssModule()
 </template>
 
 <style module lang='sass'>
-@use '@/assets/main.sass' as main
+ 
 .container
     display: flex
     flex-direction: column
@@ -49,7 +49,6 @@ const s = useCssModule()
         display: flex
         align-items: center
         .name
-            @include main.f-size-small
             font-weight: 700
 
         .button
@@ -77,15 +76,12 @@ const s = useCssModule()
 
 
             .title
-                @include main.f-size-very-small
                 font-weight: 700
                 letter-spacing: 0.02em
                 // border: 1px solid
                 padding: .25rem .5rem 
                 background: var(--grayishOnWhite)
 
-            .date
-                @include main.f-size-very-small
                 letter-spacing: 0.02em
                 padding: .25rem .5rem 
 

@@ -32,14 +32,13 @@ const { t } = useI18n()
 </template>
 
 <style module lang='sass'>
-@use '@/assets/main.sass' as main
+ 
 .container
     display: flex
     flex-direction: column
     overflow: hidden
 
     .header
-        @include main.button-font
         position: relative
         display: flex
         align-items: center
@@ -64,7 +63,6 @@ const { t } = useI18n()
                 height: 100%
                     
     .body
-        @include main.font
 
         flex: 1
         grid-area: data

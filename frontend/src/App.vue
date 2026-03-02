@@ -10,9 +10,8 @@ const s = useCssModule()
 
 <template>
     <div :class="s.skelet">
-        <TopHeader 
+        <TopHeader />
           
-        />
         <div :class="s.flex">
             <SideHeader />
             <RouterView />
@@ -24,6 +23,8 @@ const s = useCssModule()
 .skelet
     display: flex
     flex-direction: column
+    background:  color-mix(in srgb, var(--black) 5%, var(--white) )
+
 
 .flex
     flex: 1

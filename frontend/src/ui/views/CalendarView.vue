@@ -1,7 +1,6 @@
 <script setup lang="ts">
 import { reactive, useCssModule} from "vue"
 import CalendarGrid from '../components/calendar/CalendarGrid.vue';
-import CalendarToolBarVertical from "../components/calendar/CalendarToolBarVertical.vue";
 import { CalendarDate } from "../../core/Calendar";
 
 const s = useCssModule()
@@ -19,6 +18,8 @@ console.log(today);
     <CalendarGrid 
         :class="s.calendar" 
         :events="[]"
+        :looked-at-date="new Date()"
+        :is-macdonalds="false"
     />
 </template>
 

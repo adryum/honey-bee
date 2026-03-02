@@ -136,7 +136,6 @@ onMounted(() => {
 
 <style module lang='sass'>
 @use '@/assets/_colors.sass' as colors
-@use '@/assets/main.sass' as main
 .container
     top: 0
     position: sticky

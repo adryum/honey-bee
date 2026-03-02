@@ -62,8 +62,6 @@ const props = withDefaults(defineProps<{
 </template>
 
 <style module lang='sass'>
-@use '@/assets/main.sass' as main
-
 .shadow
     box-shadow: 0 0 1px 1px var(--faint-border) !important
 .container

@@ -1,4 +1,4 @@
-import './assets/main.sass'
+import '@/assets/_base.sass'
 import '/src/core/LightDarkMode.ts'
 import axios from 'axios'
 import { createApp } from 'vue'
