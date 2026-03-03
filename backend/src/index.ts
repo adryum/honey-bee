@@ -24,7 +24,7 @@ async function startServer() {
     await connectRedis()
 
     app.use(cors({
-        origin: process.env.WEBSITE_ORIGIN as string, // your SPA origin
+        origin: process.env.WEBSITE_ORIGIN!, // your SPA origin
         credentials: true,
         exposedHeaders: ['Content-Disposition'] // ondownload exposes file names to client (downloads apple.pdf => client sees apple.pdf)
     })); // Enable CORS to allow your Vue app to communicate with this backend

@@ -16,7 +16,6 @@ axios.defaults.withCredentials = true;
 const app = createApp(App)
 const pinia = createPinia()
 
-
 app.use(VueApexCharts);
 app.component('ApexChart', VueApexCharts);
 

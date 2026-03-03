@@ -4,8 +4,7 @@ import { Role, Role_to_GoogleCalendarRole } from '../DatabaseEnums';
 import { oauth2Client } from './GoogleAuth';
 
 const client = new JWT({
-    email: process.env.SERVICE_ACCOUNT_EMAIL!,
-    key: process.env.SERVICE_PRIVATE_KEY!.replace(/\\n/g, '\n'),
+    keyFile: process.env.PATH_TO_SERVICE_ACC!,
     scopes: ['https://www.googleapis.com/auth/calendar'], // Use the Calendar scope
 });
 

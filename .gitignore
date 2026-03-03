@@ -17,6 +17,7 @@ coverage
 
 *.env
 google-calendar-service-acc.json
+service-account.json
 
 /cypress/videos/
 /cypress/screenshots/
