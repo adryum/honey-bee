@@ -13,7 +13,7 @@ const s = useCssModule()
 </template>
 
 <style module lang='sass'>
-@use '@/assets/main.sass' as main
+ 
 .container
     display: grid
     grid-template-columns: 20rem 1fr

@@ -57,7 +57,6 @@ const dropdownActions: DropdownItem[] = [
 
 <style module lang="sass">
 @use '@/assets/_colors.sass' as colors
-@use '@/assets/main.sass' as main
 
 .HRhorizontal
     height: 2px

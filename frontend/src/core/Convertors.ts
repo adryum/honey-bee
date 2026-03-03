@@ -35,7 +35,8 @@ export function HiveCreateResponse_to_HiveModelDB(
         creatorName:  convertee.creatorName,
         creatorImage: convertee.creatorImage,
         history:      convertee.history,
-        calendarId:   convertee.calendarId
+        calendarId:   convertee.calendarId,
+        // calendarEvents: convertee.calendarEvents
     }
 }
 

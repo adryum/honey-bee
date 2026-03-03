@@ -3,7 +3,8 @@ import { computed, onMounted, ref, useCssModule, watch } from "vue";
 import { useWindowSize } from "@vueuse/core";
 import Icon from "../Icon.vue";
 import { IconType, SVG } from "@/assets/svgs/SVGLoader";
-import type { CalendarDayModel, CalendarEventDB } from "@/core/stores/Models";
+import type { CalendarDayModel } from "@/core/stores/Models";
+import CreateCalendarEventModal from "../modals/CreateCalendarEventModal.vue";
 
 const s = useCssModule()
 const props = withDefaults(defineProps<{
@@ -27,9 +28,15 @@ const isThisMonth = computed(() => {
 })
 
 const { width, height } = useWindowSize()
-const tasks = ['one', 'two', 'three', 'fout', 'fiver', 'sixer', 'sevener']
 const container = ref<HTMLDivElement | null>()
 const availableRows = ref(0)
+
+var showModal = ref(false)
+function onClick() {
+    showModal.value = !showModal.value
+    console.log("Clicked on close!");
+    
+}
 
 function calculatePossibleListItemCount() {
     if (!container.value) return
@@ -70,11 +77,12 @@ onMounted(() => {
         isWeekend && s.weekend,
         !isThisMonth && s.notThisMonthDate
     ]"
+    @click="onClick"
 > 
     <p 
         :class="s.dayLabel"
     >
-        {{ day.date.getUTCDate() + (isToday ? " Today" : "") }} 
+        {{ day.date.getUTCDate() + (isToday ? " ( Today )" : "") }} 
     </p>
     <ul 
         :class="s.taskList"
@@ -88,11 +96,19 @@ onMounted(() => {
         </button>
         
     </ul>
+    <CreateCalendarEventModal
+        v-if="showModal"
+        :day-model="day"
+        @clickOutside="onClick"
+        @close="onClick"
+    />
 </div>
 </template>
 
 <style module lang='sass'>
-@use '@/assets/main.sass' as main
+.dayLabel
+    +bulletLabel
+ 
 .container
     position: relative
     display: flex
@@ -164,7 +180,6 @@ onMounted(() => {
             box-sizing: border-box
 
     .hint
-        @include main.f-size-tiny
         margin-top: .5rem
 
 .thisMonthDate

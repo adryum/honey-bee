@@ -22,10 +22,11 @@ export default defineConfig({
     },
   },
   css: {
-    loaderOptions: {
+    preprocessorOptions: {
       sass: {
-        additionalData: `@import "@/styles/variables";` // If needed for global variables
-      }
+        // This injects the import into every SASS file/block
+        additionalData: `\n@use "@/assets/_mixins.sass" as *\n` 
+      },
     }
   }
 })

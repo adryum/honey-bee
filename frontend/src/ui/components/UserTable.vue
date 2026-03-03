@@ -38,7 +38,7 @@ onMounted(async () => {
 </template>
 
 <style module lang='sass'>
-@use '@/assets/main.sass' as main
+ 
 .container
     width: 80rem
     height: 30rem

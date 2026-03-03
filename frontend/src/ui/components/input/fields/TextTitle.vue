@@ -51,7 +51,7 @@ onMounted(() => {
 </template>
 
 <style module lang='sass'>
-@use '@/assets/main.sass' as main
+ 
 .container
     position: relative
     display: flex

@@ -119,7 +119,6 @@ onMounted(async () => {
 
 <style lang="sass">
 @use '/src/assets/_colors.sass' as colors
-@use '/src/assets/main.sass' as main
 .selection-dropdown
     all: unset
     @include main.button-font
@@ -171,7 +170,6 @@ onMounted(async () => {
 
 <style module lang='sass'>
 @use '/src/assets/_colors.sass' as colors
-@use '/src/assets/main.sass' as main
 .container
     @include main.font
     position: relative

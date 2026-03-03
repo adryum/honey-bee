@@ -21,7 +21,7 @@ const s = useCssModule()
 </template>
 
 <style module lang='sass'>
-@use '@/assets/main.sass' as main
+ 
 @use '@/assets/_colors.sass' as colors
 .container
     display: flex

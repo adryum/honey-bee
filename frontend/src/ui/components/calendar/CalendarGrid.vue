@@ -13,12 +13,34 @@ const props = withDefaults(defineProps<{
     lookedAtDate: () => new Date()
 })
 
+const macdonadsWeekDays = [
+    Days.Sunday,
+    Days.Monday,
+    Days.Tuesday,
+    Days.Wednesday,
+    Days.Thursday,
+    Days.Friday,
+    Days.Saturday,
+]
+const normalWeekDays = [
+    Days.Monday,
+    Days.Tuesday,
+    Days.Wednesday,
+    Days.Thursday,
+    Days.Friday,
+    Days.Saturday,
+    Days.Sunday,
+]
+const weekDays = computed(() => {
+    return props.isMacdonalds ? macdonadsWeekDays : normalWeekDays
+})
+
 const currentMonthDays = computed((): CalendarDayModel[] => {
     const date = props.lookedAtDate
     const day = date.getDate()
     const month = date.getMonth()
     const year = date.getFullYear()
-    const calendarDays = getCalendarMonthWithDayPadding(year, month, props.isMacdonalds) 
+    const calendarDays = getCalendarMonthWithDayPadding(year, month, !props.isMacdonalds) 
 
     return calendarDays.map<CalendarDayModel>(date=> ({
         date:   date,
@@ -85,7 +107,7 @@ function getCalendarMonthWithDayPadding(
 <template>
 <div :class="s.container">
     <div :class="s.days">
-        <p v-for="day in Days">{{ day }}</p>
+        <p v-for="day in weekDays">{{ day }}</p>
     </div>
     <div ref="grid" :class="s.grid">
         <CalendarDayComponent 
@@ -97,9 +119,8 @@ function getCalendarMonthWithDayPadding(
 </template>
 
 <style module lang='sass'>
-@use '@/assets/main.sass' as main
+ 
 .container
-    @include main.font
     display: flex
     flex-direction: column
     gap: 1px

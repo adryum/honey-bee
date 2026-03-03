@@ -1,5 +1,5 @@
 <script setup lang="ts">
-import { computed, ref, useCssModule, type Component, type DefineComponent } from 'vue';
+import { computed, onUnmounted, ref, useCssModule, type Component, type DefineComponent } from 'vue';
 import { motion } from 'motion-v';
 import Button from '../components/input/buttons/Button.vue';
 import HiveMedicineFragment from '../components/view_fragments/HiveMedicineFragment.vue';
@@ -44,13 +44,10 @@ function changeDestination(destination: Destinations) {
     currentDestination.value = destination
 }
 
-const { create } = usePopupCreator({
-    popupComponent: CalendarCreateEventPopup,
-    maxCount: 1,
-    props: {
-        hive: selectedHive
-    }
+onUnmounted(() => {
+    hiveStore.closeHive()
 })
+
 </script>
 
 <template>
@@ -77,12 +74,7 @@ const { create } = usePopupCreator({
                 <div
                     v-if="currentDestination === Destinations.Calendar"
                 >
-                    <IconTextButton
-                        text="Create Event" 
-                        :class="s.create"
-                        :svg="SVG.Pencil"
-                        @click="create"
-                    />
+                   
                 </div>
             </div>
         </div>
@@ -97,8 +89,9 @@ const { create } = usePopupCreator({
             v-if="currentDestination === Destinations.Calendar"
             :class="s.fragment"
             :style="{ maxHeight: `calc(100vh - ${hasSelectedFragmentComponents ? '9rem' : '6.5rem' })` }" 
-
         />
+
+        
         <HiveNoteFragment
             v-if="currentDestination === Destinations.Notes"
             :class="s.fragment"

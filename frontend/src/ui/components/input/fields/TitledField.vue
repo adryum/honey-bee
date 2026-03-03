@@ -40,7 +40,7 @@ function onValidatorUpdate(event: FieldValidator) {
 </template>
 
 <style module lang='sass'>
-@use '@/assets/main.sass' as main
+ 
 .container
     display: flex
     flex-direction: column
@@ -50,8 +50,6 @@ function onValidatorUpdate(event: FieldValidator) {
         all: unset
         display: flex
         gap: .5rem
-        @include main.font
-        @include main.f-size-very-small
         font-weight: 500
 
         .error

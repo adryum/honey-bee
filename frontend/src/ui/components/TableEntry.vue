@@ -27,7 +27,7 @@ async function onUserDelete() {
 </template>
 
 <style module lang='sass'>
-@use '@/assets/main.sass' as main
+ 
 .container
     display: flex
     height: 2.5rem

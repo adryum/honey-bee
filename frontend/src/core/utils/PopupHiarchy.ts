@@ -1,4 +1,4 @@
-import { type Ref, type Component, ref, render, type VNode, createVNode, computed, type MaybeRef, onUnmounted, shallowReactive, unref } from "vue"
+import { type Ref, type Component, ref, render, type VNode, createVNode, computed, type MaybeRef, onUnmounted, shallowReactive, unref, shallowRef } from "vue"
 
 var zIndex = 1000
 const setOnTop = () => `${zIndex++}`
@@ -155,5 +155,66 @@ export function usePopupCreator(
     return {
         create,
         closeAll
+    }
+}
+
+export type ModalModel = {
+    modalComponent: Component
+    props?:         MaybeRef<Object>
+}
+
+export function useModalCreator(
+    modalModel: ModalModel
+) {
+    const modalUnmount = ref<(() => void) | undefined>(undefined)
+
+    function create() {
+        if (!modalUnmount) return
+        const { unmount } = createModal({
+            component: modalModel.modalComponent, 
+            props: modalModel.props,
+        })
+        modalUnmount.value = unmount
+    }
+
+    function close() {
+        modalUnmount.value?.()
+    }
+
+    onUnmounted(() => {
+        close
+    })
+
+    return {
+        create,
+        close
+    }
+}
+
+
+export function createModal(data: {
+    component: Component, // <-- loose type
+    props?: Object,
+    onUnmount?: () => void
+}) {
+    // useless wrapper just to later 'safely and correctly' unmount created
+    const container = document.createElement('div')
+    document.body.appendChild(container)
+
+    container.style.position = 'fixed'
+   
+    function unmount(): void {
+        data.onUnmount?.()
+        render(null, container)
+        container.remove()
+    } 
+
+    // Create vnode with optional props  ...props - all previously defined props, and new one - unmount
+    const vnode: VNode = createVNode(data.component, { ...data.props, unmount})
+    render(vnode, container)
+
+    return {
+        vnode,
+        unmount
     }
 }

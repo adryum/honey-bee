@@ -37,7 +37,7 @@ const props = withDefaults(defineProps<{
 </template>
 
 <style module lang='sass'>
-@use '@/assets/main.sass' as main
+ 
 
 .placeholder
     opacity: .5

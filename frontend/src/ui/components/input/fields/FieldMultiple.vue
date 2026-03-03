@@ -23,7 +23,7 @@ const { type, validator, validateInput } = useField(toRef(props, 'fieldOptions')
 </template>
 
 <style module lang='sass'>
-@use '@/assets/main.sass' as main
+ 
 .container
     display: flex
     align-items: center

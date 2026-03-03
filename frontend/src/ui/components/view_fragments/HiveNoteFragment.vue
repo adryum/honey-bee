@@ -49,7 +49,6 @@ const { style: gridStyle } = useFlexibleGrid({
 </template>
 
 <style module lang='sass'>
-@use '@/assets/main.sass' as main
 .note
     height: 15rem
 .container

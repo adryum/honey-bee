@@ -11,6 +11,6 @@ const s = useCssModule()
 </template>
 
 <style module lang='sass'>
-@use '@/assets/main.sass' as main
+ 
 .container
 </style>

@@ -11,7 +11,7 @@ const s = useCssModule()
 </template>
 
 <style module lang='sass'>
-@use '@/assets/main.sass' as main
+ 
 .container
     width: 100%
     text-align: center

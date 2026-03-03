@@ -128,7 +128,6 @@ watch(formValidator.isFormValid, (newval) => {
 
 <style module lang='sass'>
 @use '@/assets/_colors.sass' as colors
-@use '@/assets/main.sass' as main
 
 .dropItem
     width: 100%
