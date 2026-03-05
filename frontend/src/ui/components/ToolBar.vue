@@ -27,7 +27,6 @@ const s = useCssModule()
     display: flex
     position: sticky
     align-items: center
-    z-index: 5
     top: 0
     width: 100%
     height: 3rem

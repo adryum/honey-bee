@@ -140,6 +140,22 @@ router.get('/google/callback', async (req: Request, res: Response) => {
     }
 })
 
+router.get('/logout', async (
+    req: Request<{},{}, {}>, 
+    res: Response
+) => {
+    req.session.destroy((err) => {
+        if (err) {
+            console.error("Failed to destroy session:", err);
+            return res.status(500).send("Logout failed");
+        }
+
+        // clear the cookie on the client
+        res.clearCookie("connect.sid"); // default cookie name for express-session
+        res.send("Logged out successfully");
+    });
+})
+
 // login user
 router.post('/login', async (req: Request<{},{}, {
     email: string,

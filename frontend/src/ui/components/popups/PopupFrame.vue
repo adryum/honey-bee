@@ -2,14 +2,17 @@
 import { useDraggable } from '@vueuse/core';
 import { ref, useCssModule } from 'vue';
 import { IconType, SVG } from '@/assets/svgs/SVGLoader';
-import type { PopupFrameModel } from '@/core/utils/PopupHiarchy';
 import Icon from '../Icon.vue';
 
 const s = useCssModule()
 const props = defineProps<{
+    label?:       string,
     isResizable?: boolean,
 }>()
-const frameModel = defineModel<PopupFrameModel | undefined>('frameModel')
+
+const emits = defineEmits<{
+    close: [],
+}>()
 const container = ref()
 const handle = ref()
 
@@ -20,38 +23,40 @@ const { style } = useDraggable(container, {
 </script>
 
 <template>
+<Teleport to="body">
     <div 
-        :class="s.wrapper"
+        ref="container"
+        :style="style"
+        :class="[s.container]"  
     >
-        <div @mousedown="frameModel?.functions.focus" 
-            ref="container"
-            :style="style"
-            :class="[s.container]" 
+        <div ref="handle" :class="s.handle">
+            <h1 
+                :class="s.popupName"
             >
-            <div ref="handle" :class="s.handle">
-                <h1 :class="s.popupName">{{ frameModel?.label ?? 'NO_LABEL' }}</h1>
-                <slot name="header">
-                    
-                </slot>
-                <button 
-                    :class="s.button"
-                    @click="frameModel?.functions.unmount()" 
-                >
-                    <Icon 
-                        :class="s.icon" 
-                        :type="IconType.SMALL"
-                        :svg="SVG.Cross" 
-                    /> 
-                </button> 
-            </div>
+                {{ label }}
+            </h1>
+            <slot name="header">
+                
+            </slot>
+            <button 
+                :class="s.button"
+                @click="emits('close')" 
+            >
+                <Icon 
+                    :class="s.icon" 
+                    :type="IconType.SMALL"
+                    :svg="SVG.Cross" 
+                /> 
+            </button> 
+        </div>
 
-            <div :class="s.body">
-                <slot name="body">
+        <div :class="s.body">
+            <slot name="body">
 
-                </slot>
-            </div>
+            </slot>
         </div>
     </div>
+</Teleport>
 </template>
 
 <style module lang="sass">

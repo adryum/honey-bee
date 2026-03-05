@@ -1,5 +1,5 @@
 <script setup lang="ts">
-import { ref, useCssModule } from 'vue';
+import { useCssModule } from 'vue';
 
 const s = useCssModule()
 defineEmits<{

@@ -30,21 +30,25 @@ const props = defineProps<{
     display: flex
     align-items: center
     gap: .5rem
-    margin: 0
     padding: 0
     text-decoration: none
-    min-height: 2.5rem
-    max-height: 2.5rem
-    height: 2.5rem
-    padding: 0 .75rem
+    min-height: 2rem
+    max-height: 2rem
+    height: 2rem
+    padding: 0 .5rem
     cursor: pointer
 
     transition: .1s
     font-family: var(--font-family)
     border-radius: var(--border-radius-tiny)
 
+    & > *
+        color: var(--black)
+
     .text
-        font-size: var(--font-size-medium)
+        font-size: var(--font-size-small)
+        font-weight: 400
+        letter-spacing: .02em
 
     &:hover
         background: var(--gray)

@@ -7,6 +7,8 @@ import router, { RouterViewPaths } from "../router";
 import { ActionNotification, useActionsStore } from "./ActionStore";
 import { useHiveStore } from "./HiveStore";
 import { useNoteStore } from "./NoteStore";
+import { Role } from "../DatabaseEnums";
+import { useAdminStore } from "./AdminStore";
 
 export const useMainStore = defineStore("MainStore", () => {
     const apiaryStore = useApiaryStore()
@@ -47,6 +49,10 @@ export const useMainStore = defineStore("MainStore", () => {
     async function onAuthentication() {
         await initialize()
 
+        if (user.value?.role === Role.ADMINISTRATOR) {
+            useAdminStore()
+        }
+
         // const createdInvoices = await invoiceApiStore.getInvoices()
         // if (createdInvoices) {
         //     invoices.value = createdInvoices
@@ -78,9 +84,15 @@ export const useMainStore = defineStore("MainStore", () => {
         // });
     }
 
+    async function logout() {
+        await authenticationApiStore.logout()
+        user.value = undefined
+    }
+
     return {
         user,
         initialize,
-        authenticateUser
+        authenticateUser,
+        logout
     }
 })

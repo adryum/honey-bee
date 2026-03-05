@@ -107,7 +107,12 @@ function getCalendarMonthWithDayPadding(
 <template>
 <div :class="s.container">
     <div :class="s.days">
-        <p v-for="day in weekDays">{{ day }}</p>
+        <p 
+            v-for="day in weekDays"
+            :class="s.day"
+        >
+            {{ day }}
+        </p>
     </div>
     <div ref="grid" :class="s.grid">
         <CalendarDayComponent 
@@ -129,15 +134,17 @@ function getCalendarMonthWithDayPadding(
     .days
         display: flex
         width: 100%
-        min-height: 1.5rem
+        min-height: 2rem
         gap: 1px
 
-        > *
+        .day
+            +bulletValue
             display: flex
             align-items: center
             justify-content: center
             flex: 1
             background: white
+
 
     .grid
         display: grid

@@ -10,15 +10,15 @@ import { createRouter, createWebHistory } from 'vue-router'
 import { useAuthenticationApiStore } from '../network/AuthenticationApiStore'
 
 export enum RouterViewPaths {
-    Home = '/',
+    Home         = '/',
     Registration = "/registration",
-    Hives = "/hives",
+    Hives        = "/hives",
     HiveOverview = "/hiveOverview",
-    Apiaries = "/apiaries",
-    ApiaryHives = "/apiaryHives",
-    Settings = "/settings",
-    Calendar = "/calendar",
-    Admin = "/admin"
+    Apiaries     = "/apiaries",
+    ApiaryHives  = "/apiaryHives",
+    Settings     = "/settings",
+    Calendar     = "/calendar",
+    Admin        = "/admin"
 }
 
 const router = createRouter({

@@ -47,7 +47,6 @@ function changeDestination(destination: Destinations) {
 onUnmounted(() => {
     hiveStore.closeHive()
 })
-
 </script>
 
 <template>
@@ -82,27 +81,27 @@ onUnmounted(() => {
         <HiveGeneralFragment
             v-if="currentDestination === Destinations.General"
             :class="s.fragment"
-            :style="{ maxHeight: `calc(100vh - ${hasSelectedFragmentComponents ? '9rem' : '6.5rem' })` }" 
+            :style="{ height: `calc(100% - ${hasSelectedFragmentComponents ? '9rem' : '6.5rem' })` }" 
             :hive="selectedHive ?? {} as HiveModelDB"
         /> 
         <CalendarView
             v-if="currentDestination === Destinations.Calendar"
             :class="s.fragment"
-            :style="{ maxHeight: `calc(100vh - ${hasSelectedFragmentComponents ? '9rem' : '6.5rem' })` }" 
+            :style="{ height: `calc(100% - ${hasSelectedFragmentComponents ? '9rem' : '6.5rem' })` }" 
         />
 
         
         <HiveNoteFragment
             v-if="currentDestination === Destinations.Notes"
             :class="s.fragment"
-            :style="{ maxHeight: `calc(100vh - ${hasSelectedFragmentComponents ? '9rem' : '6.5rem' })` }" 
+            :style="{ maxHeight: `calc(100% - ${hasSelectedFragmentComponents ? '9rem' : '6.5rem' })` }" 
             :search-text="searchText"
         />
 
         <HiveMedicineFragment
             v-if="currentDestination === Destinations.Medicine"
             :class="s.fragment"
-            :style="{ maxHeight: `calc(100vh - ${hasSelectedFragmentComponents ? '9rem' : '6.5rem' })` }" 
+            :style="{ height: `calc(100% - ${hasSelectedFragmentComponents ? '9rem' : '6.5rem' })` }" 
         
         />
     </section>

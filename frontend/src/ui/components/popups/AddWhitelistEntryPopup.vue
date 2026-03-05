@@ -1,6 +1,5 @@
 <script setup lang="ts">
 import { ref, useCssModule } from 'vue';
-import { usePopup } from '@/core/composables/UsePopup';
 import { useFormValidator } from '@/core/composables/validators/UseFormValidator';
 import IconTextButton from '../input/buttons/IconTextButton.vue';
 import { SVG } from '@/assets/svgs/SVGLoader';
@@ -9,6 +8,7 @@ import LabeledDropdownField from '../input/dropdowns/LabeledDropdownField.vue';
 
 import PopupFrameSimple from './PopupFrameSimple.vue';
 import type { PopupData } from '@/core/utils/PopupHiarchy';
+import { Role, String_to_Role } from '@/core/DatabaseEnums';
 
 const s = useCssModule()
 const props = defineProps<{
@@ -46,7 +46,9 @@ async function add() {
 </script>
 
 <template>
-<PopupFrameSimple v-model:frame-model="frameModel">
+<PopupFrameSimple 
+    v-model:frame-model="frameModel"
+>
     <template #body>
         <div :class="s.body">
             <div :class="s.fields">
@@ -71,7 +73,7 @@ async function add() {
                         },
                         zIndex: props.popupData.info.zIndex
                     }" 
-                    @on-selection="(value: any) => role = value ? string_To_Role(value) : undefined"
+                    @on-selection="(value: any) => role = value ? String_to_Role(value) : undefined"
                 />
             </div>
             <IconTextButton 

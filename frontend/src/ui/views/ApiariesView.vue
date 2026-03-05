@@ -37,6 +37,7 @@ onResize(grid, (element) => {
     <div :class="s.container">
         <ToolBar 
             name="Apiaries"
+            :class="s.toolbar"
         >
             <IconButton
                 text="Add apiary"
@@ -86,6 +87,10 @@ onResize(grid, (element) => {
 
     padding: 1rem
     box-sizing: border-box
+    isolation: isolate
+
+    .toolbar
+        z-index: 1
 
     .appiaries
         display: grid

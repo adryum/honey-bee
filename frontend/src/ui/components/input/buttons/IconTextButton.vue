@@ -5,13 +5,13 @@ import Icon from "../../Icon.vue";
 
 const s = useCssModule()
 const props = withDefaults(defineProps<{
-    svg?: SVG
-    text?: string
-    disabled?: boolean
+    svg?:       SVG
+    text?:      string
+    disabled?:  boolean
     isLoading?: boolean
 }>(), {
-    svg: SVG.Dollar,
-    text: 'BUTTON',
+    svg:      SVG.Dollar,
+    text:     'BUTTON',
     disabled: false
 })
 </script>
@@ -46,8 +46,8 @@ const props = withDefaults(defineProps<{
 
 
 .rotate
-    animation: rotate-clockwise
-    animation-duration: 1s
+    animation:                 rotate-clockwise
+    animation-duration:        1s
     animation-timing-function: linear
     animation-iteration-count: infinite
 
@@ -57,22 +57,22 @@ const props = withDefaults(defineProps<{
         opacity: .4
 
 .container
-    display: inline-flex
-    gap: .5rem
-    height: 2rem
+    display:    inline-flex
+    gap:        .5rem
+    height:     2rem
     min-height: 2rem
     max-height: 2rem
 
     font-family: var(--font-family)
-    font-size: var(--font-size-small)
+    font-size:   var(--font-size-small)
 
-    padding: .25rem .5rem
+    padding: 0 .5rem
 
-    background: white
-    border: 1px solid var(--blue)
+    background:    white
+    border:        1px solid var(--blue)
     border-radius: var(--border-radius-small)
-    box-sizing: border-box
-    transition: .1s
+    box-sizing:    border-box
+    transition:    .1s
     outline-color: var(--blue)
 
     &.enabled
@@ -80,18 +80,18 @@ const props = withDefaults(defineProps<{
 
         &:hover
             filter: brightness(95%)
-            // outline: 1px solid var(--blue)
+              // outline: 1px solid var(--blue)
 
-    .icon
-        align-self: center
-        max-height: 1rem
-        max-width: 1rem
+.icon
+    align-self: center
+    max-height: 1rem
+    max-width:  1rem
 
-    .text
-        align-self: center
-        margin: 0
-        font-weight: 500
-        line-height: 1rem
-        color: var(--black)
-        white-space: nowrap
+.text
+    align-self:  center
+    margin:      0
+    font-weight: 500
+    line-height: 1.5rem
+    color:       var(--black)
+    white-space: nowrap
 </style>

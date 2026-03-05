@@ -1,6 +1,7 @@
-import { String_to_HiveType, String_to_NoteTypes } from "./DatabaseEnums";
-import type { ApiaryCreateResponseModel, HiveCreateResponseModel, NoteCreateModelResponse, UserProfileResponseModel } from "./network/Models";
-import type { ApiaryModelDB, HiveModelDB, NoteModelDB, UserProfileModel } from "./stores/Models";
+import type { reactive } from "vue";
+import { String_to_HiveType, String_to_NoteTypes, String_to_Role } from "./DatabaseEnums";
+import type { ApiaryCreateResponseModel, HiveCreateResponseModel, NoteCreateModelResponse, UserEntryResponseModel, UserProfileResponseModel, WhitelistEntryResponseModel } from "./network/Models";
+import type { ApiaryModelDB, HiveModelDB, NoteModelDB, UserEntryModelDB, UserProfileModel, WhitelistEntryModelDB } from "./stores/Models";
 
 export function ApiaryCreateResponse_to_ApiaryModelDB(
     convertee: ApiaryCreateResponseModel
@@ -75,4 +76,39 @@ export function NoteCreateModelResponseArray_to_NoteModelDBArray(
     convertee: NoteCreateModelResponse[]
 ): NoteModelDB[] {
     return convertee.map(item => NoteCreateModelResponse_to_NoteModelDB(item))
+}
+
+
+export function WhitelistEntryResponseModel_To_WhitelistEntryDB(
+    convertee: WhitelistEntryResponseModel
+): WhitelistEntryModelDB {
+    return {
+        id:           convertee.id,
+        email:        convertee.email,
+        role:         String_to_Role(convertee.role),
+        isRegistered: Boolean(convertee.isRegistered),
+        isEnabled:    Boolean(convertee.status)
+    } 
+}
+export function WhitelistEntryResponseModelArray_To_WhitelistEntryModelDBArray(
+    array: WhitelistEntryResponseModel[]
+): WhitelistEntryModelDB[] {
+    return array.map(item => WhitelistEntryResponseModel_To_WhitelistEntryDB(item))
+}
+
+
+export function UserEntryResponseModel_To_UserEntryModelDB(
+    convertee: UserEntryResponseModel
+): UserEntryModelDB {
+    return {
+        id:            convertee.id,
+        email:         convertee.email,
+        role:          convertee.role,
+        isWhitelisted: Boolean(convertee.isWhitelisted)
+    }
+}
+export function UserEntryResponseModelArray_To_UserTableEntryDBArray(
+    convertee: UserEntryResponseModel[]
+): UserEntryModelDB[] {
+    return convertee.map(item => UserEntryResponseModel_To_UserEntryModelDB(item))
 }

@@ -73,3 +73,18 @@ export type CalendarDayModel = {
     date:   Date
     events: CalendarEventDB[]
 }
+
+export type WhitelistEntryModelDB = {
+    id:           number
+    email:        string
+    role:         Role
+    isEnabled:    boolean
+    isRegistered: boolean
+}
+
+export type UserEntryModelDB = {
+    id:            number
+    email:         string
+    role:          Role
+    isWhitelisted: boolean
+}

@@ -5,24 +5,27 @@ import { ref, useCssModule } from "vue";
 
 const s = useCssModule()
 const props = withDefaults(defineProps<{
-    label?: string
-    zIndex?: number
+    label?:         string
+    zIndex?:        number
+    color?:         string
+    floaterOffset?: number
 }>(), {
-    label: '',
-    zIndex: 0
+    label:         '',
+    zIndex:        0,
+    floaterOffset: 4
 })
 const anchor = ref()
-const list = ref()
+const list   = ref()
 
 const model: DropdownModel = {
     isShown: ref(false)
 }
 const { floaterStyle } = useFloatingUI({
-    anchorElement: anchor,
-    floatingElement: list,
-    isShown: model.isShown,
-    floaterOffset: 4,
-    zIndex: props.zIndex,
+    anchorElement:       anchor,
+    floatingElement:     list,
+    isShown:             model.isShown,
+    floaterOffset:       props.floaterOffset,
+    zIndex:              props.zIndex,
     takeWidthFromAnchor: true
 })
 </script>
@@ -52,7 +55,12 @@ const { floaterStyle } = useFloatingUI({
             v-show="model.isShown.value"
             ref="list"
             :class="$style.list"
-            :style="floaterStyle"
+            :style="{ 
+                ...floaterStyle, 
+                boxShadow: `0 0 2px 1px ${props.color || 'var(--yellow)'}`,
+                width: `calc(${floaterStyle.width} - 2px)`,
+                left: `calc(${floaterStyle.left} - 1px)`
+            }"
         >
             <slot 
                 name="list"
@@ -67,26 +75,27 @@ const { floaterStyle } = useFloatingUI({
 
 <style module lang='sass'>
 .label
-    opacity: .8
-    font-weight: 600
+    opacity:        .8
+    font-weight:    600
     letter-spacing: .04em
-    font-size: var(--font-size-small)
-    font-family: var(--font-family)
-    color: var(--black)
-    margin-bottom: .5rem
+    font-size:      var(--font-size-small)
+    font-family:    var(--font-family)
+    color:          var(--black)
+    margin-bottom:  .5rem
 
 .list
-    display: flex
+    display:        flex
     flex-direction: column
-    background: white
-    box-shadow: inset 0 0 0 1px var(--yellow)
-    border-radius: var(--border-radius-small)
-    box-sizing: border-box
-    padding: 4px
-    overflow: hidden
+    background:     var(--white)
+    border-radius:  var(--border-radius-small)
+    box-sizing:     border-box
+    gap:            .1rem
+    overflow:       hidden
+    padding:        .25rem
+
 
 .container
-    display: flex
+    display:        flex
     flex-direction: column
 
 </style>

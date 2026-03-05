@@ -109,3 +109,39 @@ export type HiveCalendarEntryResponseModel = {
     description:  string
     creatorEmail: string
 }
+
+export type WhitelistEntryResponseModel = {
+    id:           number
+    email:        string
+    role:         string
+    status:       number
+    isRegistered: number
+}
+export type UpdateWhitelistEntryRequestModel = {
+    id:        number
+    email:     string
+    role:      Role
+    isEnabled: boolean
+}
+export type UpdateUserEntryRequestModel = {
+    id:            number
+    email:         string
+    role:          Role
+    isWhitelisted: boolean
+}
+export type UserEntryResponseModel = {
+    id:            number
+    email:         string
+    role:          Role
+    isWhitelisted: number
+}
+
+export type UpdateWhitelistEntryResponseModel = {
+    whitelistEntry: WhitelistEntryResponseModel
+    userEntry:      UserEntryResponseModel
+}
+export type AddToWhitelistRequestModel = {
+    email:     string
+    role:      string
+    isEnabled: boolean
+}

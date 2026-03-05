@@ -1,9 +1,10 @@
 <script setup lang="ts">
-import { useCssModule } from "vue";
+import { ref, useCssModule } from "vue";
 import Info from "../hive_overview/Info.vue";
 import HoneyProfitChart from "../hive_overview/supper/HoneyProfitChart.vue";
 import HistoryLog from "../hive_overview/history/HistoryLog.vue";
 import type { HiveModelDB } from "@/core/stores/Models";
+import { useElementSize } from '@vueuse/core'
 
 const s = useCssModule()
 const props = defineProps<{
@@ -12,7 +13,9 @@ const props = defineProps<{
 </script>
 
 <template>
-<div :class="s.container">
+<div 
+    :class="s.container"
+>
     <Info 
         :class="s.info"
         :hive="hive"
@@ -26,7 +29,14 @@ const props = defineProps<{
 </template>
 
 <style module lang='sass'>
+.heightChecker
+    position: absolute
+    background: green
+    width: 10rem
+    height: 100%
+    z-index: 10
 .container
+    position: relative
     display: grid
     grid-template-columns: 1.5fr 1fr 1fr
     grid-template-rows: 1fr 1fr

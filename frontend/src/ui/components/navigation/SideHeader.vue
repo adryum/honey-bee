@@ -2,7 +2,7 @@
 import { useToggle } from "@vueuse/core";
 import { computed, onMounted, reactive, ref, useCssModule, type CSSProperties } from "vue";
 import { motion, type VariantType } from "motion-v"
-import router from "@/core/router";
+import router, { RouterViewPaths } from "@/core/router";
 import { IconType, SVG } from "@/assets/svgs/SVGLoader";
 import Icon from "../Icon.vue";
 
@@ -36,7 +36,7 @@ const tabs: Tab[] = [
     },
     {
         name: 'bees',
-        pagePath: '/bees',
+        pagePath: RouterViewPaths.Admin,
         svg: SVG.Key
     },
     {

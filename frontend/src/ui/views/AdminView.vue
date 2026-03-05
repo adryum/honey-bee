@@ -1,67 +1,76 @@
-<script setup>
+<script setup lang="ts">
 import { ref, useCssModule } from "vue";
-import IconCubeButton from '@/ui/components/input/buttons/IconCubeButton.vue';
-import UserTable from "@/ui/components/UserTable.vue";
+import WhitelistFragment from "../components/view_fragments/admin/WhitelistFragment.vue";
 
+enum AdminFragment {
+    Whitelist = "Whitelist",
+    Users     = "Users",
+    Access    = "Access"
+}
 const s = useCssModule()
+const seletedFragment = ref<AdminFragment>(AdminFragment.Whitelist)
+
 </script>
 
 <template>
 <div :class="s.container">
     <div :class="s.header">
-        <PathTitle title="Admin powers"/>
-        <div :class="s['vt-linebreak']"></div>
-        <IconCubeButton :class="s['button-special']" res="fa-solid fa-left-long"/>
+        <button
+            v-for="item in Object.values(AdminFragment) as AdminFragment[]"
+            :class="[
+                s.button,
+                seletedFragment === item && s.selected
+            ]"
+            @click="seletedFragment = item"
+        >
+            <p>{{ item }}</p>
+        </button>
     </div>
 
-    <div :class="s.content">
-        <UserTable />
-    </div>
+    <WhitelistFragment
+        v-if="seletedFragment === AdminFragment.Whitelist"
+    />
 </div>
 </template>
 
 <style module lang='sass'>
- 
-.container 
-    display: flex
-    flex-direction: column
-    width: 100%
-    height: calc( 100vh - 12px )
-    overflow: hidden
-
-    box-sizing: border-box
-    margin: 6px
-
-    border-radius: 4px
-    box-shadow: 0px 0px 10px rgba(0, 0, 0, 0.21)
-    background: #FFECC8
-
 .header
-    display: flex
-    align-items: center
-    gap: .4rem
+    width: 100%
+    // border-bottom: 4px solid var(--white)
 
-    height: 5rem
+.selected
+    background: var(--white) !important
+    transform:  translateY(0)
+    & > *
+        opacity: 1 !important
 
-    box-sizing: border-box
-    padding: .4rem
-    border-radius: 4px
-    box-shadow: 0px 0px 10px rgba(0, 0, 0, 0.21)
-    background: #EDEDED
+.button
+    margin:         0
+    border:         none
+    background:     var(--dark)
+    padding:        0 1rem
+    height:         2rem
+    letter-spacing: .02em
+    font-family:    var(--font-family)
+    font-size:      var(--font-size-small)
+    border-radius:  var(--border-radius-small) var(--border-radius-small) 0 0
+    cursor:         pointer
+    transition:     0.1s
 
-    .vt-linebreak
-        width: 6px
-        height: 100%
-        border-radius: 4px
-        background: #D9D9D9
-        margin-left: auto 
+    & > *
+        opacity: 0.7
 
-.button-special
+    &:hover
+        filter: brightness(1.05)
 
-.content
-    flex: 1
-    display: flex
-    align-items: center
-    justify-content: center
-    
+        & > *
+            opacity: 1
+
+.container 
+    display:        flex
+    flex-direction: column
+    height:         calc( 100vh - var(--header-height))
+    width:          100%
+    padding:        1rem
+    box-sizing:     border-box
 </style>

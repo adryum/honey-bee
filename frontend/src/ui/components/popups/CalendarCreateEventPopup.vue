@@ -139,8 +139,8 @@ function createEvent() {
     flex-direction: column
     gap: 1.5rem
     max-height: 35rem
-    width: 30rem
-    height: 25rem
+    width: 25rem
+
 
 .image
     width: 50%

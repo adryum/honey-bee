@@ -62,6 +62,7 @@ const { create } = usePopupCreator({
             </div>
 
             <label 
+                v-if="selectedHive"
                 for="tasks"
                 :class="s.label"
             >
@@ -94,6 +95,12 @@ const { create } = usePopupCreator({
             </label>
 
             <div :class="s.taskList">
+                <p 
+                    v-if="dayModel.events.length === 0"
+                    :class="s.noTasksText"
+                >
+                    No tasks for this day
+                </p>
                 <CalendarTaskExpandable
                     v-for="task in dayModel.events"
                     :task="task"
@@ -168,12 +175,22 @@ const { create } = usePopupCreator({
     align-items: center
 
 .taskList
-    display:        flex
+    display:        inline-flex
     flex-direction: column
     overflow-y:     scroll
     gap:            1rem
-    min-height:     0
-    flex:           1
+    min-height:     4rem
     padding:        1px
+    background:     rgb(245, 245, 245)
+    border-radius:  var(--border-radius-small)
+
+
+    .noTasksText
+        +bulletLabel
+        font-size: var(--font-size-large)
+        font-weight: 600
+        opacity: 1
+        color: #71797E
+        margin: auto
 
 </style>
