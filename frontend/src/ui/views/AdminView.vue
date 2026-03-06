@@ -1,11 +1,12 @@
 <script setup lang="ts">
 import { ref, useCssModule } from "vue";
 import WhitelistFragment from "../components/view_fragments/admin/WhitelistFragment.vue";
+import UserlistFragment from "../components/view_fragments/admin/UserlistFragment.vue";
 
 enum AdminFragment {
     Whitelist = "Whitelist",
     Users     = "Users",
-    Access    = "Access"
+    // Access    = "Access"
 }
 const s = useCssModule()
 const seletedFragment = ref<AdminFragment>(AdminFragment.Whitelist)
@@ -29,6 +30,10 @@ const seletedFragment = ref<AdminFragment>(AdminFragment.Whitelist)
 
     <WhitelistFragment
         v-if="seletedFragment === AdminFragment.Whitelist"
+    />
+
+    <UserlistFragment
+        v-if="seletedFragment === AdminFragment.Users"
     />
 </div>
 </template>

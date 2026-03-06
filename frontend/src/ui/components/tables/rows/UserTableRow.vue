@@ -1,6 +1,6 @@
 <script setup lang="ts">
 import { Role } from "@/core/DatabaseEnums";
-import type { WhitelistEntryModelDB } from "@/core/stores/Models";
+import type { UserEntryModelDB, WhitelistEntryModelDB } from "@/core/stores/Models";
 import { reactive, ref, useCssModule } from "vue";
 import ModularDropdown from "../../input/dropdowns/ModularDropdown.vue";
 import TextDropdownBottomPart from "../../input/dropdowns/dropdownItems/bottom/TextDropdownBottomPart.vue";
@@ -11,21 +11,25 @@ import { useAdminStore } from "@/core/stores/AdminStore";
 
 const s = useCssModule()
 const props = defineProps<{
-    entry:       WhitelistEntryModelDB
+    entry:       UserEntryModelDB
     orderNumber: number
 }>()
 const isEditingRow = ref(false)
 
-const editableEntry = reactive<WhitelistEntryModelDB>({ ...props.entry })
+const editableEntry = reactive<UserEntryModelDB>({ ...props.entry })
 const adminStore = useAdminStore()
+
+function openProfile() {
+    
+}
 
 function save() {
     try {
-        adminStore.updateWhitelistEntry({
-            id:        props.entry.id,
-            email:     editableEntry.email,
-            role:      editableEntry.role,
-            isEnabled: editableEntry.isEnabled
+        adminStore.updateUserEntry({
+            id:            props.entry.id,
+            email:         editableEntry.email,
+            role:          editableEntry.role,
+            isWhitelisted: editableEntry.isWhitelisted
         },
         {
             onSuccess: function (message: string): void {
@@ -39,10 +43,10 @@ function save() {
 }
 
 function cancel() {
-    isEditingRow.value = false
-    editableEntry.email = props.entry.email
-    editableEntry.role = props.entry.role
-    editableEntry.isEnabled = props.entry.isEnabled
+    isEditingRow.value          = false
+    editableEntry.email         = props.entry.email
+    editableEntry.role          = props.entry.role
+    editableEntry.isWhitelisted = props.entry.isWhitelisted
 }
 </script>
 
@@ -119,7 +123,7 @@ function cancel() {
             <template #head="{dropdown}">
                 <TableRowSelectionDropdownTopPart
                     :dropdown="dropdown"
-                    :selectedValue="editableEntry.isEnabled ? 'Allowed' : 'Denied'"
+                    :selectedValue="editableEntry.isWhitelisted ? 'Yes' : 'No'"
                     :showIcon="isEditingRow"
                     :allowToggling="isEditingRow"
                 />
@@ -128,12 +132,12 @@ function cancel() {
                 <TextDropdownBottomPart
                     :dropdown="dropdown" 
                     text="Allowed"
-                    @click="editableEntry.isEnabled = true"
+                    @click="editableEntry.isWhitelisted = true"
                 />
                 <TextDropdownBottomPart 
                     :dropdown="dropdown" 
                     text="Denied"
-                    @click="editableEntry.isEnabled = false"
+                    @click="editableEntry.isWhitelisted = false"
                 />
             </template>
         </ModularDropdown>
@@ -162,6 +166,11 @@ function cancel() {
         >
             <!-- <p>Cancel</p> -->
         </IconCubeButton>
+        <IconCubeButton 
+            v-if="!isEditingRow"
+            :svg="SVG.Profile"
+            @click="openProfile"
+        />
     </td>
 </tr>
 </template>
@@ -170,34 +179,34 @@ function cancel() {
 .edited
     background: var(--gray) !important
 .input
-    all: unset
-    width: 100%
-    height: 100%
+    all:        unset
+    width:      100%
+    height:     100%
     box-sizing: border-box
-    font-size: var(--font-size-medium)
+    font-size:  var(--font-size-medium)
 
 .row
-    display: flex
+    display:     flex
     align-items: center
-    box-sizing: border-box
-    background: var(--white)
-    gap: .5rem
-    min-height: 2.5rem
-    height: 2.5rem
-    max-height: 2.5rem
+    box-sizing:  border-box
+    background:  var(--white)
+    gap:         .5rem
+    min-height:  2.5rem
+    height:      2.5rem
+    max-height:  2.5rem
     font-weight: 300
-    opacity: .8
+    opacity:     .8
 
 
 td
     padding: 0
-    height: 100%
+    height:  100%
 
 .nr
-    display: flex
-    align-items: center
+    display:         flex
+    align-items:     center
     justify-content: center
-    min-width: 3rem
+    min-width:       3rem
 
 .email
     width: 100%
@@ -209,8 +218,10 @@ td
     min-width: 10rem
 
 .actions
-    display: flex
+    display:     flex
     align-items: center
-    gap: .5rem
-    width: 100%
+    gap:         .5rem
+    width:       100%
+
+
 </style>

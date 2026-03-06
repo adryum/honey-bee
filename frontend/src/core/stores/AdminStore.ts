@@ -103,6 +103,7 @@ export const useAdminStore = defineStore("useAdminStore", () => {
             
             if (result) {
                 updateWhitelistAndUserEntry(result?.whitelistEntry, result?.userEntry)
+                responseCallbacks?.onSuccess?.("")
             } else {
                 throw new Error("Failed to update user!");
             }
@@ -126,6 +127,7 @@ export const useAdminStore = defineStore("useAdminStore", () => {
             
             if (result) {
                 updateWhitelistAndUserEntry(result?.whitelistEntry, result?.userEntry)
+                responseCallbacks?.onSuccess?.("")
             } else {
                 throw new Error("Failed to add to whitelsit");
             }

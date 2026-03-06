@@ -43,35 +43,35 @@ const props = withDefaults(defineProps<{
     opacity: .5
 
 .head
-    position: relative
-    display: flex
+    position:    relative
+    display:     flex
     align-items: center
-    height: 2.5rem
-    padding: .75rem .9rem
+    height:      2.5rem
+    padding:     .75rem .9rem
 
     font-family: var(--font-family)
-    font-size: var(--font-size-medium)
+    font-size:   var(--font-size-medium)
     font-weight: 500
 
-    background: white
-    box-sizing: border-box
-    box-shadow: inset 0 0 0 1px #E0E0E0
+    background:    white
+    box-sizing:    border-box
+    box-shadow:    inset 0 0 0 1px #E0E0E0
     border-radius: var(--border-radius-small)
     outline-color: transparent
 
     &.focused
         box-shadow: inset 0 0 0 1px var(--yellow)
-        outline: 2px solid color-mix(in srgb, var(--yellow) 20%, transparent)
+        outline:    2px solid color-mix(in srgb, var(--yellow) 20%, transparent)
 
     .text
         line-height: 1rem
-        color: var(--black)
+        color:       var(--black)
 
     .button
         position: absolute
-        right: .5rem
-        height: 2rem
-        width: 2rem
+        right:    .5rem
+        height:   2rem
+        width:    2rem
 
         
 </style>

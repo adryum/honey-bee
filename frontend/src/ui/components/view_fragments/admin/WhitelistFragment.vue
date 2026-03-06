@@ -9,10 +9,10 @@ import AddWhitelistEntryPopup from "../../popups/AddWhitelistEntryPopup.vue";
 const s = useCssModule()
 const showAddWhitelistPopup = ref(false)
 
-const { create } = usePopupCreator({
-    popupComponent: AddWhitelistEntryPopup,
-    maxCount: 1
-})
+// const { create } = usePopupCreator({
+//     popupComponent: AddWhitelistEntryPopup,
+//     maxCount: 1
+// })
 </script>
 
 <template>
@@ -23,12 +23,13 @@ const { create } = usePopupCreator({
         <IconTextButton
             text="Add entry"
             :svg="SVG.Plus"
-            @click="create()"
+            @click="showAddWhitelistPopup = !showAddWhitelistPopup"
         />
     </div>
     <WhitelistTable/>
     <AddWhitelistEntryPopup
         v-if="showAddWhitelistPopup"
+        @close="showAddWhitelistPopup = false"
     />
 </div>
 </template>

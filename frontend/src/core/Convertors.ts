@@ -107,7 +107,7 @@ export function UserEntryResponseModel_To_UserEntryModelDB(
         isWhitelisted: Boolean(convertee.isWhitelisted)
     }
 }
-export function UserEntryResponseModelArray_To_UserTableEntryDBArray(
+export function UserEntryResponseModelArray_To_UserEntryModelDBArray(
     convertee: UserEntryResponseModel[]
 ): UserEntryModelDB[] {
     return convertee.map(item => UserEntryResponseModel_To_UserEntryModelDB(item))

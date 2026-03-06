@@ -1,7 +1,6 @@
 <script setup lang="ts">
 import { ref, useCssModule } from 'vue';
 import { useFormValidator } from '@/core/composables/validators/UseFormValidator';
-
 import type { PopupData } from '@/core/utils/PopupHiarchy';
 import { Role, String_to_Role } from '@/core/DatabaseEnums';
 import PopupFrame from './PopupFrame.vue';
@@ -49,7 +48,7 @@ async function add() {
 
 <template>
 <PopupFrame 
-    label="Add Whitelist Entry"
+    label="Add User Entry"
 >
     <template #body>
         <div :class="s.body">

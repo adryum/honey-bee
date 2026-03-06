@@ -2,7 +2,7 @@ import axios from 'axios'
 import { defineStore } from 'pinia'
 
 import type { UserEntryModelDB, WhitelistEntryModelDB } from '../stores/Models'
-import { WhitelistEntryResponseModelArray_To_WhitelistEntryModelDBArray, WhitelistEntryResponseModel_To_WhitelistEntryDB } from '../Convertors'
+import { UserEntryResponseModelArray_To_UserEntryModelDBArray, WhitelistEntryResponseModelArray_To_WhitelistEntryModelDBArray, WhitelistEntryResponseModel_To_WhitelistEntryDB } from '../Convertors'
 import type { WhitelistEntryResponseModel, AddToWhitelistRequestModel, UpdateUserEntryRequestModel, UpdateWhitelistEntryResponseModel, UpdateWhitelistEntryRequestModel, UserEntryResponseModel } from './Models'
 
 export const useAdminApiStore = defineStore('useAdminApiStore', () => {
@@ -37,7 +37,7 @@ export const useAdminApiStore = defineStore('useAdminApiStore', () => {
             const users = promise.data 
             console.log("Got all user response: ", users);
             
-            // return UserEntryResponseModelArray_To_UserEntryModelDBArray(users) 
+            return UserEntryResponseModelArray_To_UserEntryModelDBArray(users) 
         } catch (error) {
             console.error(error);
             return undefined

@@ -1,8 +1,9 @@
 <script setup lang="ts">
 import { useDraggable } from '@vueuse/core';
-import { ref, useCssModule } from 'vue';
+import { computed, ref, useCssModule } from 'vue';
 import { IconType, SVG } from '@/assets/svgs/SVGLoader';
 import Icon from '../Icon.vue';
+import { cssStringToObject } from '@/core/utils/others';
 
 const s = useCssModule()
 const props = defineProps<{
@@ -13,21 +14,38 @@ const props = defineProps<{
 const emits = defineEmits<{
     close: [],
 }>()
+
 const container = ref()
 const handle = ref()
+const zIndex = ref(getBiggerZIndex())
 
 const { style } = useDraggable(container, {
     handle: handle,
     initialValue: { x: 100, y: 100  }
 })
+
+const objStyle = computed(() => {
+    return cssStringToObject(style.value)
+})
+</script>
+
+<script lang="ts">
+    const globalZIndex = ref(2000)
+    function getBiggerZIndex() {
+        return globalZIndex.value += 1
+    }
 </script>
 
 <template>
 <Teleport to="body">
     <div 
         ref="container"
-        :style="style"
+        :style="{
+            ...objStyle,
+            zIndex: zIndex
+        }"
         :class="[s.container]"  
+        @mousedown="zIndex = getBiggerZIndex()"
     >
         <div ref="handle" :class="s.handle">
             <h1 

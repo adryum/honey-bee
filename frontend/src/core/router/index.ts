@@ -8,6 +8,7 @@ import SignUpView from '@/ui/views/registration/SignUpView.vue'
 import SettingsView from '@/ui/views/SettingsView.vue'
 import { createRouter, createWebHistory } from 'vue-router'
 import { useAuthenticationApiStore } from '../network/AuthenticationApiStore'
+import ProfileView from '@/ui/views/ProfileView.vue'
 
 export enum RouterViewPaths {
     Home         = '/',
@@ -18,7 +19,8 @@ export enum RouterViewPaths {
     ApiaryHives  = "/apiaryHives",
     Settings     = "/settings",
     Calendar     = "/calendar",
-    Admin        = "/admin"
+    Admin        = "/admin",
+    Profile      = "/profile",
 }
 
 const router = createRouter({
@@ -27,7 +29,7 @@ const router = createRouter({
     {
         path: RouterViewPaths.Home,
         name: RouterViewPaths.Home,
-        component: ApiariesView,
+        component: ProfileView,
     },
     {
         path: RouterViewPaths.Registration,
@@ -63,6 +65,11 @@ const router = createRouter({
         path: RouterViewPaths.Admin,
         name: RouterViewPaths.Admin,
         component: AdminView
+    },
+    {
+        path: RouterViewPaths.Profile,
+        name: RouterViewPaths.Profile,
+        component: ProfileView
     },
     // {
     //   path: '/about',
