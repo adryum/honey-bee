@@ -2,7 +2,7 @@ import { defineStore } from "pinia"
 import type { UserEntryModelDB, UserProfileModel, WhitelistEntryModelDB } from "./Models"
 import { ref } from "vue"
 import { useAdminApiStore } from "../network/AdminApiStore"
-import type { UpdateUserEntryRequestModel, UpdateWhitelistEntryRequestModel, AddToWhitelistRequestModel, WhitelistEntryResponseModel, UserEntryResponseModel } from "../network/Models"
+import type { UpdateUserEntryRequestModel, UpdateWhitelistEntryRequestModel, AddToWhitelistRequestModel, WhitelistEntryResponseModel, UserEntryResponseModel, UpdateApiaryAccessRequestModel, UpdateApiaryAccessResponseModel } from "../network/Models"
 import { isValidValue } from "../utils/others"
 import { useActionsStore, ActionNotification } from "./ActionStore"
 import type { CallbackModel } from "../models/SupperModels"
@@ -19,6 +19,36 @@ export const useAdminStore = defineStore("useAdminStore", () => {
     
     const userEntries = ref<UserEntryModelDB[]>([])
     const whitelistEntries = ref<WhitelistEntryModelDB[]>([])
+
+    async function getApiaryAccess(userId: number) {
+        try {
+            const result = await adminApiStore.getApiaryAccess(userId)
+            return result
+        } catch (error) {
+            console.error(error);
+            
+        }
+    }
+
+    async function updateAccessToApiary(
+        model:     UpdateApiaryAccessRequestModel,
+        callback?: CallbackModel
+    ): Promise<UpdateApiaryAccessResponseModel | undefined> {
+        try {
+            const result = await adminApiStore.updateAccessToApiary(model)
+
+            if (result) {
+                callback?.onSuccess?.("")
+            } else {
+                callback?.onFailure?.()
+            }
+            
+            return result
+        } catch (error) {
+            console.error(error);
+            
+        }
+    }
 
     async function getWhitelistEntries() {
         try {
@@ -185,5 +215,7 @@ export const useAdminStore = defineStore("useAdminStore", () => {
         updateWhitelistEntry,
         updateUserEntry,
         removeWhitelistEntry,
+        updateAccessToApiary,
+        getApiaryAccess
     }
 })

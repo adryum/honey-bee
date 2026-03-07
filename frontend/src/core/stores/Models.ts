@@ -88,3 +88,10 @@ export type UserEntryModelDB = {
     role:          Role
     isWhitelisted: boolean
 }
+
+export type UserProfileModelDB = {
+    id:       number
+    role:     Role
+    email:    string
+    username: string
+}

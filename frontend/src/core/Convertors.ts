@@ -1,7 +1,7 @@
 import type { reactive } from "vue";
 import { String_to_HiveType, String_to_NoteTypes, String_to_Role } from "./DatabaseEnums";
-import type { ApiaryCreateResponseModel, HiveCreateResponseModel, NoteCreateModelResponse, UserEntryResponseModel, UserProfileResponseModel, WhitelistEntryResponseModel } from "./network/Models";
-import type { ApiaryModelDB, HiveModelDB, NoteModelDB, UserEntryModelDB, UserProfileModel, WhitelistEntryModelDB } from "./stores/Models";
+import type { ApiaryAccessResponseModel, ApiaryCreateResponseModel, HiveCreateResponseModel, NoteCreateModelResponse, UserEntryResponseModel, UserProfileResponseModel, WhitelistEntryResponseModel } from "./network/Models";
+import type { ApiaryModelDB, HiveModelDB, NoteModelDB, UserEntryModelDB, UserProfileModel, UserProfileModelDB, WhitelistEntryModelDB } from "./stores/Models";
 
 export function ApiaryCreateResponse_to_ApiaryModelDB(
     convertee: ApiaryCreateResponseModel
@@ -47,17 +47,6 @@ export function HiveCreateResponseArray_to_HiveModelDBArray(
     return convertee.map(item => HiveCreateResponse_to_HiveModelDB(item))
 }
 
-export function UserProfileResponseModel_To_UserProfileModel(
-    convertee: UserProfileResponseModel
-): UserProfileModel {
-    return {
-        id:       convertee.id,
-        username: convertee.username,
-        picture:  convertee.picture,
-        email:    convertee.email,
-        role:     convertee.role
-    }
-}
 
 export function NoteCreateModelResponse_to_NoteModelDB(
     convertee: NoteCreateModelResponse
@@ -111,4 +100,28 @@ export function UserEntryResponseModelArray_To_UserEntryModelDBArray(
     convertee: UserEntryResponseModel[]
 ): UserEntryModelDB[] {
     return convertee.map(item => UserEntryResponseModel_To_UserEntryModelDB(item))
+}
+
+
+export function UserProfileResponseModel_To_UserProfileModelDB(
+    convertee: UserProfileResponseModel
+): UserProfileModelDB {
+    return {
+        id:       convertee.id,
+        role:     String_to_Role(convertee.role),
+        email:    convertee.email,
+        username: convertee.username
+    }
+}
+
+
+export function ApiaryAccessResponseModel_To_Number(
+    convertee: ApiaryAccessResponseModel
+) {
+    return convertee.apiaryId
+}
+export function ApiaryAccessResponseModelArray_To_NumberArray(
+    convertee: ApiaryAccessResponseModel[]
+) {
+    return convertee.map(item => ApiaryAccessResponseModel_To_Number(item))
 }

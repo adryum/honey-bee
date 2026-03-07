@@ -3,38 +3,112 @@ import { db } from "../config/Database";
 import { requireRole } from "../Middleware";
 import { Role, String_to_Role } from "../DatabaseEnums";
 import { ResultSetHeader, RowDataPacket } from "mysql2";
-import { isValidValue, updateUserSession } from "../utils";
-import { eventEmitter, clientEventName, ClientEvents } from "../config/Events";
+import { isValidValue } from "../utils";
+import { updateUserSession } from "../config/RedisClient";
+import { ClientEvents } from "../config/SocketIo";
 
 const router = Router()
 
-router.post('/users', async (req: Request<{},{}, {
-    identification: string
-}>, res: Response) => {
-    const { identification } = req.body 
+router.post(
+    '/access/set/apiary', 
+    requireRole([Role.ADMINISTRATOR]),
+    async (req: Request<{},{}, {
+        userId:     number
+        apiaryId:   number
+        giveAccess: boolean
+    }>, 
+    res: Response
+) => {
+    console.log("# Update user apiary access");
+    const { userId, apiaryId, giveAccess } = req.body 
 
-    console.log(identification);
-
-    if (!identification) {
+    if (!isValidValue(userId) || !isValidValue(apiaryId)) {
         res.status(401).send("incorrect credentials!");
         return;
     }
 
-    const query = `
-        SELECT u.*, COUNT(DISTINCT h.id) AS hive_count
-        FROM users AS u
-        LEFT JOIN hives AS h ON h.user_id = u.id
-        GROUP BY u.id
-    `
+    try {
+        console.log("Checking if user already has access...");
+        const [[checkResult]] = await db.query<RowDataPacket[]>(`
+            SELECT id
+            FROM userApiaryAccess
+            WHERE userId = ? AND apiaryId = ?
+            LIMIT 1`, 
+            [userId, apiaryId]
+        )
+        
+        if (isValidValue(checkResult)) {
+            console.log("User has access!");
+            if (!giveAccess) {
+                console.log("Removing access...");
+                await db.query<ResultSetHeader>(`
+                    DELETE FROM userApiaryAccess
+                    WHERE userId = ? AND apiaryId = ?
+                    LIMIT 1`,
+                    [userId, apiaryId]
+                )
+                console.log("Done!");
+            }
+            return res.status(200).json({
+                userId:    userId,
+                apiaryId:  apiaryId,
+                hasAccess: false
+            })
+        } else {
+            console.log("User doesnt have access!");
+            if (giveAccess) {
+                console.log("Giving access...");
+                await db.query<ResultSetHeader>(`
+                    INSERT INTO userApiaryAccess (userId, apiaryId)
+                    VALUES (?, ?)`,
+                    [userId, apiaryId]
+                )
+                console.log("Done!");
+            }
+            return res.status(200).json({
+                userId:    userId,
+                apiaryId:  apiaryId,
+                hasAccess: true
+            })
+        }
+        
+    } catch (error) {
+        console.error(error);
+        res.status(500).send('Failed to get apiary access!');
+    }
+})
 
-    const [users] = await db.query(query)
+router.post(
+    '/access/get/apiaries', 
+    requireRole([Role.ADMINISTRATOR]),
+    async (req: Request<{},{}, {
+        userId: number
+    }>, 
+    res: Response
+) => {
+    console.log("# Get user apiary access");
+    const { userId } = req.body 
 
-    console.log(users)
-    
-    res.status(201).json({
-        message: 'all good!',
-        users: users
-    })
+    if (!isValidValue(userId)) {
+        res.status(401).send("incorrect credentials!");
+        return;
+    }
+
+    try {
+        console.log("Getting apiary accesses...");
+        const [result] = await db.query<RowDataPacket[]>(`
+            SELECT apiaryId
+            FROM userApiaryAccess
+            WHERE userId = ?`, 
+            userId
+        )
+        console.log("Done!");
+
+        return res.status(200).json(result)
+    } catch (error) {
+        console.error(error);
+        res.status(500).send('Failed to get apiary access!');
+    }
 })
 
 router.post('/user/delete', async (req: Request, res: Response) => {
@@ -160,8 +234,7 @@ router.post('/whitelist/remove', requireRole([Role.ADMINISTRATOR]), async (req: 
                 `, [userId]
             );
             console.log("Removed from whitelist!");
-            await updateUserSession(userId)
-            eventEmitter.emit(clientEventName(userId), ClientEvents.LOGOUT)
+            await updateUserSession({ id: userId }, ClientEvents.LOGOUT)
         } else {
             console.log("No user was found!");
         }
@@ -247,8 +320,7 @@ router.post('/whitelist/update', requireRole([Role.ADMINISTRATOR]), async (req: 
                     `, [emailCheck?.email]
                 );
                 console.log("Removed from whitelist!");
-                await updateUserSession(userIdQuery!.id, roleEnum)
-                eventEmitter.emit(clientEventName(userIdQuery!.id), ClientEvents.LOGOUT)
+                await updateUserSession({ id: userIdQuery!.id, role: roleEnum }, ClientEvents.LOGOUT)
             } else {
                 console.log("User is not registered!");
             }
@@ -272,8 +344,7 @@ router.post('/whitelist/update', requireRole([Role.ADMINISTRATOR]), async (req: 
             );
 
             console.log("Done!");
-            await updateUserSession(userId, roleEnum)
-            eventEmitter.emit(clientEventName(userId), ClientEvents.LOGOUT)
+            await updateUserSession({ id: userId, role: roleEnum }, ClientEvents.LOGOUT)
         } else {
             console.log("Whitelist entry is not linked to an user!");
         }
@@ -308,8 +379,7 @@ router.post('/whitelist/update', requireRole([Role.ADMINISTRATOR]), async (req: 
                 `, [roleEnum, isEnabled, email]
             )
             console.log("Done!");
-            await updateUserSession(newEmailUserCheck!.id, roleEnum)
-            eventEmitter.emit(clientEventName(newEmailUserCheck!.id), ClientEvents.LOGOUT)
+            await updateUserSession({ id: newEmailUserCheck!.id, role: roleEnum }, ClientEvents.LOGOUT)
         } else {
             console.log("No user with entrys email!");
         }
@@ -354,12 +424,18 @@ router.post('/whitelist/update', requireRole([Role.ADMINISTRATOR]), async (req: 
     }
 })
 
-router.post('/users/update', requireRole([Role.ADMINISTRATOR]), async (req: Request<{},{},{
-    id: number
-    email: string 
-    role: string
-    isWhitelisted: boolean
-}>, res: Response) => {
+router.post(
+    '/users/update', 
+    requireRole([Role.ADMINISTRATOR]), 
+    async (
+        req: Request<{},{},{
+            id: number
+            email: string 
+            role: string
+            isWhitelisted: boolean
+        }>, 
+        res: Response
+) => {
     console.log("# User entry update");
     const { id, email, role, isWhitelisted } = req.body 
     const roleEnum = String_to_Role(role)
@@ -432,8 +508,7 @@ router.post('/users/update', requireRole([Role.ADMINISTRATOR]), async (req: Requ
             `, [roleEnum, isWhitelisted, id]
         );
         console.log("Done!");
-        await updateUserSession(id, roleEnum)
-        eventEmitter.emit(clientEventName(id), ClientEvents.LOGOUT)
+        await updateUserSession({ id: id, role: roleEnum }, ClientEvents.LOGOUT)
 
         var userEntry: RowDataPacket | undefined
         var whitelistEntry: RowDataPacket | undefined
@@ -505,7 +580,7 @@ router.get('/users', requireRole([Role.ADMINISTRATOR]), async (
             `
         )
         console.log("Done!");
-        res.status(200).json(users);
+        return res.status(200).json(users);
     } catch (error) {
         res.status(400).send("Failed to get all users!");
     }

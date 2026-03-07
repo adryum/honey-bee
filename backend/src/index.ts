@@ -10,38 +10,29 @@ import adminRoute from "./routes/Admin"
 import hiveRoute from "./routes/Hives"
 import apiaryRoute from "./routes/Apiaries"
 import noteRoute from "./routes/Notes"
-import eventRoute from "./routes/Events"
 
 import express from "express";
 import cors from "cors";
-import session from "express-session";
-import { RedisStore } from "connect-redis";
-import { connectRedis, redisClient } from "./config/RedisClient";
+import { connectRedis } from "./config/RedisClient";
+import { createServer } from "http";
+import { initializeSocket } from "./config/SocketIo";
+
+
 const app = express();
-const port = 5000;
+const httpServer = createServer(app);
+const port = process.env.EXPRESS_PORT!
+console.log('RUNNING FILE:', __filename);
+
+app.use(cors({
+    origin:         process.env.WEBSITE_ORIGIN!,   // your SPA origin
+    credentials:    true,
+    exposedHeaders: ['Content-Disposition']        // ondownload exposes file names to client (downloads apple.pdf => client sees apple.pdf)
+})); // Enable CORS to allow your Vue app to communicate with this backend
+app.use(express.json()); // Parse JSON data in request bodies
 
 async function startServer() {
-    await connectRedis()
-
-    app.use(cors({
-        origin: process.env.WEBSITE_ORIGIN!, // your SPA origin
-        credentials: true,
-        exposedHeaders: ['Content-Disposition'] // ondownload exposes file names to client (downloads apple.pdf => client sees apple.pdf)
-    })); // Enable CORS to allow your Vue app to communicate with this backend
-    app.use(express.json()); // Parse JSON data in request bodies
-
-    app.use(session({
-        store: new RedisStore({ client: redisClient }),
-        secret: process.env.SESSION_COOKIE_SECRET as string,
-        resave: false,
-        saveUninitialized: false,
-        cookie: { 
-            secure: false, 
-            httpOnly: true, 
-            sameSite: 'lax', 
-            maxAge: 1000 * 60 * 60 * 24 // 24 hour 
-        },
-    }));
+    initializeSocket(httpServer)
+    await connectRedis(app)
 
     app.use((req, res, next) => {
         // monkey-patches .json function
@@ -67,7 +58,6 @@ async function startServer() {
         next();
     });
 
-    app.use("/events", eventRoute)
     app.use("/auth", authentication)
     app.use("/admin", adminRoute)
     app.use("/hive", hiveRoute)
@@ -75,10 +65,9 @@ async function startServer() {
     app.use("/note", noteRoute)
 
     // starts express server
-    app.listen(port, () => {
-        console.log(`Server running at port: ${port}`);
+    httpServer.listen(port, () => {
+        console.log(`Server running on port: ${port}`);
     });
-
     testConnection()
 }
 

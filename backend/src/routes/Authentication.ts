@@ -1,11 +1,11 @@
 /// <reference path="../types/index.d.ts" />
-
 import { Router, type Request, type Response } from "express";
 import { db } from "../config/Database";
 import { ResultSetHeader, RowDataPacket } from "mysql2";
-import { redisClient } from "../config/RedisClient";
+import { authenticateUser } from "../config/RedisClient";
 import { oauth2Client, scopes } from "../config/GoogleAuth";
-import { Role, String_to_Role } from "../DatabaseEnums";
+import { Role } from "../DatabaseEnums";
+import { requireRole } from "../Middleware";
 import { isValidValue } from "../utils";
 const router = Router()
 
@@ -21,18 +21,23 @@ router.get('/google', async (req: Request, res: Response) => {
     res.redirect(authorizeUrl);
 })
 
-router.get('/google/callback', async (req: Request, res: Response) => {
+router.get(
+    '/google/callback', 
+    async (
+        req: Request,
+        res: Response
+) => {
     try {
         const { code } = req.query
         console.log("Got Callback!");
         
-        console.log("Code: ", code);
+        // console.log("Code: ", code);
 
         // Exchange code for tokens
         const { tokens } = await oauth2Client.getToken(code as string);
         oauth2Client.setCredentials(tokens);
 
-        console.log("token: ", tokens);
+        // console.log("token: ", tokens);
         
         if (!tokens.id_token) throw new Error("Token did not contain ID!");
         
@@ -42,7 +47,7 @@ router.get('/google/callback', async (req: Request, res: Response) => {
             audience: process.env.GOOGLE_CLIENT_ID as string
         });
         const payload = ticket.getPayload();
-        console.log(payload);
+        // console.log(payload);
 
         // is needed only if OAuth consent screen is set to public, internal does it automatically :)
         // allow only testDevLab accounts to verify
@@ -71,28 +76,22 @@ router.get('/google/callback', async (req: Request, res: Response) => {
         const [[possibleUser]] = await db.query<RowDataPacket[]>(`
             SELECT 
                 id,
-                role,
-                googleRefreshToken
+                role
             FROM users
             WHERE providerSub = ? AND provider = ?
             `,
             [payload?.sub, "GOOGLE"]
         )
         console.log("Found this about user: ", possibleUser);
-
-        var userId: number | undefined
-        var role: Role | undefined
-        var accessToken: string | undefined
-
-        accessToken = tokens.access_token ?? undefined
-
-        if (possibleUser) {
-            role = String_to_Role(possibleUser.role)
-            userId = possibleUser.id
-        }
-
+        
         // get session data
-        if (!possibleUser) {
+        if (possibleUser) {
+            await authenticateUser({
+                req:  req,
+                id:   possibleUser.id,
+                role: possibleUser.role
+            })
+        } else {
             console.log("Creating new user...");
             const [user] = await db.query<ResultSetHeader>(`
                 INSERT INTO users
@@ -113,24 +112,12 @@ router.get('/google/callback', async (req: Request, res: Response) => {
                 [payload?.sub, "GOOGLE"]
             )
 
-            role = String_to_Role(newUser!.role)
-            userId = newUser!.id
+            await authenticateUser({
+                req:  req,
+                id:   newUser!.id,
+                role: newUser!.role
+            })
         }
-
-        console.log("Setting session...");
-        if (!tokens.access_token) throw new Error("Failed to get access_token!");
-        if (!isValidValue(userId)) throw new Error("Failed to get userId!");
-        if (!role) throw new Error("Failed to get role!");
-
-        req.session.userId = userId!;
-        await redisClient.hSet(`user:${userId!}`, {
-            role: role!,
-            accessToken: accessToken!
-        });
-        req.session.save()
-        console.log("Done!");
-
-
         console.log("Redirecting back to webistes origin...");
         // Redirect into your SPA
         return res.redirect(`${process.env.WEBSITE_ORIGIN}`);
@@ -139,6 +126,125 @@ router.get('/google/callback', async (req: Request, res: Response) => {
         res.status(500).send('Authentication failed');
     }
 })
+
+// router.get('/google/callback', async (req: Request, res: Response) => {
+//     try {
+//         const { code } = req.query
+//         console.log("Got Callback!");
+        
+//         console.log("Code: ", code);
+
+//         // Exchange code for tokens
+//         const { tokens } = await oauth2Client.getToken(code as string);
+//         oauth2Client.setCredentials(tokens);
+
+//         console.log("token: ", tokens);
+        
+//         if (!tokens.id_token) throw new Error("Token did not contain ID!");
+        
+//         // Verify ID token
+//         const ticket = await oauth2Client.verifyIdToken({
+//             idToken: tokens.id_token,
+//             audience: process.env.GOOGLE_CLIENT_ID as string
+//         });
+//         const payload = ticket.getPayload();
+//         console.log(payload);
+
+//         // is needed only if OAuth consent screen is set to public, internal does it automatically :)
+//         // allow only testDevLab accounts to verify
+//         // if (!(payload?.hd === "testdevlab.com" && payload?.email?.endsWith("@testdevlab.com"))) {
+//         //     console.error("Email is not from testDevLab: ", payload?.hd, payload?.email);
+//         //     return res.status(401).send("Company email please! :{")
+//         // 
+//         console.log("Getting user from whitelist...");
+//         const [[whitelistedUserQuery]] = await db.query<RowDataPacket[]>(`
+//             SELECT 
+//                 role, status
+//             FROM whitelist
+//             WHERE email = ? 
+//             `,
+//             [payload?.email]
+//         )
+//         console.log("Done: ", whitelistedUserQuery);
+        
+//         if (!whitelistedUserQuery || !Boolean(whitelistedUserQuery.status)) {
+//             console.error("User is not in or enabled in whitelist!", payload);
+//             throw new Error("Not in whitelist!");
+//         }
+
+//         console.log("Checking if user was registered before...");
+//         // check if user is registered in the sistem
+//         const [[possibleUser]] = await db.query<RowDataPacket[]>(`
+//             SELECT 
+//                 id,
+//                 role,
+//                 googleRefreshToken
+//             FROM users
+//             WHERE providerSub = ? AND provider = ?
+//             `,
+//             [payload?.sub, "GOOGLE"]
+//         )
+//         console.log("Found this about user: ", possibleUser);
+
+//         var userId: number | undefined
+//         var role: Role | undefined
+//         var accessToken: string | undefined
+
+//         accessToken = tokens.access_token ?? undefined
+
+//         if (possibleUser) {
+//             role = String_to_Role(possibleUser.role)
+//             userId = possibleUser.id
+//         }
+
+//         // get session data
+//         if (!possibleUser) {
+//             console.log("Creating new user...");
+//             const [user] = await db.query<ResultSetHeader>(`
+//                 INSERT INTO users
+//                 (username, image, email, providerSub, provider, googleRefreshToken, role)
+//                 VALUES(?,?,?,?,?,?,?)`, 
+//                 [payload?.name, payload?.picture, payload?.email, payload?.sub, "GOOGLE", tokens.refresh_token, whitelistedUserQuery!.role]
+//             )
+//             console.log("Made new user!");
+
+//             console.log("Selecting user id and role for new user session...");
+//             const [[newUser]] = await db.query<RowDataPacket[]>(`
+//                 SELECT 
+//                     id,
+//                     role
+//                 FROM users
+//                 WHERE providerSub = ? AND provider = ?
+//                 `,
+//                 [payload?.sub, "GOOGLE"]
+//             )
+
+//             role = String_to_Role(newUser!.role)
+//             userId = newUser!.id
+//         }
+
+//         console.log("Setting session...");
+//         if (!tokens.access_token) throw new Error("Failed to get access_token!");
+//         if (!isValidValue(userId)) throw new Error("Failed to get userId!");
+//         if (!role) throw new Error("Failed to get role!");
+
+//         req.session.userId = userId!;
+//         await redisClient.hSet(`user:${userId!}`, {
+//             role: role!,
+//             accessToken: accessToken!
+//         });
+//         req.session.save()
+//         console.log("Done!");
+
+
+//         console.log("Redirecting back to webistes origin...");
+//         // Redirect into your SPA
+//         return res.redirect(`${process.env.WEBSITE_ORIGIN}`);
+//     } catch (err) {
+//         console.error(err);
+//         res.status(500).send('Authentication failed');
+//     }
+// })
 
 router.get('/logout', async (
     req: Request<{},{}, {}>, 
@@ -253,6 +359,7 @@ router.post('/signup', async (req: Request<{},{}, {
     }
 })
 
+
 router.get('/me', async (
     req: Request<{},{}, {}>, 
     res: Response
@@ -266,34 +373,72 @@ router.get('/me', async (
     return res.status(200).send()
 })
 
-router.get('/profile', async (
-    req: Request<{},{}, {}>, 
-    res: Response
+
+router.post(
+    '/profile',
+    requireRole([Role.ANY]), 
+    async (
+        req: Request<{},{}, {
+            userId: number
+        }>, 
+        res: Response
 ) => {
-    if (!req.session.userId) {
-        return res.status(401).send();
+    console.log("# Get other user profile");
+    const { userId } = req.body
+
+    if (!isValidValue(userId)) {
+        return res.status(401).send('incorrect credentials!')
     }
 
-    const [[user]] = await db.query<RowDataPacket[]>(
-        `SELECT 
-            id,
-            username,
-            image,
-            email,
-            role
-        FROM users
-        WHERE id = ?`
-        ,
-        [req.session.userId]
-    )
+    try {
+        const [[user]] = await db.query<RowDataPacket[]>(
+            `SELECT 
+                id,
+                username,
+                image,
+                email,
+                role
+            FROM users
+            WHERE id = ?`
+            ,
+            [userId]
+        )
 
-    req.session.userId = user!.id
-    await redisClient.hSet(`user:${user!.id}`, {
-        role: user!.role,
-    });
+        return res.status(200).json(user);
+    } catch (error) {
+        console.error(error);
+        res.status(500).send('Server error');
+    }
+})
 
-    // fetch user from DB or session
-    res.status(200).json(user);
+router.get(
+    '/profile/me',
+    requireRole([Role.ANY]), 
+    async (
+        req: Request<{},{}, {}>, 
+        res: Response
+) => {
+    console.log("# Get my profile");
+
+    try {
+        const [[user]] = await db.query<RowDataPacket[]>(
+            `SELECT 
+                id,
+                username,
+                image,
+                email,
+                role
+            FROM users
+            WHERE id = ?`
+            ,
+            [req.session.userId]
+        )
+
+        return res.status(200).json(user);
+    } catch (error) {
+        console.error(error);
+        res.status(500).send('Server error');
+    }
 })
 
 export default router

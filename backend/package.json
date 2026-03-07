@@ -20,7 +20,8 @@
     "multer": "^2.0.2",
     "mysql2": "^3.14.1",
     "nodemon": "^3.1.11",
-    "redis-server": "^1.2.2"
+    "redis-server": "^1.2.2",
+    "socket.io": "^4.8.3"
   },
   "devDependencies": {
     "@types/cors": "^2.8.19",

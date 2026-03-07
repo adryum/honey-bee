@@ -1,22 +1,16 @@
 import axios from 'axios'
 import { defineStore } from 'pinia'
 import router, { RouterViewPaths } from '../router';
-import type { UserProfileModel } from '../stores/Models';
 import type { UserProfileResponseModel } from './Models';
-import { UserProfileResponseModel_To_UserProfileModel } from '../Convertors';
+import { UserProfileResponseModel_To_UserProfileModelDB } from '../Convertors';
 
 export const useAuthenticationApiStore = defineStore('authenticationApiStore', () => {
-    async function getProfileInfo(): Promise<UserProfileModel | undefined> {
+    async function getMyProfile() {
         try {
-            const response = await axios.get<UserProfileResponseModel>('/auth/profile')
-            console.log("GetProfileRes: ", response);
-            if (!response) throw new Error("no response");
-
-
-            return UserProfileResponseModel_To_UserProfileModel(response.data)
+            const { data } = await axios.get<UserProfileResponseModel>('/auth/profile/me') 
+            return UserProfileResponseModel_To_UserProfileModelDB(data)
         } catch (error) {
-            console.error("Broke down! Failed to get user profile!", error);
-            return undefined
+            console.log(error);
         }
     }
 
@@ -40,7 +34,7 @@ export const useAuthenticationApiStore = defineStore('authenticationApiStore', (
     }
 
     return {
-        getProfileInfo,
+        getMyProfile,
         checkSession,
         logout
     }

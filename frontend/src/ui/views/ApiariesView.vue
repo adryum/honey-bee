@@ -97,6 +97,7 @@ onResize(grid, (element) => {
         gap: 20px
 
         .apiary
+            height: 30rem
             transition: .2s
             &:hover
                 transform: translateY(-4px)

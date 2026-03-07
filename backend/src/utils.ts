@@ -40,15 +40,3 @@ export function isValidValue(value: unknown): boolean {
     return true
 }
  
-export async function updateUserSession(id: number, role?: Role) {
-    console.log("Updating user Redis session...");
-    if (!isValidValue(id)) throw new Error("Invalid user is passed: " + id);
-
-    if (role) {
-        await redisClient.hSet(`user:${id}`, {
-            role: role,
-        });
-    }
-    // eventEmitter.emit(`user_${id}`, ClientEvents.REFRESH_PAGE);
-    console.log("Done!");
-}

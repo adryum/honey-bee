@@ -8,6 +8,7 @@ import IconCubeButton from "../../input/buttons/IconCubeButton.vue";
 import { SVG } from "@/assets/svgs/SVGLoader";
 import TableRowSelectionDropdownTopPart from "../../input/dropdowns/dropdownItems/top/TableRowSelectionDropdownTopPart.vue";
 import { useAdminStore } from "@/core/stores/AdminStore";
+import { useProfileStore } from "@/core/stores/ProfileStore";
 
 const s = useCssModule()
 const props = defineProps<{
@@ -18,9 +19,10 @@ const isEditingRow = ref(false)
 
 const editableEntry = reactive<UserEntryModelDB>({ ...props.entry })
 const adminStore = useAdminStore()
+const profileStore = useProfileStore()
 
-function openProfile() {
-    
+async function openProfile() {
+    await profileStore.openProfile(props.entry.id)
 }
 
 function save() {

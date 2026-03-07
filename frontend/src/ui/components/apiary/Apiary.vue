@@ -8,8 +8,8 @@ import type { ApiaryModelDB } from "@/core/stores/Models";
 
 const s = useCssModule()
 const props = defineProps<{
-    apiary: ApiaryModelDB,
-    onDelete?: Function
+    apiary:    ApiaryModelDB,
+    isDimmed?: boolean
 }>()
 
 const MotionIconCubeDropdown = motion.create(CubeDropdown)
@@ -31,116 +31,136 @@ const dropdownActions: DropdownItem[] = [
 </script>
 <template>
 <div 
-    ref="container"
     :class="s.container" 
 >
-    <img 
-        alt="apiary image"
-        :class="s.image" 
-        :src="apiary.image || 'src/assets/images/apiary1.jpg'" 
+    <div
+        :class="[
+            s.left,
+            isDimmed && s.dimmedOut
+        ]"
     >
-    <hr :class="s.linearDim">
-    <MotionIconCubeDropdown
-        :svg="SVG.Pounds" :class="[s.options]"
-        :options="dropdownActions"
-    />
-    <h1 :class="[s.name]">{{ apiary!.name }}</h1>
-    <ul :class="s.info">
-        <div :class="s.entry">
-            <p :class="s.value">{{ apiary.hiveCount }}</p>
-            <hr :class="s.HRhorizontal">
-            <p :class="s.title">Hives</p>
-        </div>
-    </ul>
+        <img 
+            alt="apiary image"
+            :class="s.image" 
+            :src="apiary.image || 'src/assets/images/apiary1.jpg'" 
+        >
+        <hr :class="s.linearDim">
+        <h1 
+            :class="s.label"
+        >
+            {{ apiary!.name }}
+        </h1>
+        <ul 
+            :class="s.info"
+        >
+            <div :class="s.entry">
+                <p :class="s.value">{{ apiary.hiveCount }}</p>
+                <hr :class="s.HRhorizontal">
+                <p :class="s.title">Hives</p>
+            </div>
+        </ul>
+    </div>
+    <div
+        :class="s.buttons"
+        @click.stop=""
+    >
+        <slot>
+
+        </slot>
+    </div>
 </div>
 </template>
 
 <style module lang="sass">
-@use '@/assets/_colors.sass' as colors
+.dimmedOut
+    opacity: .5
+    filter: brightness(.6)
 
-.HRhorizontal
-    height: 2px
-    width: 100%
-    background: var(--white)
-    border: none
-.container
-    font-family: var(--font-family)
+.label
+    font-size:      var(--font-size-large)
+    font-weight:    800
+    letter-spacing: .02em
+    margin:         0
+    z-index:        0
+    padding:        0 2rem
+    color:          white
+
+.left
     position: relative
-    display: flex
+    display:  flex
     flex-direction: column
     justify-content: flex-end
-
-    height: 450px
-    box-sizing: border-box
+    cursor:   pointer
+    flex:     1
     overflow: hidden
-    transition: .3s ease-out
-    cursor: pointer
+
+.image
+    position:   absolute
+    display:    block
+    height:     100%
+    width:      100%
+    object-fit: cover
+    transition: .5s
+    outline:    6px solid rgba(255, 255, 255, .2)
+
+.buttons
+    position:      absolute
+    right:         0
+    display:       inline-flex
+    background:    white
+    border-radius: 0 0 0 var(--border-radius-small)
+
+.container
+    position: relative
+    display: flex
+
+    font-family:   var(--font-family)
     border-radius: var(--border-radius-small)
+    overflow: hidden
+    // box-shadow:    0 0 0 1px var(--light-gray)
 
     &:hover .image
         transform: scale(1.01)
-    &:hover .options
-        opacity: 1
 
-    .options
-        position: absolute
-        z-index: 0
-        top: 0
-        right: 0
-        margin: 1em
-        
-    .name
-        font-size: var(--font-size-huge)
-        font-weight: 800
-        letter-spacing: .02em
-        margin: 0
-        z-index: 0
-        padding: 0 2rem
-        color: white
+.info
+    all:     unset
+    z-index: 0
 
-    .info
-        all: unset
-        z-index: 0
-
-        display: flex
-        justify-content: flex-end
-        gap: 1em
-        padding: 1em
+    display:         flex
+    justify-content: flex-end
+    gap:             1em
+    padding:         1em
 
     .entry
-        display: flex
-        flex-direction: column
+        display:         flex
+        flex-direction:  column
         justify-content: space-between
-        align-items: center
+        align-items:     center
 
         .value
-            color: white
-            font-size: var(--font-size-medium)
+            color:       white
+            font-size:   var(--font-size-medium)
             font-weight: 700
 
         .title
-            color: white
-            font-size: var(--font-size-medium)
-            font-weight: 400
+            color:          white
+            font-size:      var(--font-size-medium)
+            font-weight:    400
             letter-spacing: .8px
 
-        
+        .HRhorizontal
+            height:     2px
+            width:      100%
+            background: var(--white)
+            border:     none
 
-    .image
-        position: absolute
-        height: 100%
-        width: 100%
-        object-fit: cover
-        transition: .3s ease-out
-        outline: 6px solid rgba(255, 255, 255, .2)
+.linearDim
+    all:      unset
+    position: absolute
+    bottom:   0
+    height:   60%
+    width:    100%
 
-    .linearDim
-        all: unset
-        position: absolute
-        bottom: 0
-        height: 60%
-        width: 100%
-
-        background: linear-gradient( rgba(0, 0, 0, 0) 0%, rgba(0, 0, 0, .15) 100%)
+    background: linear-gradient( rgba(0, 0, 0, 0) 0%, rgba(0, 0, 0, .15) 100%)
 </style>
         

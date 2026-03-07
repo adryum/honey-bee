@@ -2,17 +2,38 @@ import axios from 'axios'
 import { defineStore } from 'pinia'
 
 import type { UserEntryModelDB, WhitelistEntryModelDB } from '../stores/Models'
-import { UserEntryResponseModelArray_To_UserEntryModelDBArray, WhitelistEntryResponseModelArray_To_WhitelistEntryModelDBArray, WhitelistEntryResponseModel_To_WhitelistEntryDB } from '../Convertors'
-import type { WhitelistEntryResponseModel, AddToWhitelistRequestModel, UpdateUserEntryRequestModel, UpdateWhitelistEntryResponseModel, UpdateWhitelistEntryRequestModel, UserEntryResponseModel } from './Models'
+import { ApiaryAccessResponseModelArray_To_NumberArray, UserEntryResponseModelArray_To_UserEntryModelDBArray, WhitelistEntryResponseModelArray_To_WhitelistEntryModelDBArray, WhitelistEntryResponseModel_To_WhitelistEntryDB } from '../Convertors'
+import type { WhitelistEntryResponseModel, AddToWhitelistRequestModel, UpdateUserEntryRequestModel, UpdateWhitelistEntryResponseModel, UpdateWhitelistEntryRequestModel, UserEntryResponseModel, UpdateApiaryAccessRequestModel, UpdateApiaryAccessResponseModel, ApiaryAccessResponseModel } from './Models'
 
 export const useAdminApiStore = defineStore('useAdminApiStore', () => {
+    async function getApiaryAccess(userId: number): Promise<number[] | undefined> {
+        try {
+            const { data } = await axios.post<ApiaryAccessResponseModel[]>('/admin/access/get/apiaries', { userId: userId})
+            return ApiaryAccessResponseModelArray_To_NumberArray(data)
+        } catch (error) {
+            console.error(`Failed to get apiary access for user ${userId} :`, error);
+            return undefined
+        }
+    }
+
+    async function updateAccessToApiary(
+        model: UpdateApiaryAccessRequestModel
+    ): Promise<UpdateApiaryAccessResponseModel | undefined> {
+        try {
+            const { data } = await axios.post<UpdateApiaryAccessResponseModel>('/admin/access/set/apiary', model)
+            return data
+        } catch (error) {
+            console.error(error);
+        }
+    }
+   
+
     async function forceServerFetchNewSheetData(): Promise<boolean | undefined> {
         try {
             const { data } = await axios.post<boolean>('/admin/reFechSheet')
             return data
         } catch (error) {
             console.error(error);
-            return undefined
         }
     }
 
@@ -110,6 +131,8 @@ export const useAdminApiStore = defineStore('useAdminApiStore', () => {
         removeFromWhitelist,
         updateWhitelistEntry,
         updateUserEntry,
-        forceServerFetchNewSheetData
+        forceServerFetchNewSheetData,
+        updateAccessToApiary,
+        getApiaryAccess
     }
 })

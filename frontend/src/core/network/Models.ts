@@ -62,7 +62,7 @@ export type UserProfileResponseModel = {
     username: string
     picture:  string
     email:    string
-    role:     Role
+    role:     string
 }
 
 export type NoteCreateModelRequest = {
@@ -144,4 +144,21 @@ export type AddToWhitelistRequestModel = {
     email:     string
     role:      string
     isEnabled: boolean
+}
+
+
+export type UpdateApiaryAccessRequestModel = {
+    userId:     number
+    apiaryId:   number
+    giveAccess: boolean
+}
+export type UpdateApiaryAccessResponseModel = {
+    userId:    number
+    apiaryId:  number
+    hasAccess: boolean
+}
+
+
+export type ApiaryAccessResponseModel = {
+    apiaryId: number
 }
