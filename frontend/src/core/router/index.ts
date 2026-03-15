@@ -9,6 +9,7 @@ import SettingsView from '@/ui/views/SettingsView.vue'
 import { createRouter, createWebHistory } from 'vue-router'
 import { useAuthenticationApiStore } from '../network/AuthenticationApiStore'
 import ProfileView from '@/ui/views/ProfileView.vue'
+import InspectionView from '@/ui/views/InspectionView.vue'
 
 export enum RouterViewPaths {
     Home         = '/',
@@ -29,7 +30,7 @@ const router = createRouter({
     {
         path: RouterViewPaths.Home,
         name: RouterViewPaths.Home,
-        component: ProfileView,
+        component: InspectionView,
     },
     {
         path: RouterViewPaths.Registration,

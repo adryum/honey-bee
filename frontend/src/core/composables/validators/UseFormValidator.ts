@@ -7,6 +7,12 @@ export type ValidatorModel = Reactive<{
     resetField: () => void
 }>
 
+export type FormvalidatorAndItsOptionsModel = {
+    formValidator?: FormValidatorModel
+    onReset:        () => void
+    isValid:        () => boolean
+}
+
 export type FormValidatorModel = {
     isFormValid: Ref<boolean>
     addValidator: (val: ValidatorModel) => void
