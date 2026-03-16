@@ -4,8 +4,9 @@ import { computed, shallowRef, useCssModule, watch, type CSSProperties } from 'v
 
 const s = useCssModule()
 const props = defineProps<{ 
-    svg: SVG
-    type: IconType
+    svg:    SVG
+    type:   IconType
+    color?: string
 }>()
 
 // Eager import all SVGs as components at build time
@@ -17,10 +18,16 @@ const map = Object.fromEntries(
 
 const currentPath = `/src/assets/svgs/${props.svg}.svg`
 const Icon = shallowRef(map[currentPath] ?? null)
+
 const iconStyle = computed((): CSSProperties => {
+    const baseStyle: CSSProperties = props.color ? {
+        color: props.color
+    } : {}
+    var sizeStyle: CSSProperties = {}
+
     switch (props.type) {
         case IconType.SMALL:
-            return {
+            sizeStyle =  {
                 minWidth: '1rem',
                 width: '1rem',
                 maxWidth: '1rem',
@@ -28,8 +35,9 @@ const iconStyle = computed((): CSSProperties => {
                 height: '1rem',
                 maxHeight: '1rem'
             }
+            break;
         case IconType.MEDIUM:
-            return {
+            sizeStyle = {
                 minWidth: '1.5rem',
                 width: '1.5rem',
                 maxWidth: '1.5rem',
@@ -37,8 +45,9 @@ const iconStyle = computed((): CSSProperties => {
                 height: '1.5rem',
                 maxHeight: '1.5rem'
             }
+            break;
         case IconType.BIG:
-            return {
+            sizeStyle = {
                 minWidth: '2rem',
                 width: '2rem',
                 maxWidth: '2rem',
@@ -46,10 +55,10 @@ const iconStyle = computed((): CSSProperties => {
                 height: '2rem',
                 maxHeight: '2rem'
             }
-    
-        default:
-            return {}
+            break;
     }
+
+    return { ...baseStyle, ...sizeStyle }
 })
 
 watch(() => props.svg, (newVal) => {
@@ -63,10 +72,11 @@ watch(() => props.svg, (newVal) => {
 </script>
 
 <template>
-  <component 
-    :class="s.icon"
-    :style="iconStyle"
-    :is="Icon" />
+    <component 
+        :class="s.icon"
+        :style="iconStyle"
+        :is="Icon" 
+    />
 </template>
 
 <style module lang="sass">

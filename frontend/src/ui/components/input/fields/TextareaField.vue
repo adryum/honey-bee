@@ -114,7 +114,7 @@ onMounted(async () => {
 
     box-shadow: inset 0 0 0 1px #E0E0E0
     border-radius: 6px
-    background: white
+    background: var(--white)
     outline: 0 solid color-mix(in srgb, var(--yellow) 20%, transparent);
 
     &:focus     

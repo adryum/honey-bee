@@ -4,13 +4,15 @@ import type { FieldValidationOptions } from "@/core/composables/validators/UseFi
 import Icon from "../../Icon.vue";
 import { IconType, SVG } from "@/assets/svgs/SVGLoader";
 import TextareaField from "./TextareaField.vue";
+import { getRandomId } from "@/core/utils/others";
 
 const s = useCssModule()
 const props = defineProps<{
-    label: string
+    label?: string
     placeholder?: string
     options: FieldValidationOptions<string>
 }>()
+const id = getRandomId("textarea")
 const input = defineModel('input', { default: '' })
 const shown = ref(false)
 </script>
@@ -19,9 +21,15 @@ const shown = ref(false)
 <div :class="s.container"
     @click="shown = !shown"
 >
-    <label :class="s.label" for="field">{{ label }}</label>
+    <label 
+        v-if="label"
+        :for="id"
+        :class="s.label" 
+    >
+        {{ label }}
+    </label>
     <TextareaField 
-        id="field" 
+        :id="id" 
         :class="s.field"
         :placeholder="placeholder"
         :validator-options="options"
@@ -69,11 +77,10 @@ const shown = ref(false)
     letter-spacing: .02em
 
     .label
-        opacity: .8
-        font-weight: 600
-        letter-spacing: .04em
-        font-size: var(--font-size-small)
-        color: var(--black)
+        font-weight: 400
+        letter-spacing: .02em
+        font-size: var(--font-size-medium)
+        // color: var(--black)
         margin-bottom: .5rem
 
     .hint

@@ -14,15 +14,15 @@ const props = withDefaults(defineProps<{
     onClick?: () => void
     dropdownItems?: DropdownItem[]
 }>(), {
-    svg: SVG.Confirm,
+    svg: SVG.Checkmark,
     dropdownItems: () => [{
             text: 'option1',
-            svg: SVG.Confirm,
+            svg: SVG.Checkmark,
             color: 'black'
         },
         {
             text: 'option2',
-            svg: SVG.Confirm,
+            svg: SVG.Checkmark,
             color: 'red'
         },
     ]

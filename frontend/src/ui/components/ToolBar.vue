@@ -24,17 +24,20 @@ const s = useCssModule()
 <style module lang='sass'>
  
 .container
-    display: flex
-    position: sticky
-    align-items: center
     top: 0
+    position: sticky
+    
+    display: flex
+    align-items: center
+    
     width: 100%
-    height: 3rem
+    height: 3.5rem
+    min-height: 3.5rem
+    max-height: 3.5rem
     font-family: var(--font-family)
 
     background: var(--white)
-    padding: .5rem 1rem
-    padding-right: .5rem
+    padding: 0 1rem
     box-sizing: border-box
     border-radius: var(--border-radius-tiny)
     box-shadow: 0 0 1px 0 var(--faint-border)

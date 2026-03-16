@@ -42,22 +42,22 @@ const tabs: Tab[] = [
     {
         name: 'd',
         pagePath: '/',
-        svg: SVG.Confirm
+        svg: SVG.Checkmark
     },
     {
         name: 'e',
         pagePath: '/',
-        svg: SVG.Confirm
+        svg: SVG.Checkmark
     },
     {
         name: 'f',
         pagePath: '/',
-        svg: SVG.Confirm
+        svg: SVG.Checkmark
     },
     {
         name: 'g',
         pagePath: '/',
-        svg: SVG.Confirm
+        svg: SVG.Checkmark
     }
 ]
 const selectedTab = ref(tabs[0])

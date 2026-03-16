@@ -20,11 +20,11 @@ const { t } = useI18n()
         <div :class="s.buttons">
             <IconCubeButton 
                 :class="s.button" 
-                :svg="SVG.Confirm"
+                :svg="SVG.Checkmark"
                 @click="createPopup({component: NoteCreatePopup})"
             />
             <ExtendableSearchbar />
-            <IconCubeButton :class="s.button" :svg="SVG.Confirm"/>
+            <IconCubeButton :class="s.button" :svg="SVG.Checkmark"/>
         </div>
     </div>
     <div :class="s.body">

@@ -15,8 +15,8 @@ const { t } = useI18n()
     <div :class="s.header">
         <h1>{{ t("hiveOverview.medicine") }}</h1>
         <div :class="s.buttons">
-            <IconCubeButton :class="s.button" :svg="SVG.Confirm"/>
-            <IconCubeButton :class="s.button" :svg="SVG.Confirm"/>
+            <IconCubeButton :class="s.button" :svg="SVG.Checkmark"/>
+            <IconCubeButton :class="s.button" :svg="SVG.Checkmark"/>
         </div>
     </div>
     <div :class="s.body">

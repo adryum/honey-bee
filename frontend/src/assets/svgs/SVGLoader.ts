@@ -10,7 +10,7 @@ export enum SVG {
     Question      = "Question",
     Search        = "Search",
     Cross         = "Cross",
-    Confirm       = "Confirm",
+    Checkmark     = "Checkmark",
     Pencil        = "Pencil",
     MoreDots      = "MoreDots",
     InfoSquere    = "InfoSquere",
@@ -26,6 +26,10 @@ export enum SVG {
     Profile       = "Profile",
     Logout        = "Logout",
     Save          = "Save",
+    ArrowRight    = "ArrowRight",
+    BeeHive       = "BeeHive",
+    Apiary        = "Apiary",
+    Hive          = "Hive"
 }
 
 export enum IconType {

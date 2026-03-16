@@ -95,3 +95,51 @@ export type UserProfileModelDB = {
     email:    string
     username: string
 }
+
+export type InspectionFormUI = {
+    id:                           number;
+    hiveId:                       number;
+    isAbnormalBehavior:           boolean;
+    isSwarming:                   boolean;
+    needAdditionalFeeding:        boolean;
+    isQueenAlive:                 boolean;
+    isQueenLayingEggs:            boolean;
+    isQueenLayingEggsIncorrectly: boolean;
+    needMoreHoneyFrames:          boolean;
+    needMoreBreedingFrames:       boolean;
+    needMedicalAttention:         boolean;
+    hasHiveDamage:                boolean;
+    isTakingOutFrames:            boolean;
+    abnormalBehaviorDescription:  string;
+    medicalAttentionDescription:  string;
+    hiveDamageDescription:        string;
+    neededHoneyFrames:            number;
+    neededBreedingFrames:         number;
+    takenHoneyFrames:             number;
+    takenBreedingFrames:          number;
+    isSubmited:                     boolean;
+    hasMadeChanges:                  boolean;
+}
+
+export type InspectionFormDB = {
+    id:                           number;
+    hiveId:                       number;
+    isAbnormalBehavior:           boolean;
+    isSwarming:                   boolean;
+    needAdditionalFeeding:        boolean;
+    isQueenAlive:                 boolean;
+    isQueenLayingEggs:            boolean;
+    isQueenLayingEggsIncorrectly: boolean;
+    needMoreHoneyFrames:          boolean;
+    needMoreBreedingFrames:       boolean;
+    needMedicalAttention:         boolean;
+    hasHiveDamage:                boolean;
+    isTakingOutFrames:            boolean;
+    abnormalBehaviorDescription:  string;
+    medicalAttentionDescription:  string;
+    hiveDamageDescription:        string;
+    neededHoneyFrames:            number;
+    neededBreedingFrames:         number;
+    takenHoneyFrames:             number;
+    takenBreedingFrames:          number;
+}

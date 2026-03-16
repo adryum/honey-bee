@@ -10,7 +10,7 @@ const s = useCssModule()
 <div :class="s.container">
     <div :class="s.header">
         <h1 :class="s.name">Trens</h1>
-        <IconCubeButton :class="s.button" :svg="SVG.Confirm"/>
+        <IconCubeButton :class="s.button" :svg="SVG.Checkmark"/>
     </div>
     <!-- <TitledText title="Description"/> -->
     <div :class="s.tags">

@@ -80,3 +80,7 @@ let counter = 0
 export function getUniqueThisSesionId(): number {
     return ++counter
 }
+
+export function getRandomId(prefix: string): string {
+    return `${prefix}-${Math.random().toString(36).slice(2, 11)}`
+}

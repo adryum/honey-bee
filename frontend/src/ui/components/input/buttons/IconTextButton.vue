@@ -5,10 +5,13 @@ import Icon from "../../Icon.vue";
 
 const s = useCssModule()
 const props = withDefaults(defineProps<{
-    svg?:       SVG
-    text?:      string
-    disabled?:  boolean
-    isLoading?: boolean
+    svg?:              SVG
+    text?:             string
+    disabled?:         boolean
+    isLoading?:        boolean
+    isSubmit?:         boolean
+    swapIconPosition?: boolean
+    isAlignedCenter?:  boolean
 }>(), {
     svg:      SVG.Dollar,
     text:     'BUTTON',
@@ -18,14 +21,17 @@ const props = withDefaults(defineProps<{
 
 <template>
 <button 
-    type="button" 
+    :type="isSubmit ? 'submit' : 'button'" 
     :class="[
         s.container, 
+        isSubmit && s.submit,
+        isAlignedCenter && s.alignedCenter,
         disabled || isLoading ? s.disabled : s.enabled,
     ]"
     :disabled="disabled || isLoading"
 >
     <Icon 
+        v-if="!swapIconPosition"
         :class="[
             s.icon,
             isLoading && s.rotate
@@ -33,11 +39,29 @@ const props = withDefaults(defineProps<{
         :type="IconType.SMALL" 
         :svg="isLoading ? SVG.Restart : svg"
     />
-    <p :class="s.text">{{ text }}</p>
+    <p :class="[isSubmit ? s.submitText : s.text]">{{ text }}</p>
+    <Icon 
+        v-if="swapIconPosition"
+        :class="[
+            s.icon,
+            isLoading && s.rotate
+        ]" 
+        :type="IconType.SMALL" 
+        :svg="isLoading ? SVG.Restart : svg"
+    />
 </button>
 </template>
 
 <style module lang='sass'>
+.alignedCenter
+    justify-content: center
+
+.submitText
+    color: white
+    font-size: var(--font-size-medium)
+    letter-spacing: .04em
+    font-weight: 500
+
 @keyframes rotate-clockwise 
     0%
         transform: rotateZ(0deg)
@@ -57,35 +81,49 @@ const props = withDefaults(defineProps<{
         opacity: .4
 
 .container
+    border: none
+    background: none
     display:    inline-flex
+
+    align-items: center
+
     gap:        .5rem
     height:     2rem
-    min-height: 2rem
+    min-height: 2.5rem
     max-height: 2rem
 
     font-family: var(--font-family)
     font-size:   var(--font-size-small)
 
-    padding: 0 .5rem
-
-    background:    white
-    border:        1px solid var(--blue)
-    border-radius: var(--border-radius-small)
     box-sizing:    border-box
-    transition:    .1s
-    outline-color: var(--blue)
+    padding: 0 1rem
+    border-radius: var(--border-radius-small)
+
+    transition: .1s
+
+    &:hover
+        // filter: brightness(95%)
+        background: var(--gray)
+
+    &.submit
+        height:     3rem
+        min-height: 3rem
+        max-height: 3rem
+        background: var(--orange)
+
+        &:hover
+            filter: brightness(95%) !important
 
     &.enabled
         cursor: pointer
 
-        &:hover
-            filter: brightness(95%)
-              // outline: 1px solid var(--blue)
+       
 
 .icon
     align-self: center
     max-height: 1rem
     max-width:  1rem
+    color: white
 
 .text
     align-self:  center

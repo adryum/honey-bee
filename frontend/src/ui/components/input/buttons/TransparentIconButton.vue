@@ -9,7 +9,7 @@ const props = withDefaults(defineProps<{
     svg?: SVG
     onClick?: () => void
 }>(), {
-    svg: SVG.Confirm
+    svg: SVG.Checkmark
 })
 const s = useCssModule()
 </script>

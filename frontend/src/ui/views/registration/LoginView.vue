@@ -46,7 +46,7 @@ onMounted(async () => {
         </div>
 
         <IconTextButton
-            :svg="SVG.Confirm"
+            :svg="SVG.Checkmark"
             text="Login with Google"
             @click="login"
         />

@@ -1,24 +1,104 @@
 <script setup lang="ts">
-import { ref, useCssModule } from "vue";
+import { onMounted, reactive, ref, useCssModule } from "vue";
 import Icon from "../components/Icon.vue";
 import { IconType, SVG } from "@/assets/svgs/SVGLoader";
-import CheckboxWText from "../components/input/fields/CheckboxWText.vue";
-import LabeledTextareaField from "../components/input/fields/LabeledTextareaField.vue";
 import IconTextButton from "../components/input/buttons/IconTextButton.vue";
+import InspectionForm from "../components/forms/InspectionForm.vue";
+import type { InspectionFormDB, InspectionFormUI } from "@/core/stores/Models";
 
 const s = useCssModule()
-const selectedHive = ref<number>(1)
+const props = withDefaults(defineProps<{
+    hives: { id: number, name: string }[]
+}>(), {
+    hives: () => [
+        { id: 1, name: "#231 Apple hive" },
+        { id: 2, name: "#232 Banana hive" },
+        { id: 3, name: "#233 Cherry hive" },
+        { id: 4, name: "#231 Coconut hive" },
+        { id: 5, name: "#232 Pineapple hive" },
+        { id: 6, name: "#233 Orange hive" },
 
-const isAbnormalBehavior = ref<boolean>(false)
-const isRunningAway = ref<boolean>(false)
-const isNeedAdditionalFeeding = ref<boolean>(false)
-const isQueenAlive = ref<boolean>(false)
-const isQueenLayingEggs = ref<boolean>(false)
-const isQueenLayingEggsIncorrectly = ref<boolean>(false)
-const isHiveNeedingMoreHoneyFrames = ref<boolean>(false)
-const isHiveNeedingMoreBreedingFrames = ref<boolean>(false)
-const isMedicalActionNeeded = ref<boolean>(false)
-const isThereAnyHiveDamage = ref<boolean>(false)
+    ]
+})
+const inspectionForms = ref<InspectionFormUI[]>([])
+const selectedForm = ref<InspectionFormUI | undefined>(undefined)
+
+const emptyForm: InspectionFormUI = {
+    id:                           -1,
+    hiveId:                       0,
+    isAbnormalBehavior:           false,
+    isSwarming:                   false,
+    needAdditionalFeeding:        false,
+    isQueenAlive:                 false,
+    isQueenLayingEggs:            false,
+    isQueenLayingEggsIncorrectly: false,
+    needMoreHoneyFrames:          false,
+    needMoreBreedingFrames:       false,
+    needMedicalAttention:         false,
+    hasHiveDamage:                false,
+    isTakingOutFrames:            false,
+    abnormalBehaviorDescription:  "",
+    medicalAttentionDescription:  "",
+    hiveDamageDescription:        "",
+    neededHoneyFrames:            0,
+    neededBreedingFrames:         0,
+    takenHoneyFrames:             0,
+    takenBreedingFrames:          0,
+    isSubmited:                     false,
+    hasMadeChanges:                  false
+}
+
+function hasMadeAnyChanges(form: InspectionFormUI): boolean {
+    return form.hasMadeChanges
+    || form.isAbnormalBehavior
+    || form.isSwarming
+    || form.needAdditionalFeeding
+    || form.isQueenAlive
+    || form.isQueenLayingEggs
+    || form.isQueenLayingEggsIncorrectly
+    || form.needMoreHoneyFrames
+    || form.needMoreBreedingFrames
+    || form.needMedicalAttention
+    || form.hasHiveDamage
+    || form.isTakingOutFrames
+}
+
+function initialize() {
+    props.hives.forEach(hive => {
+        inspectionForms.value.push({ ...emptyForm, hiveId: hive.id });
+    })
+    selectHive(props.hives[0].id)
+}
+
+function selectHive(id: number) {
+    if (selectedForm.value && hasMadeAnyChanges(selectedForm.value)) {
+        selectedForm.value.hasMadeChanges = true;
+    }
+
+    selectedForm.value = inspectionForms.value.find(form => form.hiveId === id);
+}
+
+function saveForm(formModel: InspectionFormUI) {
+    const formIndex = inspectionForms.value.findIndex(form => form.hiveId === formModel.hiveId);
+    const isLastForm = formIndex === inspectionForms.value.length - 1;
+
+    formModel.isSubmited = true
+
+    if (!isLastForm) {
+        selectHive(inspectionForms.value[formIndex + 1].hiveId)
+    } else {
+        finishInspection()
+    }
+}
+
+function finishInspection() {
+    
+}
+
+onMounted(() => {
+    initialize()
+})
+
 </script>
 
 <template>
@@ -30,113 +110,29 @@ const isThereAnyHiveDamage = ref<boolean>(false)
             :class="s.header"
         >
             <Icon
-                :svg="SVG.Apiaries"
+                :svg="SVG.Hive"
                 :type="IconType.MEDIUM"
             />
             <label 
                 for="apiaryHives"
                 :class="s.label"
-            >Apple hive </label>
-
-            <button>
-                Add note
-            </button>
-        </div>
-
-        <form
-            :class="s.form"
-            @submit.prevent="console.log('submited!!')"
-        >
-            <CheckboxWText
-                label="Abnormal bee behavior?"
-                v-model:is-true="isAbnormalBehavior"
-            />
-            <LabeledTextareaField
-                v-if="isAbnormalBehavior"
-                :class="s.indented"
-                label="what kind of behavior?"
-                :options="{}"
-            />
-            
-            
-            <CheckboxWText
-                label="Running away? Spieto?"
-                v-model:is-true="isRunningAway"
-            />
-
-             <CheckboxWText
-                label="Need additional feeding?"
-                v-model:is-true="isNeedAdditionalFeeding"
-            />
-
-
-            <CheckboxWText
-                label="Queen alive?"
-                v-model:is-true="isQueenAlive"
-            />
-            <CheckboxWText
-                v-if="isQueenAlive"
-                label="Is queen laying eggs?"
-                :class="s.indented"
-                v-model:is-true="isQueenLayingEggs"
-            />
-            <CheckboxWText
-                v-if="isQueenAlive"
-                label="Is queen laying eggs incorrectly?"
-                :class="s.indented"
-                v-model:is-true="isQueenLayingEggsIncorrectly"
-            />
-
-            <CheckboxWText
-                label="Does hive need more honey frames?"
-                v-model:is-true="isHiveNeedingMoreHoneyFrames"
-            />
-            <LabeledTextareaField
-                v-if="isHiveNeedingMoreHoneyFrames"
-                label="amount:"
-                :class="s.indented"
-                :options="{}"
-            />
-            
-            <CheckboxWText
-                label="Does hive need more breeding frames?"
-                v-model:is-true="isHiveNeedingMoreBreedingFrames"
-            />
-            <LabeledTextareaField
-                v-if="isHiveNeedingMoreBreedingFrames"
-                label="amount:"
-                :class="s.indented"
-                :options="{}"
-            />
-
-            <CheckboxWText
-                label="Is medical action needed?"
-                v-model:is-true="isMedicalActionNeeded"
-            />
-            <LabeledTextareaField
-                v-if="isMedicalActionNeeded"
-                label="Reason:"
-                :class="s.indented"
-                :options="{}"
-            />
-
-            <CheckboxWText
-                label="Is there any hive damage?"
-                v-model:is-true="isThereAnyHiveDamage"  
-            />
-            <LabeledTextareaField
-                v-if="isThereAnyHiveDamage"
-                label="Additional notes:"
-                :class="s.indented"
-                :options="{}"
-            />
+            >
+                {{ hives.find(hive => hive.id === selectedForm?.hiveId)?.name }}
+            </label>
 
             <IconTextButton
-                :svg="SVG.Confirm"
-                text="Submit"
-                type="submit"
+                :class="s.marginLeft"
+                :svg="SVG.Plus"
+                text="Add note"
             />
-        </form>
+        </div>
+
+        <InspectionForm
+            v-if="selectedForm"
+            :class="s.form"
+            @submit="saveForm(selectedForm)"
+            v-model:form="selectedForm"
+        />
 
     </section>
     <section
@@ -146,28 +142,37 @@ const isThereAnyHiveDamage = ref<boolean>(false)
         <div
             :class="s.header"
         >
+            <Icon
+                :svg="SVG.Apiary"
+                :type="IconType.MEDIUM"
+            />
             <label 
                 for="apiaryHives"
                 :class="s.label"
-            >Applejacks hives: </label>
+            >Applejacks hives</label>
         </div>
 
         <div
             :class="s.hiveGrid"
         >
             <div
-                v-for="i in 10"
+                v-for="form in inspectionForms"
                 :class="[
                     s.hive,
-                    i < 5 && s.completed,
-                    i >= 5 && s.uncomplete,
-                    selectedHive === i && s.selected
+                    form.hasMadeChanges ? s.started : s.uncomplete,
+                    form.isSubmited && s.completed,
+                    selectedForm?.hiveId === form.hiveId && s.selected
                 ]"
-                @click="selectedHive = i"
+                @click="selectHive(form.hiveId)"
             >
                 <p
-                    :class="s.id"
-                >{{ i }}</p>
+                    :class="[
+                        s.id,
+                        selectedForm?.hiveId === form.hiveId && s.selected
+                    ]"
+                >
+                    {{ form.hiveId }}
+                </p>
                 
             </div>
 
@@ -177,22 +182,20 @@ const isThereAnyHiveDamage = ref<boolean>(false)
 </template>
 
 <style module lang="sass">
+.marginLeft
+    margin-left: auto
+
 .plate
+    border-radius: var(--border-radius-small)
     display: flex
     flex-direction: column
-    gap: 1rem
+
     background: var(--white)
+    height: calc( 100vh - 5rem )
 
-    .form
-        display: flex
-        flex-direction: column
-        gap: 1rem
-        padding: 1rem
-        box-sizing: border-box
-
-
-.indented
-    margin-left: 2.5rem
+.form
+    overflow-y: scroll
+    height: 100%
 
 .hiveGrid
     display: inline-flex
@@ -217,29 +220,42 @@ const isThereAnyHiveDamage = ref<boolean>(false)
         border-radius: var(--border-radius-small)
         cursor: pointer
 
+        transition: .1s
+
 
         .id
             font-family: var(--font-family)
-            font-size: var(--font-size-large)
-            font-weight: 600
+            font-size: var(--font-size-big)
+            font-weight: 500
             color: var(--black)
 
+            &.selected
+                color: white
+
         &.uncomplete
-            background: var(--gray)
-            box-shadow: inset 0 0  0 2px  color-mix(in srgb, var(--gray) 90%, black )
+            background: white
+            box-shadow: 0 0 0 1px var(--gray)
+
+        &.started
+            background: white
+            box-shadow: 0 0 0 1px var(--orange)
 
         &.completed
-            background: var(--darker-orange)
-            box-shadow: inset 0 0  0 2px  color-mix(in srgb, var(--darker-orange) 90%, black )
+            background: var(--light-gray)
+            box-shadow: 0 0 0 1px var(--gray)
 
         &.selected
-            background: #fedd20
-            box-shadow: inset 0 0  0 2px  color-mix(in srgb, #fedd20 95%, black )
+            background: var(--orange)
+            color: white
 
 .header
     display: flex
+    align-items: center
     margin: 1rem
-    gap: 1rem
+    height: 2rem
+    min-height: 2rem
+    max-height: 2rem
+    gap: .5rem
 
 .label
     +bulletLabel
@@ -248,6 +264,7 @@ const isThereAnyHiveDamage = ref<boolean>(false)
     width: 100%
     height: 100%
     background: var(--white)
+    border-radius: var(--border-radius-small)
 
 .container
     display: grid

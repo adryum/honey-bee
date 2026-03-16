@@ -18,11 +18,11 @@ const props = withDefaults(defineProps<{
 }>(), {
     zIndex: 0,
     isRequiried: false,
-    svg: SVG.Confirm,
+    svg: SVG.Checkmark,
     options: () => [
         {
             text: 'option',
-            svg: SVG.Confirm,
+            svg: SVG.Checkmark,
             color: ''
         },
     ]
@@ -90,7 +90,7 @@ onMounted(async () => {
             <p :class="s.selection">{{ selected }}</p>
             <MotionSVG 
                 :initial="{ rotateZ: 270 }" 
-                :animate="isListShown ? { rotateZ: 270 } : { rotateZ: 90 }" :class="s.icon" :svg="SVG.Confirm"/>
+                :animate="isListShown ? { rotateZ: 270 } : { rotateZ: 90 }" :class="s.icon" :svg="SVG.Checkmark"/>
         </div>
         
         <Teleport to="body"><AnimatePresence><motion.ol  ref="dropdownList" v-if="isListShown"
