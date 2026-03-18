@@ -32,7 +32,7 @@ export function getCurrentUTCDateString(): string {
     return toMySQLUTCDateTime(new Date())
 }
 
-export function isValidValue(value: unknown): boolean {
+export function isValidValue(value: unknown): value is NonNullable<typeof value> {
     if (value === null || value === undefined) return false
     if (typeof value === 'number') return !Number.isNaN(value)
     if (typeof value === 'string') return value !== ''

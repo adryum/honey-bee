@@ -1,7 +1,7 @@
 import { Router, type Request, type Response } from "express";
 import { db } from "../config/Database";
 import { HiveT } from "../TableColumnTitles";
-import { col, getCurrentUTCDateString } from "../utils";
+import { col, getCurrentUTCDateString, isValidValue } from "../utils";
 import type { ResultSetHeader, RowDataPacket } from "mysql2";
 import { uploadImage } from "../config/image_cloud/Cloudinary";
 import { PublicIdBuilder } from "../config/image_cloud/PublicIdBuilder";
@@ -391,48 +391,253 @@ router.post('/calendar/create', requireRole([Role.ANY]), async (req: Request<{},
     }
 })
 
-// returns hive overview
-// router.post('/overview', async (req: Request<{},{},{
-//     hiveId: string
-// }>, res: Response) => {
-//     // const { identification, hiveId } = req.body
+type InspectionResponse = {
+    id:            number;
+    apiaryId:      number;
+    apiaryName:    string
+    userIdCreator: number
+    userPicture:   string
+    username:      string
+    creationDate:  string
+    forms:    {
+        id:                           number;
+        hiveId:                       number;
+        isAbnormalBehavior:           boolean;
+        isSwarming:                   boolean;
+        needAdditionalFeeding:        boolean;
+        isQueenAlive:                 boolean;
+        isQueenLayingEggs:            boolean;
+        isQueenLayingEggsIncorrectly: boolean;
+        needMoreHoneyFrames:          boolean;
+        needMoreBreedingFrames:       boolean;
+        needMedicalAttention:         boolean;
+        hasHiveDamage:                boolean;
+        isTakingOutFrames:            boolean;
+        abnormalBehaviorDescription:  string;
+        medicalAttentionDescription:  string;
+        hiveDamageDescription:        string;
+        neededHoneyFrames:            number;
+        neededBreedingFrames:         number;
+        takenHoneyFrames:             number;
+        takenBreedingFrames:          number;
+    }[]
+}
+
+function getInspectionsQuery(where: string) {
+    return `
+        SELECT 
+            hive_inspections.id,
+            hive_inspections.apiaryId,
+            apiaries.name AS apiaryName,
+            hive_inspections.userIdCreator,
+            users.username,
+            users.image,
+            hive_inspections.creationDate,
+
+            COALESCE((
+                SELECT JSON_ARRAYAGG(
+                    JSON_OBJECT(
+                        'id',                           hive_inspection_forms.id,
+                        'isAbnormalBehavior',           hive_inspection_forms.isAbnormalBehavior,
+                        'abnormalBehaviorDescription',  hive_inspection_forms.abnormalBehaviorDescription,
+                        'isSwarming',                   hive_inspection_forms.isSwarming,
+                        'needFeeding',                  hive_inspection_forms.needFeeding,
+                        'isQueenAlive',                 hive_inspection_forms.isQueenAlive,
+                        'isQueenLayingEggs',            hive_inspection_forms.isQueenLayingEggs,
+                        'isQueenLayingEggsIncorrectly', hive_inspection_forms.isQueenLayingEggsIncorrectly,
+                        'needMoreHoneyFrames',          hive_inspection_forms.needMoreHoneyFrames,
+                        'needMoreHoneyFramesAmount',    hive_inspection_forms.needMoreHoneyFramesAmount,
+                        'needMoreBreedingFrames',       hive_inspection_forms.needMoreBreedingFrames,
+                        'needMoreBreedingFramesAmount', hive_inspection_forms.needMoreBreedingFramesAmount,
+                        'needMedicalAttention',         hive_inspection_forms.needMedicalAttention,
+                        'medicalAttentionDescription',  hive_inspection_forms.medicalAttentionDescription,
+                        'hasHiveDamage',                hive_inspection_forms.hasHiveDamage,
+                        'hiveDamageDescription',        hive_inspection_forms.hiveDamageDescription,
+                        'isTakingFrames',               hive_inspection_forms.isTakingFrames,
+                        'takenHoneyFrames',             hive_inspection_forms.takenHoneyFrames,
+                        'takenBreedingFrames',          hive_inspection_forms.takenBreedingFrames,
+                        'inspectionId',                 hive_inspection_forms.inspectionId,
+                        'hiveId',                       hive_inspection_forms.hiveId,
+                        'hiveName',                     hives.name
+                    )
+                )
+                FROM hive_inspection_forms
+                LEFT JOIN hives ON hive_inspection_forms.hiveId = hives.id
+                WHERE hive_inspections.id = hive_inspection_forms.inspectionId
+            ), JSON_ARRAY()) AS forms
+
+        FROM hive_inspections
+        LEFT JOIN users ON hive_inspections.userIdCreator = users.id
+        LEFT JOIN apiaries ON hive_inspections.apiaryId = apiaries.id
+        ${where}
+    `
+}
+
+router.get(
+    '/inspections/get', 
+    requireRole([Role.ANY]), 
+    async (
+        req: Request, 
+        res: Response<InspectionResponse[] | string>
+) => {
+    console.log("# Get Inspections");
+    const page   = parseInt(req.query.page as string) || 1;
+    const limit  = parseInt(req.query.limit as string) || 20;
+    const offset = (page - 1) * limit
     
-//     // missing credentials
-//     if (!identification || !hiveId) 
-//         return res.status(401).send('incorrect credentials!') 
+    try {
+        console.log(`Getting Limit: ${limit} Offset: ${offset} inspections...`);
+        const [inspections] = await db.query<(RowDataPacket & InspectionResponse)[]>(
+            getInspectionsQuery(`
+                WHERE hive_inspections.userIdCreator = ?
+                LIMIT ? OFFSET ?`
+            ), 
+            [
+                req.session.userId,
+                limit,
+                offset
+            ]
+        )
+        console.log("Done!");
+        
+        res.status(200).json(inspections);
+    } catch (error) {
+        console.error(error);
+        res.status(500).send('Server error');
+    }
+})
 
-//     const [[overviewResults]] = await db.query<RowDataPacket[]>(`
-//         SELECT 
-//             ${HiveT.id} AS h_id, 
-//             ${HiveT.name} AS h_name,
-//             ${HiveT.imagePath} AS h_image,
-//             ${HiveT.description} AS h_description,
-//             ${HiveT.location} AS h_location,
-//             ${HiveT.type} AS h_type,
-//             ${HiveT.frames} AS h_frames,
-//             ${HiveT.weight} AS h_height,
+router.post(
+    '/inspections/create', 
+    requireRole([Role.ANY]), 
+    async (
+        req: Request<{},{},{
+            apiaryId: number;
+            forms:     {
+                hiveId:                       number;
+                isAbnormalBehavior:           boolean;
+                isSwarming:                   boolean;
+                needAdditionalFeeding:        boolean;
+                isQueenAlive:                 boolean;
+                isQueenLayingEggs:            boolean;
+                isQueenLayingEggsIncorrectly: boolean;
+                needMoreHoneyFrames:          boolean;
+                needMoreBreedingFrames:       boolean;
+                needMedicalAttention:         boolean;
+                hasHiveDamage:                boolean;
+                isTakingOutFrames:            boolean;
+                abnormalBehaviorDescription:  string;
+                medicalAttentionDescription:  string;
+                hiveDamageDescription:        string;
+                needMoreHoneyFramesAmount:    number;
+                needMoreBreedingFramesAmount: number;
+                takenHoneyFrames:             number;
+                takenBreedingFrames:          number;
+            }[]
+        }>, 
+        res: Response
+) => {
+    console.log("# Create Inspection");
+    const { apiaryId, forms } = req.body
 
-//             n.id AS n_id,
-//             CONCAT(u.name, ' ', u.surname) AS n_author,
-//             n.title AS n_title,
-//             n.content AS n_content,
-//             n.creation_date AS n_creation_date,
-//             n.color AS n_color,
+    // checking manditory fields
+    console.log("Checking manditory fields...");
+    if (forms.some(item => !isValidValue(item.hiveId)) || !isValidValue(apiaryId)) {
+        console.log("Hive ID and Apiary ID are required!");
+        return res.status(400).send("Hive ID and Apiary ID are required!");
+    }
+    console.log("Done!");
 
-//             q.id AS q_id,
-//             q.name AS q_name,
-//             q.image AS q_image,
-//             q.registration_date AS q_registration_date,
-//             qs.name_latin AS q_specie
-//         FROM ${HiveT.tableName}
-//         LEFT JOIN note_place__hive AS note_place ON note_place.hive_id = ${HiveT.id}
-//         LEFT JOIN notes AS n ON n.id = note_place.note_id
-//         LEFT JOIN users AS u ON u.id = n.user_id 
-//         LEFT JOIN queen_bees AS q ON q.id = ${HiveT.queenBeeId}
-//         LEFT JOIN queen_bee_species AS qs ON q.specie_id = qs.id
-//         WHERE ${HiveT.userId} = ? AND ${HiveT.id} = ?`, 
-//         [identification.id, hiveId]
-//     )
-// })
+
+    console.log("Getting db connection..");
+    const connection = await db.getConnection();
+    await connection.beginTransaction();
+    console.log("Done!");
+    
+    try {
+        const [inspectionResult] = await connection.query<ResultSetHeader>(`
+            INSERT INTO hive_inspections (apiaryId, userIdCreator) VALUES ?`, 
+            [[[
+                apiaryId,
+                req.session.userId
+            ]]]
+        )
+        // inserting new entries (transaction lets us rollback db changes on error)
+        console.log("Inserting inspection forms...");
+        await Promise.all(
+            forms.map(row =>
+                connection.query<ResultSetHeader>(`
+                    INSERT INTO hive_inspection_forms 
+                    (
+                        hiveId,
+                        isAbnormalBehavior,
+                        isSwarming,
+                        needFeeding,
+                        isQueenAlive,
+                        isQueenLayingEggs,
+                        isQueenLayingEggsIncorrectly,
+                        needMoreHoneyFrames,
+                        needMoreBreedingFrames,
+                        needMedicalAttention,
+                        hasHiveDamage,
+                        isTakingFrames,
+                        abnormalBehaviorDescription,
+                        medicalAttentionDescription,
+                        hiveDamageDescription,
+                        needMoreHoneyFramesAmount,
+                        needMoreBreedingFramesAmount,
+                        takenHoneyFrames,
+                        takenBreedingFrames,
+                        inspectionId
+                    ) VALUES ?`,
+                    [[[
+                        row.hiveId,
+                        row.isAbnormalBehavior,
+                        row.isSwarming,
+                        row.needAdditionalFeeding,
+                        row.isQueenAlive,
+                        row.isQueenLayingEggs,
+                        row.isQueenLayingEggsIncorrectly,
+                        row.needMoreHoneyFrames,
+                        row.needMoreBreedingFrames,
+                        row.needMedicalAttention,
+                        row.hasHiveDamage,
+                        row.isTakingOutFrames,
+                        row.abnormalBehaviorDescription,
+                        row.medicalAttentionDescription,
+                        row.hiveDamageDescription,
+                        row.needMoreHoneyFramesAmount,
+                        row.needMoreBreedingFramesAmount,
+                        row.takenHoneyFrames,
+                        row.takenBreedingFrames,
+                        inspectionResult.insertId
+                    ]]]
+                )
+            )
+        );
+
+        await connection.commit();
+        console.log("Done!");
+
+        console.log(`Getting inspection...`);
+        const [[inspection]] = await db.query<(RowDataPacket & InspectionResponse)[]>(
+            getInspectionsQuery(`
+                WHERE hive_inspections.id = ?`
+            ), 
+            [
+                inspectionResult.insertId,
+            ]
+        )
+        console.log("Done!");
+        
+        res.status(200).json(inspection);
+    } catch (error) {
+        await connection.rollback();
+        console.error(error);
+        res.status(500).send('Server error');
+    } finally {
+        connection.release(); // always release back to pool
+    }
+});
 
 export default router

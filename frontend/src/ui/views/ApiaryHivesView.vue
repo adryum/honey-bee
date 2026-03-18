@@ -1,6 +1,6 @@
 <script setup lang="ts">
 import Hive from '../components/hive/Hive.vue';
-import { computed, ref, useCssModule } from "vue";
+import { computed, onMounted, ref, useCssModule } from "vue";
 import ToolBar from '../components/ToolBar.vue';
 import { useFlexibleGrid } from '@/core/utils/others.js';
 import { useApiaryStore } from '@/core/stores/ApiaryStore';
@@ -10,16 +10,20 @@ import IconTextButton from '../components/input/buttons/IconTextButton.vue';
 import { usePopupCreator } from '@/core/utils/PopupHiarchy';
 import HiveAddPopup from '../components/popups/hive/HiveAddPopup.vue';
 import StringSearchDropdown from '../components/input/dropdowns/StringSearchDropdown.vue';
+import { SVG } from '@/assets/svgs/SVGLoader';
+import { useInspectionStore } from '@/core/stores/InspectionStore';
 
 const s = useCssModule()
-const apiaryStore = useApiaryStore()
-const hiveStore = useHiveStore()    
+const apiaryStore     = useApiaryStore()
+const hiveStore       = useHiveStore()
+const inspectionStore = useInspectionStore()
+const { hives }          = storeToRefs(hiveStore)
 const { selectedApiary } = storeToRefs(apiaryStore)
 
 const filteredHives = computed(() => {
     if (!selectedApiary.value) return []
 
-    return hiveStore.hives.filter(hive => 
+    return hives.value.filter(hive => 
         hive.apiaryId === selectedApiary.value!.id && hive.name.toLowerCase().includes(searchWord.value.toLowerCase())
     )
 })
@@ -35,6 +39,11 @@ const { create } = usePopupCreator({
     popupComponent: HiveAddPopup, 
     maxCount: 1
 })
+
+onMounted(() => {
+    console.log("hives", filteredHives.value);
+    console.log(!filteredHives.value.isEmpty());
+})
 </script>
 
 <template>
@@ -43,10 +52,18 @@ const { create } = usePopupCreator({
     :class="s.container"
 >
     <ToolBar 
-        :name="selectedApiary?.name"
+        :label="selectedApiary?.name"
     >
         <IconTextButton
+            v-if="selectedApiary && !filteredHives.isEmpty()"
+            text="Add inspection"
+            :svg="SVG.Plus"
+            :class="s.button"
+            @click="inspectionStore.startApiaryInspection(selectedApiary.id, selectedApiary.name)"
+        />
+        <IconTextButton
             text="Add hive"
+            :svg="SVG.Plus"
             :class="s.button"
             @click="create"
         />

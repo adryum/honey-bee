@@ -9,9 +9,12 @@ import IconTextButton from "../input/buttons/IconTextButton.vue";
 
 const s = useCssModule()
 
-const props = defineProps<{ 
-    form: InspectionFormUI 
-}>()
+const props = withDefaults(defineProps<{ 
+    form :       InspectionFormUI
+    isReviewing?: boolean
+}>(), {
+    isReviewing: false
+})
 const emit = defineEmits<{ 
     'update:form': [InspectionFormUI]
     'submit': []
@@ -27,6 +30,7 @@ const form = useVModel(props, 'form', emit)
 >
     <CheckboxWText
         label="Abnormal bee behavior?"
+        :disabled="isReviewing"
         v-model:is-true="form.isAbnormalBehavior"
     />
     <LabeledTextareaField
@@ -39,56 +43,64 @@ const form = useVModel(props, 'form', emit)
     
     <CheckboxWText
         label="Swarming?"
+        :disabled="isReviewing"
         v-model:is-true="form.isSwarming"
     />
 
         <CheckboxWText
         label="Need additional feeding?"
+        :disabled="isReviewing"
         v-model:is-true="form.needAdditionalFeeding"
     />
 
 
     <CheckboxWText
         label="Queen alive?"
+        :disabled="isReviewing"
         v-model:is-true="form.isQueenAlive"
     />
     <CheckboxWText
         v-if="form.isQueenAlive"
         label="Is queen laying eggs?"
+        :disabled="isReviewing"
         :class="s.indented"
         v-model:is-true="form.isQueenLayingEggs"
     />
     <CheckboxWText
         v-if="form.isQueenAlive"
         label="Is queen laying eggs incorrectly?"
+        :disabled="isReviewing"
         :class="s.indented"
         v-model:is-true="form.isQueenLayingEggsIncorrectly"
     />
 
     <CheckboxWText
         label="Does hive need more honey frames?"
+        :disabled="isReviewing"
         v-model:is-true="form.needMoreHoneyFrames"
     />
     <LabeledTextareaField
         v-if="form.needMoreHoneyFrames"
         :class="s.indented"
         :options="{}"
-        v-model:input="form.neededHoneyFrames"
+        v-model:input="form.needMoreHoneyFramesAmount"
     />
     
     <CheckboxWText
         label="Does hive need more breeding frames?"
+        :disabled="isReviewing"
         v-model:is-true="form.needMoreBreedingFrames"
     />
     <LabeledTextareaField
         v-if="form.needMoreBreedingFrames"
         :class="s.indented"
         :options="{}"
-        v-model="form.neededBreedingFrames"
+        v-model="form.needMoreBreedingFramesAmount"
     />
 
     <CheckboxWText
         label="Taking out frames?"
+        :disabled="isReviewing"
         v-model:is-true="form.isTakingOutFrames"  
     />
     <LabeledTextareaField
@@ -108,6 +120,7 @@ const form = useVModel(props, 'form', emit)
 
     <CheckboxWText
         label="Is medical action needed?"
+        :disabled="isReviewing"
         v-model:is-true="form.needMedicalAttention"
     />
     <LabeledTextareaField
@@ -119,6 +132,7 @@ const form = useVModel(props, 'form', emit)
 
     <CheckboxWText
         label="Is there any hive damage?"
+        :disabled="isReviewing"
         v-model:is-true="form.hasHiveDamage"  
     />
     <LabeledTextareaField
@@ -129,6 +143,7 @@ const form = useVModel(props, 'form', emit)
     />
 
     <IconTextButton
+        v-if="!isReviewing"
         :svg="SVG.ArrowRight"
         :is-submit="true"
         :swap-icon-position="true"

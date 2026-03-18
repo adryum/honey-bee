@@ -1,9 +1,7 @@
 <script setup lang="ts">
 import { ref, useCssModule } from 'vue';
 import { useFormValidator } from '@/core/composables/validators/UseFormValidator';
-
-import type { PopupData } from '@/core/utils/PopupHiarchy';
-import { Role, String_to_Role } from '@/core/DatabaseEnums';
+import { Role } from '@/core/DatabaseEnums';
 import PopupFrame from './PopupFrame.vue';
 import { SVG } from '@/assets/svgs/SVGLoader';
 import LabeledInputField from '../input/fields/LabeledInputField.vue';
@@ -89,6 +87,8 @@ async function add() {
                 text="Add"
                 :disabled="!isFormValid" 
                 :svg="SVG.Plus"
+                :is-submit="true"
+                :is-aligned-center="true"
                 @click="add"
             />
         </div>

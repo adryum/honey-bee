@@ -36,12 +36,12 @@ onResize(grid, (element) => {
 <template>
     <div :class="s.container">
         <ToolBar 
-            name="Apiaries"
+            label="Apiaries"
             :class="s.toolbar"
         >
             <IconButton
                 text="Add apiary"
-                :svg="SVG.Key"
+                :svg="SVG.Plus"
                 :class="s.button"
                 @click="createPopup({
                     component: CreateApiaryPopup, 

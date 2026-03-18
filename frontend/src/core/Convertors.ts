@@ -1,7 +1,7 @@
 import type { reactive } from "vue";
 import { String_to_HiveType, String_to_NoteTypes, String_to_Role } from "./DatabaseEnums";
-import type { ApiaryAccessResponseModel, ApiaryCreateResponseModel, HiveCreateResponseModel, NoteCreateModelResponse, UserEntryResponseModel, UserProfileResponseModel, WhitelistEntryResponseModel } from "./network/Models";
-import type { ApiaryModelDB, HiveModelDB, NoteModelDB, UserEntryModelDB, UserProfileModel, UserProfileModelDB, WhitelistEntryModelDB } from "./stores/Models";
+import type { ApiaryAccessResponseModel, ApiaryCreateResponseModel, HiveCreateResponseModel, InspectionCreateRequestModel, InspectionGetResponseModel, NoteCreateModelResponse, UserEntryResponseModel, UserProfileResponseModel, WhitelistEntryResponseModel } from "./network/Models";
+import type { ApiaryModelDB, HiveModelDB, InspectionDB, InspectionFormDB, InspectionFormUI, NoteModelDB, UserEntryModelDB, UserProfileModel, UserProfileModelDB, WhitelistEntryModelDB } from "./stores/Models";
 
 export function ApiaryCreateResponse_to_ApiaryModelDB(
     convertee: ApiaryCreateResponseModel
@@ -124,4 +124,109 @@ export function ApiaryAccessResponseModelArray_To_NumberArray(
     convertee: ApiaryAccessResponseModel[]
 ) {
     return convertee.map(item => ApiaryAccessResponseModel_To_Number(item))
+}
+
+
+export function InspectionGetResponseModel_To_InspectionFormDB(
+    convertee: InspectionGetResponseModel
+): InspectionDB {
+    return {
+        id:            convertee.id,
+        apiaryId:      convertee.apiaryId,
+        apiaryName:    convertee.apiaryName,
+        userIdCreator: convertee.userIdCreator,
+        userPicture:   convertee.userPicture,
+        username:      convertee.username,
+        creationDate:  convertee.creationDate,
+        forms:         convertee.forms.map(form => ({
+            id:                           form.id,
+            hiveId:                       form.hiveId,
+            hiveName:                     form.hiveName,
+            isAbnormalBehavior:           form.isAbnormalBehavior,
+            isSwarming:                   form.isSwarming,
+            needAdditionalFeeding:        form.needAdditionalFeeding,
+            isQueenAlive:                 form.isQueenAlive,
+            isQueenLayingEggs:            form.isQueenLayingEggs,
+            isQueenLayingEggsIncorrectly: form.isQueenLayingEggsIncorrectly,
+            needMoreHoneyFrames:          form.needMoreHoneyFrames,
+            needMoreBreedingFrames:       form.needMoreBreedingFrames,
+            needMedicalAttention:         form.needMedicalAttention,
+            hasHiveDamage:                form.hasHiveDamage,
+            isTakingOutFrames:            form.isTakingOutFrames,
+            abnormalBehaviorDescription:  form.abnormalBehaviorDescription,
+            medicalAttentionDescription:  form.medicalAttentionDescription,
+            hiveDamageDescription:        form.hiveDamageDescription,
+            needMoreHoneyFramesAmount:    form.needMoreHoneyFramesAmount,
+            needMoreBreedingFramesAmount: form.needMoreBreedingFramesAmount,
+            takenHoneyFrames:             form.takenHoneyFrames,
+            takenBreedingFrames:          form.takenBreedingFrames
+        }))
+    }
+}
+export function InspectionGetResponseModelArray_To_InspectionFormDBArray(
+    convertee: InspectionGetResponseModel[]
+): InspectionDB[] {
+    console.log(convertee);
+
+    return convertee.map(item => InspectionGetResponseModel_To_InspectionFormDB(item))
+}
+
+
+export function InspectionFormUIArray_To_InspectionCreateRequestModel(
+    apiaryId: number,
+    convertee: InspectionFormUI[]
+): InspectionCreateRequestModel {    
+    return {
+        apiaryId: apiaryId,
+        forms: convertee.map(form => ({
+            hiveId:                       form.hiveId,
+            isAbnormalBehavior:           form.isAbnormalBehavior,
+            isSwarming:                   form.isSwarming,
+            needAdditionalFeeding:        form.needAdditionalFeeding,
+            isQueenAlive:                 form.isQueenAlive,
+            isQueenLayingEggs:            form.isQueenLayingEggs,
+            isQueenLayingEggsIncorrectly: form.isQueenLayingEggsIncorrectly,
+            needMoreHoneyFrames:          form.needMoreHoneyFrames,
+            needMoreBreedingFrames:       form.needMoreBreedingFrames,
+            needMedicalAttention:         form.needMedicalAttention,
+            hasHiveDamage:                form.hasHiveDamage,
+            isTakingOutFrames:            form.isTakingOutFrames,
+            abnormalBehaviorDescription:  form.abnormalBehaviorDescription,
+            medicalAttentionDescription:  form.medicalAttentionDescription,
+            hiveDamageDescription:        form.hiveDamageDescription,
+            needMoreHoneyFramesAmount:    form.needMoreHoneyFramesAmount,
+            needMoreBreedingFramesAmount: form.needMoreBreedingFramesAmount,
+            takenHoneyFrames:             form.takenHoneyFrames,
+            takenBreedingFrames:          form.takenBreedingFrames
+        }))
+    }
+}
+
+
+export function InspectionFormDB_To_InspectionFormUI(
+    convertee: InspectionFormDB
+): InspectionFormUI {
+    return {
+        hiveId:                       convertee.hiveId,
+        isAbnormalBehavior:           convertee.isAbnormalBehavior,
+        isSwarming:                   convertee.isSwarming,
+        needAdditionalFeeding:        convertee.needAdditionalFeeding,
+        isQueenAlive:                 convertee.isQueenAlive,
+        isQueenLayingEggs:            convertee.isQueenLayingEggs,
+        isQueenLayingEggsIncorrectly: convertee.isQueenLayingEggsIncorrectly,
+        needMoreHoneyFrames:          convertee.needMoreHoneyFrames,
+        needMoreBreedingFrames:       convertee.needMoreBreedingFrames,
+        needMedicalAttention:         convertee.needMedicalAttention,
+        hasHiveDamage:                convertee.hasHiveDamage,
+        isTakingOutFrames:            convertee.isTakingOutFrames,
+        abnormalBehaviorDescription:  convertee.abnormalBehaviorDescription,
+        medicalAttentionDescription:  convertee.medicalAttentionDescription,
+        hiveDamageDescription:        convertee.hiveDamageDescription,
+        needMoreHoneyFramesAmount:    convertee.needMoreHoneyFramesAmount,
+        needMoreBreedingFramesAmount: convertee.needMoreBreedingFramesAmount,
+        takenHoneyFrames:             convertee.takenHoneyFrames,
+        takenBreedingFrames:          convertee.takenBreedingFrames,
+        isSubmited:                   false,
+        hasMadeChanges:               false
+    }
 }

@@ -27,7 +27,7 @@ const tabs: Tab[] = [
     {
         name: 'apiaries',
         pagePath: '/apiaries',
-        svg: SVG.Apiaries
+        svg: SVG.Apiary
     },
     {
         name: 'calendar',
@@ -40,9 +40,9 @@ const tabs: Tab[] = [
         svg: SVG.Key
     },
     {
-        name: 'd',
-        pagePath: '/',
-        svg: SVG.Checkmark
+        name: 'Inspections',
+        pagePath: RouterViewPaths.Inspections,
+        svg: SVG.Clipboard
     },
     {
         name: 'e',
@@ -137,7 +137,7 @@ onMounted(() => {
 <style module lang='sass'>
 @use '@/assets/_colors.sass' as colors
 .container
-    top: 0
+    top: 3rem
     position: sticky
     display: flex
     flex-direction: column

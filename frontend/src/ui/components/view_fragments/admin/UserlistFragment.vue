@@ -20,7 +20,7 @@ const s = useCssModule()
 .toolbar
     display:       flex
     align-items:   center
-    height:        3rem
+    height:        3.5rem
     background:    var(--white)
     padding:       0 .5rem
     border-radius: 0 var(--border-radius-small) var(--border-radius-small) var(--border-radius-small)

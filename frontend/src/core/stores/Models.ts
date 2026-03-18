@@ -97,7 +97,7 @@ export type UserProfileModelDB = {
 }
 
 export type InspectionFormUI = {
-    id:                           number;
+    id?:                          number;
     hiveId:                       number;
     isAbnormalBehavior:           boolean;
     isSwarming:                   boolean;
@@ -113,17 +113,29 @@ export type InspectionFormUI = {
     abnormalBehaviorDescription:  string;
     medicalAttentionDescription:  string;
     hiveDamageDescription:        string;
-    neededHoneyFrames:            number;
-    neededBreedingFrames:         number;
+    needMoreHoneyFramesAmount:    number;
+    needMoreBreedingFramesAmount: number;
     takenHoneyFrames:             number;
     takenBreedingFrames:          number;
-    isSubmited:                     boolean;
-    hasMadeChanges:                  boolean;
+    isSubmited:                   boolean;
+    hasMadeChanges:               boolean;
+}
+
+export type InspectionDB = {
+    id:            number;
+    apiaryId:      number;
+    apiaryName:    string
+    userIdCreator: number
+    userPicture:   string
+    username:      string
+    creationDate:  string
+    forms:         InspectionFormDB[]
 }
 
 export type InspectionFormDB = {
     id:                           number;
     hiveId:                       number;
+    hiveName:                     string;
     isAbnormalBehavior:           boolean;
     isSwarming:                   boolean;
     needAdditionalFeeding:        boolean;
@@ -138,8 +150,18 @@ export type InspectionFormDB = {
     abnormalBehaviorDescription:  string;
     medicalAttentionDescription:  string;
     hiveDamageDescription:        string;
-    neededHoneyFrames:            number;
-    neededBreedingFrames:         number;
+    needMoreHoneyFramesAmount:    number;
+    needMoreBreedingFramesAmount: number;
     takenHoneyFrames:             number;
     takenBreedingFrames:          number;
+}
+
+export type InspectionTableEntryModel = {
+    id:            number
+    apiaryId:      number
+    apiaryName:    string
+    userIdCreator: number
+    userPicture:   string
+    username:      string
+    creationDate:  string
 }

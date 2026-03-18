@@ -162,3 +162,63 @@ export type UpdateApiaryAccessResponseModel = {
 export type ApiaryAccessResponseModel = {
     apiaryId: number
 }
+
+
+
+export type InspectionCreateRequestModel = {
+    apiaryId: number;
+    forms:     {
+        hiveId:                       number;
+        isAbnormalBehavior:           boolean;
+        isSwarming:                   boolean;
+        needAdditionalFeeding:        boolean;
+        isQueenAlive:                 boolean;
+        isQueenLayingEggs:            boolean;
+        isQueenLayingEggsIncorrectly: boolean;
+        needMoreHoneyFrames:          boolean;
+        needMoreBreedingFrames:       boolean;
+        needMedicalAttention:         boolean;
+        hasHiveDamage:                boolean;
+        abnormalBehaviorDescription:  string;
+        medicalAttentionDescription:  string;
+        hiveDamageDescription:        string;
+        isTakingOutFrames:            boolean;
+        needMoreHoneyFramesAmount:    number;
+        needMoreBreedingFramesAmount: number;
+        takenHoneyFrames:             number;
+        takenBreedingFrames:          number;
+    }[]
+}
+
+export type InspectionGetResponseModel = {
+    id:            number;
+    apiaryId:      number;
+    apiaryName:    string
+    userIdCreator: number
+    userPicture:   string
+    username:      string
+    creationDate:  string
+    forms:    {
+        id:                           number;
+        hiveId:                       number;
+        hiveName:                     string;
+        isAbnormalBehavior:           boolean;
+        isSwarming:                   boolean;
+        needAdditionalFeeding:        boolean;
+        isQueenAlive:                 boolean;
+        isQueenLayingEggs:            boolean;
+        isQueenLayingEggsIncorrectly: boolean;
+        needMoreHoneyFrames:          boolean;
+        needMoreBreedingFrames:       boolean;
+        needMedicalAttention:         boolean;
+        hasHiveDamage:                boolean;
+        isTakingOutFrames:            boolean;
+        abnormalBehaviorDescription:  string;
+        medicalAttentionDescription:  string;
+        hiveDamageDescription:        string;
+        needMoreHoneyFramesAmount:    number;
+        needMoreBreedingFramesAmount: number;
+        takenHoneyFrames:             number;
+        takenBreedingFrames:          number;
+    }[]
+}

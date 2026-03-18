@@ -2,9 +2,9 @@
 import { onMounted, useCssModule } from "vue";
 
 const props = withDefaults(defineProps<{
-    name?: string,
+    label?: string,
 }>(), {
-    name: "{ PAGE }",
+    label: "{ PAGE }",
 })
 
 const s = useCssModule()
@@ -12,7 +12,7 @@ const s = useCssModule()
 
 <template>
 <div :class="s.container">
-    <h1 :class="[s.name]">{{ name }}</h1>
+    <h1 :class="[s.label]">{{ label }}</h1>
     <div :class="s.workComponents">
         <slot>
             
@@ -47,9 +47,9 @@ const s = useCssModule()
         display: flex
         gap: .5rem
 
-    .name
+    .label
         font-size: var(--font-size-large)
-        color: black
+        color: var(--black)
         font-weight: 700
         letter-spacing: .02em
         margin: 0

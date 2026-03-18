@@ -1,15 +1,5 @@
-import AdminView from '@/ui/views/AdminView.vue'
-import ApiariesView from '@/ui/views/ApiariesView.vue'
-import ApiaryHivesView from '@/ui/views/ApiaryHivesView.vue'
-import CalendarView from '@/ui/views/CalendarView.vue'
-import HiveOverview from '@/ui/views/HiveOverview.vue'
-import LoginView from '@/ui/views/registration/LoginView.vue'
-import SignUpView from '@/ui/views/registration/SignUpView.vue'
-import SettingsView from '@/ui/views/SettingsView.vue'
 import { createRouter, createWebHistory } from 'vue-router'
 import { useAuthenticationApiStore } from '../network/AuthenticationApiStore'
-import ProfileView from '@/ui/views/ProfileView.vue'
-import InspectionView from '@/ui/views/InspectionView.vue'
 
 export enum RouterViewPaths {
     Home         = '/',
@@ -22,6 +12,7 @@ export enum RouterViewPaths {
     Calendar     = "/calendar",
     Admin        = "/admin",
     Profile      = "/profile",
+    Inspections  = "/inspections"
 }
 
 const router = createRouter({
@@ -30,47 +21,58 @@ const router = createRouter({
     {
         path: RouterViewPaths.Home,
         name: RouterViewPaths.Home,
-        component: InspectionView,
+        component: () => import('@/ui/views/InspectionsView.vue'),
     },
     {
         path: RouterViewPaths.Registration,
         name: RouterViewPaths.Registration,
-        component: LoginView
+        component: () => import('@/ui/views/registration/LoginView.vue')
     },
     {
         path: RouterViewPaths.HiveOverview,
         name: RouterViewPaths.HiveOverview,
-        component: HiveOverview
+        component: () => import('@/ui/views/HiveOverview.vue')
     },
     {
         path: RouterViewPaths.Apiaries,
         name: RouterViewPaths.Apiaries,
-        component: ApiariesView
+        component: () => import('@/ui/views/ApiariesView.vue')
     },
     {
         path: RouterViewPaths.ApiaryHives,
         name: RouterViewPaths.ApiaryHives,
-        component: ApiaryHivesView
+        component: () => import('@/ui/views/ApiaryHivesView.vue')
     },
     {
-        path: RouterViewPaths.Settings,
-        name: RouterViewPaths.Settings,
-        component: SettingsView
+        path: RouterViewPaths.Inspections,
+        name: RouterViewPaths.Inspections,
+        component: () => import('@/ui/views/InspectionsView.vue')
+    },
+    {
+        path: `/inspection/intake/apiary/:apiaryId`,
+        name: "apiary inspection",
+        component: () => import('@/ui/views/InspectionIntakeView.vue'),
+    },
+    {
+        path: `/inspection/:id`,
+        name: "inspection",
+        component: () => import('@/ui/views/InspectionReviewview.vue'),
+        props: true
     },
     {
         path: RouterViewPaths.Calendar,
         name: RouterViewPaths.Calendar,
-        component: CalendarView
+        component: () => import('@/ui/views/CalendarView.vue'), 
     },
     {
         path: RouterViewPaths.Admin,
         name: RouterViewPaths.Admin,
-        component: AdminView
+        component: () => import('@/ui/views/AdminView.vue')
     },
     {
         path: RouterViewPaths.Profile,
         name: RouterViewPaths.Profile,
-        component: ProfileView
+        component: () => import('@/ui/views/ProfileView.vue')
     },
     // {
     //   path: '/about',

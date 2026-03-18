@@ -17,6 +17,10 @@ export const useApiaryStore = defineStore("Apiary store", () => {
 
     const isCreatingApiary = ref(false)
 
+    function getApiaryHives(apiaryId: number) {
+        return hiveStore.hives.filter(hive => hive.apiaryId === apiaryId)
+    }
+
     function countHivesInApiaries() {
         // reset count to 0
         for (const apiary of apiaries.value) {
@@ -122,6 +126,7 @@ export const useApiaryStore = defineStore("Apiary store", () => {
         unassignHive,
         openApiary,
         initialize,
-        countHivesInApiaries
+        countHivesInApiaries,
+        getApiaryHives
     }
 })

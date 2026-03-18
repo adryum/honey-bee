@@ -69,11 +69,12 @@ export function useFlexibleGrid(options: FlexibleGridOptions) {
     }
 }
 
-export function isValidValue(value: unknown): boolean {
+export function isValidValue(value: unknown): value is NonNullable<typeof value> {
     if (value === null || value === undefined) return false
     if (typeof value === 'number') return !Number.isNaN(value)
     if (typeof value === 'string') return value !== ''
     if (typeof value === 'boolean') return value
+    if (Array.isArray(value)) return value.length > 0
     return true
 }
 let counter = 0

@@ -1,27 +1,25 @@
 <script setup lang="ts">
-import { onMounted, reactive, ref, useCssModule } from "vue";
+import { computed, onMounted, reactive, ref, useCssModule } from "vue";
 import Icon from "../components/Icon.vue";
 import { IconType, SVG } from "@/assets/svgs/SVGLoader";
 import IconTextButton from "../components/input/buttons/IconTextButton.vue";
 import InspectionForm from "../components/forms/InspectionForm.vue";
-import type { InspectionFormDB, InspectionFormUI } from "@/core/stores/Models";
+import type { InspectionFormUI } from "@/core/stores/Models";
+import { useInspectionStore } from "@/core/stores/InspectionStore";
+import { InspectionFormUIArray_To_InspectionCreateRequestModel } from "@/core/Convertors";
+import { storeToRefs } from "pinia";
+import { isValidValue } from "@/core/utils/others";
+import router, { RouterViewPaths } from "@/core/router";
+import { useRoute } from "vue-router";
 
 const s = useCssModule()
-const props = withDefaults(defineProps<{
-    hives: { id: number, name: string }[]
-}>(), {
-    hives: () => [
-        { id: 1, name: "#231 Apple hive" },
-        { id: 2, name: "#232 Banana hive" },
-        { id: 3, name: "#233 Cherry hive" },
-        { id: 4, name: "#231 Coconut hive" },
-        { id: 5, name: "#232 Pineapple hive" },
-        { id: 6, name: "#233 Orange hive" },
-
-    ]
-})
+const inspectionStore = useInspectionStore()
 const inspectionForms = ref<InspectionFormUI[]>([])
+const { currentInspectionHives, currentInspectionApiary } = storeToRefs(inspectionStore)
 const selectedForm = ref<InspectionFormUI | undefined>(undefined)
+
+const inspectionId            = ref<number | undefined>()
+const isOcerviewingInspection = computed(() => isValidValue(inspectionId.value))
 
 const emptyForm: InspectionFormUI = {
     id:                           -1,
@@ -40,12 +38,12 @@ const emptyForm: InspectionFormUI = {
     abnormalBehaviorDescription:  "",
     medicalAttentionDescription:  "",
     hiveDamageDescription:        "",
-    neededHoneyFrames:            0,
-    neededBreedingFrames:         0,
+    needMoreHoneyFramesAmount:            0,
+    needMoreBreedingFramesAmount:         0,
     takenHoneyFrames:             0,
     takenBreedingFrames:          0,
-    isSubmited:                     false,
-    hasMadeChanges:                  false
+    isSubmited:                   false,
+    hasMadeChanges:               false,
 }
 
 function hasMadeAnyChanges(form: InspectionFormUI): boolean {
@@ -64,10 +62,12 @@ function hasMadeAnyChanges(form: InspectionFormUI): boolean {
 }
 
 function initialize() {
-    props.hives.forEach(hive => {
+    if (!isValidValue(currentInspectionApiary.value)) return
+
+    currentInspectionHives.value.forEach(hive => {
         inspectionForms.value.push({ ...emptyForm, hiveId: hive.id });
     })
-    selectHive(props.hives[0].id)
+    selectHive(currentInspectionHives.value[0].id)
 }
 
 function selectHive(id: number) {
@@ -91,8 +91,21 @@ function saveForm(formModel: InspectionFormUI) {
     }
 }
 
-function finishInspection() {
-    
+async function finishInspection() {
+    if (!currentInspectionApiary.value?.id) return;
+
+    const model = InspectionFormUIArray_To_InspectionCreateRequestModel(
+        currentInspectionApiary.value.id,
+        inspectionForms.value
+    )
+    await inspectionStore.createInspection(model, {
+        onSuccess: function (message: string): void {
+            router.push(RouterViewPaths.Inspections)
+        },
+        onFailure: function (): void {
+
+        }
+    })
 }
 
 onMounted(() => {
@@ -117,7 +130,7 @@ onMounted(() => {
                 for="apiaryHives"
                 :class="s.label"
             >
-                {{ hives.find(hive => hive.id === selectedForm?.hiveId)?.name }}
+                {{ currentInspectionHives.find(hive => hive.id === selectedForm?.hiveId)?.name }}
             </label>
 
             <IconTextButton
@@ -149,7 +162,7 @@ onMounted(() => {
             <label 
                 for="apiaryHives"
                 :class="s.label"
-            >Applejacks hives</label>
+            >{{ currentInspectionApiary?.name || 'Apiary' }} hives</label>
         </div>
 
         <div

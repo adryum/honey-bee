@@ -110,6 +110,7 @@ const props = withDefaults(defineProps<{
         min-height: 3rem
         max-height: 3rem
         background: var(--orange)
+        color: white
 
         &:hover
             filter: brightness(95%) !important
@@ -123,7 +124,6 @@ const props = withDefaults(defineProps<{
     align-self: center
     max-height: 1rem
     max-width:  1rem
-    color: white
 
 .text
     align-self:  center

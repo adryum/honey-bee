@@ -301,7 +301,7 @@ router.post('/whitelist/update', requireRole([Role.ADMINISTRATOR]), async (req: 
             }
 
             console.log("Checking if previous user is registered...");
-            const [[userIdQuery]] = await db.query<RowDataPacket[]>(`
+            const [[userIdQuery]] = await db.query<(RowDataPacket & { id: number })[]>(`
                 SELECT id
                 FROM users
                 WHERE email = ?
@@ -320,7 +320,7 @@ router.post('/whitelist/update', requireRole([Role.ADMINISTRATOR]), async (req: 
                     `, [emailCheck?.email]
                 );
                 console.log("Removed from whitelist!");
-                await updateUserSession({ id: userIdQuery!.id, role: roleEnum }, ClientEvents.LOGOUT)
+                await updateUserSession({ id: userIdQuery.id, role: roleEnum }, ClientEvents.LOGOUT)
             } else {
                 console.log("User is not registered!");
             }
@@ -359,7 +359,7 @@ router.post('/whitelist/update', requireRole([Role.ADMINISTRATOR]), async (req: 
         console.log("Done!");
 
         console.log("Checking if there's a user with new entry's email...");
-        const [[newEmailUserCheck]] = await db.query<RowDataPacket[]>(`
+        const [[newEmailUserCheck]] = await db.query<(RowDataPacket & { id: number })[]>(`
             SELECT id
             FROM users
             WHERE email = ?
@@ -379,7 +379,7 @@ router.post('/whitelist/update', requireRole([Role.ADMINISTRATOR]), async (req: 
                 `, [roleEnum, isEnabled, email]
             )
             console.log("Done!");
-            await updateUserSession({ id: newEmailUserCheck!.id, role: roleEnum }, ClientEvents.LOGOUT)
+            await updateUserSession({ id: newEmailUserCheck.id, role: roleEnum }, ClientEvents.LOGOUT)
         } else {
             console.log("No user with entrys email!");
         }

@@ -1,0 +1,213 @@
+<script setup lang="ts">
+import { computed, onMounted, ref, useCssModule } from "vue";
+import Icon from "../components/Icon.vue";
+import { IconType, SVG } from "@/assets/svgs/SVGLoader";
+import IconTextButton from "../components/input/buttons/IconTextButton.vue";
+import InspectionForm from "../components/forms/InspectionForm.vue";
+import { useInspectionStore } from "@/core/stores/InspectionStore";
+import { storeToRefs } from "pinia";
+import type { InspectionFormDB, InspectionFormUI } from "@/core/stores/Models";
+import { InspectionFormDB_To_InspectionFormUI } from "@/core/Convertors";
+import router from "@/core/router";
+
+const s = useCssModule()
+const props = defineProps<{
+    id: string
+}>()
+
+const inspectionStore        = useInspectionStore()
+const { reviewedInspection } = storeToRefs(inspectionStore)
+const forms                  = computed(() => reviewedInspection.value?.forms || [])
+const selectedForm           = ref<InspectionFormDB | undefined>()
+const selectedFormUI         = ref<InspectionFormUI | undefined>()
+const previousPagePath       = ref<string | undefined>()
+
+function selectForm(id: number) {
+    selectedForm.value = forms.value.find(form => form.id === id)
+
+    if (selectedForm.value) {
+        selectedFormUI.value = InspectionFormDB_To_InspectionFormUI(selectedForm.value)
+    }
+}
+
+onMounted(() => {
+    selectForm(forms.value[0]?.id)
+    previousPagePath.value = window.history.state.back
+})
+</script>
+
+<template>
+<div :class="s.container">
+    <section
+        :class="s.plate"
+    >
+        <div
+            :class="s.header"
+        >
+            <Icon
+                :svg="SVG.Hive"
+                :type="IconType.MEDIUM"
+            />
+            <label 
+                for="apiaryHives"
+                :class="s.label"
+            >
+                {{ forms.find(hive => hive.id === selectedForm?.hiveId)?.hiveName }}
+            </label>
+
+            <IconTextButton
+                :class="s.marginLeft"
+                :svg="SVG.Logout"
+                text="Exit"
+                @click="router.push(previousPagePath || '/')"
+            />
+        </div>
+
+        <InspectionForm
+            v-if="selectedFormUI"
+            :class="s.form"
+            :isReviewing="false"
+            v-model:form="selectedFormUI"
+        />
+    </section>
+    <section
+        id="apiaryHives"
+        :class="s.apiaryHives"
+    >
+        <div
+            :class="s.header"
+        >
+            <Icon
+                :svg="SVG.Apiary"
+                :type="IconType.MEDIUM"
+            />
+            <label 
+                for="apiaryHives"
+                :class="s.label"
+            >{{ reviewedInspection?.apiaryName || 'Apiary' }} hives</label>
+        </div>
+
+        <div
+            :class="s.hiveGrid"
+        >
+            <div
+                v-for="form in forms"
+                :class="[
+                    s.hive,
+                    s.uncomplete,
+                    selectedForm?.hiveId === form.hiveId && s.selected
+                ]"
+                @click="selectForm(form.id)"
+            >
+                <p
+                    :class="[
+                        s.id,
+                        selectedForm?.hiveId === form.hiveId && s.selected
+                    ]"
+                >
+                    {{ form.hiveId ?? "N/A" }}
+                </p>
+                
+            </div>
+
+        </div>
+    </section>
+</div>
+</template>
+
+<style module lang="sass">
+.marginLeft
+    margin-left: auto
+
+.plate
+    border-radius: var(--border-radius-small)
+    display: flex
+    flex-direction: column
+
+    background: var(--white)
+    height: calc( 100vh - 5rem )
+
+.form
+    overflow-y: scroll
+    height: 100%
+
+.hiveGrid
+    display: inline-flex
+    align-content: flex-start
+    justify-content: flex-start
+    flex-wrap: wrap
+    height: 30rem
+    width: 100%
+    gap: 1rem
+    padding: 1rem
+    padding-top: 0 
+    box-sizing: border-box
+
+    .hive
+        display: flex
+        align-items: center
+        justify-content: center
+
+        min-width: 4rem
+        min-height: 4rem
+        
+        border-radius: var(--border-radius-small)
+        cursor: pointer
+
+        transition: .1s
+
+
+        .id
+            font-family: var(--font-family)
+            font-size: var(--font-size-big)
+            font-weight: 500
+            color: var(--black)
+
+            &.selected
+                color: white
+
+        &.uncomplete
+            background: white
+            box-shadow: 0 0 0 1px var(--gray)
+
+        &.started
+            background: white
+            box-shadow: 0 0 0 1px var(--orange)
+
+        &.completed
+            background: var(--light-gray)
+            box-shadow: 0 0 0 1px var(--gray)
+
+        &.selected
+            background: var(--orange)
+            color: white
+
+.header
+    display: flex
+    align-items: center
+    margin: 1rem
+    height: 2rem
+    min-height: 2rem
+    max-height: 2rem
+    gap: .5rem
+
+.label
+    +bulletLabel
+
+.apiaryHives
+    width: 100%
+    height: 100%
+    background: var(--white)
+    border-radius: var(--border-radius-small)
+
+.container
+    display: grid
+    grid-template-columns: 1fr 25rem
+    grid-template-rows: 1fr
+    gap: .5rem
+
+    padding: 1rem
+    box-sizing: border-box
+    height: calc( 100vh - 3rem )
+    width: 100%
+</style>
