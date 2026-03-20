@@ -1,45 +1,42 @@
-import type { HiveModelDB } from "../stores/Models";
-import axios from "axios"
-import { HiveCreateResponse_to_HiveModelDB, HiveCreateResponseArray_to_HiveModelDBArray } from "../Convertors";
-import { isValidValue } from "../utils/others";
-import type { HiveCreateResponseModel, HiveCreateRequestModel, HiveUpdateRequestModel } from "../network/Models";
+import { useMutation, useQuery, useQueryClient } from "@tanstack/vue-query/build/legacy/_tsup-dts-rollup";
+import { hiveApi } from "../api/hiveApi";
 
-export const hiveApi = {
-    getHives: async () => {
-        const result = await axios.get<HiveCreateResponseModel[]>("/hive/get")
-        return HiveCreateResponseArray_to_HiveModelDBArray(result.data)
-    },
-    createHive: async (model: HiveCreateRequestModel) => {
-        const formData = new FormData()
-        formData.append("name", model.name)
-        formData.append("description", model.description)
-        formData.append("type", model.type)
-        if (isValidValue(model.apiaryId)) formData.append("apiaryId", model.apiaryId.toString())
-        if (model.image) formData.append("image", model.image)
+export const useHives = () => {
+    const queryClient = useQueryClient()
 
-        const result = await axios.post<HiveCreateResponseModel>("/hive/create", formData)
-        
-        return HiveCreateResponse_to_HiveModelDB(result.data)
-    },
-    updateHive: async (model: HiveUpdateRequestModel) => {
-        const formData = new FormData()
-        formData.append("id", model.id.toString())
-        formData.append("name", model.name)
-        formData.append("description", model.description) 
-        formData.append("type", model.type) 
-        formData.append("apiaryId", isValidValue(model.apiaryId) ? model.apiaryId!.toString() : "") 
-        if (model.image) formData.append("image", model.image)
+    const { data: hives, isLoading, isError } = useQuery({
+        queryKey: ["hives"],
+        queryFn: hiveApi.getHives
+    })
 
-        const result = await axios.post<HiveCreateResponseModel>("/hive/update", formData)
-        
-        return HiveCreateResponse_to_HiveModelDB(result.data)
-    },
-    deleteHive: async (id: number) => {
-        const result = await axios.post<number>("/hive/delete", { id: id})        
-        return result.data
-    },
-    createCalendarEvent: () => {
+    const { mutate: createHive } = useMutation({
+        mutationFn: hiveApi.createHive,
+        onSuccess: (newHive) => {
+            queryClient.invalidateQueries({ queryKey: ['hives'] })
+        }
+    })
 
+    const { mutate: deleteHive } = useMutation({
+        mutationFn: hiveApi.deleteHive,
+        onSuccess: (id) => {
+            queryClient.invalidateQueries({ queryKey: ['hives'] })
+        }
+    })
+
+    const { mutate: updateHive } = useMutation({
+        mutationFn: hiveApi.updateHive,
+        onSuccess: (updatedHive) => {
+            queryClient.invalidateQueries({ queryKey: ['hives'] })
+        }
+    })
+
+    return {
+        hives,
+        isLoading,
+        isError,
+        createHive,
+        deleteHive,
+        updateHive
     }
 
     // async function createCalendarEvent(
@@ -58,7 +55,10 @@ export const hiveApi = {
 
     // async function getHives(): Promise<HiveModelDB[] | undefined> {
     //     try {
+    //         const result = await axios.get<HiveCreateResponseModel[]>("/hive/get")
+    //         if (!result.data) throw new Error("Failed to get hives!");
             
+    //         return HiveCreateResponseArray_to_HiveModelDBArray(result.data)
     //     } catch (error) {
     //         console.error(error);
     //         return undefined 

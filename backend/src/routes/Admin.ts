@@ -10,6 +10,109 @@ import { ClientEvents } from "../config/SocketIo";
 const router = Router()
 
 router.post(
+    '/access/set/hive', 
+    requireRole([Role.ADMINISTRATOR]),
+    async (req: Request<{},{}, {
+        userId:     number
+        hiveId:   number
+        giveAccess: boolean
+    }>, 
+    res: Response
+) => {
+    console.log("# Update user hive access");
+    const { userId, hiveId, giveAccess } = req.body 
+
+    if (!isValidValue(userId) || !isValidValue(hiveId)) {
+        res.status(401).send("incorrect credentials!");
+        return;
+    }
+
+    try {
+        console.log("Checking if user already has access...");
+        const [[checkResult]] = await db.query<RowDataPacket[]>(`
+            SELECT id
+            FROM userHiveAccess
+            WHERE userId = ? AND hiveId = ?
+            LIMIT 1`, 
+            [userId, hiveId]
+        )
+        
+        if (isValidValue(checkResult)) {
+            console.log("User has access!");
+            if (!giveAccess) {
+                console.log("Removing access...");
+                await db.query<ResultSetHeader>(`
+                    DELETE FROM userHiveAccess
+                    WHERE userId = ? AND hiveId = ?
+                    LIMIT 1`,
+                    [userId, hiveId]
+                )
+                console.log("Done!");
+            }
+            return res.status(200).json({
+                userId:    userId,
+                hiveId:  hiveId,
+                hasAccess: false
+            })
+        } else {
+            console.log("User doesnt have access!");
+            if (giveAccess) {
+                console.log("Giving access...");
+                await db.query<ResultSetHeader>(`
+                    INSERT INTO userHiveAccess (userId, hiveId)
+                    VALUES (?, ?)`,
+                    [userId, hiveId]
+                )
+                console.log("Done!");
+            }
+            return res.status(200).json({
+                userId:    userId,
+                hiveId:  hiveId,
+                hasAccess: true
+            })
+        }
+        
+    } catch (error) {
+        console.error(error);
+        res.status(500).send('Failed to get hive access!');
+    }
+})
+
+router.post(
+    '/access/get/hives', 
+    requireRole([Role.ADMINISTRATOR]),
+    async (req: Request<{},{}, {
+        userId: number
+    }>, 
+    res: Response
+) => {
+    console.log("# Get user hive access");
+    const { userId } = req.body 
+
+    if (!isValidValue(userId)) {
+        res.status(401).send("incorrect credentials!");
+        return;
+    }
+
+    try {
+        console.log("Getting hive accesses...");
+        const [result] = await db.query<RowDataPacket[]>(`
+            SELECT hiveId
+            FROM userHiveAccess
+            WHERE userId = ?`, 
+            userId
+        )
+        console.log("Done!");
+
+        return res.status(200).json(result)
+    } catch (error) {
+        console.error(error);
+        res.status(500).send('Failed to get hive access!');
+    }
+})
+
+
+router.post(
     '/access/set/apiary', 
     requireRole([Role.ADMINISTRATOR]),
     async (req: Request<{},{}, {

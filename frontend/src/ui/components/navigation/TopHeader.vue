@@ -24,9 +24,9 @@ const s = useCssModule()
     display: flex
     align-items: center
     width: 100%
-    min-height: 3rem
+    min-height: 3.5rem
     box-sizing: border-box
-    padding: 0 .25rem
+    padding: 0 .5rem
     
 
     background: var(--white)

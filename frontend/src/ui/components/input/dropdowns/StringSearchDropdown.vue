@@ -242,13 +242,11 @@ watch(search , (newVal) => {
 
     .row
         display: flex
-        max-height: 2rem
-        height: 2rem
+        max-height: 2.5rem
+        height: 2.5rem
         
         box-sizing: border-box
-        // box-shadow: inset 0 0 0 1px var(--faint-border)
         border-radius: var(--border-radius-small)
-        // border: 1px solid var(--blue)
         overflow: hidden
         transition: .1s
         outline-color: transparent
@@ -256,15 +254,12 @@ watch(search , (newVal) => {
         &.invalid
             box-shadow: inset 0 0 0 1px var(--red) !important
 
-        &.focussed
-            // box-shadow: inset 0 0 0 1px var(--yellow) !important
-            // outline: 2px solid color-mix(in srgb, var(--yellow) 20%, transparent)
-
         .icon
             width: 1rem
             height: 1rem
             background: none
             padding: .4rem
+            padding-left: .8rem
             margin-top: auto
             margin-bottom: auto
 

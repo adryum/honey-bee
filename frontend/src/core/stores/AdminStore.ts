@@ -30,6 +30,16 @@ export const useAdminStore = defineStore("useAdminStore", () => {
         }
     }
 
+    async function getHiveAccess(userId: number) {
+        try {
+            const result = await adminApiStore.getHiveAccess(userId)
+            return result
+        } catch (error) {
+            console.error(error);
+            
+        }
+    }
+
     async function updateAccessToApiary(
         model:     UpdateApiaryAccessRequestModel,
         callback?: CallbackModel
@@ -216,6 +226,7 @@ export const useAdminStore = defineStore("useAdminStore", () => {
         updateUserEntry,
         removeWhitelistEntry,
         updateAccessToApiary,
-        getApiaryAccess
+        getApiaryAccess,
+        getHiveAccess,
     }
 })

@@ -32,15 +32,14 @@ const props = defineProps<{
     gap: .5rem
     padding: 0
     text-decoration: none
-    min-height: 2rem
-    max-height: 2rem
-    height: 2rem
+    min-height: 2.5rem
+    max-height: 2.5rem
+    height: 2.5rem
     padding: 0 .5rem
     cursor: pointer
 
     transition: .1s
     font-family: var(--font-family)
-    border-radius: var(--border-radius-tiny)
 
     & > *
         color: var(--black)
@@ -51,5 +50,7 @@ const props = defineProps<{
         letter-spacing: .02em
 
     &:hover
-        background: var(--gray)
+        background: var(--orange)
+        & > *
+            color: var(--white)
 </style>

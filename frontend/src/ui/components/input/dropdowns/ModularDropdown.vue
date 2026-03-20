@@ -57,7 +57,7 @@ const { floaterStyle } = useFloatingUI({
             :class="$style.list"
             :style="{ 
                 ...floaterStyle, 
-                boxShadow: `0 0 2px 1px ${props.color || 'var(--yellow)'}`,
+                boxShadow: `0 0 5px 0 ${props.color || 'var(--dark)'}`,
                 width: `calc(${floaterStyle.width} - 2px)`,
                 left: `calc(${floaterStyle.left} - 1px)`
             }"
@@ -91,8 +91,6 @@ const { floaterStyle } = useFloatingUI({
     box-sizing:     border-box
     gap:            .1rem
     overflow:       hidden
-    padding:        .25rem
-
 
 .container
     display:        flex

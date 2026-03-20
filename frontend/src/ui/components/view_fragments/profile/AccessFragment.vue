@@ -1,19 +1,36 @@
 <script setup lang="ts">
 import { useApiaryStore } from "@/core/stores/ApiaryStore";
 import { storeToRefs } from "pinia";
-import { computed, reactive, ref, useCssModule } from "vue";
+import { computed, onMounted, reactive, ref, useCssModule } from "vue";
 import Apiary from "../../apiary/Apiary.vue";
 import { isValidValue, useFlexibleGrid } from "@/core/utils/others";
 import { useProfileStore } from "@/core/stores/ProfileStore";
-import type { ApiaryModelDB } from "@/core/stores/Models";
+import type { ApiaryModelDB, HiveModelDB } from "@/core/stores/Models";
 import { useAdminStore } from "@/core/stores/AdminStore";
+import { useHiveStore } from "@/core/stores/HiveStore";
 
 const s = useCssModule()
+const props = defineProps<{
+    userId: number
+}>()
+
 const adminStore       = useAdminStore()
 const apiaryStore      = useApiaryStore()
+const hiveStore        = useHiveStore()
 const profileStore     = useProfileStore()
 const { apiaries }     = storeToRefs(apiaryStore)
-const { apiaryAccess } = storeToRefs(profileStore)
+const { apiaries }     = storeToRefs(apiaryStore)
+const { apiaryAccess, hiveAccess } = storeToRefs(profileStore)
+
+
+const userApiaryAccess = ref<number[]>([])
+const userHiveAccess   = ref<number[]>([])
+const userApiaries     = ref<ApiaryModelDB[]>([])
+const userApiaryHives  = ref<HiveModelDB[]>([])
+
+const changingHiveAccess   = reactive<Record<number, boolean>>({})
+const changingApiaryAccess = reactive<Record<number, boolean>>({})
+
 
 type ApiaryAccessModel = {
     apiary:           ApiaryModelDB
@@ -21,7 +38,6 @@ type ApiaryAccessModel = {
     isChangingAccess: boolean
 }
 
-const changingAccess = reactive<Record<number, boolean>>({})
 const showedApiariesUI = computed<ApiaryAccessModel[]>(() => {
     return apiaries.value.map(item => ({
         apiary:           item,
@@ -29,6 +45,8 @@ const showedApiariesUI = computed<ApiaryAccessModel[]>(() => {
         isChangingAccess: changingAccess[item.id] ?? false
     }))
 })
+
+const openedApiaryId = ref<number | null>(null)
 
 const grid = ref()
 const { style: gridStyle } = useFlexibleGrid({ 
@@ -72,6 +90,13 @@ async function toggleApiaryAccess(model: ApiaryAccessModel) {
         changingAccess[model.apiary.id] = false
     }
 }
+
+onMounted(async () => {
+    userApiaryAccess.value = await adminStore.getApiaryAccess(props.userId) ?? []
+    userHiveAccess.value   = await adminStore.getHiveAccess(props.userId)   ?? []
+
+
+})
 </script>
 
 <template>

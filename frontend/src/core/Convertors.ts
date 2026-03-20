@@ -1,6 +1,6 @@
 import type { reactive } from "vue";
 import { String_to_HiveType, String_to_NoteTypes, String_to_Role } from "./DatabaseEnums";
-import type { ApiaryAccessResponseModel, ApiaryCreateResponseModel, HiveCreateResponseModel, InspectionCreateRequestModel, InspectionGetResponseModel, NoteCreateModelResponse, UserEntryResponseModel, UserProfileResponseModel, WhitelistEntryResponseModel } from "./network/Models";
+import type { ApiaryAccessResponseModel, ApiaryCreateResponseModel, HiveAccessResponseModel, HiveCreateResponseModel, InspectionCreateRequestModel, InspectionGetResponseModel, NoteCreateModelResponse, UserEntryResponseModel, UserProfileResponseModel, WhitelistEntryResponseModel } from "./network/Models";
 import type { ApiaryModelDB, HiveModelDB, InspectionDB, InspectionFormDB, InspectionFormUI, NoteModelDB, UserEntryModelDB, UserProfileModel, UserProfileModelDB, WhitelistEntryModelDB } from "./stores/Models";
 
 export function ApiaryCreateResponse_to_ApiaryModelDB(
@@ -124,6 +124,18 @@ export function ApiaryAccessResponseModelArray_To_NumberArray(
     convertee: ApiaryAccessResponseModel[]
 ) {
     return convertee.map(item => ApiaryAccessResponseModel_To_Number(item))
+}
+
+
+export function HiveAccessResponseModel_To_Number(
+    convertee: HiveAccessResponseModel
+) {
+    return convertee.hiveId
+}
+export function HiveAccessResponseModelArray_To_NumberArray(
+    convertee: HiveAccessResponseModel[]
+) {
+    return convertee.map(item => HiveAccessResponseModel_To_Number(item))
 }
 
 

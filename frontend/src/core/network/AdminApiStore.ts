@@ -2,8 +2,8 @@ import axios from 'axios'
 import { defineStore } from 'pinia'
 
 import type { UserEntryModelDB, WhitelistEntryModelDB } from '../stores/Models'
-import { ApiaryAccessResponseModelArray_To_NumberArray, UserEntryResponseModelArray_To_UserEntryModelDBArray, WhitelistEntryResponseModelArray_To_WhitelistEntryModelDBArray, WhitelistEntryResponseModel_To_WhitelistEntryDB } from '../Convertors'
-import type { WhitelistEntryResponseModel, AddToWhitelistRequestModel, UpdateUserEntryRequestModel, UpdateWhitelistEntryResponseModel, UpdateWhitelistEntryRequestModel, UserEntryResponseModel, UpdateApiaryAccessRequestModel, UpdateApiaryAccessResponseModel, ApiaryAccessResponseModel } from './Models'
+import { ApiaryAccessResponseModelArray_To_NumberArray, HiveAccessResponseModelArray_To_NumberArray, UserEntryResponseModelArray_To_UserEntryModelDBArray, WhitelistEntryResponseModelArray_To_WhitelistEntryModelDBArray, WhitelistEntryResponseModel_To_WhitelistEntryDB } from '../Convertors'
+import type { WhitelistEntryResponseModel, AddToWhitelistRequestModel, UpdateUserEntryRequestModel, UpdateWhitelistEntryResponseModel, UpdateWhitelistEntryRequestModel, UserEntryResponseModel, UpdateApiaryAccessRequestModel, UpdateApiaryAccessResponseModel, ApiaryAccessResponseModel, HiveAccessResponseModel } from './Models'
 
 export const useAdminApiStore = defineStore('useAdminApiStore', () => {
     async function getApiaryAccess(userId: number): Promise<number[] | undefined> {
@@ -12,6 +12,16 @@ export const useAdminApiStore = defineStore('useAdminApiStore', () => {
             return ApiaryAccessResponseModelArray_To_NumberArray(data)
         } catch (error) {
             console.error(`Failed to get apiary access for user ${userId} :`, error);
+            return undefined
+        }
+    }
+
+    async function getHiveAccess(userId: number): Promise<number[] | undefined> {
+        try {
+            const { data } = await axios.post<HiveAccessResponseModel[]>('/admin/access/get/hives', { userId: userId})
+            return HiveAccessResponseModelArray_To_NumberArray(data)
+        } catch (error) {
+            console.error(`Failed to get hive access for user ${userId} :`, error);
             return undefined
         }
     }
@@ -133,6 +143,7 @@ export const useAdminApiStore = defineStore('useAdminApiStore', () => {
         updateUserEntry,
         forceServerFetchNewSheetData,
         updateAccessToApiary,
-        getApiaryAccess
+        getApiaryAccess,
+        getHiveAccess,
     }
 })

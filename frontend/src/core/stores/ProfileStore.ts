@@ -25,35 +25,17 @@ export const useProfileStore = defineStore("useProfileStore", () => {
         
         if (mainStore.user?.role === Role.ADMINISTRATOR) {
             const apiaryResult = await adminStore.getApiaryAccess(userId)
-            // const hiveResult   = await adminStore.getHiveAccess(userId)
+            const hiveResult   = await adminStore.getHiveAccess(userId)
+
             if (apiaryResult) apiaryAccess.value = apiaryResult
-            // if (hiveResult) hiveAccess.value = hiveResult
+            if (hiveResult) hiveAccess.value = hiveResult
         }
 
         router.push(RouterViewPaths.Profile)
     }
-
-    async function openMyProfile() {
-        openedUser.value = mainStore.user
-        
-        // if (mainStore.user?.role === Role.ADMINISTRATOR) {
-        //     const apiaryResult = await adminStore.getApiaryAccess(userId)
-        //     // const hiveResult   = await adminStore.getHiveAccess(userId)
-        //     if (apiaryResult) apiaryAccess.value = apiaryResult
-        //     // if (hiveResult) hiveAccess.value = hiveResult
-        // }
-
-        router.push(RouterViewPaths.Profile)
-    }
-
-    function openApiary(id: number) {
-        
-    }
-
+    
     return {
         openProfile,
-        openApiary,
-        openMyProfile,
         apiaryAccess,
         hiveAccess,
         openedUser,

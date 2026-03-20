@@ -86,13 +86,19 @@ const dropdownActions: DropdownItem[] = [
     color:          white
 
 .left
-    position: relative
-    display:  flex
-    flex-direction: column
+    position:        relative
+    display:         flex
+    flex-direction:  column
     justify-content: flex-end
-    cursor:   pointer
-    flex:     1
-    overflow: hidden
+    cursor:          pointer
+    flex:            1
+    overflow:        hidden
+
+    &::after 
+        content:    ''
+        position:   absolute
+        inset:      0
+        box-shadow: inset 0 0 20px 5px rgba(0,0,0,.1)
 
 .image
     position:   absolute

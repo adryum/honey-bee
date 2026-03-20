@@ -10,6 +10,7 @@
   },
   "dependencies": {
     "@floating-ui/vue": "^1.1.9",
+    "@tanstack/vue-query": "^5.92.12",
     "@vueuse/core": "^13.6.0",
     "apexcharts": "^5.3.6",
     "axios": "^1.9.0",

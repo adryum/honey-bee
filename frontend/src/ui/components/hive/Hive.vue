@@ -1,12 +1,8 @@
 <script setup lang="ts">
 import { useCssModule } from 'vue';
-import CubeDropdown from '../input/dropdowns/CubeDropdown.vue';
-import { useHive } from '@/core/composables/hive/useHive';
-import type { DropdownItem } from '@/core/Interfaces';
 import { IconType, SVG } from '@/assets/svgs/SVGLoader';
 import Icon from '../Icon.vue';
 import type { HiveModelDB } from '@/core/stores/Models';
-import { useHiveStore } from '@/core/stores/HiveStore';
 
 const s = useCssModule()
 const props = withDefaults(defineProps<{
@@ -26,7 +22,7 @@ const props = withDefaults(defineProps<{
     ]"
 >
     <div :class="s.body">
-        <div 
+        <!-- <div 
             v-if="hive.type" 
             :class="s.type"
         >
@@ -35,7 +31,7 @@ const props = withDefaults(defineProps<{
                 :type="IconType.MEDIUM" 
                 :svg="SVG.HoneyHive" 
             />
-        </div>
+        </div> -->
         <img 
             :class="s.hiveImage" 
             :src="hive.image || 'src/assets/images/hive1.jpg'" 
@@ -44,12 +40,12 @@ const props = withDefaults(defineProps<{
     </div>
     <div :class="s.footer">
         <div :class="s.title">
-            <p :class="s.name">{{ hive.name }}</p>
+            <p :class="s.name">#{{ hive.id }} {{ hive.name }}</p>
             <p 
                 v-if="showApiary" 
                 :class="s.apiaryName"
             >
-                {{ hive.apiaryName }}
+                <!-- {{ hive.apiaryName }} -->
             </p>
         </div>
         <!-- <CubeDropdown  
@@ -65,6 +61,7 @@ const props = withDefaults(defineProps<{
 .shadow
     box-shadow: 0 0 1px 1px var(--faint-border) !important
 .container
+    position: relative
     display: flex
     flex-direction: column
     height: 25rem
@@ -80,15 +77,20 @@ const props = withDefaults(defineProps<{
         transform: translateY(-2px)
 
     .footer
+
+
         display: flex
         align-items: center
-        height: 3rem
-        max-height: 3rem
+        max-height: 3.5rem
+        min-height: 3.5rem
         width: 100%
 
         box-sizing: border-box
         padding: .5rem 
-        // box-shadow: inset 0 0 0 1px var(--faint-border)
+
+        border-radius: 0 
+        background: rgba(255, 255, 255, 1)
+
 
         .options 
             margin-left: auto
@@ -98,6 +100,7 @@ const props = withDefaults(defineProps<{
             display: flex
             flex-direction: column
             padding-left: .5rem
+            padding-right: .5rem
             .name
                 all: unset
                 font-size: var(--font-size-medium)
@@ -113,7 +116,14 @@ const props = withDefaults(defineProps<{
         // padding: .5rem
         padding-bottom: 0 
         cursor: pointer
+        box-shadow: inset 0 0 100px 0 black
 
+        &::after 
+            content: ''
+            position: absolute
+            inset: 0
+            box-shadow: inset 0 0 20px 5px rgba(0,0,0,.3)
+            
 
         .type
             position: absolute
@@ -139,6 +149,5 @@ const props = withDefaults(defineProps<{
             box-sizing: border-box
             // border-radius: var(--border-radius-small)
             background: var(--yellow)
-            box-shadow: inset 0 0 1px 0 var(--faint-border)
 
 </style>

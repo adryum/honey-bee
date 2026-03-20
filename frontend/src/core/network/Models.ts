@@ -162,7 +162,9 @@ export type UpdateApiaryAccessResponseModel = {
 export type ApiaryAccessResponseModel = {
     apiaryId: number
 }
-
+export type HiveAccessResponseModel = {
+    hiveId: number
+}
 
 
 export type InspectionCreateRequestModel = {

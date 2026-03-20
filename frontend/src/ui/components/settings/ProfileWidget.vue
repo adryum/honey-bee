@@ -59,7 +59,7 @@ function onClick(dropdown: DropdownModel, destination: SettingDestination) {
 
 <template>
 <ModularDropdown
-    color="var(--gray)"
+    color="var(--faint-border)"
     :floater-offset="8"
 >
     <template #head="{ dropdown }">
