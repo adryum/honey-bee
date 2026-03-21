@@ -1,21 +1,21 @@
 <script setup lang="ts">
-import { computed, useCssModule } from "vue";
+import { computed, toRef, useCssModule } from "vue";
 import { useI18n } from "vue-i18n";
 import HiveUpdatePopup from "../popups/hive/HiveUpdatePopup.vue";
 import IconTextButton from '../input/buttons/IconTextButton.vue'
 import { SVG } from "@/assets/svgs/SVGLoader";
 import { usePopupCreator } from "@/core/utils/PopupHiarchy";
 import type { HiveModelDB } from "@/core/stores/Models";
-import { useApiaryStore } from "@/core/stores/ApiaryStore";
-import { storeToRefs } from "pinia";
+import { useApiaryQuery } from "@/core/composables/useApiary";
 
 const s = useCssModule()
 const { t } = useI18n()
 const props = defineProps<{
-    hive: HiveModelDB
+    hive:       HiveModelDB
 }>()
 
-const { apiaries } = storeToRefs(useApiaryStore())
+const { apiary } = useApiaryQuery(toRef(() => props.hive.apiaryId))
+
 const { create } = usePopupCreator({
     popupComponent: HiveUpdatePopup,
     maxCount: 1,
@@ -23,10 +23,6 @@ const { create } = usePopupCreator({
         hive: props.hive
     }
 })
-const apiaryName = computed(() => {
-    return apiaries.value.find(item => item.id === props.hive.apiaryId)?.name ?? "No apiary" 
-})
-
 </script>
 
 <template>
@@ -69,7 +65,7 @@ const apiaryName = computed(() => {
             <p 
                 id="apiary"
                 :class="s.gridValues"    
-            >{{ apiaryName }}</p>
+            >{{ apiary?.name ?? "No apiary" }}</p>
             <label 
                 for="created"
                 :class="s.gridLabels"

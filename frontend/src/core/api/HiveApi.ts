@@ -5,9 +5,26 @@ import { isValidValue } from "../utils/others";
 import type { HiveCreateResponseModel, HiveCreateRequestModel, HiveUpdateRequestModel } from "./Models";
 
 export const hiveApi = {
-    getHives: async () => {
-        const result = await axios.get<HiveCreateResponseModel[]>("/hive/get")
-        return result.data.map(HiveCreateResponse_to_HiveModelDB)
+    getHives: async (
+        apiaryId: number | undefined
+    ) => {
+        const { data } = await axios.get<HiveCreateResponseModel[]>("/hive/get", {
+            params: {
+                apiaryId: apiaryId
+            }
+        })
+        return data.map(HiveCreateResponse_to_HiveModelDB)
+    },
+
+    getHive: async (
+        id: number
+    ) => {
+        const { data } = await axios.get<HiveCreateResponseModel>("/hive/get", {
+            params: {
+                hiveId: id
+            }
+        })
+        return HiveCreateResponse_to_HiveModelDB(data)
     },
 
     createHive: async (

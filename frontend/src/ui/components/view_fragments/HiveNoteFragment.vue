@@ -1,28 +1,24 @@
 <script setup lang="ts">
-import { computed, ref, useCssModule } from "vue";
+import { computed, ref, toRef, useCssModule } from "vue";
 import Note from '../hive_overview/notes/Note.vue'
 import { useFlexibleGrid } from "@/core/utils/others";
-import { useNoteStore } from "@/core/stores/NoteStore";
-import { storeToRefs } from "pinia";
-import { useHiveStore } from "@/core/stores/HiveStore";
+import { useNotes } from "@/core/composables/useNotes";
 
 const s = useCssModule()
 const props = defineProps<{
+    hiveId:     number
     searchText: string
 }>()
 
-const noteStore = useNoteStore()
-const { notes } = storeToRefs(noteStore)
-const { selectedHive } = storeToRefs(useHiveStore())
-const hiveNotes = computed(() => {
-    return notes.value.filter(note => note.hiveId === selectedHive.value!.id)
+const { notes } = useNotes({ 
+    hiveId: toRef(() => props.hiveId) 
 })
+
 const filteredNotes = computed(() => {
-    console.log("search: ", props.searchText);
-    return hiveNotes.value.filter(note => 
+    return notes.value?.filter(note => 
         note.title.toLowerCase().includes(props.searchText.toLowerCase()) ||
         note.content.toLowerCase().includes(props.searchText.toLowerCase())
-    )
+    ) ?? []
 })
 
 const grid = ref()

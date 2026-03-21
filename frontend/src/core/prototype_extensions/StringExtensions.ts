@@ -2,13 +2,19 @@
 declare global {
     interface String {
         toFixed(val: number): string
-        toSentenceCase(): string
+        toSentenceCase():     string
+        toNumber():           number
     }
 }
 
 String.prototype.toFixed = function(val: number): string {
     // `this` is the string value
     return  Number(this.replace(',', '.')).toFixed(val)
+}
+
+String.prototype.toNumber = function(): number {
+    // `this` is the string value
+    return Number(this)
 }
 
 String.prototype.toSentenceCase = function(): string {

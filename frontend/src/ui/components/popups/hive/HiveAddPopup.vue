@@ -2,7 +2,6 @@
 import { ref, useCssModule } from 'vue';
 import PopupFrame from '../PopupFrame.vue';
 import { usePopup, type PopupData } from '@/core/utils/PopupHiarchy';
-import { useHiveStore } from '@/core/stores/HiveStore';
 import Hive from '../../hive/Hive.vue';
 import { useFlexibleGrid } from '@/core/utils/others';
 import LabeledInputField from '../../input/fields/LabeledInputField.vue';
@@ -16,7 +15,6 @@ import { SVG } from '@/assets/svgs/SVGLoader';
 import ImageDropZone from '../../input/fields/ImageDropZone.vue';
 import IconTextButton from '../../input/buttons/IconTextButton.vue';
 import { storeToRefs } from 'pinia';
-import { useApiaryStore } from '@/core/stores/ApiaryStore';
 
 const s = useCssModule()
 const props = defineProps<{

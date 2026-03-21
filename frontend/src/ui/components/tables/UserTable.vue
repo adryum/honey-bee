@@ -1,15 +1,14 @@
 <script setup lang="ts">
-import { useAdminStore } from "@/core/stores/AdminStore";
 import { storeToRefs } from "pinia";
 import { onMounted, ref, useCssModule } from "vue";
 import UserTableRow from "./rows/UserTableRow.vue";
+import { useAdminQuery } from "@/core/composables/useAdmin";
 
 const s = useCssModule()
-const adminStore = useAdminStore()
-const { userEntries } = storeToRefs(adminStore)
 
-onMounted(async () => {
-    await adminStore.getUserEntries()
+const { registeredUserEntries } = useAdminQuery({
+    getRegisteredUsers: true,
+    getWhitelist: false
 })
 </script>
 
@@ -56,7 +55,7 @@ onMounted(async () => {
         :class="s.body"
     >
         <UserTableRow
-            v-for="(entry, i) in userEntries" 
+            v-for="(entry, i) in registeredUserEntries" 
             :key="entry.id" 
             :entry="entry"
             :order-number="i"

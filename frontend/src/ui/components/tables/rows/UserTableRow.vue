@@ -7,8 +7,7 @@ import TextDropdownBottomPart from "../../input/dropdowns/dropdownItems/bottom/T
 import IconCubeButton from "../../input/buttons/IconCubeButton.vue";
 import { SVG } from "@/assets/svgs/SVGLoader";
 import TableRowSelectionDropdownTopPart from "../../input/dropdowns/dropdownItems/top/TableRowSelectionDropdownTopPart.vue";
-import { useAdminStore } from "@/core/stores/AdminStore";
-import { useProfileStore } from "@/core/stores/ProfileStore";
+import { useAdminMutation } from "@/core/composables/useAdmin";
 
 const s = useCssModule()
 const props = defineProps<{
@@ -18,30 +17,22 @@ const props = defineProps<{
 const isEditingRow = ref(false)
 
 const editableEntry = reactive<UserEntryModelDB>({ ...props.entry })
-const adminStore = useAdminStore()
-const profileStore = useProfileStore()
+const { updateRegisteredUserEntry } = useAdminMutation()
 
-async function openProfile() {
-    await profileStore.openProfile(props.entry.id)
+async function openProfile(userId: number) {
+
 }
 
 function save() {
-    try {
-        adminStore.updateUserEntry({
-            id:            props.entry.id,
-            email:         editableEntry.email,
-            role:          editableEntry.role,
-            isWhitelisted: editableEntry.isWhitelisted
-        },
-        {
-            onSuccess: function (message: string): void {
-                isEditingRow.value = false
-            },
-            onFailure: function (): void {
-                throw new Error("Function not implemented.");
-            }
-        })
-    } catch (error) {}
+    updateRegisteredUserEntry({
+        id:            props.entry.id,
+        email:         editableEntry.email,
+        role:          editableEntry.role,
+        isWhitelisted: editableEntry.isWhitelisted
+    },
+    {
+        onSuccess: () => isEditingRow.value = false
+    })
 }
 
 function cancel() {

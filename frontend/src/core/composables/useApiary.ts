@@ -1,13 +1,36 @@
 import { useQueryClient, useQuery, useMutation } from "@tanstack/vue-query";
 import { apiaryApi } from "../api/ApiaryApi";
+import { computed, type Ref } from "vue";
 
-export const useApiaries = () => {
-    const queryClient = useQueryClient()
-
+export const useApiariesQuery = () => {
     const { data: apiaries, isLoading, isError } = useQuery({
         queryKey: ["apiaries"],
-        queryFn: apiaryApi.getApiaries
+        queryFn:  apiaryApi.getApiaries
     })
+
+    return {
+        apiaries,
+        isLoading,
+        isError,
+    }
+}
+
+export const useApiaryQuery = (id: Ref<number | undefined>) => {
+    const { data: apiary, isLoading, isError } = useQuery({
+        queryKey: ["apiaries", id],
+        queryFn:  () => apiaryApi.getApiary(id.value!),
+        enabled:  computed(() => id.value !== undefined)
+    })
+
+    return {
+        apiary,
+        isLoading,
+        isError
+    }
+}
+
+export const useApiaryMutations = () => {
+    const queryClient = useQueryClient()
 
     const { mutate: createApiary, isPending: isCreatingApiary } = useMutation({
         mutationFn: apiaryApi.createApiary,
@@ -37,7 +60,7 @@ export const useApiaries = () => {
         }
     })
 
-    // const { mutate: updateApiary } = useMutation({
+      // const { mutate: updateApiary } = useMutation({
     //     mutationFn: apiaryApi.updateApiary,
     //     onSuccess: (updatedApiary) => {
     //         queryClient.invalidateQueries({ queryKey: ['apiaries'] })
@@ -45,9 +68,6 @@ export const useApiaries = () => {
     // })
 
     return {
-        apiaries,
-        isLoading,
-        isError,
         createApiary,
         deleteApiary,
         assignHive,

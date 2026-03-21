@@ -1,29 +1,61 @@
-import { useMutation, useQuery, useQueryClient } from "@tanstack/vue-query/build/legacy/_tsup-dts-rollup";
-import { hiveApi } from "../api/hiveApi";
+import { useMutation, useQuery, useQueryClient } from "@tanstack/vue-query";
+import { hiveApi } from "../api/HiveApi";
+import { computed, type Ref } from "vue";
 
-export const useHives = () => {
-    const queryClient = useQueryClient()
-
-    const { data: hives, isLoading, isError } = useQuery({
-        queryKey: ["hives"],
-        queryFn: hiveApi.getHives
+export const useHiveQuery = ({
+    id,
+}: {
+    id: Ref<number | undefined>
+}) => {
+    const { data: hive, isLoading, isError } = useQuery({
+        queryKey: ["hives", id],
+        queryFn:  () => hiveApi.getHive(id.value!),
+        enabled:  computed(() => id.value !== undefined)
     })
 
-    const { mutate: createHive } = useMutation({
+    return {
+        hive,
+        isLoading,
+        isError,
+    }
+}
+
+export const useHivesQuery = ({
+    apiaryId
+}: {
+    apiaryId: number | undefined
+}) => {
+
+    const { data: hives, isLoading, isError } = useQuery({
+        queryKey: ["hives", { apiaryId: apiaryId }],
+        queryFn:  () => hiveApi.getHives(apiaryId)
+    })
+
+    return {
+        hives,
+        isLoading,
+        isError,
+    }
+}
+
+export const useHiveMutations = () => {
+    const queryClient = useQueryClient()
+
+    const { mutate: createHive, isPending: isCreatingHive } = useMutation({
         mutationFn: hiveApi.createHive,
         onSuccess: (newHive) => {
             queryClient.invalidateQueries({ queryKey: ['hives'] })
         }
     })
 
-    const { mutate: deleteHive } = useMutation({
+    const { mutate: deleteHive, isPending: isDeletingHive } = useMutation({
         mutationFn: hiveApi.deleteHive,
         onSuccess: (id) => {
             queryClient.invalidateQueries({ queryKey: ['hives'] })
         }
     })
 
-    const { mutate: updateHive } = useMutation({
+    const { mutate: updateHive, isPending: isUpdatingHive } = useMutation({
         mutationFn: hiveApi.updateHive,
         onSuccess: (updatedHive) => {
             queryClient.invalidateQueries({ queryKey: ['hives'] })
@@ -31,13 +63,14 @@ export const useHives = () => {
     })
 
     return {
-        hives,
-        isLoading,
-        isError,
         createHive,
         deleteHive,
-        updateHive
+        updateHive,
+        isCreatingHive,
+        isDeletingHive,
+        isUpdatingHive
     }
+
 }
 
     // async function createCalendarEvent(

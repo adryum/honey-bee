@@ -9,6 +9,15 @@ export const apiaryApi = {
         return data.map(ApiaryCreateResponse_to_ApiaryModelDB)
     },
 
+    getApiary: async (id: number) => {
+        const { data } = await axios.get<ApiaryCreateResponseModel>("/apiary/get", {
+            params: {
+                id: id
+            }
+        })
+        return ApiaryCreateResponse_to_ApiaryModelDB(data)
+    },
+
     createApiary: async (
         model: ApiaryCreateRequestModel
     ): Promise<ApiaryModelDB> => {

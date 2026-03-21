@@ -1,15 +1,7 @@
 import { useMutation, useQuery, useQueryClient } from "@tanstack/vue-query";
 import { adminApi } from "../api/AdminApi";
 
-export const useAdminQuery = ({
-    getWhitelist,
-    getRegisteredUsers
-}: {
-    getWhitelist:       boolean,
-    getRegisteredUsers: boolean
-}) => {
-    const queryClient = useQueryClient()
-
+export const useAdminQuery = () => {
     const { 
         data: whitelistEntries, 
         isLoading: isLoadingWhitelistEntries, 
@@ -17,7 +9,6 @@ export const useAdminQuery = ({
     } = useQuery({
         queryKey: ["whitelistEntries"],
         queryFn: adminApi.getWhitelistEntries,
-        enabled: getWhitelist
     })
 
     const { 
@@ -27,7 +18,6 @@ export const useAdminQuery = ({
     } = useQuery({
         queryKey: ["registeredUserEntries"],
         queryFn: adminApi.getRegisteredUserEntries,
-        enabled: getRegisteredUsers
     })
 
     return {
@@ -73,29 +63,32 @@ export const useAdminMutation = () => {
 
     const { mutate: updateRegisteredUserEntry, isPending: isUpdatingRegisteredUserEntry } = useMutation({
         mutationFn: adminApi.updateUserEntry,
-        onSuccess: (newUserEntry) => {
-
+        onSuccess: async (newUserEntry) => {
+            await queryClient.invalidateQueries({ queryKey: ['whitelistEntries'] })
+            await queryClient.invalidateQueries({ queryKey: ["registeredUserEntries"] })
         }
     })
 
     const { mutate: updateWhitelistEntry, isPending: isUpdatingWhitelistEntry } = useMutation({
         mutationFn: adminApi.updateWhitelistEntry,
-        onSuccess: (newWhitelistEntry) => {
-
+        onSuccess: async (newWhitelistEntry) => {
+            await queryClient.invalidateQueries({ queryKey: ['whitelistEntries'] })
+            await queryClient.invalidateQueries({ queryKey: ["registeredUserEntries"] })
         }
     })
 
     const { mutate: addWhitelistEntry, isPending: isAddingWhitelistEntry } = useMutation({
         mutationFn: adminApi.addToWhitelist,
-        onSuccess: (newWhitelistEntry) => {
-
+        onSuccess: async (newWhitelistEntry) => {
+            await queryClient.invalidateQueries({ queryKey: ['whitelistEntries'] })
         }
     })
 
     const { mutate: removeWhitelistEntry, isPending: isRemovingWhitelistEntry } = useMutation({
         mutationFn: adminApi.removeFromWhitelist,
-        onSuccess: (id) => {
-
+        onSuccess: async (id) => {
+            await queryClient.invalidateQueries({ queryKey: ['whitelistEntries'] })
+            await queryClient.invalidateQueries({ queryKey: ["registeredUserEntries"] })
         }
     })
 

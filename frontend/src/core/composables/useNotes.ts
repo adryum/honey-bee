@@ -1,33 +1,44 @@
-import { useMutation, useQuery, useQueryClient } from "@tanstack/vue-query/build/legacy/_tsup-dts-rollup";
+import { useMutation, useQuery, useQueryClient } from "@tanstack/vue-query";
 import { computed, type Ref } from "vue";
 import { noteApi } from "../api/NoteApi";
 
-export const useNotes = (
+export const useNotes = ({
+    hiveId
+}: {
     hiveId: Ref<number | undefined>
+}
 ) => {
-    const queryClient = useQueryClient()
-
     const { data: notes, isLoading, isError } = useQuery({
         queryKey: ["notes", { id: hiveId.value }],
         queryFn:  () => noteApi.getNotes(hiveId.value!),
         enabled:  computed(() => hiveId.value != undefined)
     })
 
-    const { mutate: createNote, isPending: isCreatingNote } = useMutation({
+    return {
+        notes,
+        isLoading,
+        isError,
+    }
+}
+
+export const useNoteMutations = () => {
+    const queryClient = useQueryClient()
+
+    const { mutate: create, isPending: isCreatingNote } = useMutation({
         mutationFn: noteApi.create,
         onSuccess:  (newNote) => {
             queryClient.invalidateQueries({ queryKey: ['notes'] })
         }
     })
 
-    const { mutate: deleteNote, isPending: isDeletingNote } = useMutation({
+    const { mutate: remove, isPending: isDeletingNote } = useMutation({
         mutationFn: noteApi.delete,
         onSuccess:  (id) => {
             queryClient.invalidateQueries({ queryKey: ['notes'] })
         }
     })
 
-    const { mutate: updateNote, isPending: isUpdatingNote } = useMutation({
+    const { mutate: update, isPending: isUpdatingNote } = useMutation({
         mutationFn: noteApi.update,
         onSuccess:  (updatedNote) => {
             queryClient.invalidateQueries({ queryKey: ['notes'] })
@@ -35,12 +46,9 @@ export const useNotes = (
     })
 
     return {
-        notes,
-        isLoading,
-        isError,
-        createNote,
-        deleteNote,
-        updateNote,
+        create,
+        remove,
+        update,
         isCreatingNote,
         isDeletingNote,
         isUpdatingNote

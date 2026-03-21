@@ -8,7 +8,6 @@ import IconCubeButton from "../input/buttons/IconCubeButton.vue";
 import type { CalendarDayModel, HiveModelDB } from "@/core/stores/Models";
 import { usePopupCreator } from "@/core/utils/PopupHiarchy";
 import CalendarCreateEventPopup from "../popups/CalendarCreateEventPopup.vue";
-import { storeToRefs } from "pinia";
 
 const s = useCssModule()
 const props = defineProps<{
@@ -60,7 +59,7 @@ const { create } = usePopupCreator({
             </div>
 
             <label 
-                v-if="selectedHive"
+                v-if="hive"
                 for="tasks"
                 :class="s.label"
             >
@@ -71,7 +70,7 @@ const { create } = usePopupCreator({
                 :class="s.titleWrapper"
             >
                 <button 
-                    v-if="selectedHive"
+                    v-if="hive"
                     :class="s.button"
                     @click="create"
                 >

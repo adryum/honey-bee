@@ -10,8 +10,7 @@ import SelectedTextHead from '../input/dropdowns/dropdownItems/top/SelectedTextH
 import IconTextItem from '../input/dropdowns/dropdownItems/bottom/IconTextItem.vue';
 import IconTextButton from '../input/buttons/IconTextButton.vue';
 import type { AddToWhitelistRequestModel } from '@/core/api/Models';
-import type { CallbackModel } from '@/core/models/SupperModels';
-import { useAdminStore } from '@/core/stores/AdminStore';
+import { useAdminMutation } from '@/core/composables/useAdmin';
 
 const s = useCssModule()
 const props = defineProps<{}>()
@@ -22,7 +21,7 @@ const isEnabled = ref<boolean>(true)
     
 const formValidator = useFormValidator()
 const { isFormValid } = formValidator
-const adminStore = useAdminStore()
+const { addWhitelistEntry } = useAdminMutation()
 async function add() {
     try {
         const payload: AddToWhitelistRequestModel  = {
@@ -30,15 +29,10 @@ async function add() {
             role: role.value!,
             isEnabled: isEnabled.value
         }
-        const callback: CallbackModel = {
-            onSuccess: () => close(),
-            onFailure: function (): void {
-                throw new Error('Function not implemented.');
-            }
-        }
-
-        await adminStore.addToWhiteList(payload, callback)
-
+      
+        await addWhitelistEntry(payload, {
+            onSuccess: () => close()
+        })
     } catch (error) {
         
     }

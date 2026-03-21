@@ -1,52 +1,46 @@
 <script setup lang="ts">
-import { computed, onUnmounted, ref, useCssModule, type Component, type DefineComponent } from 'vue';
+import { computed, ref, toRef, useCssModule } from 'vue';
 import { motion } from 'motion-v';
 import Button from '../components/input/buttons/Button.vue';
 import HiveMedicineFragment from '../components/view_fragments/HiveMedicineFragment.vue';
 import HiveGeneralFragment from '../components/view_fragments/HiveGeneralFragment.vue';
 import HiveNoteFragment from '../components/view_fragments/HiveNoteFragment.vue';
 import CalendarView from './CalendarView.vue';
-import { Destinations, type DestinationProps } from '@/core/models/OtherModels';
 import NoteFragmentToolbarPart from '../components/view_fragments/NoteFragmentToolbarPart.vue';
-import { useHiveStore } from '@/core/stores/HiveStore';
-import { storeToRefs } from 'pinia';
-import type { HiveModelDB } from '@/core/stores/Models';
-import IconTextButton from '../components/input/buttons/IconTextButton.vue';
-import { SVG } from '@/assets/svgs/SVGLoader';
-import { usePopupCreator } from '@/core/utils/PopupHiarchy';
-import CalendarCreateEventPopup from '../components/popups/CalendarCreateEventPopup.vue';
+import { HiveTab } from '@/core/ViewTabEnums';
+import { useHiveQuery } from '@/core/composables/useHive';
+import { useRouter } from 'vue-router';
+import { RouterViewPaths } from '@/core/router';
 
 const s = useCssModule()
-const props = defineProps({
-    hiveId: String,
+const props = defineProps<{
+    id:  number,
+    tab: HiveTab
+}>()
+
+const searchText = ref("")
+const currentTab = computed<HiveTab>(() => props.tab)
+const { hive }   = useHiveQuery({ id: toRef(() => props.id) })
+const router = useRouter()
+const fragmentHeight = computed((): string => {
+    switch (currentTab.value) {
+        case HiveTab.Calendar: return `calc(100% -  9rem)`
+        case HiveTab.General:  return `calc(100% -  6.5rem)`
+        case HiveTab.Medicine: return `calc(100% -  6.5rem)`
+        case HiveTab.Notes:    return `calc(100% -  6.5rem)`
+        default:               return ""
+    }
 })
 
-const hiveStore = useHiveStore()
-const { selectedHive } = storeToRefs(hiveStore)
-const searchText = ref('')
-
-const currentDestination = ref<Destinations>(Destinations.Notes)
-const destinatonProps: DestinationProps[] = [
-    { destination: Destinations.General, fragmentComponent: HiveGeneralFragment, fragmentToolbarComponent: undefined},
-    { destination: Destinations.Calendar, fragmentComponent: CalendarView, fragmentToolbarComponent: undefined},
-    { destination: Destinations.Notes, fragmentComponent: HiveNoteFragment, fragmentToolbarComponent: NoteFragmentToolbarPart },
-    { destination: Destinations.Medicine, fragmentComponent:  HiveMedicineFragment, fragmentToolbarComponent: undefined }
-]
-
-const selectedDestinationProps = computed(() => {
-    return destinatonProps.find(val => val.destination === currentDestination.value)!
-})
-const hasSelectedFragmentComponents = computed(() => {
-    return selectedDestinationProps.value.fragmentToolbarComponent
-})
-
-function changeDestination(destination: Destinations) {
-    currentDestination.value = destination
+function changeTab(tab: HiveTab) {
+    router.replace({
+        name: RouterViewPaths.HiveOverview,
+        params: { 
+            id:  props.id, 
+            tab: tab 
+        }
+    })
 }
-
-onUnmounted(() => {
-    hiveStore.closeHive()
-})
 </script>
 
 <template>
@@ -56,52 +50,58 @@ onUnmounted(() => {
         <div :class="s.toolbar">
             <div :class="s.shared">
                 <motion.button 
-                    v-for="props in destinatonProps" 
-                    :class="[s.button, (props.destination === currentDestination) && s.selected]"
+                    v-for="loopTab in Object.values(HiveTab)" 
+                    :class="[
+                        s.button, 
+                        loopTab === currentTab && s.selected
+                    ]"
                     :while-press="{ scale: 0.98}"
-                    @click="changeDestination(props.destination)"
+                    @click="changeTab(loopTab)"
                 >
-                    {{ props.destination }}
+                    {{ loopTab }}
                 </motion.button>
                 <Button :style="{ marginLeft: 'auto'}" text="Add Inspection"></Button>
             </div>
-            <div :class="[s.fragmentSpecific, s.shown]">
+
+
+            <div 
+                :class="[
+                    s.fragmentSpecific, 
+                    s.shown
+                ]"
+            >
                 <NoteFragmentToolbarPart
-                    v-if="currentDestination === Destinations.Notes"
+                    v-if="currentTab === HiveTab.Notes"
                     v-model:searchText="searchText"
                 />
-                <div
-                    v-if="currentDestination === Destinations.Calendar"
-                >
-                   
-                </div>
             </div>
         </div>
 
         <HiveGeneralFragment
-            v-if="currentDestination === Destinations.General"
+            v-if="currentTab === HiveTab.General && hive"
             :class="s.fragment"
-            :style="{ height: `calc(100% - ${hasSelectedFragmentComponents ? '9rem' : '6.5rem' })` }" 
-            :hive="selectedHive ?? {} as HiveModelDB"
+            :style="{ height: fragmentHeight }" 
+            :hive="hive"
         /> 
+
         <CalendarView
-            v-if="currentDestination === Destinations.Calendar"
+            v-if="currentTab === HiveTab.Calendar && hive"
             :class="s.fragment"
-            :style="{ height: `calc(100% - ${hasSelectedFragmentComponents ? '9rem' : '6.5rem' })` }" 
+            :style="{ height: fragmentHeight }" 
         />
 
-        
         <HiveNoteFragment
-            v-if="currentDestination === Destinations.Notes"
+            v-if="currentTab === HiveTab.Notes && hive"
             :class="s.fragment"
-            :style="{ maxHeight: `calc(100% - ${hasSelectedFragmentComponents ? '9rem' : '6.5rem' })` }" 
+            :style="{ maxHeight: fragmentHeight }" 
             :search-text="searchText"
+            :hive-id="hive.id"
         />
 
         <HiveMedicineFragment
-            v-if="currentDestination === Destinations.Medicine"
+            v-if="currentTab === HiveTab.Medicine && hive"
             :class="s.fragment"
-            :style="{ height: `calc(100% - ${hasSelectedFragmentComponents ? '9rem' : '6.5rem' })` }" 
+            :style="{ height: fragmentHeight }" 
         
         />
     </section>

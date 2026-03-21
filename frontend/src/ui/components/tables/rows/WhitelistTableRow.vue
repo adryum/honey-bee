@@ -7,7 +7,7 @@ import TextDropdownBottomPart from "../../input/dropdowns/dropdownItems/bottom/T
 import IconCubeButton from "../../input/buttons/IconCubeButton.vue";
 import { SVG } from "@/assets/svgs/SVGLoader";
 import TableRowSelectionDropdownTopPart from "../../input/dropdowns/dropdownItems/top/TableRowSelectionDropdownTopPart.vue";
-import { useAdminStore } from "@/core/stores/AdminStore";
+import { useAdminMutation } from "@/core/composables/useAdmin";
 
 const s = useCssModule()
 const props = defineProps<{
@@ -17,25 +17,18 @@ const props = defineProps<{
 const isEditingRow = ref(false)
 
 const editableEntry = reactive<WhitelistEntryModelDB>({ ...props.entry })
-const adminStore = useAdminStore()
+const { updateWhitelistEntry } = useAdminMutation()
 
 function save() {
-    try {
-        adminStore.updateWhitelistEntry({
-            id:        props.entry.id,
-            email:     editableEntry.email,
-            role:      editableEntry.role,
-            isEnabled: editableEntry.isEnabled
-        },
-        {
-            onSuccess: function (message: string): void {
-                isEditingRow.value = false
-            },
-            onFailure: function (): void {
-                throw new Error("Function not implemented.");
-            }
-        })
-    } catch (error) {}
+    updateWhitelistEntry({
+        id:        props.entry.id,
+        email:     editableEntry.email,
+        role:      editableEntry.role,
+        isEnabled: editableEntry.isEnabled
+    },
+    {
+        onSuccess: () => isEditingRow.value = false
+    })
 }
 
 function cancel() {

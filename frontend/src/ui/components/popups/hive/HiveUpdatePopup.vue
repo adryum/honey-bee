@@ -4,8 +4,6 @@ import ImageDropZone from '../../input/fields/ImageDropZone.vue';
 import PopupFrame from '../PopupFrame.vue';
 import { useFormValidator } from '@/core/composables/validators/UseFormValidator';
 import { HiveType } from '@/core/DatabaseEnums';
-import { useApiaryStore } from '@/core/stores/ApiaryStore';
-import { useHiveStore } from '@/core/stores/HiveStore';
 import { type PopupData, usePopup } from '@/core/utils/PopupHiarchy';
 import { storeToRefs } from 'pinia';
 import IconTextButton from '../../input/buttons/IconTextButton.vue';

@@ -6,11 +6,12 @@ import { onResize } from '@/core/utils/Hooks';
 import { SVG } from '@/assets/svgs/SVGLoader';
 import Apiary from '../components/apiary/Apiary.vue';
 import StringSearchDropdown from "../components/input/dropdowns/StringSearchDropdown.vue";
-import { useApiaries } from "@/core/composables/useApiary";
+import { useApiariesQuery } from "@/core/composables/useApiary";
+import router from "@/core/router";
 
 const s = useCssModule()
 
-const { apiaries } = useApiaries()
+const { apiaries } = useApiariesQuery()
 const searchWord = ref<string>('')
 
 const filteredApiaries = computed(() => {
@@ -24,7 +25,7 @@ const gridColumns = ref(0)
 const minHiveWidth = 550
 
 function openApiary(id: number) {
-    
+    router.push(`/apiary/${id}/hives`)
 }
 
 onResize(grid, (element) => {

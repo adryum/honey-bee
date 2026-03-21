@@ -5,19 +5,14 @@ import Icon from "../../Icon.vue";
 import IconDropdown from "../../input/dropdowns/IconDropdown.vue";
 import IconTextItem from "../../input/dropdowns/dropdownItems/bottom/IconTextItem.vue";
 import type { NoteModelDB } from "@/core/stores/Models";
-import { useNoteStore } from "@/core/stores/NoteStore";
+import { useNoteMutations } from "@/core/composables/useNotes";
 
 const s = useCssModule()
-const noteStore = useNoteStore()
 const props = defineProps<{
     note: NoteModelDB
 }>()
-const randomRotation = ref(0)
 
-onMounted(() => {
-  // Generate a random rotation between -15 and +15 degrees, for example
-  randomRotation.value = Math.floor(Math.random() * 10) - 5
-})
+const { remove } = useNoteMutations()
 </script>
 
 <template>
@@ -44,7 +39,7 @@ onMounted(() => {
                     svg: SVG.Trash,
                     text: 'Remove'
                 }"
-                @click="noteStore.deleteNote(note.id)"
+                @click="remove(note.id)"
             />
         </IconDropdown>
     </div>

@@ -1,14 +1,13 @@
 <script setup lang="ts">
-import { ref, useCssModule } from "vue";
+import { useCssModule } from "vue";
 import Info from "../hive_overview/Info.vue";
 import HoneyProfitChart from "../hive_overview/supper/HoneyProfitChart.vue";
 import HistoryLog from "../hive_overview/history/HistoryLog.vue";
 import type { HiveModelDB } from "@/core/stores/Models";
-import { useElementSize } from '@vueuse/core'
 
 const s = useCssModule()
 const props = defineProps<{
-    hive: HiveModelDB
+    hive:       HiveModelDB
 }>()
 </script>
 
