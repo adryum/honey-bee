@@ -1,25 +1,24 @@
 <script setup lang="ts">
-import { computed, onMounted, useCssModule } from "vue";
+import { computed, onMounted, ref, useCssModule } from "vue";
 import ToolBar from "../components/ToolBar.vue";
 import InspectionTable from "../components/tables/InspectionTable.vue";
-import { useInspectionStore } from "@/core/stores/InspectionStore";
 import type { InspectionTableEntryModel } from "@/core/stores/Models";
-import { storeToRefs } from "pinia";
+import { useInspections, type InspectionFilters } from "@/core/composables/useInspection";
+import { InspectionDB_To_InspectionTableEntryModel } from "@/core/Convertors";
 
 const s = useCssModule()
 const props = defineProps<{}>()
 
-const inspectionStore = useInspectionStore()
-const { inspections } = storeToRefs(inspectionStore)
-const inspectionEntries = computed((): InspectionTableEntryModel[] => inspections.value)
+const { inspections, nextPage, prevPage } = useInspections(ref<InspectionFilters>({
+    page:   1,
+    limit:  10,
+    hiveId: undefined,
+    ids:    undefined
+}))
 
-
-onMounted(async () => {
-    await inspectionStore.getInspections({
-        page: 1,
-        limit: 999
-    })
-})
+const inspectionEntries = computed(
+    (): InspectionTableEntryModel[] => inspections.value?.map(InspectionDB_To_InspectionTableEntryModel) ?? []
+)
 </script>
 
 <template>
@@ -33,6 +32,12 @@ onMounted(async () => {
         :class="s.table"
         :entries="inspectionEntries"
     />
+    <button 
+        @click="prevPage"
+    >Previous</button>
+    <button 
+        @click="nextPage"
+    >Next</button>
 </div>
 </template>
 

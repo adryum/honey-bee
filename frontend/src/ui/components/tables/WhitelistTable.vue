@@ -1,15 +1,13 @@
 <script setup lang="ts">
-import { useAdminStore } from "@/core/stores/AdminStore";
 import { storeToRefs } from "pinia";
 import { onMounted, ref, useCssModule } from "vue";
 import WhitelistTableRow from "./rows/WhitelistTableRow.vue";
+import { useAdminQuery } from "@/core/composables/useAdmin";
 
 const s = useCssModule()
-const adminStore = useAdminStore()
-const { whitelistEntries } = storeToRefs(adminStore)
-
-onMounted(async () => {
-    await adminStore.getWhitelistEntries()
+const { whitelistEntries } = useAdminQuery({
+    getWhitelist: true,
+    getRegisteredUsers: false
 })
 </script>
 

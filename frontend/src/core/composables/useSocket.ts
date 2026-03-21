@@ -1,6 +1,7 @@
-import { ref, watch, onBeforeUnmount, type Ref } from "vue";
-import { io, type Socket } from "socket.io-client";
-import { useMainStore } from "../stores/MainStore";
+import { ref, watch, onBeforeUnmount, type Ref, type ShallowRef, shallowRef, computed } from "vue";
+import { io, type Socket } from 'socket.io-client'
+import type {  UserModelDB } from "../stores/Models";
+import { useAuthStore } from "../stores/useAuthStore";
 
 export enum ClientEvents {
     REFRESH_PAGE    = "REFRESH_PAGE",
@@ -8,10 +9,22 @@ export enum ClientEvents {
     SESSION_EXPIRED = "SESSION_EXPIRED"
 }
 
-export function useSocket(userId: Ref<string | undefined>) {
-    const socket = ref<Socket | null>(null);
+export type SocketModel = {
+    socket:    ShallowRef<Socket | undefined>
+    connected: Ref<boolean>
+}
+
+export function startSocket(user: Ref<UserModelDB | undefined>) {
+    const userId = computed(() => user.value?.id.toString() ?? undefined)
+    return useSocket(userId)
+}
+
+export function useSocket(
+    userId: Ref<string | undefined>
+): SocketModel {
+    const socket    = shallowRef<Socket | undefined>(undefined);
     const connected = ref(false);
-    const mainStore = useMainStore()
+    const { logout } = useAuthStore()
 
     // Watch the userId. Whenever it changes, reconnect.
     watch(userId, (newId) => {
@@ -45,14 +58,14 @@ export function useSocket(userId: Ref<string | undefined>) {
         socket.value.on(ClientEvents.LOGOUT, () => {
             console.warn("Event: LOGOUT");
             alert("Session expired.");
-            mainStore.logout()
+            logout()
         });
 
         socket.value.on(ClientEvents.SESSION_EXPIRED, () => {
             console.warn("Event: SESSION_EXPIRED");
             
             alert("Session expired.");
-            mainStore.logout()
+            logout()
         });
     }, { immediate: true });
 
@@ -60,5 +73,10 @@ export function useSocket(userId: Ref<string | undefined>) {
         socket.value?.disconnect();
     });
 
-    return { socket, connected };
+    return { 
+        socket: socket, 
+        connected: connected 
+    };
 }
+
+

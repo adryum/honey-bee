@@ -38,6 +38,7 @@ export const useHives = () => {
         deleteHive,
         updateHive
     }
+}
 
     // async function createCalendarEvent(
     //     model: HiveCalendarEntryRequestModel
@@ -124,4 +125,3 @@ export const useHives = () => {
     //         return undefined 
     //     }
     // }
-}

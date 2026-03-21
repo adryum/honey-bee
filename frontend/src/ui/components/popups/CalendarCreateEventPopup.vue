@@ -1,14 +1,13 @@
 <script setup lang="ts">
 import { ref, useCssModule } from 'vue'
 import { useFormValidator } from '@/core/composables/validators/UseFormValidator';
-import { useHiveStore } from '@/core/stores/HiveStore';
 import { type PopupData, usePopup } from '@/core/utils/PopupHiarchy';
 import { storeToRefs } from 'pinia';
 import PopupFrame from './PopupFrame.vue';
 import LabeledInputField from '../input/fields/LabeledInputField.vue';
 import LabeledTextareaField from '../input/fields/LabeledTextareaField.vue';
 import IconTextButton from '../input/buttons/IconTextButton.vue';
-import { useMainStore } from '@/core/stores/MainStore';
+import { useAuthStore } from '@/core/stores/useAuthStore';
 
 const s = useCssModule()
 const props = defineProps<{
@@ -24,7 +23,7 @@ const { frameModel, close } = usePopup({
 const formValidator = useFormValidator()
 
 const hiveStore = useHiveStore()
-const { user } = storeToRefs(useMainStore())
+const { user } = storeToRefs(useAuthStore())
 
 const start = ref('')
 const end = ref('')

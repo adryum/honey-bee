@@ -1,13 +1,9 @@
 <script setup lang="ts">
-import { useApiaryStore } from "@/core/stores/ApiaryStore";
 import { storeToRefs } from "pinia";
 import { computed, onMounted, reactive, ref, useCssModule } from "vue";
 import Apiary from "../../apiary/Apiary.vue";
 import { isValidValue, useFlexibleGrid } from "@/core/utils/others";
-import { useProfileStore } from "@/core/stores/ProfileStore";
 import type { ApiaryModelDB, HiveModelDB } from "@/core/stores/Models";
-import { useAdminStore } from "@/core/stores/AdminStore";
-import { useHiveStore } from "@/core/stores/HiveStore";
 
 const s = useCssModule()
 const props = defineProps<{
@@ -15,10 +11,6 @@ const props = defineProps<{
 }>()
 
 const adminStore       = useAdminStore()
-const apiaryStore      = useApiaryStore()
-const hiveStore        = useHiveStore()
-const profileStore     = useProfileStore()
-const { apiaries }     = storeToRefs(apiaryStore)
 const { apiaries }     = storeToRefs(apiaryStore)
 const { apiaryAccess, hiveAccess } = storeToRefs(profileStore)
 

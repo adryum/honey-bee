@@ -1,7 +1,7 @@
 import type { reactive } from "vue";
 import { String_to_HiveType, String_to_NoteTypes, String_to_Role } from "./DatabaseEnums";
-import type { ApiaryAccessResponseModel, ApiaryCreateResponseModel, HiveAccessResponseModel, HiveCreateResponseModel, InspectionCreateRequestModel, InspectionGetResponseModel, NoteCreateModelResponse, UserEntryResponseModel, UserProfileResponseModel, WhitelistEntryResponseModel } from "./network/Models";
-import type { ApiaryModelDB, HiveModelDB, InspectionDB, InspectionFormDB, InspectionFormUI, NoteModelDB, UserEntryModelDB, UserProfileModel, UserProfileModelDB, WhitelistEntryModelDB } from "./stores/Models";
+import type { ApiaryAccessResponseModel, ApiaryCreateResponseModel, HiveAccessResponseModel, HiveCreateResponseModel, InspectionCreateRequestModel, InspectionGetResponseModel, NoteCreateModelResponse, UserEntryResponseModel, UserProfileResponseModel, WhitelistEntryResponseModel } from "./api/Models";
+import type { ApiaryModelDB, HiveModelDB, InspectionDB, InspectionFormDB, InspectionFormUI, InspectionTableEntryModel, NoteModelDB, UserEntryModelDB, UserProfileModel, UserModelDB, WhitelistEntryModelDB } from "./stores/Models";
 
 export function ApiaryCreateResponse_to_ApiaryModelDB(
     convertee: ApiaryCreateResponseModel
@@ -13,11 +13,6 @@ export function ApiaryCreateResponse_to_ApiaryModelDB(
         image:       convertee.image,
         hiveCount:   0
     }
-}
-export function ApiaryCreateResponseArray_to_ApiaryModelDBArray(
-    convertee: ApiaryCreateResponseModel[]
-): ApiaryModelDB[] {
-    return convertee.map(item => ApiaryCreateResponse_to_ApiaryModelDB(item))
 }
 
 export function HiveCreateResponse_to_HiveModelDB(
@@ -41,13 +36,6 @@ export function HiveCreateResponse_to_HiveModelDB(
     }
 }
 
-export function HiveCreateResponseArray_to_HiveModelDBArray(
-    convertee: HiveCreateResponseModel[]
-): HiveModelDB[] {
-    return convertee.map(item => HiveCreateResponse_to_HiveModelDB(item))
-}
-
-
 export function NoteCreateModelResponse_to_NoteModelDB(
     convertee: NoteCreateModelResponse
 ): NoteModelDB {
@@ -61,12 +49,6 @@ export function NoteCreateModelResponse_to_NoteModelDB(
         creationDate: convertee.creationDate
     }
 }
-export function NoteCreateModelResponseArray_to_NoteModelDBArray(
-    convertee: NoteCreateModelResponse[]
-): NoteModelDB[] {
-    return convertee.map(item => NoteCreateModelResponse_to_NoteModelDB(item))
-}
-
 
 export function WhitelistEntryResponseModel_To_WhitelistEntryDB(
     convertee: WhitelistEntryResponseModel
@@ -79,12 +61,6 @@ export function WhitelistEntryResponseModel_To_WhitelistEntryDB(
         isEnabled:    Boolean(convertee.status)
     } 
 }
-export function WhitelistEntryResponseModelArray_To_WhitelistEntryModelDBArray(
-    array: WhitelistEntryResponseModel[]
-): WhitelistEntryModelDB[] {
-    return array.map(item => WhitelistEntryResponseModel_To_WhitelistEntryDB(item))
-}
-
 
 export function UserEntryResponseModel_To_UserEntryModelDB(
     convertee: UserEntryResponseModel
@@ -96,16 +72,10 @@ export function UserEntryResponseModel_To_UserEntryModelDB(
         isWhitelisted: Boolean(convertee.isWhitelisted)
     }
 }
-export function UserEntryResponseModelArray_To_UserEntryModelDBArray(
-    convertee: UserEntryResponseModel[]
-): UserEntryModelDB[] {
-    return convertee.map(item => UserEntryResponseModel_To_UserEntryModelDB(item))
-}
-
 
 export function UserProfileResponseModel_To_UserProfileModelDB(
     convertee: UserProfileResponseModel
-): UserProfileModelDB {
+): UserModelDB {
     return {
         id:       convertee.id,
         role:     String_to_Role(convertee.role),
@@ -114,30 +84,17 @@ export function UserProfileResponseModel_To_UserProfileModelDB(
     }
 }
 
-
 export function ApiaryAccessResponseModel_To_Number(
     convertee: ApiaryAccessResponseModel
 ) {
     return convertee.apiaryId
 }
-export function ApiaryAccessResponseModelArray_To_NumberArray(
-    convertee: ApiaryAccessResponseModel[]
-) {
-    return convertee.map(item => ApiaryAccessResponseModel_To_Number(item))
-}
-
 
 export function HiveAccessResponseModel_To_Number(
     convertee: HiveAccessResponseModel
 ) {
     return convertee.hiveId
 }
-export function HiveAccessResponseModelArray_To_NumberArray(
-    convertee: HiveAccessResponseModel[]
-) {
-    return convertee.map(item => HiveAccessResponseModel_To_Number(item))
-}
-
 
 export function InspectionGetResponseModel_To_InspectionFormDB(
     convertee: InspectionGetResponseModel
@@ -175,14 +132,6 @@ export function InspectionGetResponseModel_To_InspectionFormDB(
         }))
     }
 }
-export function InspectionGetResponseModelArray_To_InspectionFormDBArray(
-    convertee: InspectionGetResponseModel[]
-): InspectionDB[] {
-    console.log(convertee);
-
-    return convertee.map(item => InspectionGetResponseModel_To_InspectionFormDB(item))
-}
-
 
 export function InspectionFormUIArray_To_InspectionCreateRequestModel(
     apiaryId: number,
@@ -240,5 +189,19 @@ export function InspectionFormDB_To_InspectionFormUI(
         takenBreedingFrames:          convertee.takenBreedingFrames,
         isSubmited:                   false,
         hasMadeChanges:               false
+    }
+}
+
+export function InspectionDB_To_InspectionTableEntryModel(
+    convertee: InspectionDB
+): InspectionTableEntryModel {
+    return {
+        id:            convertee.id,
+        apiaryId:      convertee.apiaryId,
+        apiaryName:    convertee.apiaryName,
+        userIdCreator: convertee.userIdCreator,
+        userPicture:   convertee.userPicture,
+        username:      convertee.username,
+        creationDate:  convertee.creationDate
     }
 }

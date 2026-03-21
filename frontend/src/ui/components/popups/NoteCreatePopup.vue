@@ -12,7 +12,7 @@ import ModularDropdown from '../input/dropdowns/ModularDropdown.vue';
 import { SVG } from '@/assets/svgs/SVGLoader';
 import SelectedTextHead from '../input/dropdowns/dropdownItems/top/SelectedTextHead.vue';
 import IconTextItem from '../input/dropdowns/dropdownItems/bottom/IconTextItem.vue';
-import type { NoteCreateModelRequest } from '@/core/network/Models';
+import type { NoteCreateModelRequest } from '@/core/api/Models';
 import { useNoteStore } from '@/core/stores/NoteStore';
 import { useHiveStore } from '@/core/stores/HiveStore';
 import { isValidValue } from '@/core/utils/others';

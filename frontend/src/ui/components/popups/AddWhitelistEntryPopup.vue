@@ -9,7 +9,7 @@ import ModularDropdown from '../input/dropdowns/ModularDropdown.vue';
 import SelectedTextHead from '../input/dropdowns/dropdownItems/top/SelectedTextHead.vue';
 import IconTextItem from '../input/dropdowns/dropdownItems/bottom/IconTextItem.vue';
 import IconTextButton from '../input/buttons/IconTextButton.vue';
-import type { AddToWhitelistRequestModel } from '@/core/network/Models';
+import type { AddToWhitelistRequestModel } from '@/core/api/Models';
 import type { CallbackModel } from '@/core/models/SupperModels';
 import { useAdminStore } from '@/core/stores/AdminStore';
 

@@ -5,14 +5,15 @@ import IconCubeButton from "../input/buttons/IconCubeButton.vue";
 import ModularDropdown from "../input/dropdowns/ModularDropdown.vue";
 import IconTextItem from "../input/dropdowns/dropdownItems/bottom/IconTextItem.vue";
 import type { DropdownModel } from "@/core/models/Models";
-import { useMainStore } from "@/core/stores/MainStore";
 import { storeToRefs } from "pinia";
 import { Role } from "@/core/DatabaseEnums";
 import router, { RouterViewPaths } from "@/core/router";
+import { useAuthStore } from "@/core/stores/useAuthStore";
 
 const s = useCssModule()
-const mainStore = useMainStore()
-const { user } = storeToRefs(mainStore)
+const authStore = useAuthStore()
+const { logout } = authStore
+const { user } = storeToRefs(authStore)
 
 const placeholderImage = "src/assets/images/ProfilePlaceholder.jpg"
 const settingDestinations = computed(() => {
@@ -50,7 +51,7 @@ function onClick(dropdown: DropdownModel, destination: SettingDestination) {
     switch (destination.name) {
         case "Profile":     break;
         case "Settings":    break;
-        case "Logout":      mainStore.logout(); break;
+        case "Logout":      logout(); break;
         case "Admin Panel": router.push(RouterViewPaths.Admin); break;
         default:break;
     }

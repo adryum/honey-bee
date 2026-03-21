@@ -1,15 +1,18 @@
 import type { HiveModelDB } from "../stores/Models";
 import axios from "axios"
-import { HiveCreateResponse_to_HiveModelDB, HiveCreateResponseArray_to_HiveModelDBArray } from "../Convertors";
+import { HiveCreateResponse_to_HiveModelDB } from "../Convertors";
 import { isValidValue } from "../utils/others";
-import type { HiveCreateResponseModel, HiveCreateRequestModel, HiveUpdateRequestModel } from "../network/Models";
+import type { HiveCreateResponseModel, HiveCreateRequestModel, HiveUpdateRequestModel } from "./Models";
 
 export const hiveApi = {
     getHives: async () => {
         const result = await axios.get<HiveCreateResponseModel[]>("/hive/get")
-        return HiveCreateResponseArray_to_HiveModelDBArray(result.data)
+        return result.data.map(HiveCreateResponse_to_HiveModelDB)
     },
-    createHive: async (model: HiveCreateRequestModel) => {
+
+    createHive: async (
+        model: HiveCreateRequestModel
+    ): Promise<HiveModelDB> => {
         const formData = new FormData()
         formData.append("name", model.name)
         formData.append("description", model.description)
@@ -21,7 +24,10 @@ export const hiveApi = {
         
         return HiveCreateResponse_to_HiveModelDB(result.data)
     },
-    updateHive: async (model: HiveUpdateRequestModel) => {
+
+    updateHive: async (
+        model: HiveUpdateRequestModel
+    ): Promise<HiveModelDB> => {
         const formData = new FormData()
         formData.append("id", model.id.toString())
         formData.append("name", model.name)
@@ -34,10 +40,14 @@ export const hiveApi = {
         
         return HiveCreateResponse_to_HiveModelDB(result.data)
     },
-    deleteHive: async (id: number) => {
+
+    deleteHive: async (
+        id: number
+    ): Promise<number> => {
         const result = await axios.post<number>("/hive/delete", { id: id})        
         return result.data
     },
+    
     createCalendarEvent: () => {
 
     }

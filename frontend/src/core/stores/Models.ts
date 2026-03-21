@@ -32,14 +32,6 @@ export type HiveCreateModel = {
     image?:       File
 }
 
-export type UserProfileModel = {
-    id:       number
-    username: string
-    picture:  string
-    email:    string
-    role:     Role
-}
-
 export type NoteModelDB = {
     id:           number
     title:        string
@@ -89,11 +81,12 @@ export type UserEntryModelDB = {
     isWhitelisted: boolean
 }
 
-export type UserProfileModelDB = {
+export type UserModelDB = {
     id:       number
     role:     Role
     email:    string
     username: string
+    picture:  string
 }
 
 export type InspectionFormUI = {

@@ -152,12 +152,25 @@ export type UpdateApiaryAccessRequestModel = {
     apiaryId:   number
     giveAccess: boolean
 }
+
+
 export type UpdateApiaryAccessResponseModel = {
     userId:    number
     apiaryId:  number
     hasAccess: boolean
 }
 
+export type UpdateHiveAccessRequestModel = {
+    userId:   number
+    hiveId:   number
+    giveAccess: boolean
+}
+
+export type UpdateHiveAccessResponseModel = {
+    userId:   number
+    hiveId:   number
+    hasAccess: boolean
+}
 
 export type ApiaryAccessResponseModel = {
     apiaryId: number

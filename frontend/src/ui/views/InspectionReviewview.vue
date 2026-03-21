@@ -4,19 +4,20 @@ import Icon from "../components/Icon.vue";
 import { IconType, SVG } from "@/assets/svgs/SVGLoader";
 import IconTextButton from "../components/input/buttons/IconTextButton.vue";
 import InspectionForm from "../components/forms/InspectionForm.vue";
-import { useInspectionStore } from "@/core/stores/InspectionStore";
 import { storeToRefs } from "pinia";
-import type { InspectionFormDB, InspectionFormUI } from "@/core/stores/Models";
+import type { InspectionDB, InspectionFormDB, InspectionFormUI } from "@/core/stores/Models";
 import { InspectionFormDB_To_InspectionFormUI } from "@/core/Convertors";
 import router from "@/core/router";
+import { useInspectionMutation } from "@/core/composables/useInspection";
 
 const s = useCssModule()
 const props = defineProps<{
     id: string
 }>()
 
-const inspectionStore        = useInspectionStore()
-const { reviewedInspection } = storeToRefs(inspectionStore)
+const {  } = useInspectionMutation()
+const inspection = ref<InspectionDB | undefined>()
+
 const forms                  = computed(() => reviewedInspection.value?.forms || [])
 const selectedForm           = ref<InspectionFormDB | undefined>()
 const selectedFormUI         = ref<InspectionFormUI | undefined>()

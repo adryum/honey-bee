@@ -3,17 +3,24 @@ import { RouterView } from 'vue-router'
 import { useCssModule } from 'vue';
 import SideHeader from './ui/components/navigation/SideHeader.vue';
 import TopHeader from './ui/components/navigation/TopHeader.vue';
+import { storeToRefs } from 'pinia';
+import { useAuthStore } from './core/stores/useAuthStore';
 
 const s = useCssModule()
+const { user } = storeToRefs(useAuthStore())
 
 </script>   
 
 <template>
     <div :class="s.skelet">
-        <TopHeader />
+        <TopHeader 
+            v-if="user"
+        />
           
         <div :class="s.flex">
-            <SideHeader />
+            <SideHeader
+                v-if="user"
+            />
             <RouterView />
         </div> 
     </div>

@@ -1,7 +1,7 @@
 import axios from 'axios'
 import { defineStore } from 'pinia'
 import router, { RouterViewPaths } from '../router';
-import type { UserProfileResponseModel } from './Models';
+import type { UserProfileResponseModel } from '../api/Models';
 import { UserProfileResponseModel_To_UserProfileModelDB } from '../Convertors';
 
 export const useAuthenticationApiStore = defineStore('authenticationApiStore', () => {

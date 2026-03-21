@@ -1,16 +1,9 @@
 <script setup lang="ts">
-import { Role } from "@/core/DatabaseEnums";
-import type { InspectionTableEntryModel, WhitelistEntryModelDB } from "@/core/stores/Models";
-import { reactive, ref, useCssModule } from "vue";
-import ModularDropdown from "../../input/dropdowns/ModularDropdown.vue";
-import TextDropdownBottomPart from "../../input/dropdowns/dropdownItems/bottom/TextDropdownBottomPart.vue";
-import IconCubeButton from "../../input/buttons/IconCubeButton.vue";
+import type { InspectionTableEntryModel } from "@/core/stores/Models";
+import { ref, useCssModule } from "vue";
 import { IconType, SVG } from "@/assets/svgs/SVGLoader";
-import TableRowSelectionDropdownTopPart from "../../input/dropdowns/dropdownItems/top/TableRowSelectionDropdownTopPart.vue";
-import { useAdminStore } from "@/core/stores/AdminStore";
 import { formatDateWithOrdinal } from "@/core/utils/Utils";
 import IconTextButton from "../../input/buttons/IconTextButton.vue";
-import { useInspectionStore } from "@/core/stores/InspectionStore";
 
 const s = useCssModule()
 const props = defineProps<{
@@ -18,7 +11,8 @@ const props = defineProps<{
     orderNumber: number
 }>()
 const isEditingRow = ref(false)
-const inspectionStore = useInspectionStore()
+
+const 
 </script>
 
 <template>

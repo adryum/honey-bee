@@ -5,12 +5,12 @@ import RegistrationInputField from "@/ui/components/input/fields/RegistrationInp
 import CheckboxWText from "@/ui/components/input/fields/CheckboxWText.vue";
 import RegistrationButton from "@/ui/components/input/buttons/RegistrationButton.vue";
 import FaintButton from "@/ui/components/input/buttons/FaintButton.vue";
-import { useMainStore } from "@/core/stores/MainStore";
 import IconTextButton from "@/ui/components/input/buttons/IconTextButton.vue";
 import { SVG } from "@/assets/svgs/SVGLoader";
+import { useAuthStore } from "@/core/stores/useAuthStore";
 
 const s = useCssModule()
-const mainStore = useMainStore()
+const authStore = useAuthStore()
 const email = ref('')
 const password = ref('') 
 const rememberMe = ref(false) 
@@ -25,7 +25,7 @@ async function login() {
 
 // auto login
 onMounted(async () => {
-    await mainStore.authenticateUser()
+    await authStore.authenticate()
 })
 </script>
 
