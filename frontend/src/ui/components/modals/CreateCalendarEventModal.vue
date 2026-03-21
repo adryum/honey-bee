@@ -5,28 +5,26 @@ import Icon from "../Icon.vue";
 import CalendarTaskExpandable from "./CalendarTaskExpandable.vue";
 import ModalPlate from "./ModalPlate.vue";
 import IconCubeButton from "../input/buttons/IconCubeButton.vue";
-import type { CalendarDayModel } from "@/core/stores/Models";
+import type { CalendarDayModel, HiveModelDB } from "@/core/stores/Models";
 import { usePopupCreator } from "@/core/utils/PopupHiarchy";
 import CalendarCreateEventPopup from "../popups/CalendarCreateEventPopup.vue";
-import { useHiveStore } from "@/core/stores/HiveStore";
 import { storeToRefs } from "pinia";
 
 const s = useCssModule()
 const props = defineProps<{
+    hive: HiveModelDB
     dayModel: CalendarDayModel
 }>()
 defineEmits<{
     clickOutside: [],
     close: []
 }>()
-const hiveStore = useHiveStore()
-const { selectedHive } = storeToRefs(hiveStore)
 
 const { create } = usePopupCreator({
     popupComponent: CalendarCreateEventPopup,
     maxCount: 1,
     props: {
-        hive: selectedHive,
+        hive: props.hive,
         selectedDate: props.dayModel.date
     }
 })

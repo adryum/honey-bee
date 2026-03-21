@@ -12,7 +12,10 @@ const props = defineProps<{
 }>()
 const isEditingRow = ref(false)
 
-const 
+function openInspection(id: number) {
+    
+}
+
 </script>
 
 <template>
@@ -75,7 +78,7 @@ const
             :svg="SVG.Logout"
             :type="IconType.SMALL"
             text="Open"
-            @click="inspectionStore.openInspection(entry.id)"
+            @click="openInspection(entry.id)"
         />
         <IconTextButton
             :svg="SVG.Cog"

@@ -2,23 +2,19 @@
 import { computed, onMounted, ref, useCssModule} from "vue"
 import ToolBar from '../components/ToolBar.vue';
 import IconButton from '../components/input/buttons/IconTextButton.vue';
-import CreateApiaryPopup from '../components/popups/CreateApiaryPopup.vue';
 import { onResize } from '@/core/utils/Hooks';
 import { SVG } from '@/assets/svgs/SVGLoader';
-import { createPopup } from '@/core/utils/PopupHiarchy';
-import { useApiaryStore } from '@/core/stores/ApiaryStore';
-import { storeToRefs } from 'pinia';
 import Apiary from '../components/apiary/Apiary.vue';
 import StringSearchDropdown from "../components/input/dropdowns/StringSearchDropdown.vue";
+import { useApiaries } from "@/core/composables/useApiary";
 
 const s = useCssModule()
-const apiaryStore = useApiaryStore()
-const { apiaries } = storeToRefs(apiaryStore)
 
+const { apiaries } = useApiaries()
 const searchWord = ref<string>('')
 
 const filteredApiaries = computed(() => {
-    return apiaries.value.filter(apiary => 
+    return apiaries.value?.filter(apiary => 
         apiary.name.toLowerCase().includes(searchWord.value.toLowerCase())
     )
 })
@@ -26,6 +22,10 @@ const filteredApiaries = computed(() => {
 const grid = ref<HTMLDivElement>()
 const gridColumns = ref(0)
 const minHiveWidth = 550
+
+function openApiary(id: number) {
+    
+}
 
 onResize(grid, (element) => {
     const rect = element.contentRect
@@ -43,9 +43,6 @@ onResize(grid, (element) => {
                 text="Add apiary"
                 :svg="SVG.Plus"
                 :class="s.button"
-                @click="createPopup({
-                    component: CreateApiaryPopup, 
-                })"
             />
             <StringSearchDropdown
                 :options="{
@@ -71,7 +68,7 @@ onResize(grid, (element) => {
                 v-for="apiary in filteredApiaries"
                 :class="s.apiary" 
                 :apiary="apiary"
-                @click="apiaryStore.openApiary(apiary.id)"
+                @click="openApiary(apiary.id)"
             />
         </div>
     </div>
