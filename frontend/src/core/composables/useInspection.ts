@@ -18,10 +18,6 @@ export const useInspections = (
     const { data: inspections, isLoading, isError } = useQuery({
         queryKey: computed(() => ['inspections', filters.value]),
         queryFn:  () => inspectionApi.getInspections(filters.value),
-        enabled:  computed(() =>
-            filters.value.hiveId != undefined ||
-            filters.value.ids != undefined
-        ),
         placeholderData: keepPreviousData
     })
 
@@ -43,7 +39,7 @@ export const useInspections = (
 export const useInspectionMutation = () => {
     const queryClient = useQueryClient()
 
-    const { mutate: createInspection, isPending: isCreatingInspection } = useMutation({
+    const { mutate: create, isPending: isCreatingInspection } = useMutation({
         mutationFn: inspectionApi.create,
         onSuccess: (newInspection) => {
             queryClient.invalidateQueries({ queryKey: ['inspections'] })
@@ -81,7 +77,7 @@ export const useInspectionMutation = () => {
     })
 
     return {
-        createInspection,
+        create,
         exportInspections,
         isCreatingInspection,
         isExportingInspections,

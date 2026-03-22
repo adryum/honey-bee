@@ -1,5 +1,5 @@
 import { Router, type Request, type Response } from "express";
-import { db } from "../config/Database";
+import { pool } from "../config/Database";
 import { requireRole } from "../Middleware";
 import { Role, String_to_Role } from "../DatabaseEnums";
 import { ResultSetHeader, RowDataPacket } from "mysql2";
@@ -29,7 +29,7 @@ router.post(
 
     try {
         console.log("Checking if user already has access...");
-        const [[checkResult]] = await db.query<RowDataPacket[]>(`
+        const [[checkResult]] = await pool.query<RowDataPacket[]>(`
             SELECT id
             FROM userHiveAccess
             WHERE userId = ? AND hiveId = ?
@@ -41,7 +41,7 @@ router.post(
             console.log("User has access!");
             if (!giveAccess) {
                 console.log("Removing access...");
-                await db.query<ResultSetHeader>(`
+                await pool.query<ResultSetHeader>(`
                     DELETE FROM userHiveAccess
                     WHERE userId = ? AND hiveId = ?
                     LIMIT 1`,
@@ -58,7 +58,7 @@ router.post(
             console.log("User doesnt have access!");
             if (giveAccess) {
                 console.log("Giving access...");
-                await db.query<ResultSetHeader>(`
+                await pool.query<ResultSetHeader>(`
                     INSERT INTO userHiveAccess (userId, hiveId)
                     VALUES (?, ?)`,
                     [userId, hiveId]
@@ -96,7 +96,7 @@ router.post(
 
     try {
         console.log("Getting hive accesses...");
-        const [result] = await db.query<RowDataPacket[]>(`
+        const [result] = await pool.query<RowDataPacket[]>(`
             SELECT hiveId
             FROM userHiveAccess
             WHERE userId = ?`, 
@@ -132,7 +132,7 @@ router.post(
 
     try {
         console.log("Checking if user already has access...");
-        const [[checkResult]] = await db.query<RowDataPacket[]>(`
+        const [[checkResult]] = await pool.query<RowDataPacket[]>(`
             SELECT id
             FROM userApiaryAccess
             WHERE userId = ? AND apiaryId = ?
@@ -144,7 +144,7 @@ router.post(
             console.log("User has access!");
             if (!giveAccess) {
                 console.log("Removing access...");
-                await db.query<ResultSetHeader>(`
+                await pool.query<ResultSetHeader>(`
                     DELETE FROM userApiaryAccess
                     WHERE userId = ? AND apiaryId = ?
                     LIMIT 1`,
@@ -161,7 +161,7 @@ router.post(
             console.log("User doesnt have access!");
             if (giveAccess) {
                 console.log("Giving access...");
-                await db.query<ResultSetHeader>(`
+                await pool.query<ResultSetHeader>(`
                     INSERT INTO userApiaryAccess (userId, apiaryId)
                     VALUES (?, ?)`,
                     [userId, apiaryId]
@@ -199,7 +199,7 @@ router.post(
 
     try {
         console.log("Getting apiary accesses...");
-        const [result] = await db.query<RowDataPacket[]>(`
+        const [result] = await pool.query<RowDataPacket[]>(`
             SELECT apiaryId
             FROM userApiaryAccess
             WHERE userId = ?`, 
@@ -227,7 +227,7 @@ router.post('/user/delete', async (req: Request, res: Response) => {
     const deleteQuery = `
         DELETE FROM users WHERE id = ?
     `
-    const delRes = await db.query(deleteQuery, [userId])
+    const delRes = await pool.query(deleteQuery, [userId])
     
     res.status(201).json({
         message: 'all good!',
@@ -259,7 +259,7 @@ router.post('/whitelist/add', requireRole([Role.ADMINISTRATOR]), async (req: Req
     
     try {
         console.log("Checking if email is already registered...");
-        const [[checkResult]] = await db.query<RowDataPacket[]>(`
+        const [[checkResult]] = await pool.query<RowDataPacket[]>(`
             SELECT email
             FROM whitelist
             WHERE email = ?
@@ -273,7 +273,7 @@ router.post('/whitelist/add', requireRole([Role.ADMINISTRATOR]), async (req: Req
             return res.status(400).send("Email is already registered!")
         } else {
             console.log("No email was found! Creating new entry...");
-            const [insertResult] = await db.query<ResultSetHeader>(`
+            const [insertResult] = await pool.query<ResultSetHeader>(`
                 INSERT INTO whitelist 
                 (email, role, status)
                 VALUES (?, ?, ?)`
@@ -282,7 +282,7 @@ router.post('/whitelist/add', requireRole([Role.ADMINISTRATOR]), async (req: Req
             console.log("Done!");
 
             console.log("Getting new whitelist entry data...");
-            const [[newWhitelistEntry]] = await db.query<RowDataPacket[]>(
+            const [[newWhitelistEntry]] = await pool.query<RowDataPacket[]>(
                     newWhitelistEntryDataQuery + ` 
                     WHERE id = ? 
                     LIMIT 1
@@ -306,7 +306,7 @@ router.post('/whitelist/remove', requireRole([Role.ADMINISTRATOR]), async (req: 
 
     try {
         console.log("Getting entry's email...");
-        const [[entryLinkCheck]] = await db.query<RowDataPacket[]>(`
+        const [[entryLinkCheck]] = await pool.query<RowDataPacket[]>(`
             SELECT email
             FROM whitelist
             WHERE id = ?
@@ -316,7 +316,7 @@ router.post('/whitelist/remove', requireRole([Role.ADMINISTRATOR]), async (req: 
         console.log("Done!");
         
         console.log("Checking if entry has a link with user...");
-        const [[userIdQuery]] = await db.query<RowDataPacket[]>(`
+        const [[userIdQuery]] = await pool.query<RowDataPacket[]>(`
             SELECT id
             FROM users
             WHERE email = ?
@@ -329,7 +329,7 @@ router.post('/whitelist/remove', requireRole([Role.ADMINISTRATOR]), async (req: 
             const userId: number = userIdQuery?.id
 
             console.log("Removing user from whitelist and breaking whitelist - user link...");
-            await db.query<ResultSetHeader>(`
+            await pool.query<ResultSetHeader>(`
                 UPDATE users
                 SET isWhitelisted = false
                 WHERE id = ?
@@ -343,7 +343,7 @@ router.post('/whitelist/remove', requireRole([Role.ADMINISTRATOR]), async (req: 
         }
 
         console.log("Deleting entry from table...");
-        await db.query<ResultSetHeader>(`
+        await pool.query<ResultSetHeader>(`
             DELETE FROM whitelist
             WHERE id = ?
             `, [id]
@@ -371,7 +371,7 @@ router.post('/whitelist/update', requireRole([Role.ADMINISTRATOR]), async (req: 
     try {
         // check if email has changed
         console.log("Checking if whitelist entry's email was changed...");
-        const [[emailCheck]] = await db.query<RowDataPacket[]>(`
+        const [[emailCheck]] = await pool.query<RowDataPacket[]>(`
             SELECT 
                 email,
                 EXISTS (
@@ -389,7 +389,7 @@ router.post('/whitelist/update', requireRole([Role.ADMINISTRATOR]), async (req: 
             console.log("Email was changed!");
 
             console.log("Checking if entry with new already email exists...");
-            const [[existingWhitelistEntryCheck]] = await db.query<RowDataPacket[]>(`
+            const [[existingWhitelistEntryCheck]] = await pool.query<RowDataPacket[]>(`
                 SELECT id
                 FROM whitelist
                 WHERE email = ?
@@ -404,7 +404,7 @@ router.post('/whitelist/update', requireRole([Role.ADMINISTRATOR]), async (req: 
             }
 
             console.log("Checking if previous user is registered...");
-            const [[userIdQuery]] = await db.query<(RowDataPacket & { id: number })[]>(`
+            const [[userIdQuery]] = await pool.query<(RowDataPacket & { id: number })[]>(`
                 SELECT id
                 FROM users
                 WHERE email = ?
@@ -415,7 +415,7 @@ router.post('/whitelist/update', requireRole([Role.ADMINISTRATOR]), async (req: 
                 console.log("User is registered!");
                 
                 console.log("Removing user from whitelist and breaking whitelist - user link...");
-                await db.query<ResultSetHeader>(`
+                await pool.query<ResultSetHeader>(`
                     UPDATE users
                     SET isWhitelisted = false
                     WHERE email = ?
@@ -432,14 +432,14 @@ router.post('/whitelist/update', requireRole([Role.ADMINISTRATOR]), async (req: 
             console.log(emailCheck);
             
             console.log("Updating user entry...");
-            const [[userIdGetResult]] = await db.query<RowDataPacket[]>(`
+            const [[userIdGetResult]] = await pool.query<RowDataPacket[]>(`
                 SELECT id
                 FROM users
                 WHERE email = ?
                 `, [email]
             );
             const userId = userIdGetResult!.id
-            const [updateUserResult] = await db.query<ResultSetHeader>(`
+            const [updateUserResult] = await pool.query<ResultSetHeader>(`
                 UPDATE users
                 SET role = ?, isWhitelisted = ?
                 WHERE id = ?
@@ -453,7 +453,7 @@ router.post('/whitelist/update', requireRole([Role.ADMINISTRATOR]), async (req: 
         }
 
         console.log("Updating whitelist entry...");
-        const [updateEntryResult] = await db.query<ResultSetHeader>(`
+        const [updateEntryResult] = await pool.query<ResultSetHeader>(`
             UPDATE whitelist
             SET email = ?, role = ?, status = ?
             WHERE id = ?
@@ -462,7 +462,7 @@ router.post('/whitelist/update', requireRole([Role.ADMINISTRATOR]), async (req: 
         console.log("Done!");
 
         console.log("Checking if there's a user with new entry's email...");
-        const [[newEmailUserCheck]] = await db.query<(RowDataPacket & { id: number })[]>(`
+        const [[newEmailUserCheck]] = await pool.query<(RowDataPacket & { id: number })[]>(`
             SELECT id
             FROM users
             WHERE email = ?
@@ -474,7 +474,7 @@ router.post('/whitelist/update', requireRole([Role.ADMINISTRATOR]), async (req: 
             console.log("User found!");
             
             console.log("Updating user with a matching entry email...");
-            await db.query<RowDataPacket[]>(`
+            await pool.query<RowDataPacket[]>(`
                 UPDATE users
                 SET role = ?, isWhitelisted = ?
                 WHERE email = ?
@@ -492,7 +492,7 @@ router.post('/whitelist/update', requireRole([Role.ADMINISTRATOR]), async (req: 
 
         if (emailCheck) {
             console.log("Getting new user data...");
-            [[userEntry]] = await db.query<RowDataPacket[]>(`
+            [[userEntry]] = await pool.query<RowDataPacket[]>(`
                 SELECT 
                     id,
                     email,
@@ -509,7 +509,7 @@ router.post('/whitelist/update', requireRole([Role.ADMINISTRATOR]), async (req: 
         }
 
         console.log("Getting new whitelist entry data...");
-        [[whitelistEntry]] = await db.query<RowDataPacket[]>(
+        [[whitelistEntry]] = await pool.query<RowDataPacket[]>(
             newWhitelistEntryDataQuery + `
             WHERE id = ?
             LIMIT 1
@@ -545,7 +545,7 @@ router.post(
 
     try {
         console.log("Checking if users whitelist status has changed...");
-        const [[whitelistStatusCheck]] = await db.query<RowDataPacket[]>(`
+        const [[whitelistStatusCheck]] = await pool.query<RowDataPacket[]>(`
             SELECT isWhitelisted
             FROM users
             WHERE id = ?
@@ -560,7 +560,7 @@ router.post(
         if (whitelistStatusCheck.isWhitelisted !== isWhitelisted) {
             console.log(`Status was changed: ${whitelistStatusCheck.isWhitelisted} => ${isWhitelisted}`);
             console.log("Checking if user is in whitelist table...");
-            [[whitelistTableCheck]] = await db.query<RowDataPacket[]>(`
+            [[whitelistTableCheck]] = await pool.query<RowDataPacket[]>(`
                 SELECT
                     id
                 FROM whitelist
@@ -573,7 +573,7 @@ router.post(
             if (whitelistTableCheck) {
                 console.log("User is in whitelist table!");
                 console.log("Updating whitelist entry...");
-                const [updateEntryResult] = await db.query<ResultSetHeader>(`
+                const [updateEntryResult] = await pool.query<ResultSetHeader>(`
                     UPDATE whitelist
                     SET role = ?, status = ?
                     WHERE email = ?
@@ -585,7 +585,7 @@ router.post(
 
                 if (isWhitelisted) {
                     console.log("Creating new whitelistEntry...");
-                    const [whitelistEntryInsert] = await db.query<ResultSetHeader>(`
+                    const [whitelistEntryInsert] = await pool.query<ResultSetHeader>(`
                         INSERT INTO whitelist
                         (email, role, status)
                         VALUES(?,?,?)`,
@@ -597,14 +597,14 @@ router.post(
         }
 
         console.log("Updating user...");
-        const [[userIdGetResult]] = await db.query<RowDataPacket[]>(`
+        const [[userIdGetResult]] = await pool.query<RowDataPacket[]>(`
             SELECT id
             FROM users
             WHERE email = ?
             `, [email]
         );
         const userId = userIdGetResult!.id
-        const [updateUserResult] = await db.query<ResultSetHeader>(`
+        const [updateUserResult] = await pool.query<ResultSetHeader>(`
             UPDATE users
             SET role = ?, isWhitelisted = ?
             WHERE id = ?
@@ -618,7 +618,7 @@ router.post(
 
         if (whitelistTableCheck) {
             console.log("Getting new whitelist entry data...");
-            [[whitelistEntry]] = await db.query<RowDataPacket[]>(
+            [[whitelistEntry]] = await pool.query<RowDataPacket[]>(
                 newWhitelistEntryDataQuery + `
                 WHERE id = ?
                 LIMIT 1
@@ -630,7 +630,7 @@ router.post(
         }
 
         console.log("Getting new user entry data...");
-        [[userEntry]] = await db.query<RowDataPacket[]>(`
+        [[userEntry]] = await pool.query<RowDataPacket[]>(`
             SELECT 
                 id,
                 email,
@@ -659,7 +659,7 @@ router.get('/whitelist/users', requireRole([Role.ADMINISTRATOR]),  async (
 ) => {
     try {
         console.log("Getting all whitelist table entries...");
-        const [whitelistEntries] = await db.query<RowDataPacket[]>(newWhitelistEntryDataQuery)
+        const [whitelistEntries] = await pool.query<RowDataPacket[]>(newWhitelistEntryDataQuery)
         console.log("Done!");
         res.status(200).json(whitelistEntries);
     } catch (error) {
@@ -673,7 +673,7 @@ router.get('/users', requireRole([Role.ADMINISTRATOR]), async (
 ) => {
     try {
         console.log("Getting all users...");
-        const [users] = await db.query<RowDataPacket[]>(`
+        const [users] = await pool.query<RowDataPacket[]>(`
             SELECT 
                 id,
                 email,

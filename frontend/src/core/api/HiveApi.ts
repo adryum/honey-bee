@@ -8,7 +8,7 @@ export const hiveApi = {
     getHives: async (
         apiaryId: number | undefined
     ) => {
-        const { data } = await axios.get<HiveCreateResponseModel[]>("/hive/get", {
+        const { data } = await axios.get<HiveCreateResponseModel[]>("/hive", {
             params: {
                 apiaryId: apiaryId
             }
@@ -19,11 +19,7 @@ export const hiveApi = {
     getHive: async (
         id: number
     ) => {
-        const { data } = await axios.get<HiveCreateResponseModel>("/hive/get", {
-            params: {
-                hiveId: id
-            }
-        })
+        const { data } = await axios.get<HiveCreateResponseModel>(`/hive/${id}`)
         return HiveCreateResponse_to_HiveModelDB(data)
     },
 

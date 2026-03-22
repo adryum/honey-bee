@@ -6,18 +6,21 @@ import { useFlexibleGrid } from '@/core/utils/others.js';
 import IconTextButton from '../components/input/buttons/IconTextButton.vue';
 import StringSearchDropdown from '../components/input/dropdowns/StringSearchDropdown.vue';
 import { SVG } from '@/assets/svgs/SVGLoader';
-import { useHivesQuery } from '@/core/composables/useHive';
 import { useApiaryQuery } from '@/core/composables/useApiary';
 import { useRouter } from 'vue-router';
+import CreateHiveModal from '../components/modals/CreateHiveModal.vue';
 
 const s = useCssModule()
 const props = defineProps<{
     apiaryId: number
 }>()
 
-const { apiary } = useApiaryQuery(computed(() => props.apiaryId))
-const { hives }  = useHivesQuery({
-    apiaryId: props.apiaryId
+const dialog = ref<InstanceType<typeof CreateHiveModal>>()
+
+const { apiary, hives } = useApiaryQuery({
+    id:             computed(() => props.apiaryId),
+    getApiary:      true,
+    getApiaryHives: true
 })
 const router = useRouter()
 
@@ -35,23 +38,13 @@ const { style: gridStyle } = useFlexibleGrid({
     gapPx: 10
 })
 
-// const { create } = usePopupCreator({
-//     popupComponent: HiveAddPopup, 
-//     maxCount: 1
-// })
-
 function startInspection(apiaryId: number) {
-    
+    router.push(`/inspection/conduct/apiary/${apiaryId}/`)
 }
 
 function openHive(hiveId: number) {
     router.push(`/hive/${hiveId}/general`)
 }
-
-onMounted(() => {
-    console.log("hives", filteredHives.value);
-    console.log(!filteredHives.value.isEmpty());
-})
 </script>
 
 <template>
@@ -73,7 +66,7 @@ onMounted(() => {
             text="Add hive"
             :svg="SVG.Plus"
             :class="s.button"
-            
+            @click="dialog?.open()"
         />
         <StringSearchDropdown
                 :options="{
@@ -102,6 +95,10 @@ onMounted(() => {
             @click="openHive(hive.id)"
         />
     </div>
+    <CreateHiveModal
+        ref="dialog"
+        :apiary-id="apiaryId"
+    />
 </div>
 </template>
 

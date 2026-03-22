@@ -8,12 +8,12 @@ export const inspectionApi = {
     create: async (
         inspectionData: InspectionCreateRequestModel
     ): Promise<InspectionDB> => {
-        const { data } = await axios.post<InspectionGetResponseModel>('/hive/inspections/create', inspectionData) 
+        const { data } = await axios.post<InspectionGetResponseModel>('/inspection/create', inspectionData) 
         return InspectionGetResponseModel_To_InspectionFormDB(data)
     },
 
     getInspections: async (payload: InspectionFilters): Promise<InspectionDB[]> => {
-        const { data } = await axios.get<InspectionGetResponseModel[]>('/hive/inspections/get', {
+        const { data } = await axios.get<InspectionGetResponseModel[]>('/inspection/', {
             params: { 
                 page:   payload.page,
                 limit:  payload.limit,

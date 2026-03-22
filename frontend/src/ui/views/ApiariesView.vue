@@ -8,9 +8,10 @@ import Apiary from '../components/apiary/Apiary.vue';
 import StringSearchDropdown from "../components/input/dropdowns/StringSearchDropdown.vue";
 import { useApiariesQuery } from "@/core/composables/useApiary";
 import router from "@/core/router";
+import CreateApiaryModal from "../components/modals/CreateApiaryModal.vue";
 
 const s = useCssModule()
-
+const dialog = ref<InstanceType<typeof CreateApiaryModal>>()
 const { apiaries } = useApiariesQuery()
 const searchWord = ref<string>('')
 
@@ -44,6 +45,7 @@ onResize(grid, (element) => {
                 text="Add apiary"
                 :svg="SVG.Plus"
                 :class="s.button"
+                @click="dialog?.open()"
             />
             <StringSearchDropdown
                 :options="{
@@ -72,6 +74,11 @@ onResize(grid, (element) => {
                 @click="openApiary(apiary.id)"
             />
         </div>
+        <CreateApiaryModal 
+            ref="dialog"
+
+
+        />
     </div>
 </template>
 

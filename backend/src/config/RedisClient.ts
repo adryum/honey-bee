@@ -1,5 +1,5 @@
 import { createClient, RedisClientType } from "redis";
-import { Role } from "../DatabaseEnums";
+import { Role, String_to_Role } from "../DatabaseEnums";
 import type { Application, Request } from "express";
 import session from "express-session";
 import { RedisStore } from "connect-redis";
@@ -116,4 +116,9 @@ export async function updateUserSession(model: UserUpdateModel, event?: ClientEv
     }
 
     console.log("Done!");
+}
+
+
+export async function getSessionUserRole(userId: number): Promise<Role> {
+    return String_to_Role(await redisClient.hGet(`user:${userId}`, 'role') ?? "")
 }

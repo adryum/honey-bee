@@ -76,7 +76,7 @@ export function useFloatingUI(
     }, {immediate: true})
 
     watch(() => floaterStyle.value.visibility, async (newVal) => {
-        console.log("VISIBILIT: ", newVal);
+        // console.log("VISIBILIT: ", newVal);
         
     }, {immediate: true})
     onUnmounted(() => cleanup?.())

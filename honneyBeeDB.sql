@@ -31,12 +31,9 @@ CREATE TABLE IF NOT EXISTS `apiaries` (
   PRIMARY KEY (`id`),
   KEY `FK_apiary_user` (`userId`) USING BTREE,
   CONSTRAINT `FK_apiaries_users` FOREIGN KEY (`userId`) REFERENCES `users` (`id`) ON DELETE SET NULL
-) ENGINE=InnoDB AUTO_INCREMENT=97 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
+) ENGINE=InnoDB AUTO_INCREMENT=101 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
 
--- Dumping data for table honey_bee.apiaries: ~2 rows (approximately)
-INSERT INTO `apiaries` (`id`, `name`, `image`, `location`, `description`, `userId`, `creationDate`) VALUES
-	(95, 'supra', NULL, NULL, 'all hives', NULL, NULL),
-	(96, 'Nothe one', NULL, NULL, 'x', NULL, NULL);
+-- Dumping data for table honey_bee.apiaries: ~0 rows (approximately)
 
 -- Dumping structure for table honey_bee.hivehistory
 CREATE TABLE IF NOT EXISTS `hivehistory` (
@@ -52,7 +49,7 @@ CREATE TABLE IF NOT EXISTS `hivehistory` (
   CONSTRAINT `FK_hivehistory_users` FOREIGN KEY (`userId`) REFERENCES `users` (`id`) ON DELETE CASCADE
 ) ENGINE=InnoDB AUTO_INCREMENT=4 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
 
--- Dumping data for table honey_bee.hivehistory: ~1 rows (approximately)
+-- Dumping data for table honey_bee.hivehistory: ~0 rows (approximately)
 
 -- Dumping structure for table honey_bee.hives
 CREATE TABLE IF NOT EXISTS `hives` (
@@ -71,14 +68,56 @@ CREATE TABLE IF NOT EXISTS `hives` (
   KEY `FK_hive_user` (`userId`) USING BTREE,
   CONSTRAINT `FK_hives_apiaries` FOREIGN KEY (`apiaryId`) REFERENCES `apiaries` (`id`) ON DELETE SET NULL,
   CONSTRAINT `FK_hives_users` FOREIGN KEY (`userId`) REFERENCES `users` (`id`) ON DELETE SET NULL
-) ENGINE=InnoDB AUTO_INCREMENT=77 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
+) ENGINE=InnoDB AUTO_INCREMENT=79 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
 
--- Dumping data for table honey_bee.hives: ~4 rows (approximately)
-INSERT INTO `hives` (`id`, `name`, `image`, `location`, `type`, `description`, `apiaryId`, `userId`, `creationDate`, `calendarId`) VALUES
-	(73, 'niga', NULL, NULL, 'Stationary', 'fr', 95, NULL, NULL, '95ef0835061e39b4b4fca24b8445cab54b32db312011a68754f4dccd78a6f761@group.calendar.google.com'),
-	(74, '124', NULL, NULL, 'Stationary', '123', 95, NULL, NULL, '973b2fc67ade434668e041fbf479bf8e49e5b022deec2a1107ffbb91be1cf103@group.calendar.google.com'),
-	(75, '123', NULL, NULL, 'Stationary', '123', 95, NULL, NULL, '0203fd148f850f4f3b703e34ba1a494edf94baecbb9a3df1bdb18459c50e80fb@group.calendar.google.com'),
-	(76, 'qwe', 'https://res.cloudinary.com/dj8lvgcxl/image/upload/v1771171940/apiaries/User:18_Apiary:76.jpg', NULL, 'Stationary', 'qwe', 96, NULL, NULL, '426a6399cbdae5cb6a5b9bb7d2091a1ea5a43c8431370125f176d58066e7d5ae@group.calendar.google.com');
+-- Dumping data for table honey_bee.hives: ~0 rows (approximately)
+
+-- Dumping structure for table honey_bee.hive_inspections
+CREATE TABLE IF NOT EXISTS `hive_inspections` (
+  `id` bigint NOT NULL AUTO_INCREMENT,
+  `apiaryId` bigint DEFAULT NULL,
+  `userIdCreator` bigint DEFAULT NULL,
+  `creationDate` timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP,
+  PRIMARY KEY (`id`),
+  KEY `userId_idx` (`userIdCreator`),
+  KEY `apiaryId_idx` (`apiaryId`),
+  CONSTRAINT `apiaryId` FOREIGN KEY (`apiaryId`) REFERENCES `apiaries` (`id`) ON DELETE SET NULL,
+  CONSTRAINT `userId` FOREIGN KEY (`userIdCreator`) REFERENCES `users` (`id`) ON DELETE SET NULL
+) ENGINE=InnoDB AUTO_INCREMENT=41 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
+
+-- Dumping data for table honey_bee.hive_inspections: ~0 rows (approximately)
+
+-- Dumping structure for table honey_bee.hive_inspection_forms
+CREATE TABLE IF NOT EXISTS `hive_inspection_forms` (
+  `id` bigint NOT NULL AUTO_INCREMENT,
+  `isAbnormalBehavior` tinyint(1) NOT NULL,
+  `abnormalBehaviorDescription` varchar(500) DEFAULT NULL,
+  `isSwarming` tinyint(1) NOT NULL,
+  `needFeeding` tinyint(1) NOT NULL,
+  `isQueenAlive` tinyint(1) NOT NULL,
+  `isQueenLayingEggs` tinyint(1) NOT NULL,
+  `isQueenLayingEggsIncorrectly` tinyint(1) NOT NULL,
+  `needMoreHoneyFrames` tinyint(1) NOT NULL,
+  `needMoreHoneyFramesAmount` int DEFAULT NULL,
+  `needMoreBreedingFrames` tinyint(1) NOT NULL,
+  `needMoreBreedingFramesAmount` int DEFAULT NULL,
+  `needMedicalAttention` tinyint(1) NOT NULL,
+  `medicalAttentionDescription` varchar(500) DEFAULT NULL,
+  `hasHiveDamage` tinyint(1) NOT NULL,
+  `hiveDamageDescription` varchar(500) DEFAULT NULL,
+  `isTakingFrames` tinyint(1) NOT NULL,
+  `takenHoneyFrames` int DEFAULT NULL,
+  `takenBreedingFrames` int DEFAULT NULL,
+  `inspectionId` bigint NOT NULL,
+  `hiveId` bigint DEFAULT NULL,
+  PRIMARY KEY (`id`),
+  KEY `inpsectionId_idx` (`inspectionId`),
+  KEY `hiveId_idx` (`hiveId`),
+  CONSTRAINT `hiveId` FOREIGN KEY (`hiveId`) REFERENCES `hives` (`id`) ON DELETE SET NULL,
+  CONSTRAINT `inpsectionId` FOREIGN KEY (`inspectionId`) REFERENCES `hive_inspections` (`id`) ON DELETE CASCADE
+) ENGINE=InnoDB AUTO_INCREMENT=61 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
+
+-- Dumping data for table honey_bee.hive_inspection_forms: ~0 rows (approximately)
 
 -- Dumping structure for table honey_bee.notes
 CREATE TABLE IF NOT EXISTS `notes` (
@@ -97,20 +136,18 @@ CREATE TABLE IF NOT EXISTS `notes` (
 ) ENGINE=InnoDB AUTO_INCREMENT=10 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
 
 -- Dumping data for table honey_bee.notes: ~0 rows (approximately)
-INSERT INTO `notes` (`id`, `title`, `content`, `creationDate`, `type`, `userId`, `hiveId`) VALUES
-	(9, 'Super hive ', 'Just like it ... notin else', '2026-02-19 10:44:17', 'INFORMATIONAL', NULL, 73);
 
 -- Dumping structure for table honey_bee.userapiaryaccess
 CREATE TABLE IF NOT EXISTS `userapiaryaccess` (
   `id` bigint NOT NULL AUTO_INCREMENT,
-  `userId` bigint DEFAULT NULL,
-  `apiaryId` bigint DEFAULT NULL,
+  `userId` bigint NOT NULL,
+  `apiaryId` bigint NOT NULL,
   PRIMARY KEY (`id`),
   KEY `FK__apiaries` (`apiaryId`),
   KEY `FK__users` (`userId`),
   CONSTRAINT `FK__apiaries` FOREIGN KEY (`apiaryId`) REFERENCES `apiaries` (`id`) ON DELETE CASCADE,
   CONSTRAINT `FK__users` FOREIGN KEY (`userId`) REFERENCES `users` (`id`) ON DELETE CASCADE
-) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
+) ENGINE=InnoDB AUTO_INCREMENT=20 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
 
 -- Dumping data for table honey_bee.userapiaryaccess: ~0 rows (approximately)
 
@@ -124,7 +161,7 @@ CREATE TABLE IF NOT EXISTS `userhiveaccess` (
   KEY `FK_userhiveaccess_users` (`userId`),
   CONSTRAINT `FK_userhiveaccess_hives` FOREIGN KEY (`hiveId`) REFERENCES `hives` (`id`) ON DELETE CASCADE,
   CONSTRAINT `FK_userhiveaccess_users` FOREIGN KEY (`userId`) REFERENCES `users` (`id`) ON DELETE CASCADE
-) ENGINE=InnoDB AUTO_INCREMENT=3 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
+) ENGINE=InnoDB AUTO_INCREMENT=5 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
 
 -- Dumping data for table honey_bee.userhiveaccess: ~0 rows (approximately)
 
@@ -132,15 +169,15 @@ CREATE TABLE IF NOT EXISTS `userhiveaccess` (
 CREATE TABLE IF NOT EXISTS `users` (
   `id` bigint NOT NULL AUTO_INCREMENT,
   `username` varchar(20) CHARACTER SET utf8mb4 COLLATE utf8mb4_0900_ai_ci NOT NULL,
-  `email` varchar(30) CHARACTER SET utf8mb4 COLLATE utf8mb4_0900_ai_ci NOT NULL DEFAULT '',
-  `password` varchar(30) NOT NULL DEFAULT '',
+  `email` varchar(30) CHARACTER SET utf8mb4 COLLATE utf8mb4_0900_ai_ci NOT NULL,
   `image` text CHARACTER SET utf8mb4 COLLATE utf8mb4_0900_ai_ci,
   `role` enum('ADMINISTRATOR','APIARY_MAINTAINER','MANAGEMENT','HIVE_WORKER') CHARACTER SET utf8mb4 COLLATE utf8mb4_0900_ai_ci DEFAULT NULL,
   `provider` enum('GOOGLE') DEFAULT NULL,
   `providerSub` varchar(255) DEFAULT NULL,
   `googleRefreshToken` text,
+  `isWhitelisted` tinyint(1) NOT NULL DEFAULT '0',
   PRIMARY KEY (`id`)
-) ENGINE=InnoDB AUTO_INCREMENT=20 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
+) ENGINE=InnoDB AUTO_INCREMENT=21 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
 
 -- Dumping data for table honey_bee.users: ~0 rows (approximately)
 
@@ -151,11 +188,11 @@ CREATE TABLE IF NOT EXISTS `whitelist` (
   `role` enum('ADMINISTRATOR','APIARY_MAINTAINER','MANAGEMENT','HIVE_WORKER') CHARACTER SET utf8mb4 COLLATE utf8mb4_0900_ai_ci DEFAULT NULL,
   `status` tinyint DEFAULT '0',
   PRIMARY KEY (`id`)
-) ENGINE=InnoDB AUTO_INCREMENT=3 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
+) ENGINE=InnoDB AUTO_INCREMENT=8 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
 
 -- Dumping data for table honey_bee.whitelist: ~0 rows (approximately)
 INSERT INTO `whitelist` (`id`, `email`, `role`, `status`) VALUES
-	(2, 'adiskir@gmail.com', 'ADMINISTRATOR', 1);
+	(7, 'adiskir@gmail.com', 'ADMINISTRATOR', 1);
 
 /*!40103 SET TIME_ZONE=IFNULL(@OLD_TIME_ZONE, 'system') */;
 /*!40101 SET SQL_MODE=IFNULL(@OLD_SQL_MODE, '') */;

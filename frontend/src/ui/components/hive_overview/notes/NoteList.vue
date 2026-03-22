@@ -27,7 +27,7 @@ const { t } = useI18n()
             <IconCubeButton :class="s.button" :svg="SVG.Checkmark"/>
         </div>
     </div>
-    <div :class="s.body">
+    <!-- <div :class="s.body">
         <Note />
         <Note />
         <Note />
@@ -37,8 +37,8 @@ const { t } = useI18n()
         <Note />
         <Note />
         <Note />
-        <Note />
-    </div>
+        <Note /> -->
+    <!-- </div> -->
 </div>
 </template>
 

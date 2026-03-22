@@ -45,7 +45,7 @@ export function useDropdown<T>(
     })
 
     function initialize() {
-        console.log('initialized');
+        // console.log('initialized');
         
         isEmpty.value = !searchInput?.value
         isOpened.value = false

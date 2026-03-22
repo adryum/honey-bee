@@ -44,11 +44,11 @@ const router = createRouter({
         component: () => import('@/ui/views/ApiariesView.vue')
     },
     {
-        path: "/apiary/:id/hives",
+        path: "/apiary/:apiaryId/hives",
         name: RouterViewPaths.ApiaryHives,
         component: () => import('@/ui/views/ApiaryHivesView.vue'),
         props: (route) => ({
-            id: Number(route.params.id)
+            apiaryId: Number(route.params.apiaryId)
         })
     },
     {
@@ -57,9 +57,12 @@ const router = createRouter({
         component: () => import('@/ui/views/InspectionsView.vue')
     },
     {
-        path: `/inspection/intake/apiary/:apiaryId`,
+        path: "/inspection/conduct/apiary/:apiaryId/",
         name: "apiary inspection",
         component: () => import('@/ui/views/InspectionIntakeView.vue'),
+        props: (route) => ({
+            apiaryId: Number(route.params.apiaryId)
+        })
     },
     {
         path: `/inspection/:id`,

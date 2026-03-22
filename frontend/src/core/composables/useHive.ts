@@ -41,21 +41,21 @@ export const useHivesQuery = ({
 export const useHiveMutations = () => {
     const queryClient = useQueryClient()
 
-    const { mutate: createHive, isPending: isCreatingHive } = useMutation({
+    const { mutate: create, isPending: isCreatingHive } = useMutation({
         mutationFn: hiveApi.createHive,
         onSuccess: (newHive) => {
             queryClient.invalidateQueries({ queryKey: ['hives'] })
         }
     })
 
-    const { mutate: deleteHive, isPending: isDeletingHive } = useMutation({
+    const { mutate: remove, isPending: isDeletingHive } = useMutation({
         mutationFn: hiveApi.deleteHive,
         onSuccess: (id) => {
             queryClient.invalidateQueries({ queryKey: ['hives'] })
         }
     })
 
-    const { mutate: updateHive, isPending: isUpdatingHive } = useMutation({
+    const { mutate: update, isPending: isUpdatingHive } = useMutation({
         mutationFn: hiveApi.updateHive,
         onSuccess: (updatedHive) => {
             queryClient.invalidateQueries({ queryKey: ['hives'] })
@@ -63,9 +63,9 @@ export const useHiveMutations = () => {
     })
 
     return {
-        createHive,
-        deleteHive,
-        updateHive,
+        create,
+        remove,
+        update,
         isCreatingHive,
         isDeletingHive,
         isUpdatingHive

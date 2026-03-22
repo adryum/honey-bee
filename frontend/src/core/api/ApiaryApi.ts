@@ -1,21 +1,22 @@
 import axios from "axios"
-import { ApiaryCreateResponse_to_ApiaryModelDB } from "../Convertors";
-import type { ApiaryCreateResponseModel, ApiaryCreateRequestModel, HiveAssignRequestModel, HiveAssignResponseModel } from "./Models";
-import type { ApiaryModelDB } from "../stores/Models";
+import { ApiaryCreateResponse_to_ApiaryModelDB, HiveCreateResponse_to_HiveModelDB } from "../Convertors";
+import type { ApiaryCreateResponseModel, ApiaryCreateRequestModel, HiveAssignRequestModel, HiveAssignResponseModel, HiveCreateResponseModel } from "./Models";
+import type { ApiaryModelDB, HiveModelDB } from "../stores/Models";
 
 export const apiaryApi = {
     getApiaries: async (): Promise<ApiaryModelDB[]> => {
-        const { data } = await axios.get<ApiaryCreateResponseModel[]>("/apiary/get")
+        const { data } = await axios.get<ApiaryCreateResponseModel[]>("/apiary")
         return data.map(ApiaryCreateResponse_to_ApiaryModelDB)
     },
 
     getApiary: async (id: number) => {
-        const { data } = await axios.get<ApiaryCreateResponseModel>("/apiary/get", {
-            params: {
-                id: id
-            }
-        })
+        const { data } = await axios.get<ApiaryCreateResponseModel>(`/apiary/${id}`)
         return ApiaryCreateResponse_to_ApiaryModelDB(data)
+    },
+
+    getApiaryHives: async (apiaryId: number): Promise<HiveModelDB[]> => {
+        const { data } = await axios.get<HiveCreateResponseModel[]>(`/apiary/${apiaryId}/hives`)
+        return data.map(HiveCreateResponse_to_HiveModelDB)
     },
 
     createApiary: async (

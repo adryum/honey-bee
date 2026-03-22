@@ -1,22 +1,31 @@
 <script setup lang="ts">
-import { computed, onMounted, reactive, ref, useCssModule } from "vue";
+import { computed, onMounted, reactive, ref, toRef, useCssModule } from "vue";
 import Icon from "../components/Icon.vue";
 import { IconType, SVG } from "@/assets/svgs/SVGLoader";
 import IconTextButton from "../components/input/buttons/IconTextButton.vue";
 import InspectionForm from "../components/forms/InspectionForm.vue";
 import type { InspectionFormUI } from "@/core/stores/Models";
-import { useInspectionStore } from "@/core/stores/InspectionStore";
 import { InspectionFormUIArray_To_InspectionCreateRequestModel } from "@/core/Convertors";
-import { storeToRefs } from "pinia";
 import { isValidValue } from "@/core/utils/others";
 import router, { RouterViewPaths } from "@/core/router";
-import { useRoute } from "vue-router";
+import { useApiaryQuery } from "@/core/composables/useApiary";
+import { useInspectionMutation } from "@/core/composables/useInspection";
 
 const s = useCssModule()
-const inspectionStore = useInspectionStore()
+const props = defineProps<{
+    apiaryId: number
+}>()
+
+const { hives, apiary } = useApiaryQuery({
+    id:             toRef(props.apiaryId),
+    getApiaryHives: true,
+    getApiary:      true
+})
+const { create } = useInspectionMutation()
 const inspectionForms = ref<InspectionFormUI[]>([])
-const { currentInspectionHives, currentInspectionApiary } = storeToRefs(inspectionStore)
-const selectedForm = ref<InspectionFormUI | undefined>(undefined)
+
+const selectedForm     = ref<InspectionFormUI | undefined>(undefined)
+const selectedFormHive = computed(() => hives.value?.find(item => item.id === selectedForm.value?.hiveId))
 
 const inspectionId            = ref<number | undefined>()
 const isOcerviewingInspection = computed(() => isValidValue(inspectionId.value))
@@ -62,12 +71,12 @@ function hasMadeAnyChanges(form: InspectionFormUI): boolean {
 }
 
 function initialize() {
-    if (!isValidValue(currentInspectionApiary.value)) return
+    if (!isValidValue(props.apiaryId) && isValidValue(hives.value)) return
 
-    currentInspectionHives.value.forEach(hive => {
+    hives.value!.forEach(hive => {
         inspectionForms.value.push({ ...emptyForm, hiveId: hive.id });
     })
-    selectHive(currentInspectionHives.value[0].id)
+    selectHive(hives.value![0].id)
 }
 
 function selectHive(id: number) {
@@ -92,18 +101,15 @@ function saveForm(formModel: InspectionFormUI) {
 }
 
 async function finishInspection() {
-    if (!currentInspectionApiary.value?.id) return;
+    if (!isValidValue(props.apiaryId)) return;
 
     const model = InspectionFormUIArray_To_InspectionCreateRequestModel(
-        currentInspectionApiary.value.id,
+        props.apiaryId,
         inspectionForms.value
     )
-    await inspectionStore.createInspection(model, {
-        onSuccess: function (message: string): void {
+    await create(model, {
+        onSuccess: () => {
             router.push(RouterViewPaths.Inspections)
-        },
-        onFailure: function (): void {
-
         }
     })
 }
@@ -130,7 +136,7 @@ onMounted(() => {
                 for="apiaryHives"
                 :class="s.label"
             >
-                {{ currentInspectionHives.find(hive => hive.id === selectedForm?.hiveId)?.name }}
+                {{ selectedFormHive?.name }}
             </label>
 
             <IconTextButton
@@ -162,7 +168,7 @@ onMounted(() => {
             <label 
                 for="apiaryHives"
                 :class="s.label"
-            >{{ currentInspectionApiary?.name || 'Apiary' }} hives</label>
+            >{{ apiary?.name || 'Apiary' }} hives</label>
         </div>
 
         <div

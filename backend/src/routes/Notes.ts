@@ -1,9 +1,8 @@
 import { Router, type Request, type Response } from "express";
-import { NoteT } from "../TableColumnTitles";
 import { ResultSetHeader, RowDataPacket } from "mysql2";
 import { getCurrentUTCDateString, isNumber, isValidValue } from "../utils";
 import { upload } from "../config/Multer";
-import { db } from "../config/Database";
+import { pool } from "../config/Database";
 import { requireRole } from "../Middleware";
 import { Role } from "../DatabaseEnums";
 
@@ -27,7 +26,7 @@ router.get('/get', requireRole([Role.ANY]), upload.none(), async (
     console.log("# Get notes");
     try {
         console.log("Getting notes...");
-        const [notes] = await db.query<RowDataPacket[]>(
+        const [notes] = await pool.query<RowDataPacket[]>(
             getNotesQuery,
         )
         console.log("Done!");
@@ -54,7 +53,7 @@ router.post('/create', requireRole([Role.ANY]), upload.none(), async (req: Reque
 
     try {
         console.log("Inserting note...");
-        const [noteInsertResult] = await db.query<ResultSetHeader>(`
+        const [noteInsertResult] = await pool.query<ResultSetHeader>(`
             INSERT INTO notes
             (title, content, creationDate, type, userId, hiveId) 
             VALUES (?,?,?,?,?, ?)`,
@@ -63,7 +62,7 @@ router.post('/create', requireRole([Role.ANY]), upload.none(), async (req: Reque
         console.log("Done!");
         
         console.log("Getting insterted data...");
-        const [[getNotesResult]] = await db.query<RowDataPacket[]>(
+        const [[getNotesResult]] = await pool.query<RowDataPacket[]>(
             getNotesQuery + " WHERE id = ?",
             [noteInsertResult.insertId]
         )
@@ -88,8 +87,8 @@ router.post('/delete', requireRole([Role.ANY]), upload.none(), async (req: Reque
     try {
         console.log("Deleting entry...");
         
-        await db.query<ResultSetHeader>(`
-            DELETE FROM ${NoteT.tableName}
+        await pool.query<ResultSetHeader>(`
+            DELETE FROM Notes
             WHERE id = ?`,
             [id]
         )
@@ -169,7 +168,7 @@ async function insertHives(noteId: number, hiveIds: number[]): Promise<ResultSet
     var notePlaceHiveInsertResult: ResultSetHeader | undefined = undefined;
     if (hiveIds.length > 0) {
         const values = hiveIds.map(hiveId => [noteId, hiveId]);
-        [notePlaceHiveInsertResult] = await db.query<ResultSetHeader>(`
+        [notePlaceHiveInsertResult] = await pool.query<ResultSetHeader>(`
             UPDATE INTO note_place__hive
             (note_id, hive_id) 
             VALUES ?`,
@@ -182,7 +181,7 @@ async function insertHives(noteId: number, hiveIds: number[]): Promise<ResultSet
 async function removeHives(noteId: number, hiveIds: number[]): Promise<ResultSetHeader | undefined> {
     var notePlaceHiveRemoveResult: ResultSetHeader | undefined = undefined;
     if (hiveIds.length > 0) {;
-        [notePlaceHiveRemoveResult] = await db.query<ResultSetHeader>(`
+        [notePlaceHiveRemoveResult] = await pool.query<ResultSetHeader>(`
             DELETE FROM note_place__hive
             WHERE note_id = ? AND hive_id IN (?)`,
             [noteId, hiveIds]

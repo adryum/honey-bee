@@ -14,7 +14,9 @@ const props = defineProps<{
     hive:       HiveModelDB
 }>()
 
-const { apiary } = useApiaryQuery(toRef(() => props.hive.apiaryId))
+const { apiary } = useApiaryQuery({
+    id: toRef(() => props.hive.apiaryId)
+})
 
 const { create } = usePopupCreator({
     popupComponent: HiveUpdatePopup,

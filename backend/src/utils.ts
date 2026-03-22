@@ -1,10 +1,10 @@
-import { db } from "./config/Database";
+import { pool } from "./config/Database";
 import { redisClient } from "./config/RedisClient";
 import { Role } from "./DatabaseEnums";
 
 export async function testConnection() {
   try {
-    await db.query("SELECT 1");
+    await pool.query("SELECT 1");
     console.log("✅ Database connected");
   } catch (err) {
     console.error("❌ Database connection failed:", err);
@@ -39,4 +39,9 @@ export function isValidValue(value: unknown): value is NonNullable<typeof value>
     if (typeof value === 'boolean') return value
     return true
 }
- 
+
+export function requireEnv(name: string): string {
+    const value = process.env[name]
+    if (value === undefined) throw new Error(`Missing environment variable: ${name}`)
+    return value
+}

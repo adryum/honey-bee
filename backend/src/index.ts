@@ -10,13 +10,14 @@ import adminRoute from "./routes/Admin"
 import hiveRoute from "./routes/Hives"
 import apiaryRoute from "./routes/Apiaries"
 import noteRoute from "./routes/Notes"
+import calendarRoute from "./routes/Calendar"
+import inspectionRoute from "./routes/Inspection"
 
 import express from "express";
 import cors from "cors";
 import { connectRedis } from "./config/RedisClient";
 import { createServer } from "http";
 import { initializeSocket } from "./config/SocketIo";
-
 
 const app = express();
 const httpServer = createServer(app);
@@ -50,9 +51,11 @@ async function startServer() {
 
     // middle man between request and resposne
     app.use((req, res, next) => {
-        console.log('------------ First Check -----------');
+        console.log('------------ New Request -----------');
         console.log('Incoming request:', req.method, req.url);
-        console.log('body: ', req.body);
+        console.log('body: ',   req.body);
+        // console.log('params: ', req.params);
+        // console.log('query: ',  req.query);
         console.log('------------------------------------');
 
         next();
@@ -61,6 +64,8 @@ async function startServer() {
     app.use("/auth", authentication)
     app.use("/admin", adminRoute)
     app.use("/hive", hiveRoute)
+    app.use("/inspection", inspectionRoute)
+    app.use("/calendar", calendarRoute)
     app.use("/apiary", apiaryRoute)
     app.use("/note", noteRoute)
 

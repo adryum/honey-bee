@@ -13,7 +13,7 @@
 
 import { google } from 'googleapis';
 import { RowDataPacket } from 'mysql2';
-import { db } from './Database';
+import { pool } from './Database';
 
 const CLIENT_ID = process.env.GOOGLE_CLIENT_ID;
 const CLIENT_SECRET = process.env.GOOGLE_CLIENT_SECRET;
@@ -54,7 +54,7 @@ export async function getValidToken(userId: number, session: any) {
     // 3. Start the refresh process and save the promise in the map
     const refreshPromise = (async () => {
         try {
-            const [rows] = await db.query<RowDataPacket[]>(
+            const [rows] = await pool.query<RowDataPacket[]>(
                 "SELECT googleRefreshToken FROM users WHERE id = ?",
                 [userId]
             );

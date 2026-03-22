@@ -6,7 +6,11 @@
   "scripts": {
     "dev": "nodemon --watch src --exec ts-node src/index.ts",
     "build": "tsc",
-    "start": "node dist/index.js"
+    "start": "node dist/index.js",
+    "db:introspect": "drizzle-kit introspect --config=src/config/DrizzleConfig.ts",
+    "db:generate": "drizzle-kit generate --config=src/config/DrizzleConfig.ts",
+    "db:migrate": "drizzle-kit migrate --config=src/config/DrizzleConfig.ts",
+    "db:studio": "drizzle-kit studio --config=src/config/DrizzleConfig.ts"
   },
   "dependencies": {
     "@types/connect-redis": "^0.0.23",
@@ -14,11 +18,12 @@
     "connect-redis": "^9.0.0",
     "cors": "^2.8.5",
     "dotenv": "^16.5.0",
+    "drizzle-orm": "^0.45.1",
     "express": "^5.1.0",
     "express-session": "^1.18.2",
     "googleapis": "^166.0.0",
     "multer": "^2.0.2",
-    "mysql2": "^3.14.1",
+    "mysql2": "^3.20.0",
     "nodemon": "^3.1.11",
     "redis-server": "^1.2.2",
     "socket.io": "^4.8.3"
@@ -29,6 +34,7 @@
     "@types/express-session": "^1.18.2",
     "@types/multer": "^2.0.0",
     "@types/node": "^24.3.0",
+    "drizzle-kit": "^0.31.10",
     "ts-node": "^10.9.2",
     "typescript": "^5.9.2"
   }

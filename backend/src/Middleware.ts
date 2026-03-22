@@ -1,5 +1,5 @@
 import { Request, Response, NextFunction } from "express";
-import { redisClient } from "./config/RedisClient";
+import { getSessionUserRole, redisClient } from "./config/RedisClient";
 import { Role, String_to_Role } from "./DatabaseEnums";
 import { isValidValue } from "./utils";
 
@@ -12,10 +12,10 @@ export function requireRole(requiredRoles: Role[]) {
             return res.sendStatus(401);
         }
 
-        const role = await redisClient.hGet(`user:${userId}`, "role");
+        const role = await getSessionUserRole(userId)
 
         // checks if role matches requirements
-        if (!requiredRoles.includes(Role.ANY) && !requiredRoles.includes(String_to_Role(role ?? ""))) {
+        if (!requiredRoles.includes(Role.ANY) && !requiredRoles.includes(role)) {
             return res.sendStatus(403);
         }
 

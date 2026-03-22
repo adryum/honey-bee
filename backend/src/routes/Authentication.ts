@@ -1,6 +1,6 @@
 /// <reference path="../types/index.d.ts" />
 import { Router, type Request, type Response } from "express";
-import { db } from "../config/Database";
+import { pool } from "../config/Database";
 import { ResultSetHeader, RowDataPacket } from "mysql2";
 import { authenticateUser } from "../config/RedisClient";
 import { oauth2Client, scopes } from "../config/GoogleAuth";
@@ -56,7 +56,7 @@ router.get(
         //     return res.status(401).send("Company email please! :{")
         // 
         console.log("Getting user from whitelist...");
-        const [[whitelistedUserQuery]] = await db.query<RowDataPacket[]>(`
+        const [[whitelistedUserQuery]] = await pool.query<RowDataPacket[]>(`
             SELECT 
                 role, status
             FROM whitelist
@@ -73,7 +73,7 @@ router.get(
 
         console.log("Checking if user was registered before...");
         // check if user is registered in the sistem
-        const [[possibleUser]] = await db.query<RowDataPacket[]>(`
+        const [[possibleUser]] = await pool.query<RowDataPacket[]>(`
             SELECT 
                 id,
                 role
@@ -93,16 +93,16 @@ router.get(
             })
         } else {
             console.log("Creating new user...");
-            const [user] = await db.query<ResultSetHeader>(`
+            const [user] = await pool.query<ResultSetHeader>(`
                 INSERT INTO users
-                (username, image, email, providerSub, provider, googleRefreshToken, role)
+                (username, image, email, providerSub, provider, googleRefreshToken, role, isWhitelisted)
                 VALUES(?,?,?,?,?,?,?)`, 
-                [payload?.name, payload?.picture, payload?.email, payload?.sub, "GOOGLE", tokens.refresh_token, whitelistedUserQuery!.role]
+                [payload?.name, payload?.picture, payload?.email, payload?.sub, "GOOGLE", tokens.refresh_token, whitelistedUserQuery!.role, true]
             )
             console.log("Made new user!");
 
             console.log("Selecting user id and role for new user session...");
-            const [[newUser]] = await db.query<RowDataPacket[]>(`
+            const [[newUser]] = await pool.query<RowDataPacket[]>(`
                 SELECT 
                     id,
                     role
@@ -274,7 +274,7 @@ router.post('/login', async (req: Request<{},{}, {
         return res.status(401).send('incorrect credentials!')
 
     try {
-        const [[getUserResult]] = await db.query<RowDataPacket[]>(`
+        const [[getUserResult]] = await pool.query<RowDataPacket[]>(`
             SELECT *
             FROM users
             WHERE email = ?
@@ -317,7 +317,7 @@ router.post('/signup', async (req: Request<{},{}, {
     }
 
     try {
-        const [[alreadyRegisteredUser]] = await db.query<RowDataPacket[]>(`
+        const [[alreadyRegisteredUser]] = await pool.query<RowDataPacket[]>(`
             SELECT *
             FROM users
             WHERE email = ?`, 
@@ -329,7 +329,7 @@ router.post('/signup', async (req: Request<{},{}, {
             return res.status(401).send('this email is already registered!')
 
         // creating user entry
-        const [response] = await db.query<ResultSetHeader>(`
+        const [response] = await pool.query<ResultSetHeader>(`
             INSERT INTO users
             (username, 
             email, 
@@ -341,7 +341,7 @@ router.post('/signup', async (req: Request<{},{}, {
         )
 
         // get user info
-        const [[user]] = await db.query<RowDataPacket[]>(`
+        const [[user]] = await pool.query<RowDataPacket[]>(`
             SELECT * 
             FROM users 
             WHERE id = ?`, 
@@ -391,7 +391,7 @@ router.post(
     }
 
     try {
-        const [[user]] = await db.query<RowDataPacket[]>(
+        const [[user]] = await pool.query<RowDataPacket[]>(
             `SELECT 
                 id,
                 username,
@@ -421,7 +421,7 @@ router.get(
     console.log("# Get my profile");
 
     try {
-        const [[user]] = await db.query<RowDataPacket[]>(
+        const [[user]] = await pool.query<RowDataPacket[]>(
             `SELECT 
                 id,
                 username,

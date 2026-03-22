@@ -68,7 +68,9 @@ const props = defineProps<{
         <tr 
             :class="s.row"
         >
-            
+            <slot>
+                
+            </slot>
         </tr>
     </tfoot>
 </table>

@@ -1,5 +1,5 @@
 <script setup lang="ts">
-import { computed, ref, toRef, useCssModule } from 'vue';
+import { computed, onMounted, ref, toRef, useCssModule } from 'vue';
 import { motion } from 'motion-v';
 import Button from '../components/input/buttons/Button.vue';
 import HiveMedicineFragment from '../components/view_fragments/HiveMedicineFragment.vue';
@@ -41,6 +41,8 @@ function changeTab(tab: HiveTab) {
         }
     })
 }
+
+onMounted(() => console.log(props.tab))
 </script>
 
 <template>

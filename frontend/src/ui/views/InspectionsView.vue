@@ -31,13 +31,14 @@ const inspectionEntries = computed(
     <InspectionTable
         :class="s.table"
         :entries="inspectionEntries"
-    />
-    <button 
-        @click="prevPage"
-    >Previous</button>
-    <button 
-        @click="nextPage"
-    >Next</button>
+    >
+        <button 
+            @click="prevPage"
+        >Previous</button>
+        <button 
+            @click="nextPage"
+        >Next</button>
+    </InspectionTable>
 </div>
 </template>
 

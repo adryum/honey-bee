@@ -15,31 +15,47 @@ export const useApiariesQuery = () => {
     }
 }
 
-export const useApiaryQuery = (id: Ref<number | undefined>) => {
-    const { data: apiary, isLoading, isError } = useQuery({
-        queryKey: ["apiaries", id],
-        queryFn:  () => apiaryApi.getApiary(id.value!),
-        enabled:  computed(() => id.value !== undefined)
+export type UseApiaryQueryModel = {
+    id :             Ref<number | undefined>
+    getApiaryHives?: boolean,
+    getApiary?:      boolean
+}
+
+export const useApiaryQuery = (model: UseApiaryQueryModel) => {
+    const { getApiary, getApiaryHives } = model
+    const { data: apiary, isLoading: isGettingApiary, isError: isGettingApiaryError } = useQuery({
+        queryKey: ["apiaries", model.id],
+        queryFn:  () => apiaryApi.getApiary(model.id.value!),
+        enabled:  computed(() => model.id.value !== undefined && getApiary)
+    })
+
+    const { data: hives, isLoading: isGettingHives, isError: isGettingHivesError } = useQuery({
+        queryKey: ["hives", { apiaryId: model.id }],
+        queryFn:  () => apiaryApi.getApiaryHives(model.id.value!),
+        enabled:  computed(() => model.id.value !== undefined && getApiaryHives)
     })
 
     return {
         apiary,
-        isLoading,
-        isError
+        isGettingApiary,
+        isGettingApiaryError,
+        hives,
+        isGettingHives,
+        isGettingHivesError
     }
 }
 
 export const useApiaryMutations = () => {
     const queryClient = useQueryClient()
 
-    const { mutate: createApiary, isPending: isCreatingApiary } = useMutation({
+    const { mutate: create, isPending: isCreatingApiary } = useMutation({
         mutationFn: apiaryApi.createApiary,
         onSuccess: (newApiary) => {
             queryClient.invalidateQueries({ queryKey: ['apiaries'] })
         }
     })
 
-    const { mutate: deleteApiary, isPending: isDeletingApiary } = useMutation({
+    const { mutate: remove, isPending: isDeletingApiary } = useMutation({
         mutationFn: apiaryApi.deleteApiary,
         onSuccess: (id) => {
             queryClient.invalidateQueries({ queryKey: ['apiaries'] })
@@ -68,8 +84,8 @@ export const useApiaryMutations = () => {
     // })
 
     return {
-        createApiary,
-        deleteApiary,
+        create,
+        remove,
         assignHive,
         unassignHive,
         isCreatingApiary,

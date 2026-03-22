@@ -1,13 +1,14 @@
 import { Router, type Request, type Response } from "express";
-import { db } from "../config/Database";
-import { ApiaryT, HiveT } from "../TableColumnTitles";
+import { db, pool } from "../config/Database";
 import { ResultSetHeader, RowDataPacket } from "mysql2";
 import { uploadImage } from "../config/image_cloud/Cloudinary";
 import { PublicIdBuilder } from "../config/image_cloud/PublicIdBuilder";
 import { upload } from "../config/Multer";
 import { requireRole } from "../Middleware";
 import { Role, String_to_Role } from "../DatabaseEnums";
-import { redisClient } from "../config/RedisClient";
+import { getSessionUserRole, redisClient } from "../config/RedisClient";
+import { and, eq, inArray } from "drizzle-orm";
+import { userhiveaccess, hives, userapiaryaccess, apiaries } from "../db/schema";
 
 const getApiaryQuery = (where: string) => `
 SELECT 
@@ -21,42 +22,120 @@ FROM apiaries as a
 
 const router = Router()
 
-router.get('/get', requireRole([Role.ANY]), async (
+router.get('/', requireRole([Role.ANY]), async (
     req: Request<{},{},{}>, 
     res: Response
 ) => {
     console.log("# Get apiaries");
-    const role = String_to_Role(await redisClient.hGet(`user:${req.session.userId}`, 'role') ?? "")
-    console.log("Role: ", role);
-    var apiaries: RowDataPacket[]
+    const userId = req.session.userId!
+    const role   = await getSessionUserRole(userId)
+
     try {
         console.log("Getting apiaries you have access to...");
+
+        var apiariesResult
         switch (role) {
             case Role.ADMINISTRATOR:
-                [apiaries] = await db.query<RowDataPacket[]>(getApiaryQuery(""))
-                break;
+                apiariesResult = await db.query.apiaries.findMany(); break;
             default:
-                [apiaries] = await db.query<RowDataPacket[]>(getApiaryQuery("") + `
-                    WHERE a.id IN (
-                        SELECT apiaryId 
-                        FROM userApiaryAccess 
-                        WHERE userId = ?
-                    )`,
-                    [req.session.userId]
-                )
+                const apiaryAccess = await db.query.userapiaryaccess.findMany({
+                    where: eq(userapiaryaccess.userId, userId)
+                })
+
+                apiariesResult = await db.query.apiaries.findMany({
+                    where: inArray(apiaries.id, apiaryAccess.map(item => item.apiaryId))
+                })
                 break;
         }
         console.log("Done!");
-    // // try {
-    // //     var [apiaries] = await db.query<any[]>(`
-    // //         ${getApiaryQuery("")}
-    // //         WHERE a.userId = ? 
-    // //         GROUP BY a.id
-    // //         `,
-    // //         [req.session.userId]
-    // //     )
-    //     console.log("Done!");
-        res.status(200).json(apiaries)
+
+        res.status(200).json(apiariesResult)
+    } catch (err) {
+        console.error(err);
+        res.status(500).send('Server error');
+    }
+})
+
+router.get(
+    "/:id", 
+    requireRole([Role.ANY]), 
+    async (
+        req: Request<{ id: string }>, 
+        res: Response
+) => {
+    console.log("# Get apiary");
+    const apiaryId  = parseInt(req.params.id)
+    const reqUserId = req.session.userId!
+    const role      = await getSessionUserRole(reqUserId)
+
+    try {
+        console.log("Checking if user has access to apiary...");
+        var hasAccess = true
+
+        if (role !== Role.ADMINISTRATOR) {
+            const accessQuery = await db.query.userapiaryaccess.findFirst({
+                where: and(
+                    eq(userapiaryaccess.userId, reqUserId), 
+                    eq(userapiaryaccess.apiaryId, apiaryId)
+                )
+            })
+            hasAccess = Boolean(accessQuery)
+        }
+        console.log("Done! access: ", hasAccess);
+        
+        if (!hasAccess) {
+            return res.status(403).json({ message: 'Access denied' })
+        }
+
+        const apiary = await db.query.apiaries.findFirst({
+            where: eq(apiaries.id, apiaryId)
+        })
+
+        return res.status(200).json(apiary)
+    } catch (err) {
+        console.error(err);
+        res.status(500).send('Server error');
+    }
+})
+
+router.get(
+    "/:id/hives",
+    requireRole([Role.ANY]),
+    async (
+        req: Request<{ id: string }>, 
+        res: Response
+) => {
+    console.log("# Get all apiary hives");
+    const userId   = req.session.userId!
+    const role     = await getSessionUserRole(userId)
+    const apiaryId = parseInt(req.params.id)
+
+    try {
+        console.log("Getting hives user has access to...");
+
+        var hivesResult
+        switch (role) {
+            case Role.ADMINISTRATOR:
+                hivesResult = await db.query.hives.findMany({
+                    where: eq(hives.apiaryId, apiaryId)
+                });
+                break;
+            default:
+                const hiveAccess = await db.query.userhiveaccess.findMany({
+                    where: eq(userhiveaccess.userId, userId)
+                });
+
+                hivesResult = await db.query.hives.findMany({
+                    where: and(
+                        eq(hives.apiaryId, apiaryId), 
+                        inArray(hives.id, hiveAccess.map(item => item.hiveId))
+                    )
+                });
+                break;
+        }
+        console.log("Done!");
+
+        return res.status(200).json(hivesResult)
     } catch (err) {
         console.error(err);
         res.status(500).send('Server error');
@@ -79,7 +158,7 @@ router.post('/create', upload.single("image"), async (req: Request<{},{},{
 
     try {
         console.log("Inserting apirary...");
-        const [result] = await db.query<ResultSetHeader>(`
+        const [result] = await pool.query<ResultSetHeader>(`
             INSERT INTO apiaries (
             name, 
             location, 
@@ -101,7 +180,7 @@ router.post('/create', upload.single("image"), async (req: Request<{},{},{
 
             console.log("Updating entry with image...");
             
-            await db.query<ResultSetHeader>(`
+            await pool.query<ResultSetHeader>(`
                 UPDATE apiaries
                 SET image = ?
                 WHERE id = ?`,
@@ -111,7 +190,7 @@ router.post('/create', upload.single("image"), async (req: Request<{},{},{
         }
 
         console.log("Getting new entry data...");
-        var [[getNewApiary]] = await db.query<RowDataPacket[]>(`
+        var [[getNewApiary]] = await pool.query<RowDataPacket[]>(`
             ${getApiaryQuery("")}
             WHERE a.id = ? 
             GROUP BY a.id
@@ -126,33 +205,5 @@ router.post('/create', upload.single("image"), async (req: Request<{},{},{
         res.status(500).send('Server error');
     }
 })
-
-// // deletes apiary
-// router.post('/delete', async (req: Request<{},{},{
-//     apiaryId: string
-// }>, res: Response) => {
-//     console.log(req.body);
-
-//     // missing credentials
-//     try {
-//         const unassigningResult = await db.query( `
-//             UPDATE ${HiveT.tableName} 
-//             SET ${HiveT.apiaryId} = NULL 
-//             WHERE ${HiveT.apiaryId} = ? AND ${HiveT.userId} = ?`, 
-//             [apiaryId, identification.id]
-//         )
-        
-//         const deleteQuery = await db.query(`
-//             DELETE FROM ${ApiaryT.tableName} 
-//             WHERE ${ApiaryT.id} = ? AND ${ApiaryT.userId} = ?`, 
-//             [apiaryId, identification.id]
-//         )
-
-//         res.status(204).send()
-//     } catch (err) {
-//         console.error(err);
-//         res.status(500).send('Server error');
-//     }
-// })
 
 export default router

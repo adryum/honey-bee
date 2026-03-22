@@ -1,0 +1,668 @@
+{
+  "id": "00000000-0000-0000-0000-000000000000",
+  "prevId": "",
+  "version": "5",
+  "dialect": "mysql",
+  "tables": {
+    "apiaries": {
+      "name": "apiaries",
+      "columns": {
+        "id": {
+          "autoincrement": true,
+          "name": "id",
+          "type": "bigint",
+          "primaryKey": false,
+          "notNull": true
+        },
+        "name": {
+          "autoincrement": false,
+          "name": "name",
+          "type": "varchar(50)",
+          "primaryKey": false,
+          "notNull": false
+        },
+        "image": {
+          "autoincrement": false,
+          "name": "image",
+          "type": "text",
+          "primaryKey": false,
+          "notNull": false
+        },
+        "location": {
+          "autoincrement": false,
+          "name": "location",
+          "type": "varchar(50)",
+          "primaryKey": false,
+          "notNull": false
+        },
+        "description": {
+          "autoincrement": false,
+          "name": "description",
+          "type": "varchar(500)",
+          "primaryKey": false,
+          "notNull": false
+        },
+        "userId": {
+          "autoincrement": false,
+          "name": "userId",
+          "type": "bigint",
+          "primaryKey": false,
+          "notNull": false
+        },
+        "creationDate": {
+          "autoincrement": false,
+          "name": "creationDate",
+          "type": "timestamp",
+          "primaryKey": false,
+          "notNull": false
+        }
+      },
+      "compositePrimaryKeys": {
+        "apiaries_id": {
+          "name": "apiaries_id",
+          "columns": [
+            "id"
+          ]
+        }
+      },
+      "indexes": {
+        "FK_apiary_user": {
+          "name": "FK_apiary_user",
+          "columns": [
+            "userId"
+          ],
+          "isUnique": false
+        }
+      },
+      "foreignKeys": {
+        "FK_apiaries_users": {
+          "name": "FK_apiaries_users",
+          "tableFrom": "apiaries",
+          "tableTo": "users",
+          "columnsFrom": [
+            "userId"
+          ],
+          "columnsTo": [
+            "id"
+          ],
+          "onDelete": "set null",
+          "onUpdate": "no action"
+        }
+      },
+      "uniqueConstraints": {},
+      "checkConstraint": {}
+    },
+    "hivehistory": {
+      "name": "hivehistory",
+      "columns": {
+        "id": {
+          "autoincrement": true,
+          "name": "id",
+          "type": "bigint",
+          "primaryKey": false,
+          "notNull": true
+        },
+        "text": {
+          "autoincrement": false,
+          "name": "text",
+          "type": "varchar(200)",
+          "primaryKey": false,
+          "notNull": false
+        },
+        "userId": {
+          "autoincrement": false,
+          "name": "userId",
+          "type": "bigint",
+          "primaryKey": false,
+          "notNull": false
+        },
+        "hiveId": {
+          "autoincrement": false,
+          "name": "hiveId",
+          "type": "bigint",
+          "primaryKey": false,
+          "notNull": false
+        },
+        "creationDate": {
+          "autoincrement": false,
+          "name": "creationDate",
+          "type": "timestamp",
+          "primaryKey": false,
+          "notNull": false
+        }
+      },
+      "compositePrimaryKeys": {
+        "hivehistory_id": {
+          "name": "hivehistory_id",
+          "columns": [
+            "id"
+          ]
+        }
+      },
+      "indexes": {},
+      "foreignKeys": {
+        "FK_hivehistory_hives": {
+          "name": "FK_hivehistory_hives",
+          "tableFrom": "hivehistory",
+          "tableTo": "hives",
+          "columnsFrom": [
+            "hiveId"
+          ],
+          "columnsTo": [
+            "id"
+          ],
+          "onDelete": "cascade",
+          "onUpdate": "no action"
+        },
+        "FK_hivehistory_users": {
+          "name": "FK_hivehistory_users",
+          "tableFrom": "hivehistory",
+          "tableTo": "users",
+          "columnsFrom": [
+            "userId"
+          ],
+          "columnsTo": [
+            "id"
+          ],
+          "onDelete": "cascade",
+          "onUpdate": "no action"
+        }
+      },
+      "uniqueConstraints": {},
+      "checkConstraint": {}
+    },
+    "hives": {
+      "name": "hives",
+      "columns": {
+        "id": {
+          "autoincrement": true,
+          "name": "id",
+          "type": "bigint",
+          "primaryKey": false,
+          "notNull": true
+        },
+        "name": {
+          "autoincrement": false,
+          "name": "name",
+          "type": "varchar(50)",
+          "primaryKey": false,
+          "notNull": false
+        },
+        "image": {
+          "autoincrement": false,
+          "name": "image",
+          "type": "text",
+          "primaryKey": false,
+          "notNull": false
+        },
+        "location": {
+          "autoincrement": false,
+          "name": "location",
+          "type": "varchar(50)",
+          "primaryKey": false,
+          "notNull": false
+        },
+        "type": {
+          "autoincrement": false,
+          "name": "type",
+          "type": "enum('Stationary','Movable','Tower')",
+          "primaryKey": false,
+          "notNull": false
+        },
+        "description": {
+          "autoincrement": false,
+          "name": "description",
+          "type": "varchar(500)",
+          "primaryKey": false,
+          "notNull": false
+        },
+        "apiaryId": {
+          "autoincrement": false,
+          "name": "apiaryId",
+          "type": "bigint",
+          "primaryKey": false,
+          "notNull": false
+        },
+        "userId": {
+          "autoincrement": false,
+          "name": "userId",
+          "type": "bigint",
+          "primaryKey": false,
+          "notNull": false
+        },
+        "creationDate": {
+          "autoincrement": false,
+          "name": "creationDate",
+          "type": "timestamp",
+          "primaryKey": false,
+          "notNull": false
+        },
+        "calendarId": {
+          "autoincrement": false,
+          "name": "calendarId",
+          "type": "text",
+          "primaryKey": false,
+          "notNull": false
+        }
+      },
+      "compositePrimaryKeys": {
+        "hives_id": {
+          "name": "hives_id",
+          "columns": [
+            "id"
+          ]
+        }
+      },
+      "indexes": {
+        "FK_hive_user": {
+          "name": "FK_hive_user",
+          "columns": [
+            "userId"
+          ],
+          "isUnique": false
+        }
+      },
+      "foreignKeys": {
+        "FK_hives_apiaries": {
+          "name": "FK_hives_apiaries",
+          "tableFrom": "hives",
+          "tableTo": "apiaries",
+          "columnsFrom": [
+            "apiaryId"
+          ],
+          "columnsTo": [
+            "id"
+          ],
+          "onDelete": "set null",
+          "onUpdate": "no action"
+        },
+        "FK_hives_users": {
+          "name": "FK_hives_users",
+          "tableFrom": "hives",
+          "tableTo": "users",
+          "columnsFrom": [
+            "userId"
+          ],
+          "columnsTo": [
+            "id"
+          ],
+          "onDelete": "set null",
+          "onUpdate": "no action"
+        }
+      },
+      "uniqueConstraints": {},
+      "checkConstraint": {}
+    },
+    "notes": {
+      "name": "notes",
+      "columns": {
+        "id": {
+          "autoincrement": true,
+          "name": "id",
+          "type": "bigint",
+          "primaryKey": false,
+          "notNull": true
+        },
+        "title": {
+          "autoincrement": false,
+          "name": "title",
+          "type": "varchar(30)",
+          "primaryKey": false,
+          "notNull": false
+        },
+        "content": {
+          "autoincrement": false,
+          "name": "content",
+          "type": "varchar(500)",
+          "primaryKey": false,
+          "notNull": false
+        },
+        "creationDate": {
+          "autoincrement": false,
+          "name": "creationDate",
+          "type": "datetime",
+          "primaryKey": false,
+          "notNull": false
+        },
+        "type": {
+          "autoincrement": false,
+          "name": "type",
+          "type": "enum('WARNING','INFORMATIONAL')",
+          "primaryKey": false,
+          "notNull": false
+        },
+        "userId": {
+          "autoincrement": false,
+          "name": "userId",
+          "type": "bigint",
+          "primaryKey": false,
+          "notNull": false
+        },
+        "hiveId": {
+          "autoincrement": false,
+          "name": "hiveId",
+          "type": "bigint",
+          "primaryKey": false,
+          "notNull": false
+        }
+      },
+      "compositePrimaryKeys": {
+        "notes_id": {
+          "name": "notes_id",
+          "columns": [
+            "id"
+          ]
+        }
+      },
+      "indexes": {},
+      "foreignKeys": {
+        "FK_notes_hives": {
+          "name": "FK_notes_hives",
+          "tableFrom": "notes",
+          "tableTo": "hives",
+          "columnsFrom": [
+            "hiveId"
+          ],
+          "columnsTo": [
+            "id"
+          ],
+          "onDelete": "set null",
+          "onUpdate": "no action"
+        },
+        "FK_notes_users": {
+          "name": "FK_notes_users",
+          "tableFrom": "notes",
+          "tableTo": "users",
+          "columnsFrom": [
+            "userId"
+          ],
+          "columnsTo": [
+            "id"
+          ],
+          "onDelete": "set null",
+          "onUpdate": "no action"
+        }
+      },
+      "uniqueConstraints": {},
+      "checkConstraint": {}
+    },
+    "userapiaryaccess": {
+      "name": "userapiaryaccess",
+      "columns": {
+        "id": {
+          "autoincrement": true,
+          "name": "id",
+          "type": "bigint",
+          "primaryKey": false,
+          "notNull": true
+        },
+        "userId": {
+          "autoincrement": false,
+          "name": "userId",
+          "type": "bigint",
+          "primaryKey": false,
+          "notNull": false
+        },
+        "apiaryId": {
+          "autoincrement": false,
+          "name": "apiaryId",
+          "type": "bigint",
+          "primaryKey": false,
+          "notNull": false
+        }
+      },
+      "compositePrimaryKeys": {
+        "userapiaryaccess_id": {
+          "name": "userapiaryaccess_id",
+          "columns": [
+            "id"
+          ]
+        }
+      },
+      "indexes": {},
+      "foreignKeys": {
+        "FK__apiaries": {
+          "name": "FK__apiaries",
+          "tableFrom": "userapiaryaccess",
+          "tableTo": "apiaries",
+          "columnsFrom": [
+            "apiaryId"
+          ],
+          "columnsTo": [
+            "id"
+          ],
+          "onDelete": "cascade",
+          "onUpdate": "no action"
+        },
+        "FK__users": {
+          "name": "FK__users",
+          "tableFrom": "userapiaryaccess",
+          "tableTo": "users",
+          "columnsFrom": [
+            "userId"
+          ],
+          "columnsTo": [
+            "id"
+          ],
+          "onDelete": "cascade",
+          "onUpdate": "no action"
+        }
+      },
+      "uniqueConstraints": {},
+      "checkConstraint": {}
+    },
+    "userhiveaccess": {
+      "name": "userhiveaccess",
+      "columns": {
+        "id": {
+          "autoincrement": true,
+          "name": "id",
+          "type": "bigint",
+          "primaryKey": false,
+          "notNull": true
+        },
+        "userId": {
+          "default": 0,
+          "autoincrement": false,
+          "name": "userId",
+          "type": "bigint",
+          "primaryKey": false,
+          "notNull": true
+        },
+        "hiveId": {
+          "default": 0,
+          "autoincrement": false,
+          "name": "hiveId",
+          "type": "bigint",
+          "primaryKey": false,
+          "notNull": true
+        }
+      },
+      "compositePrimaryKeys": {
+        "userhiveaccess_id": {
+          "name": "userhiveaccess_id",
+          "columns": [
+            "id"
+          ]
+        }
+      },
+      "indexes": {},
+      "foreignKeys": {
+        "FK_userhiveaccess_hives": {
+          "name": "FK_userhiveaccess_hives",
+          "tableFrom": "userhiveaccess",
+          "tableTo": "hives",
+          "columnsFrom": [
+            "hiveId"
+          ],
+          "columnsTo": [
+            "id"
+          ],
+          "onDelete": "cascade",
+          "onUpdate": "no action"
+        },
+        "FK_userhiveaccess_users": {
+          "name": "FK_userhiveaccess_users",
+          "tableFrom": "userhiveaccess",
+          "tableTo": "users",
+          "columnsFrom": [
+            "userId"
+          ],
+          "columnsTo": [
+            "id"
+          ],
+          "onDelete": "cascade",
+          "onUpdate": "no action"
+        }
+      },
+      "uniqueConstraints": {},
+      "checkConstraint": {}
+    },
+    "users": {
+      "name": "users",
+      "columns": {
+        "id": {
+          "autoincrement": true,
+          "name": "id",
+          "type": "bigint",
+          "primaryKey": false,
+          "notNull": true
+        },
+        "username": {
+          "autoincrement": false,
+          "name": "username",
+          "type": "varchar(20)",
+          "primaryKey": false,
+          "notNull": true
+        },
+        "email": {
+          "default": "''",
+          "autoincrement": false,
+          "name": "email",
+          "type": "varchar(30)",
+          "primaryKey": false,
+          "notNull": true
+        },
+        "password": {
+          "default": "''",
+          "autoincrement": false,
+          "name": "password",
+          "type": "varchar(30)",
+          "primaryKey": false,
+          "notNull": true
+        },
+        "image": {
+          "autoincrement": false,
+          "name": "image",
+          "type": "text",
+          "primaryKey": false,
+          "notNull": false
+        },
+        "role": {
+          "autoincrement": false,
+          "name": "role",
+          "type": "enum('ADMINISTRATOR','APIARY_MAINTAINER','MANAGEMENT','HIVE_WORKER')",
+          "primaryKey": false,
+          "notNull": false
+        },
+        "provider": {
+          "autoincrement": false,
+          "name": "provider",
+          "type": "enum('GOOGLE')",
+          "primaryKey": false,
+          "notNull": false
+        },
+        "providerSub": {
+          "autoincrement": false,
+          "name": "providerSub",
+          "type": "varchar(255)",
+          "primaryKey": false,
+          "notNull": false
+        },
+        "googleRefreshToken": {
+          "autoincrement": false,
+          "name": "googleRefreshToken",
+          "type": "text",
+          "primaryKey": false,
+          "notNull": false
+        },
+        "isWhitelisted": {
+          "default": 0,
+          "autoincrement": false,
+          "name": "isWhitelisted",
+          "type": "tinyint(1)",
+          "primaryKey": false,
+          "notNull": true
+        }
+      },
+      "compositePrimaryKeys": {
+        "users_id": {
+          "name": "users_id",
+          "columns": [
+            "id"
+          ]
+        }
+      },
+      "indexes": {},
+      "foreignKeys": {},
+      "uniqueConstraints": {},
+      "checkConstraint": {}
+    },
+    "whitelist": {
+      "name": "whitelist",
+      "columns": {
+        "id": {
+          "autoincrement": true,
+          "name": "id",
+          "type": "bigint",
+          "primaryKey": false,
+          "notNull": true
+        },
+        "email": {
+          "autoincrement": false,
+          "name": "email",
+          "type": "varchar(60)",
+          "primaryKey": false,
+          "notNull": false
+        },
+        "role": {
+          "autoincrement": false,
+          "name": "role",
+          "type": "enum('ADMINISTRATOR','APIARY_MAINTAINER','MANAGEMENT','HIVE_WORKER')",
+          "primaryKey": false,
+          "notNull": false
+        },
+        "status": {
+          "default": 0,
+          "autoincrement": false,
+          "name": "status",
+          "type": "tinyint",
+          "primaryKey": false,
+          "notNull": false
+        }
+      },
+      "compositePrimaryKeys": {
+        "whitelist_id": {
+          "name": "whitelist_id",
+          "columns": [
+            "id"
+          ]
+        }
+      },
+      "indexes": {},
+      "foreignKeys": {},
+      "uniqueConstraints": {},
+      "checkConstraint": {}
+    }
+  },
+  "views": {},
+  "_meta": {
+    "schemas": {},
+    "tables": {},
+    "columns": {}
+  },
+  "internal": {
+    "tables": {},
+    "indexes": {}
+  }
+}
