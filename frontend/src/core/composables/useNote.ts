@@ -10,7 +10,7 @@ export const useNotes = ({
 ) => {
     const { data: notes, isLoading, isError } = useQuery({
         queryKey: ["notes", { id: hiveId.value }],
-        queryFn:  () => noteApi.getNotes(hiveId.value!),
+        queryFn:  () => noteApi.getHiveNotes(hiveId.value!),
         enabled:  computed(() => hiveId.value != undefined)
     })
 

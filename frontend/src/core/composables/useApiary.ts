@@ -65,16 +65,16 @@ export const useApiaryMutations = () => {
     const { mutate: assignHive, isPending: isAssigningHive } = useMutation({
         mutationFn: apiaryApi.assignHive,
         onSuccess: (result) => {
-            // queryClient.invalidateQueries({ queryKey: ['apiaries'] })
+            queryClient.invalidateQueries({ queryKey: ['hives'] })
         }
     })
 
-    const { mutate: unassignHive, isPending: isUnassigningHive } = useMutation({
-        mutationFn: apiaryApi.unassignHive,
-        onSuccess: (result) => {
-            // queryClient.invalidateQueries({ queryKey: ['apiaries'] })
-        }
-    })
+    // const { mutate: unassignHive, isPending: isUnassigningHive } = useMutation({
+    //     mutationFn: apiaryApi.unassignHive,
+    //     onSuccess: (result) => {
+    //         queryClient.invalidateQueries({ queryKey: ['apiaries'] })
+    //     }
+    // })
 
       // const { mutate: updateApiary } = useMutation({
     //     mutationFn: apiaryApi.updateApiary,
@@ -87,10 +87,8 @@ export const useApiaryMutations = () => {
         create,
         remove,
         assignHive,
-        unassignHive,
         isCreatingApiary,
         isDeletingApiary,
         isAssigningHive,
-        isUnassigningHive
     }
 }

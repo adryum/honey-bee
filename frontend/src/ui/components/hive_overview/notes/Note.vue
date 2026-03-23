@@ -5,7 +5,7 @@ import Icon from "../../Icon.vue";
 import IconDropdown from "../../input/dropdowns/IconDropdown.vue";
 import IconTextItem from "../../input/dropdowns/dropdownItems/bottom/IconTextItem.vue";
 import type { NoteModelDB } from "@/core/stores/Models";
-import { useNoteMutations } from "@/core/composables/useNotes";
+import { useNoteMutations } from "@/core/composables/useNote";
 
 const s = useCssModule()
 const props = defineProps<{

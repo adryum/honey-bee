@@ -2,12 +2,14 @@
 import { useToggle } from "@vueuse/core";
 import { computed, onMounted, reactive, ref, useCssModule, type CSSProperties } from "vue";
 import { motion, type VariantType } from "motion-v"
-import router, { RouterViewPaths } from "@/core/router";
+import { RouterViewPaths } from "@/core/router";
 import { IconType, SVG } from "@/assets/svgs/SVGLoader";
 import Icon from "../Icon.vue";
+import { useRouter } from "vue-router";
 
 const s = useCssModule()
 const [isExtended, toggleExtension] = useToggle() 
+const router = useRouter()
 const toggleStyle = computed(() => ({
     transform: `rotateZ(${isExtended.value ? 180 : 0 }deg)`
 } satisfies CSSProperties))
@@ -20,22 +22,22 @@ interface Tab {
 
 const tabs: Tab[] = [
     {
-        name: 'home',
+        name: 'Home',
         pagePath: '/',
         svg: SVG.Home
     },
     {
-        name: 'apiaries',
+        name: 'Apiaries',
         pagePath: '/apiaries',
         svg: SVG.Apiary
     },
     {
-        name: 'calendar',
+        name: 'Calendar',
         pagePath: '/calendar',
         svg: SVG.Calendar
     },
     {
-        name: 'bees',
+        name: 'Admin panel',
         pagePath: RouterViewPaths.Admin,
         svg: SVG.Key
     },
@@ -44,21 +46,7 @@ const tabs: Tab[] = [
         pagePath: RouterViewPaths.Inspections,
         svg: SVG.Clipboard
     },
-    {
-        name: 'e',
-        pagePath: '/',
-        svg: SVG.Checkmark
-    },
-    {
-        name: 'f',
-        pagePath: '/',
-        svg: SVG.Checkmark
-    },
-    {
-        name: 'g',
-        pagePath: '/',
-        svg: SVG.Checkmark
-    }
+  
 ]
 const selectedTab = ref(tabs[0])
 
@@ -75,10 +63,7 @@ const tabVariants: Record<string, VariantType> = {
 function onTabSelect(tab: Tab) {
     router.push(tab.pagePath)
     
-    // changes svg color
-    // selectedTab.value.svg.color = 'black'
     selectedTab.value = tab
-    // tab.svg.color = 'white'
 }
 
 onMounted(() => {
@@ -115,7 +100,11 @@ onMounted(() => {
 
         <motion.label
             for="icon"
-            :class="[s.text, 'button-text']"
+            :class="[
+                s.text, 
+                'button-text',
+                selectedTab.name === tab.name && s.selected
+            ]"
             :variants="tabVariants"
             :initial="'collapsed'"
             :animate="isExtended ? 'expanded' : 'collapsed'"
@@ -208,6 +197,9 @@ onMounted(() => {
                 font-family: var(--font-family)
                 margin-left: 3rem
                 transition: .2s ease
+
+                &.selected
+                    color: white
 
            
             .selectedBookmark

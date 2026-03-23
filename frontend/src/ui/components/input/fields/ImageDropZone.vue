@@ -3,6 +3,10 @@ import { useDropZone } from "@vueuse/core";
 import { ref, useCssModule, watch } from "vue";
 import Button from "../buttons/Button.vue";
 import { motion } from 'motion-v';
+import IconCubeButton from "../buttons/IconCubeButton.vue";
+import IconButton from "../buttons/IconButton.vue";
+import { SVG } from "@/assets/svgs/SVGLoader";
+import Icon from "../../Icon.vue";
 
 const s = useCssModule()
 const dropZoneRef = ref()
@@ -46,43 +50,76 @@ function handleFiles(event: Event) {
 
 <template>
 <div :class="s.container">
-    <motion.div ref="dropZoneRef" :class="s.dropZone"
-        :style="imageSrc ? { padding: 0 } : {}"
+    <motion.div 
+        ref="dropZoneRef" 
+        :class="s.dropZone"
+        :style="imageSrc ? { padding: 0, outline: 'none' } : {}"
         :animate="isOverDropZone ? { rotateZ: '2deg', outlineOffset: '4px',  scale: .9} : { }"
-        >
+        @click="openFilePicker"
+    >
         <motion.div v-if="!imageSrc" 
-        :class="s.decorativeDiv"
-        :animate="isOverDropZone ? { rotateZ: '-6deg', scale: .6, borderRadius: '10px' } : {}"
-        ></motion.div>
-        <h1 v-if="!imageSrc" :class="s.dropHint">Drop image here!</h1>
-        
+            :class="s.decorativeDiv"
+            :animate="isOverDropZone ? { rotateZ: '-6deg', scale: .6, borderRadius: '10px' } : {}"
+            ></motion.div>
         <img v-if="imageSrc" :class="s.image" :src="imageSrc" alt="uploaded image">  
+            
+        <div
+            v-if="!imageSrc" 
+            :class="s.addImageText"
+        >
+            <Icon
+                :svg="SVG.Image"
+            />
+            <h1 
+                :class="s.dropHint"
+            >
+                Click or drop image here!
+            </h1>
+        </div>
     </motion.div>
-
-    <div :class="s.buttons">
+    <input
+        ref="fileInput"
+        type="file"
+        style="display: none"
+        @change="handleFiles"
+    />
+    <icon-button
+        v-if="imageSrc"
+        :class="s.choseFileButton"
+        :is-important="false"
+        :svg="SVG.Cross"
+        @click="imageSrc = ''"
+    />
+    <!-- <div :class="s.buttons">
         <Button 
             :class="s.choseFileButton"
             @click="openFilePicker"
             :text="imageSrc ? 'select diferent file' : 'select file'" />
-        <input
-            ref="fileInput"
-            type="file"
-            style="display: none"
-            @change="handleFiles"
-        />
-        <Button v-if="imageSrc"
-            :class="s.choseFileButton"
-            @click="imageSrc = ''"
-            :is-important="false" 
-            text="remove" />
-    </div>
+    </div> -->
     
 </div>
 </template>
 
 <style module lang='sass'>
- 
+.addImageText
+    position: absolute
+    display: flex
+    flex-direction: column
+    gap: 2rem
+    justify-content: center
+
+    height: 10rem
+    align-self: center
+
+    color: #4d505f
+
+    .dropHint
+        font-family: var(--font-family)
+        font-size: var(--font-size-medium)
+        font-weight: 700
+
 .container
+    position: relative
     display: flex
     flex-direction: column
     justify-content: center
@@ -91,23 +128,27 @@ function handleFiles(event: Event) {
     max-height: 100%
 
     .dropZone
-        position: relative
         display: flex
         width: 100%
+        max-height: 100%
+
         flex: 1
-        outline: solid
-        outline-color: rgba(0, 0, 0, .2);
-        outline-offset: -3px
         padding: 1rem
         box-sizing: border-box
-        overflow: hidden
         border-radius: 3px
+        cursor: pointer
+        justify-content: center
+        outline: 4px dotted
+        outline-offset: -4px
+        outline-color: #4d505f
+        border-radius: var(--border-radius-large)
 
         .image
             display: block
             width: 100%
             height: 100%
             object-fit: cover
+            border-radius: var(--border-radius-large)
 
         .decorativeDiv
             z-index: -1
@@ -118,26 +159,17 @@ function handleFiles(event: Event) {
             height: 100%
 
             border-radius: 3px
-            background: var(--gray)
+            background: white
 
-
-        .dropHint
-            all: unset
-            display: flex
-            align-items: center
-            justify-content: center
-            width: 100%
-            height: 100%
-
-            font-size: 40px
-            font-weight: 700
-            
-            text-align: center
+  
 
     .buttons
         display: flex
         width: 100%
         justify-content: space-between
     .choseFileButton
+        top: .5rem
+        right: .5rem
+        position: absolute
         max-width: max-content
 </style>

@@ -1,4 +1,4 @@
-export function formatDateWithOrdinal(dateTime: string): string {
+export function formatDateWithOrdinal(dateTime: string, showHoursAndSec: boolean = false): string {
     const date = new Date(dateTime.replace(" ", "T"));
 
     if (isNaN(date.getTime())) {
@@ -15,5 +15,11 @@ export function formatDateWithOrdinal(dateTime: string): string {
     const month = date.toLocaleString("en-GB", { month: "long" });
     const year = date.getFullYear();
 
-    return `${day}${suffix} ${month}, ${year}`;
+    const h = String(date.getHours()).padStart(2, '0')
+    const m = String(date.getMinutes()).padStart(2, '0')
+    const s = String(date.getSeconds()).padStart(2, '0')
+
+    const hoursAndSeconds = showHoursAndSec ? `${h}:${m}:${s} ` : ""
+
+    return hoursAndSeconds + `${day}${suffix} ${month}, ${year}`;
 }

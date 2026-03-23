@@ -11,7 +11,7 @@ const props = defineProps<{}>()
 
 const { inspections, nextPage, prevPage } = useInspections(ref<InspectionFilters>({
     page:   1,
-    limit:  10,
+    limit:  18,
     hiveId: undefined,
     ids:    undefined
 }))

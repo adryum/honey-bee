@@ -1,26 +1,35 @@
 <script setup lang="ts">
-import { useFieldValidator, type FieldValidationOptions } from "@/core/composables/validators/UseFieldValidator";
-import { useCssModule } from "vue";
+import type { FieldValidee } from "@/core/composables/useFormValidator";
+import { computed, onMounted, ref, useCssModule } from "vue";
 
 const s = useCssModule()
 const props = defineProps<{
-    options: FieldValidationOptions<string>,
+    validee?: FieldValidee
 }>()
-const input = defineModel('input', { default: '' })
-const { showValidatorBorders, validator } = useFieldValidator<string>(
-    input,
-    props.options ?? {},
-    () => input.value = '',
-)
+
+const input                = defineModel('input', { default: '' })
+const hasBeenFocussed      = ref(false)
+const showIncorrectBorders = computed(() => hasBeenFocussed.value && !props.validee?.isValid())
+
+onMounted(() => {
+    if (!props.validee) return
+
+    props.validee.showThatIsRequired.on(() => {
+        hasBeenFocussed.value = true
+    })
+    props.validee.clear.on(() => {
+        input.value = ""
+    })
+})
 </script>
 
 <template>
 <input
-    :style="showValidatorBorders && !validator.isValid && {  boxShadow: 'inset 0 0 0 1px var(--red)' }"
+    :style="showIncorrectBorders && {  boxShadow: 'inset 0 0 0 1px var(--red)' }"
     :class="[s.input]"
     type="text"
     v-model="input"
-    @click="showValidatorBorders = true"
+    @focus="hasBeenFocussed = true"
 >
 </template>
 

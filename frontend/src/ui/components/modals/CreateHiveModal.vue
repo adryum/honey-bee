@@ -1,7 +1,6 @@
 <script setup lang="ts">
 import { IconType, SVG } from '@/assets/svgs/SVGLoader';
 import { useApiaryMutations } from '@/core/composables/useApiary';
-import { useFormValidator } from '@/core/composables/validators/UseFormValidator';
 import { useCssModule, ref, watch, toRef } from 'vue';
 import LabeledTextareaField from '../input/fields/LabeledTextareaField.vue';
 import LabeledInputField from '../input/fields/LabeledInputField.vue';
@@ -10,24 +9,27 @@ import IconTextButton from '../input/buttons/IconTextButton.vue';
 import Icon from '../Icon.vue';
 import { useHiveMutations, useHivesQuery } from '@/core/composables/useHive';
 import { HiveType } from '@/core/DatabaseEnums';
-import { useFlexibleGrid } from '@/core/utils/others';
+import { getRandomId, useFlexibleGrid } from '@/core/utils/others';
 import ModularDropdown from '../input/dropdowns/ModularDropdown.vue';
 import SelectedTextHead from '../input/dropdowns/dropdownItems/top/SelectedTextHead.vue';
 import IconTextItem from '../input/dropdowns/dropdownItems/bottom/IconTextItem.vue';
+import Hive from '../hive/Hive.vue';
+import { useFormValidator } from '@/core/composables/useFormValidator';
 
 const s = useCssModule()
 const props = defineProps<{
     apiaryId: number
 }>()
 
+const id = getRandomId("modal")
 const dialogRef = ref<HTMLDialogElement>()
-const open =  () => dialogRef.value?.show()
+const open =  () => dialogRef.value?.showModal()
 const close = () => dialogRef.value?.close()
 defineExpose({ open, close })
 
-const formValidator = useFormValidator()
+const { getFormValidee, isFormValid, showThatIsRequired } = useFormValidator()
 
-const { create } = useHiveMutations()
+const { create, isCreatingHive } = useHiveMutations()
 const { hives } = useHivesQuery({ apiaryId: undefined })
 const { assignHive } = useApiaryMutations()
 
@@ -40,7 +42,8 @@ const type = ref<HiveType | undefined>(undefined)
 const file = ref<File | undefined>(undefined)
 
 function createHive() {
-    if (!formValidator.isFormValid.value) return
+    showThatIsRequired()
+    if (!isFormValid.value) return
 
     create({
         name: name.value,
@@ -72,13 +75,14 @@ const { style: gridStyle } = useFlexibleGrid({
 <template>
 <dialog
     ref="dialogRef"
+    :id="id"
     :class="s.container"
 >
     <div ref="handle" :class="s.handle">
         <h1 
             :class="s.popupName"
         >
-            Add apiary
+            Add hive
         </h1>
         <slot name="header">
             
@@ -94,6 +98,8 @@ const { style: gridStyle } = useFlexibleGrid({
             /> 
         </button> 
     </div>
+
+
     <div :class="s.body">
             <div :class="s.header">
                 <p 
@@ -116,6 +122,8 @@ const { style: gridStyle } = useFlexibleGrid({
                 </p>
             </div>
 
+
+
             <div 
                 v-show="selectedTab === tabs[1]"
                 ref="grid"
@@ -135,6 +143,8 @@ const { style: gridStyle } = useFlexibleGrid({
                 />
             </div>
 
+
+
             <form 
                 v-if="selectedTab === tabs[0]"
                 :class="s.listDivider"
@@ -147,27 +157,23 @@ const { style: gridStyle } = useFlexibleGrid({
                 <div :class="s.list">
                     <LabeledInputField
                         label="Name"
-                        :options="{
-                            isRequired: true,
-                            formValidator: formValidator
-                        }"
+                        :validee="getFormValidee(() => name !== '')"
                         v-model:input="name"
                     />
                     <LabeledTextareaField
+                        :class="s.description"
                         label="Description"
-                        :options="{
-                            isRequired: true,
-                            formValidator: formValidator
-                        }"
+                        :validee="getFormValidee(() => description !== '')"
                         v-model:input="description"
                     />
                     <ModularDropdown
                         label="Type"
-                        :z-index="9999991000"
+                        :teleport-target-id="id"
                     >
                         <template #head="{ dropdown }">
                             <SelectedTextHead
                                 :selection="type"
+                                :validee="getFormValidee(() => type !== undefined)"
                                 :dropdown="dropdown"
                             />
                         </template>
@@ -185,8 +191,11 @@ const { style: gridStyle } = useFlexibleGrid({
 
                     <IconTextButton
                         text="Create"
-                        :style="{ background: 'var(--yellow)' }"
-                        :disabled="!formValidator.isFormValid.value"
+                        :disabled="!isFormValid"
+                        :is-submit="true"
+                        :svg="SVG.Plus"
+                        :is-aligned-center="true"
+                        :is-loading="isCreatingHive"
                         @click="createHive"
                     />
                 </div>
@@ -199,6 +208,9 @@ const { style: gridStyle } = useFlexibleGrid({
 .container
     border: none
     padding: 0
+    overflow: visible
+    width: 50rem
+    height: 29.5rem
     
     box-sizing: border-box
 
@@ -211,7 +223,8 @@ const { style: gridStyle } = useFlexibleGrid({
         align-items: center
         height: 2.5rem
         background: var(--yellow)
-        
+        border-radius: var(--border-radius-medium) var(--border-radius-medium) 0 0
+        overflow: hidden
         // padding: .5rem
         padding-left: 1rem
         // border-bottom: 2px solid var(--blue)
@@ -236,17 +249,16 @@ const { style: gridStyle } = useFlexibleGrid({
             width: 4rem
 
             transition: .1s
+            cursor: pointer
 
             &:hover
                 opacity: 1
                 background: var(--red)
 
-    .body
-        padding: 1rem
-
 .existingHiveGrid
     padding-top: 1rem
     overflow-y: scroll
+    height: 22rem
 
 .hive
     // width: 20rem
@@ -257,10 +269,10 @@ const { style: gridStyle } = useFlexibleGrid({
     gap: 1rem
     padding-top: 1rem
 
-    .image
-        flex: 1
-        max-height: 30rem
-
+.image
+    flex: 1
+    max-height: 22rem
+    height: 22rem
 
 .list
     display: flex
@@ -268,17 +280,18 @@ const { style: gridStyle } = useFlexibleGrid({
     flex: 1
     gap: 1rem
 
+.description
+    height: 100%
+
 .body
     display: flex
     flex-direction: column
-    height: 100%
-    max-height: 30rem
-    height: 22rem
+    flex: 1
+
+    padding: 1rem
 
     font-size: var(--font-size-medium)
     font-family: var(--font-family)
-
-    width: 50rem
 
     .header
         display: flex

@@ -1,10 +1,8 @@
 <script setup lang="ts">
-import { computed, toRef, useCssModule } from "vue";
+import {toRef, useCssModule } from "vue";
 import { useI18n } from "vue-i18n";
-import HiveUpdatePopup from "../popups/hive/HiveUpdatePopup.vue";
 import IconTextButton from '../input/buttons/IconTextButton.vue'
 import { SVG } from "@/assets/svgs/SVGLoader";
-import { usePopupCreator } from "@/core/utils/PopupHiarchy";
 import type { HiveModelDB } from "@/core/stores/Models";
 import { useApiaryQuery } from "@/core/composables/useApiary";
 
@@ -17,14 +15,6 @@ const props = defineProps<{
 const { apiary } = useApiaryQuery({
     id: toRef(() => props.hive.apiaryId)
 })
-
-const { create } = usePopupCreator({
-    popupComponent: HiveUpdatePopup,
-    maxCount: 1,
-    props: {
-        hive: props.hive
-    }
-})
 </script>
 
 <template>
@@ -35,7 +25,6 @@ const { create } = usePopupCreator({
             <IconTextButton 
                 text="Edit"
                 :svg="SVG.Pencil"
-                @click="create"
             />
         </div>
     </div>

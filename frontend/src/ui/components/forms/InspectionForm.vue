@@ -1,7 +1,7 @@
 <script setup lang="ts">
 import { SVG } from "@/assets/svgs/SVGLoader";
 import type { InspectionFormUI } from "@/core/stores/Models";
-import { useCssModule } from "vue";
+import { computed, useCssModule } from "vue";
 import { useVModel } from '@vueuse/core'
 import CheckboxWText from "../input/fields/CheckboxWText.vue";
 import LabeledTextareaField from "../input/fields/LabeledTextareaField.vue";
@@ -19,6 +19,7 @@ const emit = defineEmits<{
     'update:form': [InspectionFormUI]
     'submit': []
 }>()
+const lockedInteractionStyle = computed(() => props.isReviewing ? { pointerEvents: 'none' } : {})
 
 const form = useVModel(props, 'form', emit)
 </script>
@@ -30,12 +31,13 @@ const form = useVModel(props, 'form', emit)
 >
     <CheckboxWText
         label="Abnormal bee behavior?"
-        :disabled="isReviewing"
+        :style="lockedInteractionStyle"
         v-model:is-true="form.isAbnormalBehavior"
     />
     <LabeledTextareaField
         v-if="form.isAbnormalBehavior"
         :class="s.indented"
+        :style="lockedInteractionStyle"
         :options="{}"
         v-model:input="form.abnormalBehaviorDescription"
     />
@@ -43,70 +45,73 @@ const form = useVModel(props, 'form', emit)
     
     <CheckboxWText
         label="Swarming?"
-        :disabled="isReviewing"
+        :style="lockedInteractionStyle"
         v-model:is-true="form.isSwarming"
     />
 
         <CheckboxWText
         label="Need additional feeding?"
-        :disabled="isReviewing"
+        :style="lockedInteractionStyle"
         v-model:is-true="form.needAdditionalFeeding"
     />
 
 
     <CheckboxWText
         label="Queen alive?"
-        :disabled="isReviewing"
+        :style="lockedInteractionStyle"
         v-model:is-true="form.isQueenAlive"
     />
     <CheckboxWText
         v-if="form.isQueenAlive"
         label="Is queen laying eggs?"
-        :disabled="isReviewing"
+        :style="lockedInteractionStyle"
         :class="s.indented"
         v-model:is-true="form.isQueenLayingEggs"
     />
     <CheckboxWText
         v-if="form.isQueenAlive"
         label="Is queen laying eggs incorrectly?"
-        :disabled="isReviewing"
+        :style="lockedInteractionStyle"
         :class="s.indented"
         v-model:is-true="form.isQueenLayingEggsIncorrectly"
     />
 
     <CheckboxWText
         label="Does hive need more honey frames?"
-        :disabled="isReviewing"
+        :style="lockedInteractionStyle"
         v-model:is-true="form.needMoreHoneyFrames"
     />
     <LabeledTextareaField
         v-if="form.needMoreHoneyFrames"
         :class="s.indented"
         :options="{}"
+        :style="lockedInteractionStyle"
         v-model:input="form.needMoreHoneyFramesAmount"
     />
     
     <CheckboxWText
         label="Does hive need more breeding frames?"
-        :disabled="isReviewing"
+        :style="lockedInteractionStyle"
         v-model:is-true="form.needMoreBreedingFrames"
     />
     <LabeledTextareaField
         v-if="form.needMoreBreedingFrames"
         :class="s.indented"
         :options="{}"
+        :style="lockedInteractionStyle"
         v-model="form.needMoreBreedingFramesAmount"
     />
 
     <CheckboxWText
         label="Taking out frames?"
-        :disabled="isReviewing"
+        :style="lockedInteractionStyle"
         v-model:is-true="form.isTakingOutFrames"  
     />
     <LabeledTextareaField
         v-if="form.isTakingOutFrames"
         label="Honey frames"
         :class="s.indented"
+        :style="lockedInteractionStyle"
         :options="{}"
         v-model:input="form.takenHoneyFrames"
     />
@@ -114,30 +119,33 @@ const form = useVModel(props, 'form', emit)
         v-if="form.isTakingOutFrames"
         label="Breeding frames"
         :class="s.indented"
+        :style="lockedInteractionStyle"
         :options="{}"
         v-model:input="form.takenBreedingFrames"
     />
 
     <CheckboxWText
         label="Is medical action needed?"
-        :disabled="isReviewing"
+        :style="lockedInteractionStyle"
         v-model:is-true="form.needMedicalAttention"
     />
     <LabeledTextareaField
         v-if="form.needMedicalAttention"
         :class="s.indented"
+        :style="lockedInteractionStyle"
         :options="{}"
         v-model:input="form.medicalAttentionDescription"
     />
 
     <CheckboxWText
         label="Is there any hive damage?"
-        :disabled="isReviewing"
+        :style="lockedInteractionStyle"
         v-model:is-true="form.hasHiveDamage"  
     />
     <LabeledTextareaField
         v-if="form.hasHiveDamage"
         :class="s.indented"
+        :style="lockedInteractionStyle"
         :options="{}"
         v-model:input="form.hiveDamageDescription"
     />

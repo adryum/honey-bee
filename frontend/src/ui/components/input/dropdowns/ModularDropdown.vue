@@ -1,14 +1,16 @@
 <script setup lang="ts">
 import { useFloatingUI } from "@/core/composables/field/useFloatingUI";
 import type { DropdownModel } from "@/core/models/Models";
-import { ref, useCssModule } from "vue";
+import { useElementExists } from "@/core/utils/Hooks";
+import { computed, ref, useCssModule } from "vue";
 
 const s = useCssModule()
 const props = withDefaults(defineProps<{
-    label?:         string
-    zIndex?:        number
-    color?:         string
-    floaterOffset?: number
+    teleportTargetId?: string
+    label?:            string
+    zIndex?:           number
+    color?:            string
+    floaterOffset?:    number
 }>(), {
     label:         '',
     zIndex:        0,
@@ -28,6 +30,8 @@ const { floaterStyle } = useFloatingUI({
     zIndex:              props.zIndex,
     takeWidthFromAnchor: true
 })
+
+const teleportTargetExists = useElementExists(() => props.teleportTargetId ?? "")
 </script>
 
 <template>
@@ -50,9 +54,13 @@ const { floaterStyle } = useFloatingUI({
     >
         Head filler
     </slot>
-    <Teleport to="body">
+    <Teleport 
+        v-if="teleportTargetId ? teleportTargetExists : true"
+        :key="teleportTargetId"
+        :to="teleportTargetId ? `#${teleportTargetId}` : 'body'"  
+    >
         <div 
-            v-show="model.isShown.value"
+            v-if="model.isShown.value"
             ref="list"
             :class="$style.list"
             :style="{ 

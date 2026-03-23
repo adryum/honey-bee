@@ -9,6 +9,7 @@ import { Role, String_to_Role } from "../DatabaseEnums";
 import { getSessionUserRole, redisClient } from "../config/RedisClient";
 import { and, eq, inArray } from "drizzle-orm";
 import { userhiveaccess, hives, userapiaryaccess, apiaries } from "../db/schema";
+import { isValidValue } from "../utils";
 
 const getApiaryQuery = (where: string) => `
 SELECT 
@@ -205,5 +206,39 @@ router.post('/create', upload.single("image"), async (req: Request<{},{},{
         res.status(500).send('Server error');
     }
 })
+
+
+// creates apiary
+router.post(
+    "/assignHive", 
+    requireRole([Role.ADMINISTRATOR, Role.APIARY_MAINTAINER]),
+    async (
+        req: Request<{},{},{
+            hiveId:   number
+            apiaryId: number
+        }>, 
+        res: Response
+) => {
+    console.log("# Assign hive to apiary");
+    const { hiveId, apiaryId } = req.body
+
+    if (!isValidValue(hiveId) || !isValidValue(apiaryId)) {
+        return res.status(400).send('incorrect information!') 
+    }
+
+    try {
+        console.log("Changing hive apiary...");
+
+        await db.update(hives).set({ apiaryId: apiaryId }).where(eq(hives.id, hiveId))
+        const hiveResult = await db.query.hives.findFirst({ where: eq(hives.id, hiveId) })
+        console.log("Done!");
+
+        res.status(201).json(hiveResult)
+    } catch (err) {
+        console.error(err);
+        res.status(500).send('Server error');
+    }
+})
+
 
 export default router

@@ -1,15 +1,28 @@
 <script setup lang="ts">
 import { IconType, SVG } from "@/assets/svgs/SVGLoader";
 import type { DropdownModel } from "@/core/models/Models";
-import { useCssModule } from "vue";
+import { computed, onMounted, ref, useCssModule } from "vue";
 import IconButton from "../../../buttons/IconButton.vue";
+import type { FieldValidee } from "@/core/composables/useFormValidator";
 
 const s = useCssModule()
 const props = withDefaults(defineProps<{
     selection?: string
-    dropdown: DropdownModel
+    validee :   FieldValidee
+    dropdown :  DropdownModel
 }>(), {
     selection: ''
+})
+
+const hasBeenFocussed      = ref(false)
+const showIncorrectBorders = computed(() => hasBeenFocussed.value && !props.validee.isValid())
+
+onMounted(() => {
+    if (!props.validee) return
+
+    props.validee.showThatIsRequired.on(() => {
+        hasBeenFocussed.value = true
+    })
 })
 </script>
 
@@ -17,15 +30,17 @@ const props = withDefaults(defineProps<{
     <div 
         :class="[
             s.head,
-            dropdown.isShown.value && s.focused
+            dropdown.isShown.value && s.focused,
+            showIncorrectBorders && s.incorrect
         ]"
-        @click="dropdown.isShown.value = !dropdown.isShown.value"
+        @click="dropdown.isShown.value = !dropdown.isShown.value; hasBeenFocussed = true"
     >
         <p 
             :class="[
                 s.text,
                 selection === '' && s.placeholder
-            ]"> {{ selection || "selection" }}</p>
+            ]"
+        > {{ selection || "selection" }}</p>
         <IconButton
             :class="s.button"
             :style="dropdown.isShown.value ? { transform: 'rotateZ(180deg)' } : {}"
@@ -37,7 +52,8 @@ const props = withDefaults(defineProps<{
 </template>
 
 <style module lang='sass'>
- 
+.incorrect
+    box-shadow: inset 0 0 0 1px var(--red) !important
 
 .placeholder
     opacity: .5

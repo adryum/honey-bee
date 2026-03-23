@@ -92,13 +92,16 @@ watch(formValidator.isFormValid, (newval) => {
                 }"
                 v-model:input="description"
             />
-            <IconTextButton 
-                text="Create" 
-                :class="s.button" 
+            <IconTextButton
                 :svg="SVG.Plus"
+                :class="s.button" 
+                :is-submit="true"
+                :swap-icon-position="true"
+                :is-aligned-center="true"
+                :style="{marginTop: 'auto'}"
                 :is-loading="isCreatingApiary"
                 :disabled="!formValidator.isFormValid.value"
-                :is-submit="true"
+                text="Create"
                 @click="createApiary" 
             />
         </div>
@@ -108,6 +111,9 @@ watch(formValidator.isFormValid, (newval) => {
 </template>
 
 <style module lang = 'sass'>
+.description
+    height: 100%
+
 .container
     border: none
     padding: 0
@@ -181,5 +187,4 @@ watch(formValidator.isFormValid, (newval) => {
 
     .button
         margin-top: auto
-        background: var(--yellow)
 </style>

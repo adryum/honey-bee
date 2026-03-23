@@ -19,15 +19,22 @@ const getNotesQuery = `
     FROM notes
     `
  
-router.get('/get', requireRole([Role.ANY]), upload.none(), async (
-    req: Request<{},{}, {}>, 
-    res: Response
+router.get(
+    '/hive/:hiveId', 
+    requireRole([Role.ANY]), 
+    upload.none(), 
+    async (
+        req: Request<{ hiveId: string }>, 
+        res: Response
 ) => {
-    console.log("# Get notes");
+    console.log("# Get hive notes");
+    const hiveId = Number.parseInt(req.params.hiveId)
+
     try {
         console.log("Getting notes...");
         const [notes] = await pool.query<RowDataPacket[]>(
-            getNotesQuery,
+            getNotesQuery + "where hiveId = ?",
+            [hiveId]
         )
         console.log("Done!");
         return res.status(200).json(notes);

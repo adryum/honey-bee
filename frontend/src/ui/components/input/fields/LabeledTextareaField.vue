@@ -5,12 +5,13 @@ import Icon from "../../Icon.vue";
 import { IconType, SVG } from "@/assets/svgs/SVGLoader";
 import TextareaField from "./TextareaField.vue";
 import { getRandomId } from "@/core/utils/others";
+import type { FieldValidee } from "@/core/composables/useFormValidator";
 
 const s = useCssModule()
 const props = defineProps<{
-    label?: string
+    label?:       string
     placeholder?: string
-    options: FieldValidationOptions<string>
+    validee?:     FieldValidee
 }>()
 const id = getRandomId("textarea")
 const input = defineModel('input', { default: '' })
@@ -32,7 +33,7 @@ const shown = ref(false)
         :id="id" 
         :class="s.field"
         :placeholder="placeholder"
-        :validator-options="options"
+        :validee="validee"
         :max-lines="5"
         v-model:input="input"
     />

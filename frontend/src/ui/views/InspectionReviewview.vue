@@ -4,19 +4,21 @@ import Icon from "../components/Icon.vue";
 import { IconType, SVG } from "@/assets/svgs/SVGLoader";
 import IconTextButton from "../components/input/buttons/IconTextButton.vue";
 import InspectionForm from "../components/forms/InspectionForm.vue";
-import { storeToRefs } from "pinia";
 import type { InspectionDB, InspectionFormDB, InspectionFormUI } from "@/core/stores/Models";
 import { InspectionFormDB_To_InspectionFormUI } from "@/core/Convertors";
 import router from "@/core/router";
-import { useInspectionMutation } from "@/core/composables/useInspection";
+import { useInspectionMutation, useInspections, type InspectionFilters } from "@/core/composables/useInspection";
 
 const s = useCssModule()
 const props = defineProps<{
-    id: string
+    id: number
 }>()
 
 const {  } = useInspectionMutation()
-const inspection = ref<InspectionDB | undefined>()
+const { inspections } = useInspections(ref<InspectionFilters>({
+    ids: [props.id]
+}))
+const inspection = ref<InspectionDB | undefined>(inspections[0])
 
 const forms                  = computed(() => reviewedInspection.value?.forms || [])
 const selectedForm           = ref<InspectionFormDB | undefined>()

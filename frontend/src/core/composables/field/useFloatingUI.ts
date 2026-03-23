@@ -23,8 +23,7 @@ export function useFloatingUI(
         var floating = getElementFromMotionProxy(options.floatingElement)
 
         if (!floating || !anchor) {
-            console.log(anchor);
-            console.log(floating);
+            console.log("No anchor or floating provided:", anchor, floating);
             return
         }
 

@@ -4,10 +4,10 @@ import { inspectionApi } from "../api/InspectionApi";
 import { isValidValue } from "../utils/others";
 
 export type InspectionFilters = {
-    page:   number   | undefined
-    limit:  number   | undefined
-    hiveId: number   | undefined
-    ids:    number[] | undefined
+    page?:   number   
+    limit?:  number   
+    hiveId?: number   
+    ids?:    number[]
 }
 
 export const useInspections = (

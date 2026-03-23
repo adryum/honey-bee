@@ -31,6 +31,7 @@ export enum SVG {
     Apiary        = "Apiary",
     Hive          = "Hive",
     Clipboard     = "Clipboard",
+    Image         = "Image",
 }
 
 export enum IconType {

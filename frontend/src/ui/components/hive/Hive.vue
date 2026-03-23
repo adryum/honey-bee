@@ -1,7 +1,5 @@
 <script setup lang="ts">
 import { useCssModule } from 'vue';
-import { IconType, SVG } from '@/assets/svgs/SVGLoader';
-import Icon from '../Icon.vue';
 import type { HiveModelDB } from '@/core/stores/Models';
 
 const s = useCssModule()

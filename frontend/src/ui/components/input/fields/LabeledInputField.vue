@@ -4,11 +4,12 @@ import InputField from "./InputField.vue";
 import type { FieldValidationOptions } from "@/core/composables/validators/UseFieldValidator";
 import Icon from "../../Icon.vue";
 import { IconType, SVG } from "@/assets/svgs/SVGLoader";
+import type { FieldValidee } from "@/core/composables/useFormValidator";
 
 const s = useCssModule()
 const props = defineProps<{
-    label: string
-    options: FieldValidationOptions<string>
+    label:   string
+    validee: FieldValidee
 }>()
 const input = defineModel('input', { default: '' })
 const shown = ref(false)
@@ -22,7 +23,7 @@ const shown = ref(false)
     <InputField 
         id="field" 
         :class="s.field"
-        :options="options"
+        :validee="validee"
         v-model:input="input"
     />
     <div 

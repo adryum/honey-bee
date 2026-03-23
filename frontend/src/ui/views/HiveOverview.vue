@@ -24,10 +24,10 @@ const { hive }   = useHiveQuery({ id: toRef(() => props.id) })
 const router = useRouter()
 const fragmentHeight = computed((): string => {
     switch (currentTab.value) {
-        case HiveTab.Calendar: return `calc(100% -  9rem)`
-        case HiveTab.General:  return `calc(100% -  6.5rem)`
-        case HiveTab.Medicine: return `calc(100% -  6.5rem)`
-        case HiveTab.Notes:    return `calc(100% -  6.5rem)`
+        case HiveTab.Calendar: return `calc(100% -  7rem)`
+        case HiveTab.General:  return `calc(100% -  7rem)`
+        case HiveTab.Medicine: return `calc(100% -  7rem)`
+        case HiveTab.Notes:    return `calc(100% -  7rem)`
         default:               return ""
     }
 })
@@ -47,6 +47,7 @@ onMounted(() => console.log(props.tab))
 
 <template>
     <section
+        v-if="hive"
         :class="s.container"
     >
         <div :class="s.toolbar">
@@ -74,6 +75,7 @@ onMounted(() => console.log(props.tab))
             >
                 <NoteFragmentToolbarPart
                     v-if="currentTab === HiveTab.Notes"
+                    :hiveId="hive.id"
                     v-model:searchText="searchText"
                 />
             </div>
@@ -145,8 +147,8 @@ onMounted(() => console.log(props.tab))
         gap: .2rem
 
         &.shown
-            height: 2.5rem
-            max-height: 2.5rem
+            height: 3rem
+            max-height: 3rem
             opacity: 1
             padding: .2rem
             padding-top: calc( .2rem + 1px  )

@@ -4,6 +4,7 @@ import { ref, useCssModule } from "vue";
 import { IconType, SVG } from "@/assets/svgs/SVGLoader";
 import { formatDateWithOrdinal } from "@/core/utils/Utils";
 import IconTextButton from "../../input/buttons/IconTextButton.vue";
+import { useRouter } from "vue-router";
 
 const s = useCssModule()
 const props = defineProps<{
@@ -11,9 +12,10 @@ const props = defineProps<{
     orderNumber: number
 }>()
 const isEditingRow = ref(false)
+const router = useRouter()
 
 function openInspection(id: number) {
-    
+    router.push(`/inspection/${id}`)
 }
 
 </script>
@@ -68,7 +70,7 @@ function openInspection(id: number) {
                 height: '100%',
             }"
         >
-            {{ formatDateWithOrdinal(entry.creationDate) }} 
+            {{ formatDateWithOrdinal(entry.creationDate, true) }} 
         </p>
     </td>
     <td 

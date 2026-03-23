@@ -1,9 +1,11 @@
 import { Router, type Request, type Response } from "express";
 import { RowDataPacket, ResultSetHeader } from "mysql2";
-import { pool } from "../config/Database";
+import { db, pool } from "../config/Database";
 import { Role } from "../DatabaseEnums";
 import { requireRole } from "../Middleware";
 import { isValidValue } from "../utils";
+import { eq } from "drizzle-orm";
+import { hiveInspections } from "../db/schema";
 
 const router = Router()
 
@@ -117,6 +119,30 @@ router.get(
         console.log("Done!");
         
         res.status(200).json(inspections);
+    } catch (error) {
+        console.error(error);
+        res.status(500).send('Server error');
+    }
+})
+
+router.get(
+    '/:id', 
+    requireRole([Role.ANY]), 
+    async (
+        req: Request<{ id: string }>, 
+        res: Response
+) => {
+    console.log("# Get Inspection");
+    const inspectionId = parseInt(req.params.id)
+    
+    try {
+        console.log(`Getting inspection...`);
+        const inspectionResult = await db.query.hiveInspections.findFirst({
+            where: eq(hiveInspections.id, inspectionId)
+        })
+        console.log("Done!");
+        
+        res.status(200).json(inspectionResult);
     } catch (error) {
         console.error(error);
         res.status(500).send('Server error');

@@ -3,15 +3,14 @@ import { ref, useCssModule } from "vue";
 import IconTextButton from "../input/buttons/IconTextButton.vue";
 import { SVG } from "@/assets/svgs/SVGLoader";
 import StringSearchDropdown from "../input/dropdowns/StringSearchDropdown.vue";
-import NoteCreatePopup from "../popups/NoteCreatePopup.vue";
-import { usePopupCreator } from "@/core/utils/PopupHiarchy";
+import CreateNoteModal from "../modals/CreateNoteModal.vue";
 
 const s = useCssModule()
-const { create } = usePopupCreator({
-    popupComponent: NoteCreatePopup,
-    maxCount: 1
-})
+const props = defineProps<{
+    hiveId: number
+}>()
 const searchText = defineModel('searchText', { default: '' })
+const createNoteModal = ref<InstanceType<typeof CreateNoteModal>>()
 
 </script>
 
@@ -21,7 +20,7 @@ const searchText = defineModel('searchText', { default: '' })
         text="Create note" 
         :class="s.create"
         :svg="SVG.Pencil"
-        @click="create"
+        @click="createNoteModal?.open()"
     />
     <StringSearchDropdown
         :class="s.search"
@@ -33,6 +32,10 @@ const searchText = defineModel('searchText', { default: '' })
                 searchText = value
             }
         }"
+    />
+    <CreateNoteModal
+        ref="createNoteModal"
+        :hive-id="hiveId"
     />
 </div>
 </template>

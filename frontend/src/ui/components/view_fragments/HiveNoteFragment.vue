@@ -2,7 +2,7 @@
 import { computed, ref, toRef, useCssModule } from "vue";
 import Note from '../hive_overview/notes/Note.vue'
 import { useFlexibleGrid } from "@/core/utils/others";
-import { useNotes } from "@/core/composables/useNotes";
+import { useNotes } from "@/core/composables/useNote";
 
 const s = useCssModule()
 const props = defineProps<{

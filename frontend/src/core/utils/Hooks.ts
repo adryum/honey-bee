@@ -1,4 +1,4 @@
-import { type Ref, onMounted, onBeforeUnmount } from "vue"
+import { type Ref, onMounted, onBeforeUnmount, ref } from "vue"
 
 export function onResize(ref: Ref<HTMLElement | undefined | null>, onChange: (element: ResizeObserverEntry) => void): void {
     let observer: ResizeObserver | null = null
@@ -18,4 +18,31 @@ export function onResize(ref: Ref<HTMLElement | undefined | null>, onChange: (el
             observer.disconnect()
         }
     })
+}
+
+
+export function useElementExists(id: string | (() => string)): Ref<boolean> {
+    const exists = ref(false)
+    let observer: MutationObserver | undefined
+
+    const getId = typeof id === 'function' ? id : () => id
+
+    const check = () => {
+        const currentId = getId()
+        if (!currentId) {
+            exists.value = false
+            return
+        }
+        exists.value = !!document.getElementById(currentId)
+    }
+
+    onMounted(() => {
+        check()
+        observer = new MutationObserver(check)
+        observer.observe(document.body, { childList: true, subtree: true })
+    })
+
+    onBeforeUnmount(() => observer?.disconnect())
+
+    return exists
 }

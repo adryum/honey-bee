@@ -4,10 +4,8 @@ import { NoteCreateModelResponse_to_NoteModelDB } from "../Convertors";
 import type { NoteCreateModelResponse, NoteCreateModelRequest, NoteUpdateRequestModel } from "./Models";
 
 export const noteApi = {
-    getNotes: async (hiveId: number): Promise<NoteModelDB[]> => {
-        const { data } = await axios.get<NoteCreateModelResponse[]>("/note/get", {
-            params: { hiveId: hiveId }
-        })
+    getHiveNotes: async (hiveId: number): Promise<NoteModelDB[]> => {
+        const { data } = await axios.get<NoteCreateModelResponse[]>(`/note/hive/${hiveId}`)
         return data.map(NoteCreateModelResponse_to_NoteModelDB)
     },
 

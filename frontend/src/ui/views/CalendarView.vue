@@ -15,16 +15,32 @@ console.log(today);
 </script>
 
 <template>
-    <CalendarGrid 
-        :class="s.calendar" 
-        :events="[]"
-        :looked-at-date="new Date()"
-        :is-macdonalds="false"
-    />
+    <div
+        :class="s.container"
+    >
+        <!-- <ToolBar 
+            label="Calendar"
+        /> -->
+        <CalendarGrid 
+            :class="s.calendar" 
+            :events="[]"
+            :looked-at-date="new Date()"
+            :is-macdonalds="false"
+        />
+    </div>
 </template>
 
 <style module lang='sass'>
 @use '@/assets/_colors.sass' as colors
+
+.container
+    padding: 1rem
+    box-sizing: border-box
+
+    display: flex
+    flex-direction: column
+    gap: 1rem
+    width: 100%
 
 .calendar
     flex: 1
