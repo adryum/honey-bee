@@ -8,14 +8,14 @@ import type { FieldValidee } from "@/core/composables/useFormValidator";
 const s = useCssModule()
 const props = withDefaults(defineProps<{
     selection?: string
-    validee :   FieldValidee
+    validee?:   FieldValidee
     dropdown :  DropdownModel
 }>(), {
     selection: ''
 })
 
 const hasBeenFocussed      = ref(false)
-const showIncorrectBorders = computed(() => hasBeenFocussed.value && !props.validee.isValid())
+const showIncorrectBorders = computed(() => hasBeenFocussed.value && !props.validee?.isValid())
 
 onMounted(() => {
     if (!props.validee) return

@@ -7,9 +7,12 @@ import TextDropdownBottomPart from "../../input/dropdowns/dropdownItems/bottom/T
 import IconCubeButton from "../../input/buttons/IconCubeButton.vue";
 import { SVG } from "@/assets/svgs/SVGLoader";
 import TableRowSelectionDropdownTopPart from "../../input/dropdowns/dropdownItems/top/TableRowSelectionDropdownTopPart.vue";
-import { useAdminMutation } from "@/core/composables/useAdmin";
+import { useAdminMutations } from "@/core/composables/useAdmin";
+import { useRouter } from "vue-router";
+import { ProfileTab } from "@/core/ViewTabEnums";
 
 const s = useCssModule()
+const router = useRouter()
 const props = defineProps<{
     entry:       UserEntryModelDB
     orderNumber: number
@@ -17,10 +20,10 @@ const props = defineProps<{
 const isEditingRow = ref(false)
 
 const editableEntry = reactive<UserEntryModelDB>({ ...props.entry })
-const { updateRegisteredUserEntry } = useAdminMutation()
+const { updateRegisteredUserEntry } = useAdminMutations()
 
 async function openProfile(userId: number) {
-
+    router.push(`/profile/${userId}/${ProfileTab.GENERAL}`)
 }
 
 function save() {
@@ -142,27 +145,21 @@ function cancel() {
             v-if="!isEditingRow"
             :svg="SVG.Pencil"
             @click="isEditingRow = !isEditingRow"
-        >
-            <!-- <p>Edit</p> -->
-        </IconCubeButton>
+        />
         <IconCubeButton 
             v-if="isEditingRow"
             :svg="SVG.Save"
             @click="save"
-        >
-            <!-- <p>Save</p> -->
-        </IconCubeButton>
+        />
         <IconCubeButton 
             v-if="isEditingRow"
             :svg="SVG.Cross"
             @click="cancel"
-        >
-            <!-- <p>Cancel</p> -->
-        </IconCubeButton>
+        />
         <IconCubeButton 
             v-if="!isEditingRow"
             :svg="SVG.Profile"
-            @click="openProfile"
+            @click="openProfile(entry.id)"
         />
     </td>
 </tr>

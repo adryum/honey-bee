@@ -3,7 +3,6 @@ import { useCssModule } from "vue";
 import UserTable from "../../tables/UserTable.vue";
 
 const s = useCssModule()
-
 </script>
 
 <template>

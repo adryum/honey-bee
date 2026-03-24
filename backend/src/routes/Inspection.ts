@@ -5,7 +5,7 @@ import { Role } from "../DatabaseEnums";
 import { requireRole } from "../Middleware";
 import { isValidValue } from "../utils";
 import { eq } from "drizzle-orm";
-import { hiveInspections } from "../db/schema";
+import { apiaries, hiveInspectionForms, hiveInspections, users } from "../db/schema";
 
 const router = Router()
 
@@ -92,33 +92,38 @@ function getInspectionsQuery(where: string) {
 }
 
 router.get(
-    '/', 
+    '/entries', 
     requireRole([Role.ANY]), 
     async (
-        req: Request, 
-        res: Response<InspectionResponse[] | string>
+        req: Request<{ 
+            page:  string
+            limit: string
+        }>, 
+        res: Response
 ) => {
-    console.log("# Get Inspections");
+    console.log("# Get Inspection entries");
     const page   = parseInt(req.query.page as string) || 1;
     const limit  = parseInt(req.query.limit as string) || 20;
     const offset = (page - 1) * limit
     
     try {
-        console.log(`Getting Limit: ${limit} Offset: ${offset} inspections...`);
-        const [inspections] = await pool.query<(RowDataPacket & InspectionResponse)[]>(
-            getInspectionsQuery(`
-                WHERE hive_inspections.userIdCreator = ?
-                LIMIT ? OFFSET ?`
-            ), 
-            [
-                req.session.userId,
-                limit,
-                offset
-            ]
-        )
+        console.log(`Getting Limit: ${limit} Offset: ${offset} inspection table entries...`);
+        const inspectionResult = await db.query.hiveInspections.findMany({
+            with: {
+                hiveInspectionForms: {
+                    with: {
+                        hive: true
+                    }
+                },
+                apiary: true,
+                user: true
+            },
+            offset: offset,
+            limit: limit,
+        })
         console.log("Done!");
         
-        res.status(200).json(inspections);
+        res.status(200).json(inspectionResult);
     } catch (error) {
         console.error(error);
         res.status(500).send('Server error');
@@ -138,7 +143,20 @@ router.get(
     try {
         console.log(`Getting inspection...`);
         const inspectionResult = await db.query.hiveInspections.findFirst({
-            where: eq(hiveInspections.id, inspectionId)
+            where: eq(hiveInspections.id, inspectionId),
+            with: {
+                hiveInspectionForms: {
+                    with: {
+                        hive: {
+                            columns: {
+                                name: true
+                            }
+                        }
+                    }
+                },
+                apiary: true,
+                user: true
+            }
         })
         console.log("Done!");
         
@@ -197,7 +215,7 @@ router.post(
     console.log("Done!");
     
     try {
-        const [inspectionResult] = await connection.query<ResultSetHeader>(`
+        const [inspectionCreateResult] = await connection.query<ResultSetHeader>(`
             INSERT INTO hive_inspections (apiaryId, userIdCreator) VALUES ?`, 
             [[[
                 apiaryId,
@@ -252,7 +270,7 @@ router.post(
                         row.needMoreBreedingFramesAmount,
                         row.takenHoneyFrames,
                         row.takenBreedingFrames,
-                        inspectionResult.insertId
+                        inspectionCreateResult.insertId
                     ]]]
                 )
             )
@@ -262,17 +280,25 @@ router.post(
         console.log("Done!");
 
         console.log(`Getting inspection...`);
-        const [[inspection]] = await pool.query<(RowDataPacket & InspectionResponse)[]>(
-            getInspectionsQuery(`
-                WHERE hive_inspections.id = ?`
-            ), 
-            [
-                inspectionResult.insertId,
-            ]
-        )
+        const inspectionResult = await db.query.hiveInspections.findFirst({
+            where: eq(hiveInspections.id, inspectionCreateResult.insertId),
+            with: {
+                hiveInspectionForms: {
+                    with: {
+                        hive: {
+                            columns: {
+                                name: true
+                            }
+                        }
+                    }
+                },
+                apiary: true,
+                user: true
+            }
+        })
         console.log("Done!");
         
-        res.status(200).json(inspection);
+        res.status(200).json(inspectionResult);
     } catch (error) {
         await connection.rollback();
         console.error(error);

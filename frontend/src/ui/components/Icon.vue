@@ -3,12 +3,13 @@ import { IconType, type SVG } from '@/assets/svgs/SVGLoader';
 import { computed, shallowRef, useCssModule, watch, type CSSProperties } from 'vue'
 
 const s = useCssModule()
-const props = defineProps<{ 
+const props = withDefaults(defineProps<{ 
     svg:    SVG
-    type:   IconType
+    type?:  IconType
     color?: string
-}>()
-
+}>(), {
+    type: IconType.SMALL
+})
 // Eager import all SVGs as components at build time
 const modules = import.meta.glob('/src/assets/svgs/*.svg', { eager: true }) as Record<string, any>
 
@@ -54,6 +55,24 @@ const iconStyle = computed((): CSSProperties => {
                 minHeight: '2rem',
                 height: '2rem',
                 maxHeight: '2rem'
+            }
+        case IconType.HUGE:
+            sizeStyle = {
+                minWidth: '3rem',
+                width: '3rem',
+                maxWidth: '3rem',
+                minHeight: '3rem',
+                height: '3rem',
+                maxHeight: '3rem'
+            }
+        case IconType.GIGANTIC:
+            sizeStyle = {
+                minWidth: '4rem',
+                width: '4rem',
+                maxWidth: '4rem',
+                minHeight: '4rem',
+                height: '4rem',
+                maxHeight: '4rem'
             }
             break;
     }

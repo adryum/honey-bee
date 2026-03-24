@@ -2,6 +2,7 @@ import { drizzle } from 'drizzle-orm/mysql2'
 import mysql from 'mysql2/promise'
 import { requireEnv } from '../utils'
 import * as schema from "../db/schema"
+import * as relations from "../db/relations"
 
 export const pool = mysql.createPool({
     host:     requireEnv("MYSQL_HOST"),
@@ -10,4 +11,7 @@ export const pool = mysql.createPool({
     database: requireEnv("MYSQL_DATABASE"),
 })
 
-export const db = drizzle(pool, { schema, mode: 'default' })
+export const db = drizzle(pool, { 
+    schema: { ...schema, ...relations },
+    mode:   'default'
+})

@@ -1,28 +1,21 @@
 <script setup lang="ts">
-import { storeToRefs } from "pinia";
-import { computed, onMounted, reactive, ref, useCssModule } from "vue";
+import { computed, ref, useCssModule } from "vue";
 import Apiary from "../../apiary/Apiary.vue";
 import { isValidValue, useFlexibleGrid } from "@/core/utils/others";
-import type { ApiaryModelDB, HiveModelDB } from "@/core/stores/Models";
+import type { ApiaryModelDB } from "@/core/stores/Models";
+import { useProfileQuery } from "@/core/composables/useProfile";
+import { useAdminMutations } from "@/core/composables/useAdmin";
 
 const s = useCssModule()
 const props = defineProps<{
     userId: number
 }>()
 
-const adminStore       = useAdminStore()
-const { apiaries }     = storeToRefs(apiaryStore)
-const { apiaryAccess, hiveAccess } = storeToRefs(profileStore)
-
+const { user, isLoading, isError } = useProfileQuery(props.userId)
+const {} = useAdminMutations()
 
 const userApiaryAccess = ref<number[]>([])
 const userHiveAccess   = ref<number[]>([])
-const userApiaries     = ref<ApiaryModelDB[]>([])
-const userApiaryHives  = ref<HiveModelDB[]>([])
-
-const changingHiveAccess   = reactive<Record<number, boolean>>({})
-const changingApiaryAccess = reactive<Record<number, boolean>>({})
-
 
 type ApiaryAccessModel = {
     apiary:           ApiaryModelDB
@@ -82,13 +75,6 @@ async function toggleApiaryAccess(model: ApiaryAccessModel) {
         changingAccess[model.apiary.id] = false
     }
 }
-
-onMounted(async () => {
-    userApiaryAccess.value = await adminStore.getApiaryAccess(props.userId) ?? []
-    userHiveAccess.value   = await adminStore.getHiveAccess(props.userId)   ?? []
-
-
-})
 </script>
 
 <template>

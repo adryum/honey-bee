@@ -7,14 +7,16 @@ import InspectionForm from "../components/forms/InspectionForm.vue";
 import type { InspectionFormUI } from "@/core/stores/Models";
 import { InspectionFormUIArray_To_InspectionCreateRequestModel } from "@/core/Convertors";
 import { isValidValue } from "@/core/utils/others";
-import router, { RouterViewPaths } from "@/core/router";
+import { RouterViewPaths } from "@/core/router";
 import { useApiaryQuery } from "@/core/composables/useApiary";
 import { useInspectionMutation } from "@/core/composables/useInspection";
+import { useRouter } from "vue-router";
 
 const s = useCssModule()
 const props = defineProps<{
     apiaryId: number
 }>()
+const router = useRouter()
 
 const { hives, apiary } = useApiaryQuery({
     id:             toRef(props.apiaryId),
@@ -26,9 +28,6 @@ const inspectionForms = ref<InspectionFormUI[]>([])
 
 const selectedForm     = ref<InspectionFormUI | undefined>(undefined)
 const selectedFormHive = computed(() => hives.value?.find(item => item.id === selectedForm.value?.hiveId))
-
-const inspectionId            = ref<number | undefined>()
-const isOcerviewingInspection = computed(() => isValidValue(inspectionId.value))
 
 const emptyForm: InspectionFormUI = {
     id:                           -1,
@@ -107,7 +106,7 @@ async function finishInspection() {
         props.apiaryId,
         inspectionForms.value
     )
-    await create(model, {
+    create(model, {
         onSuccess: () => {
             router.push(RouterViewPaths.Inspections)
         }

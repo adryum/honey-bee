@@ -1,7 +1,6 @@
-import type { reactive } from "vue";
 import { String_to_HiveType, String_to_NoteTypes, String_to_Role } from "./DatabaseEnums";
-import type { ApiaryAccessResponseModel, ApiaryCreateResponseModel, HiveAccessResponseModel, HiveCreateResponseModel, InspectionCreateRequestModel, InspectionGetResponseModel, NoteCreateModelResponse, UserEntryResponseModel, UserProfileResponseModel, WhitelistEntryResponseModel } from "./api/Models";
-import type { ApiaryModelDB, HiveModelDB, InspectionDB, InspectionFormDB, InspectionFormUI, InspectionTableEntryModel, NoteModelDB, UserEntryModelDB, UserProfileModel, UserModelDB, WhitelistEntryModelDB } from "./stores/Models";
+import type { ApiaryAccessResponseModel, ApiaryCreateResponseModel, HiveAccessResponseModel, HiveCreateResponseModel, InspectionCreateRequestModel, InspectionEntryResponseModel, InspectionReviewResponseModel, NoteCreateModelResponse, UserEntryResponseModel, UserProfileResponseModel, WhitelistEntryResponseModel } from "./api/Models";
+import type { ApiaryModelDB, HiveModelDB, InspectionDB, InspectionFormDB, InspectionFormUI, InspectionTableEntryModel, NoteModelDB, UserEntryModelDB, UserModelDB, WhitelistEntryModelDB } from "./stores/Models";
 
 export function ApiaryCreateResponse_to_ApiaryModelDB(
     convertee: ApiaryCreateResponseModel
@@ -96,21 +95,36 @@ export function HiveAccessResponseModel_To_Number(
     return convertee.hiveId
 }
 
-export function InspectionGetResponseModel_To_InspectionFormDB(
-    convertee: InspectionGetResponseModel
+
+export function InspectionEntryResponseModel_To_InspectionTableEntryModel(
+    convertee: InspectionEntryResponseModel
+): InspectionTableEntryModel {
+    return {
+        id:            convertee.id,
+        apiaryId:      convertee.apiaryId,
+        apiaryName:    convertee.apiary.name,
+        userIdCreator: convertee.userIdCreator,
+        userPicture:   convertee.user.image,
+        username:      convertee.user.username,
+        creationDate:  convertee.creationDate,
+    }
+}
+
+export function InspectionReviewResponseModel_To_InspectionFormDB(
+    convertee: InspectionReviewResponseModel
 ): InspectionDB {
     return {
         id:            convertee.id,
         apiaryId:      convertee.apiaryId,
-        apiaryName:    convertee.apiaryName,
+        apiaryName:    convertee.apiary.name,
         userIdCreator: convertee.userIdCreator,
-        userPicture:   convertee.userPicture,
-        username:      convertee.username,
+        userPicture:   convertee.user.image,
+        username:      convertee.user.username,
         creationDate:  convertee.creationDate,
-        forms:         convertee.forms.map(form => ({
+        forms:         convertee.hiveInspectionForms.map(form => ({
             id:                           form.id,
             hiveId:                       form.hiveId,
-            hiveName:                     form.hiveName,
+            hiveName:                     form.hive.name,
             isAbnormalBehavior:           form.isAbnormalBehavior,
             isSwarming:                   form.isSwarming,
             needAdditionalFeeding:        form.needAdditionalFeeding,
@@ -162,7 +176,6 @@ export function InspectionFormUIArray_To_InspectionCreateRequestModel(
         }))
     }
 }
-
 
 export function InspectionFormDB_To_InspectionFormUI(
     convertee: InspectionFormDB

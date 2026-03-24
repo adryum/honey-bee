@@ -1,15 +1,11 @@
 <script setup lang="ts">
-import { storeToRefs } from "pinia";
-import { onMounted, ref, useCssModule } from "vue";
+import { useCssModule } from "vue";
 import UserTableRow from "./rows/UserTableRow.vue";
 import { useAdminQuery } from "@/core/composables/useAdmin";
 
 const s = useCssModule()
 
-const { registeredUserEntries } = useAdminQuery({
-    getRegisteredUsers: true,
-    getWhitelist: false
-})
+const { registeredUserEntries } = useAdminQuery()
 </script>
 
 <template>

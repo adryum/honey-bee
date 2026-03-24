@@ -28,7 +28,7 @@ export const adminApi = {
     },
 
     getWhitelistEntries: async () => {
-        const { data } = await axios.get<WhitelistEntryResponseModel[]>('/admin/whitelist/users')
+        const { data } = await axios.get<WhitelistEntryResponseModel[]>('/admin/whitelist/users')        
         return data.map(WhitelistEntryResponseModel_To_WhitelistEntryDB)
     },
 

@@ -30,7 +30,7 @@ export const useAdminQuery = () => {
     }
 }
 
-export const useAdminMutation = () => {
+export const useAdminMutations = () => {
     const queryClient = useQueryClient()
 
     const { mutate: getApiaryAccess, isPending: isGettingApiaryAccess } = useMutation({

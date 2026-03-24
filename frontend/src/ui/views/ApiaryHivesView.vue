@@ -39,7 +39,7 @@ const { style: gridStyle } = useFlexibleGrid({
 })
 
 function startInspection(apiaryId: number) {
-    router.push(`/inspection/conduct/apiary/${apiaryId}/`)
+    router.push(`/inspection/conduct/apiary/${apiaryId}`)
 }
 
 function openHive(hiveId: number) {

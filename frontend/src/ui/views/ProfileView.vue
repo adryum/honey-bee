@@ -3,15 +3,29 @@ import { ref, useCssModule } from "vue";
 import Icon from "../components/Icon.vue";
 import { IconType, SVG } from "@/assets/svgs/SVGLoader";
 import AccessFragment from "../components/view_fragments/profile/AccessFragment.vue";
-
-enum ProfileTab {
-    PROFILE = "Profile",
-    ACCESS  = "Access"
-}
+import { ProfileTab } from "@/core/ViewTabEnums";
+import { useRouter } from "vue-router";
+import { RouterViewPaths } from "@/core/router";
+import { useProfileQuery } from "@/core/composables/useProfile";
 
 const s = useCssModule()
-const selectedTab = ref(ProfileTab.PROFILE)
+const router = useRouter()
+const props = defineProps<{
+    userId: number
+    tab:    ProfileTab
+}>()
 
+const { user, isLoading, isError } = useProfileQuery(props.userId)
+
+function changeTab(tab: ProfileTab) {
+    router.replace({
+        name:   RouterViewPaths.Profile,
+        params: { 
+            userId: props.userId,
+            tab:    tab
+        }
+    })
+}
 </script>
 
 <template>
@@ -69,15 +83,15 @@ const selectedTab = ref(ProfileTab.PROFILE)
             :class="s.navigation"
         >
             <button
-                v-for="tab in Object.values(ProfileTab) as ProfileTab[]"
-                :key="tab"
+                v-for="loopTab in Object.values(ProfileTab)"
+                :key="loopTab"
                 :class="[
                     s.button,
-                    tab === selectedTab && s.selected,
+                    loopTab === tab && s.selected,
                 ]"
-                @click="selectedTab = tab"
+                @click="changeTab(loopTab)"
             >
-                {{ tab }}
+                {{ loopTab }}
             </button>
         </div>
 

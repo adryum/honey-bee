@@ -17,7 +17,7 @@ const seletedFragment = ref<AdminFragment>(AdminFragment.Whitelist)
 <div :class="s.container">
     <div :class="s.header">
         <button
-            v-for="item in Object.values(AdminFragment) as AdminFragment[]"
+            v-for="item in Object.values(AdminFragment)"
             :class="[
                 s.button,
                 seletedFragment === item && s.selected

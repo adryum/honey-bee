@@ -5,7 +5,7 @@ import Button from "../buttons/Button.vue";
 import { motion } from 'motion-v';
 import IconCubeButton from "../buttons/IconCubeButton.vue";
 import IconButton from "../buttons/IconButton.vue";
-import { SVG } from "@/assets/svgs/SVGLoader";
+import { IconType, SVG } from "@/assets/svgs/SVGLoader";
 import Icon from "../../Icon.vue";
 
 const s = useCssModule()
@@ -69,6 +69,7 @@ function handleFiles(event: Event) {
         >
             <Icon
                 :svg="SVG.Image"
+                :type="IconType.GIGANTIC"
             />
             <h1 
                 :class="s.dropHint"
@@ -106,6 +107,7 @@ function handleFiles(event: Event) {
     display: flex
     flex-direction: column
     gap: 2rem
+    align-items: center
     justify-content: center
 
     height: 10rem

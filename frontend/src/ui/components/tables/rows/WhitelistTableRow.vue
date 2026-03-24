@@ -7,7 +7,7 @@ import TextDropdownBottomPart from "../../input/dropdowns/dropdownItems/bottom/T
 import IconCubeButton from "../../input/buttons/IconCubeButton.vue";
 import { SVG } from "@/assets/svgs/SVGLoader";
 import TableRowSelectionDropdownTopPart from "../../input/dropdowns/dropdownItems/top/TableRowSelectionDropdownTopPart.vue";
-import { useAdminMutation } from "@/core/composables/useAdmin";
+import { useAdminMutations } from "@/core/composables/useAdmin";
 
 const s = useCssModule()
 const props = defineProps<{
@@ -17,7 +17,7 @@ const props = defineProps<{
 const isEditingRow = ref(false)
 
 const editableEntry = reactive<WhitelistEntryModelDB>({ ...props.entry })
-const { updateWhitelistEntry } = useAdminMutation()
+const { updateWhitelistEntry } = useAdminMutations()
 
 function save() {
     updateWhitelistEntry({

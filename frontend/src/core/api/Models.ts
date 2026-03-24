@@ -205,35 +205,55 @@ export type InspectionCreateRequestModel = {
     }[]
 }
 
-export type InspectionGetResponseModel = {
+export type InspectionEntryResponseModel = {
     id:            number;
     apiaryId:      number;
-    apiaryName:    string
     userIdCreator: number
-    userPicture:   string
-    username:      string
     creationDate:  string
-    forms:    {
-        id:                           number;
-        hiveId:                       number;
-        hiveName:                     string;
-        isAbnormalBehavior:           boolean;
-        isSwarming:                   boolean;
-        needAdditionalFeeding:        boolean;
-        isQueenAlive:                 boolean;
-        isQueenLayingEggs:            boolean;
-        isQueenLayingEggsIncorrectly: boolean;
-        needMoreHoneyFrames:          boolean;
-        needMoreBreedingFrames:       boolean;
-        needMedicalAttention:         boolean;
-        hasHiveDamage:                boolean;
-        isTakingOutFrames:            boolean;
-        abnormalBehaviorDescription:  string;
-        medicalAttentionDescription:  string;
-        hiveDamageDescription:        string;
-        needMoreHoneyFramesAmount:    number;
-        needMoreBreedingFramesAmount: number;
-        takenHoneyFrames:             number;
-        takenBreedingFrames:          number;
+    user: {
+        image:   string
+        username:      string
+    }
+    apiary: {
+        name:    string
+    }
+}
+
+export type InspectionReviewResponseModel = {
+    id:            number;
+    apiaryId:      number;
+    userIdCreator: number
+    creationDate:  string
+    user: {
+        image:   string
+        username:      string
+    }
+    apiary: {
+        name:    string
+    }
+    hiveInspectionForms:    {
+        id:                           number
+        hiveId:                       number
+        isAbnormalBehavior:           boolean
+        isSwarming:                   boolean
+        needAdditionalFeeding:        boolean
+        isQueenAlive:                 boolean
+        isQueenLayingEggs:            boolean
+        isQueenLayingEggsIncorrectly: boolean
+        needMoreHoneyFrames:          boolean
+        needMoreBreedingFrames:       boolean
+        needMedicalAttention:         boolean
+        hasHiveDamage:                boolean
+        isTakingOutFrames:            boolean
+        abnormalBehaviorDescription:  string
+        medicalAttentionDescription:  string
+        hiveDamageDescription:        string
+        needMoreHoneyFramesAmount:    number
+        needMoreBreedingFramesAmount: number
+        takenHoneyFrames:             number
+        takenBreedingFrames:          number
+        hive: {
+            name: string
+        }
     }[]
 }

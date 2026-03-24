@@ -13,11 +13,9 @@ export type InspectionFilters = {
 export const useInspections = (
     filters: Ref<InspectionFilters>
 ) => {
-    const queryClient = useQueryClient()
-
-    const { data: inspections, isLoading, isError } = useQuery({
+    const { data: inspectionTableEntries, isLoading, isError } = useQuery({
         queryKey: computed(() => ['inspections', filters.value]),
-        queryFn:  () => inspectionApi.getInspections(filters.value),
+        queryFn:  () => inspectionApi.getInspectionTableEntries(filters.value),
         placeholderData: keepPreviousData
     })
 
@@ -28,11 +26,29 @@ export const useInspections = (
     }
 
     return {
-        inspections,
+        inspectionTableEntries,
         isLoading,
         isError,
         nextPage,
         prevPage,
+    }
+}
+
+export const useInspection = (
+    { id }: { 
+        id: number 
+    }
+) => {
+    const { data: inspection, isLoading, isError } = useQuery({
+        queryKey: computed(() => ['inspections', id]),
+        queryFn:  () => inspectionApi.getInspection(id),
+        placeholderData: keepPreviousData
+    })
+
+    return {
+        inspection,
+        isLoading,
+        isError,
     }
 }
 
@@ -42,16 +58,17 @@ export const useInspectionMutation = () => {
     const { mutate: create, isPending: isCreatingInspection } = useMutation({
         mutationFn: inspectionApi.create,
         onSuccess: (newInspection) => {
+            console.log("Created inspection!");
             queryClient.invalidateQueries({ queryKey: ['inspections'] })
         }
     })
 
-    // const { mutate: deleteInspection } = useMutation({
-    //     mutationFn: inspectionApi.delete,
-    //     onSuccess: (id) => {
-    //         queryClient.invalidateQueries({ queryKey: ['inspections'] })
-    //     }
-    // })
+    const { mutate: remove, isPending: isRemovingInspection } = useMutation({
+        mutationFn: inspectionApi.remove,
+        onSuccess: (id) => {
+            queryClient.invalidateQueries({ queryKey: ['inspections'] })
+        }
+    })
 
     // const { mutate: updateInspection } = useMutation({
     //     mutationFn: inspectionApi.update,
@@ -81,6 +98,8 @@ export const useInspectionMutation = () => {
         exportInspections,
         isCreatingInspection,
         isExportingInspections,
+        remove, 
+        isRemovingInspection,
         // deleteInspection,
         // updateInspection
     }

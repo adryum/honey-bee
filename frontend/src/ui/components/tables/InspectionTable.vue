@@ -7,6 +7,8 @@ import type { InspectionTableEntryModel } from "@/core/stores/Models";
 const s = useCssModule()
 const props = defineProps<{
     entries: InspectionTableEntryModel[]
+    page: number
+    limit: number
 }>()
 
 </script>
@@ -57,7 +59,7 @@ const props = defineProps<{
             v-for="(entry, i) in entries" 
             :key="entry.id" 
             :entry="entry"
-            :order-number="i"
+            :order-number="page * limit - limit + i"
         />
     </tbody>
 
@@ -118,9 +120,11 @@ const props = defineProps<{
 .footer
     all:    unset
     width:  100%
-    height: 2rem
+    height: 3rem
+    min-height: 3rem
 
     .row
+        padding: 0 .25rem
         height:     100%
 
 td

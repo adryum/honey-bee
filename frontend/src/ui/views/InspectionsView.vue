@@ -1,24 +1,22 @@
 <script setup lang="ts">
-import { computed, onMounted, ref, useCssModule } from "vue";
+import { ref, useCssModule } from "vue";
 import ToolBar from "../components/ToolBar.vue";
 import InspectionTable from "../components/tables/InspectionTable.vue";
-import type { InspectionTableEntryModel } from "@/core/stores/Models";
 import { useInspections, type InspectionFilters } from "@/core/composables/useInspection";
-import { InspectionDB_To_InspectionTableEntryModel } from "@/core/Convertors";
+import IconTextButton from "../components/input/buttons/IconTextButton.vue";
+import { SVG } from "@/assets/svgs/SVGLoader";
 
 const s = useCssModule()
 const props = defineProps<{}>()
 
-const { inspections, nextPage, prevPage } = useInspections(ref<InspectionFilters>({
+const filters = ref<InspectionFilters>({
     page:   1,
-    limit:  18,
+    limit:  14,
     hiveId: undefined,
     ids:    undefined
-}))
+})
+const { inspectionTableEntries, nextPage, prevPage } = useInspections(filters)
 
-const inspectionEntries = computed(
-    (): InspectionTableEntryModel[] => inspections.value?.map(InspectionDB_To_InspectionTableEntryModel) ?? []
-)
 </script>
 
 <template>
@@ -30,14 +28,23 @@ const inspectionEntries = computed(
     />
     <InspectionTable
         :class="s.table"
-        :entries="inspectionEntries"
+        :entries="inspectionTableEntries ?? []"
+        :page="filters.page!"
+        :limit="filters.limit!"
     >
-        <button 
+        <IconTextButton 
+            text="Previous"
+            :svg="SVG.ArrowLeftSmall"
+            :disabled="(filters?.page) === 1"
             @click="prevPage"
-        >Previous</button>
-        <button 
+        />
+        <IconTextButton 
+            text="Next"
+            :swap-icon-position="true"
+            :svg="SVG.ArrowRightSmall"
+            :disabled="!nextPage"
             @click="nextPage"
-        >Next</button>
+        />
     </InspectionTable>
 </div>
 </template>

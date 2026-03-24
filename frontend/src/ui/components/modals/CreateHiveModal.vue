@@ -1,37 +1,34 @@
 <script setup lang="ts">
-import { IconType, SVG } from '@/assets/svgs/SVGLoader';
+import { SVG } from '@/assets/svgs/SVGLoader';
 import { useApiaryMutations } from '@/core/composables/useApiary';
-import { useCssModule, ref, watch, toRef } from 'vue';
+import { useCssModule, ref } from 'vue';
 import LabeledTextareaField from '../input/fields/LabeledTextareaField.vue';
 import LabeledInputField from '../input/fields/LabeledInputField.vue';
 import ImageDropZone from '../input/fields/ImageDropZone.vue';
 import IconTextButton from '../input/buttons/IconTextButton.vue';
-import Icon from '../Icon.vue';
 import { useHiveMutations, useHivesQuery } from '@/core/composables/useHive';
 import { HiveType } from '@/core/DatabaseEnums';
-import { getRandomId, useFlexibleGrid } from '@/core/utils/others';
+import { useFlexibleGrid } from '@/core/utils/others';
 import ModularDropdown from '../input/dropdowns/ModularDropdown.vue';
 import SelectedTextHead from '../input/dropdowns/dropdownItems/top/SelectedTextHead.vue';
 import IconTextItem from '../input/dropdowns/dropdownItems/bottom/IconTextItem.vue';
 import Hive from '../hive/Hive.vue';
 import { useFormValidator } from '@/core/composables/useFormValidator';
+import ModalBase from './ModalBase.vue';
+import { useModalBase } from '@/core/composables/useModalBase';
 
 const s = useCssModule()
 const props = defineProps<{
     apiaryId: number
 }>()
 
-const id = getRandomId("modal")
-const dialogRef = ref<HTMLDialogElement>()
-const open =  () => dialogRef.value?.showModal()
-const close = () => dialogRef.value?.close()
-defineExpose({ open, close })
+const { modal, exposed } = useModalBase()
+defineExpose(exposed)
 
-const { getFormValidee, isFormValid, showThatIsRequired } = useFormValidator()
-
+const { assignHive } = useApiaryMutations()
 const { create, isCreatingHive } = useHiveMutations()
 const { hives } = useHivesQuery({ apiaryId: undefined })
-const { assignHive } = useApiaryMutations()
+const { getFormValidee, isFormValid, showThatIsRequired } = useFormValidator()
 
 const tabs = ['Create New', 'Move Existing']
 const selectedTab = ref(tabs[0])
@@ -73,33 +70,11 @@ const { style: gridStyle } = useFlexibleGrid({
 </script>
 
 <template>
-<dialog
-    ref="dialogRef"
-    :id="id"
-    :class="s.container"
+<ModalBase
+    ref="modal"
+    label="Add Hive"
 >
-    <div ref="handle" :class="s.handle">
-        <h1 
-            :class="s.popupName"
-        >
-            Add hive
-        </h1>
-        <slot name="header">
-            
-        </slot>
-        <button 
-            :class="s.button"
-            @click="close" 
-        >
-            <Icon 
-                :class="s.icon" 
-                :type="IconType.SMALL"
-                :svg="SVG.Cross" 
-            /> 
-        </button> 
-    </div>
-
-
+    <template #body>
     <div :class="s.body">
             <div :class="s.header">
                 <p 
@@ -123,7 +98,6 @@ const { style: gridStyle } = useFlexibleGrid({
             </div>
 
 
-
             <div 
                 v-show="selectedTab === tabs[1]"
                 ref="grid"
@@ -142,7 +116,6 @@ const { style: gridStyle } = useFlexibleGrid({
                     })"
                 />
             </div>
-
 
 
             <form 
@@ -168,7 +141,7 @@ const { style: gridStyle } = useFlexibleGrid({
                     />
                     <ModularDropdown
                         label="Type"
-                        :teleport-target-id="id"
+                        :teleport-target-id="modal?.id"
                     >
                         <template #head="{ dropdown }">
                             <SelectedTextHead
@@ -201,7 +174,8 @@ const { style: gridStyle } = useFlexibleGrid({
                 </div>
             </form>
         </div>
-</dialog>
+        </template>
+</ModalBase>
 </template>
 
 <style module lang = 'sass'>
@@ -292,6 +266,9 @@ const { style: gridStyle } = useFlexibleGrid({
 
     font-size: var(--font-size-medium)
     font-family: var(--font-family)
+
+    width: 50rem
+
 
     .header
         display: flex

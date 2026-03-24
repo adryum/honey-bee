@@ -4,26 +4,25 @@ import Icon from "../components/Icon.vue";
 import { IconType, SVG } from "@/assets/svgs/SVGLoader";
 import IconTextButton from "../components/input/buttons/IconTextButton.vue";
 import InspectionForm from "../components/forms/InspectionForm.vue";
-import type { InspectionDB, InspectionFormDB, InspectionFormUI } from "@/core/stores/Models";
+import type { InspectionFormDB, InspectionFormUI } from "@/core/stores/Models";
 import { InspectionFormDB_To_InspectionFormUI } from "@/core/Convertors";
-import router from "@/core/router";
-import { useInspectionMutation, useInspections, type InspectionFilters } from "@/core/composables/useInspection";
+import { useInspection, useInspectionMutation } from "@/core/composables/useInspection";
+import { watchOnce } from "@vueuse/core";
+import { useRouter } from "vue-router";
 
 const s = useCssModule()
+const router = useRouter()
 const props = defineProps<{
     id: number
 }>()
 
 const {  } = useInspectionMutation()
-const { inspections } = useInspections(ref<InspectionFilters>({
-    ids: [props.id]
-}))
-const inspection = ref<InspectionDB | undefined>(inspections[0])
+const { inspection } = useInspection({ id: props.id })
 
-const forms                  = computed(() => reviewedInspection.value?.forms || [])
-const selectedForm           = ref<InspectionFormDB | undefined>()
-const selectedFormUI         = ref<InspectionFormUI | undefined>()
-const previousPagePath       = ref<string | undefined>()
+const forms            = computed(() => inspection.value?.forms || [])
+const selectedForm     = ref<InspectionFormDB | undefined>()
+const selectedFormUI   = ref<InspectionFormUI | undefined>()
+const previousPagePath = ref<string | undefined>()
 
 function selectForm(id: number) {
     selectedForm.value = forms.value.find(form => form.id === id)
@@ -33,9 +32,14 @@ function selectForm(id: number) {
     }
 }
 
-onMounted(() => {
+watchOnce(inspection, () => {
     selectForm(forms.value[0]?.id)
+    console.log(inspection.value);
+    
+})
+onMounted(() => {
     previousPagePath.value = window.history.state.back
+    selectForm(forms.value[0]?.id)
 })
 </script>
 
@@ -55,7 +59,7 @@ onMounted(() => {
                 for="apiaryHives"
                 :class="s.label"
             >
-                {{ forms.find(hive => hive.id === selectedForm?.hiveId)?.hiveName }}
+                {{ selectedForm?.hiveName }}
             </label>
 
             <IconTextButton
@@ -69,7 +73,7 @@ onMounted(() => {
         <InspectionForm
             v-if="selectedFormUI"
             :class="s.form"
-            :isReviewing="false"
+            :isReviewing="true"
             v-model:form="selectedFormUI"
         />
     </section>
@@ -87,7 +91,7 @@ onMounted(() => {
             <label 
                 for="apiaryHives"
                 :class="s.label"
-            >{{ reviewedInspection?.apiaryName || 'Apiary' }} hives</label>
+            >{{ inspection?.apiaryName || 'Apiary' }} hives</label>
         </div>
 
         <div

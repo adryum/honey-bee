@@ -4,14 +4,14 @@ import IconTextButton from "../input/buttons/IconTextButton.vue";
 import { SVG } from "@/assets/svgs/SVGLoader";
 import StringSearchDropdown from "../input/dropdowns/StringSearchDropdown.vue";
 import CreateNoteModal from "../modals/CreateNoteModal.vue";
+import type { ModalBaseModel } from "@/core/composables/useModalBase";
 
 const s = useCssModule()
 const props = defineProps<{
     hiveId: number
 }>()
 const searchText = defineModel('searchText', { default: '' })
-const createNoteModal = ref<InstanceType<typeof CreateNoteModal>>()
-
+const createNoteModal = ref<ModalBaseModel>()
 </script>
 
 <template>

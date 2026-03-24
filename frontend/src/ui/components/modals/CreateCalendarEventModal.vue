@@ -14,6 +14,7 @@ const props = defineProps<{
     hive: HiveModelDB
     dayModel: CalendarDayModel
 }>()
+
 defineEmits<{
     clickOutside: [],
     close: []

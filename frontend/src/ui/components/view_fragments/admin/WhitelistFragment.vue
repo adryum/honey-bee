@@ -3,16 +3,11 @@ import { ref, useCssModule } from "vue";
 import WhitelistTable from "../../tables/WhitelistTable.vue";
 import IconTextButton from "../../input/buttons/IconTextButton.vue";
 import { SVG } from "@/assets/svgs/SVGLoader";
-import { usePopupCreator } from "@/core/utils/PopupHiarchy";
-import AddWhitelistEntryPopup from "../../popups/AddWhitelistEntryPopup.vue";
+import CreateWhitelistEntryModal from "../../modals/CreateWhitelistEntryModal.vue";
+import type { ModalBaseModel } from "@/core/composables/useModalBase";
 
 const s = useCssModule()
-const showAddWhitelistPopup = ref(false)
-
-// const { create } = usePopupCreator({
-//     popupComponent: AddWhitelistEntryPopup,
-//     maxCount: 1
-// })
+const createWhitelistEntry = ref<ModalBaseModel | undefined>()
 </script>
 
 <template>
@@ -23,13 +18,14 @@ const showAddWhitelistPopup = ref(false)
         <IconTextButton
             text="Add entry"
             :svg="SVG.Plus"
-            @click="showAddWhitelistPopup = !showAddWhitelistPopup"
+            @click="createWhitelistEntry?.open()"
         />
     </div>
-    <WhitelistTable/>
-    <AddWhitelistEntryPopup
-        v-if="showAddWhitelistPopup"
-        @close="showAddWhitelistPopup = false"
+    <WhitelistTable
+    
+    />
+    <CreateWhitelistEntryModal
+        ref="createWhitelistEntry"
     />
 </div>
 </template>

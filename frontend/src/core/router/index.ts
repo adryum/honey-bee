@@ -1,6 +1,6 @@
 import { createRouter, createWebHistory } from 'vue-router'
 import { useAuthenticationApiStore } from '../network/AuthenticationApiStore'
-import type { HiveTab } from '../ViewTabEnums';
+import type { HiveTab, ProfileTab } from '../ViewTabEnums';
 
 export enum RouterViewPaths {
     Home         = '/',
@@ -57,7 +57,7 @@ const router = createRouter({
         component: () => import('@/ui/views/InspectionsView.vue')
     },
     {
-        path: "/inspection/conduct/apiary/:apiaryId/",
+        path: "/inspection/conduct/apiary/:apiaryId",
         name: "apiary inspection",
         component: () => import('@/ui/views/InspectionIntakeView.vue'),
         props: (route) => ({
@@ -65,7 +65,7 @@ const router = createRouter({
         })
     },
     {
-        path: `/inspection/:id`,
+        path: "/inspection/:id",
         name: "inspection",
         component: () => import('@/ui/views/InspectionReviewview.vue'),
         props: (route) => ({
@@ -83,9 +83,13 @@ const router = createRouter({
         component: () => import('@/ui/views/AdminView.vue')
     },
     {
-        path: RouterViewPaths.Profile,
+        path: "/profile/:userId/:tab",
         name: RouterViewPaths.Profile,
-        component: () => import('@/ui/views/ProfileView.vue')
+        component: () => import('@/ui/views/ProfileView.vue'),
+        props: (route) => ({
+            id:  Number(route.params.userId),
+            tab: route.params.tab as ProfileTab
+        })
     },
     // {
     //   path: '/about',
@@ -99,7 +103,7 @@ const router = createRouter({
 })
 
 router.beforeEach(async (to, from) => {
-    console.log("Routing to: ", to.name);
+    console.log("Routing to: ", to.fullPath);
 
     if (to.name !== RouterViewPaths.Registration) {
         const store = useAuthenticationApiStore()

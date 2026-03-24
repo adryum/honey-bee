@@ -2,11 +2,11 @@
 import { useFloatingUI } from "@/core/composables/field/useFloatingUI";
 import type { DropdownModel } from "@/core/models/Models";
 import { useElementExists } from "@/core/utils/Hooks";
-import { computed, ref, useCssModule } from "vue";
+import { computed, isRef, ref, useCssModule, watch, type Ref } from "vue";
 
 const s = useCssModule()
 const props = withDefaults(defineProps<{
-    teleportTargetId?: string
+    teleportTargetId?: string | Ref<string>
     label?:            string
     zIndex?:           number
     color?:            string
@@ -31,7 +31,11 @@ const { floaterStyle } = useFloatingUI({
     takeWidthFromAnchor: true
 })
 
-const teleportTargetExists = useElementExists(() => props.teleportTargetId ?? "")
+const tpTargetId = computed(() => isRef(props.teleportTargetId) 
+    ? props.teleportTargetId.value 
+    : props.teleportTargetId
+)
+const teleportTargetExists = computed(() => !!tpTargetId.value)
 </script>
 
 <template>
@@ -56,7 +60,7 @@ const teleportTargetExists = useElementExists(() => props.teleportTargetId ?? ""
     </slot>
     <Teleport 
         v-if="teleportTargetId ? teleportTargetExists : true"
-        :key="teleportTargetId"
+        :key="tpTargetId"
         :to="teleportTargetId ? `#${teleportTargetId}` : 'body'"  
     >
         <div 

@@ -1,8 +1,22 @@
 import { useMutation, useQuery, useQueryClient } from "@tanstack/vue-query/build/legacy/_tsup-dts-rollup";
+import { profileApi } from "../api/ProfileApi";
+import { computed } from "vue";
 
-import type { MaybeRef, Ref } from "vue";
+export const useProfileQuery = (userId: number) => {
+    const { data: user, isLoading, isError } = useQuery({
+        queryKey: ["users", userId],
+        queryFn: () => profileApi.getProfile(userId),
+        enabled:  computed(() => userId != undefined)
+    })
 
-export const useProfile = (userId: MaybeRef<number | undefined>) => {
+    return {
+        user,
+        isLoading,
+        isError
+    }
+}
+
+export const useProfileMutations = () => {
     const queryClient = useQueryClient()
 
     // const { mutate: updateHive } = useMutation({
