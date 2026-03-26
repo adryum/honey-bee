@@ -7,6 +7,7 @@ const props = withDefaults(defineProps<{
     hive: HiveModelDB,
     showApiary?: boolean
     showShadow?: boolean
+    isDimmed?: boolean
 }>(), {
     showApiary: false
 })
@@ -19,7 +20,12 @@ const props = withDefaults(defineProps<{
         showShadow && s.shadow
     ]"
 >
-    <div :class="s.body">
+    <div 
+        :class="[
+            s.body,
+            isDimmed && s.dimmedOut
+        ]"
+    >
         <!-- <div 
             v-if="hive.type" 
             :class="s.type"
@@ -46,16 +52,17 @@ const props = withDefaults(defineProps<{
                 <!-- {{ hive.apiaryName }} -->
             </p>
         </div>
-        <!-- <CubeDropdown  
-            :svg="SVG.MoreDots" 
-            :class="s.options"
-            :dropdownItems="moreOptions"
-        /> -->
+        <slot name="footer">
+
+        </slot>
     </div>
 </div>
 </template>
 
 <style module lang='sass'>
+.dimmedOut
+    opacity: .5
+    filter: brightness(.6)
 .shadow
     box-shadow: 0 0 1px 1px var(--faint-border) !important
 .container

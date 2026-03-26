@@ -1,6 +1,6 @@
 import { useMutation, useQuery, useQueryClient } from "@tanstack/vue-query";
 import { hiveApi } from "../api/HiveApi";
-import { computed, type Ref } from "vue";
+import { computed, unref, type MaybeRef, type Ref } from "vue";
 
 export const useHiveQuery = ({
     id,
@@ -23,12 +23,12 @@ export const useHiveQuery = ({
 export const useHivesQuery = ({
     apiaryId
 }: {
-    apiaryId: number | undefined
+    apiaryId: MaybeRef<number | undefined>
 }) => {
 
     const { data: hives, isLoading, isError } = useQuery({
-        queryKey: ["hives", { apiaryId: apiaryId }],
-        queryFn:  () => hiveApi.getHives(apiaryId)
+        queryKey: computed(() => ["hives", { apiaryId: unref(apiaryId) }]),
+        queryFn:  () => hiveApi.getHives(unref(apiaryId))
     })
 
     return {

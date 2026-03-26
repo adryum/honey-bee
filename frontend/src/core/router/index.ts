@@ -87,8 +87,8 @@ const router = createRouter({
         name: RouterViewPaths.Profile,
         component: () => import('@/ui/views/ProfileView.vue'),
         props: (route) => ({
-            id:  Number(route.params.userId),
-            tab: route.params.tab as ProfileTab
+            userId: Number(route.params.userId),
+            tab:    route.params.tab as ProfileTab
         })
     },
     // {

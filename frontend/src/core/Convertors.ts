@@ -79,7 +79,8 @@ export function UserProfileResponseModel_To_UserProfileModelDB(
         id:       convertee.id,
         role:     String_to_Role(convertee.role),
         email:    convertee.email,
-        username: convertee.username
+        username: convertee.username,
+        picture:  convertee.image
     }
 }
 

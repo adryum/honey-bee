@@ -5,6 +5,7 @@ import router, { RouterViewPaths } from "../router";
 import { startSocket } from "../composables/useSocket";
 import { authApi } from "../api/AuthApi";
 import { useMutation } from "@tanstack/vue-query";
+import { profileApi } from "../api/ProfileApi";
 
 export const useAuthStore = defineStore("auth store", () => {
     const user = ref<UserModelDB | undefined>(undefined)
@@ -13,7 +14,7 @@ export const useAuthStore = defineStore("auth store", () => {
     startSocket(user)
 
     const { mutate: authenticate, isPending: isAuthenticating } = useMutation({
-        mutationFn: authApi.authenticate,
+        mutationFn: profileApi.getMe,
         onSuccess:  (userModel) => {
             user.value = userModel
             router.push(RouterViewPaths.Home)

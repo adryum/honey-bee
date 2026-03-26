@@ -63,6 +63,7 @@ export type UserProfileResponseModel = {
     picture:  string
     email:    string
     role:     string
+    image:    string
 }
 
 export type NoteCreateModelRequest = {

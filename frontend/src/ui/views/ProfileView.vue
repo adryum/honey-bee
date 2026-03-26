@@ -1,5 +1,5 @@
 <script setup lang="ts">
-import { ref, useCssModule } from "vue";
+import { computed, ref, useCssModule } from "vue";
 import Icon from "../components/Icon.vue";
 import { IconType, SVG } from "@/assets/svgs/SVGLoader";
 import AccessFragment from "../components/view_fragments/profile/AccessFragment.vue";
@@ -7,6 +7,8 @@ import { ProfileTab } from "@/core/ViewTabEnums";
 import { useRouter } from "vue-router";
 import { RouterViewPaths } from "@/core/router";
 import { useProfileQuery } from "@/core/composables/useProfile";
+import { useAuthStore } from "@/core/stores/useAuthStore";
+import { storeToRefs } from "pinia";
 
 const s = useCssModule()
 const router = useRouter()
@@ -16,6 +18,9 @@ const props = defineProps<{
 }>()
 
 const { user, isLoading, isError } = useProfileQuery(props.userId)
+
+const { user: THEUser } = storeToRefs(useAuthStore()) 
+const isTHEUser = computed(() => user.value?.id === THEUser.value?.id)
 
 function changeTab(tab: ProfileTab) {
     router.replace({
@@ -29,7 +34,10 @@ function changeTab(tab: ProfileTab) {
 </script>
 
 <template>
-<div :class="s.container">
+<div
+    v-if="user"
+    :class="s.container"
+>
     <div
         :class="s.header"
     >
@@ -37,7 +45,7 @@ function changeTab(tab: ProfileTab) {
             :class="s.topLine"
         >
             <img 
-                src="@/assets/images/axe.jpg" alt="Profile Picture" 
+                :src="user.picture || '@/assets/images/axe.jpg'" alt="Profile Picture" 
                 :class="s.img"    
             />
             <div 
@@ -46,7 +54,7 @@ function changeTab(tab: ProfileTab) {
                 <p
                     :class="s.name"
                 >
-                    Adriano kirsteino
+                    {{ user.username }}
                 </p>
                 <div
                     :class="s.row"
@@ -59,7 +67,7 @@ function changeTab(tab: ProfileTab) {
                             :type="IconType.SMALL"
                         />
                         <p>
-                            Hive manager
+                            {{ user.role }}
                         </p>
                     </div>
 
@@ -91,15 +99,15 @@ function changeTab(tab: ProfileTab) {
                 ]"
                 @click="changeTab(loopTab)"
             >
-                {{ loopTab }}
+                {{ loopTab.toSentenceCase() }}
             </button>
         </div>
 
     </div>
 
-
     <AccessFragment
-
+        v-if="tab === ProfileTab.ACCESS"
+        :user-id="user?.id"
     />
 </div>
 </template>

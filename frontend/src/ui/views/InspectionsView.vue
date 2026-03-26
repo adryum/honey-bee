@@ -24,7 +24,7 @@ const { inspectionTableEntries, nextPage, prevPage } = useInspections(filters)
     :class="s.container"
 >
     <ToolBar
-        label="Inpections"
+        label="Inspections"
     />
     <InspectionTable
         :class="s.table"

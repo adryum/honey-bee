@@ -12,6 +12,7 @@ import apiaryRoute from "./routes/Apiaries"
 import noteRoute from "./routes/Notes"
 import calendarRoute from "./routes/Calendar"
 import inspectionRoute from "./routes/Inspection"
+import profileRoute from "./routes/Profile"
 
 import express from "express";
 import cors from "cors";
@@ -68,6 +69,7 @@ async function startServer() {
     app.use("/calendar", calendarRoute)
     app.use("/apiary", apiaryRoute)
     app.use("/note", noteRoute)
+    app.use("/profile", profileRoute)
 
     // starts express server
     httpServer.listen(port, () => {

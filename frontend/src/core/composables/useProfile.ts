@@ -1,4 +1,4 @@
-import { useMutation, useQuery, useQueryClient } from "@tanstack/vue-query/build/legacy/_tsup-dts-rollup";
+import { useMutation, useQuery, useQueryClient } from "@tanstack/vue-query";
 import { profileApi } from "../api/ProfileApi";
 import { computed } from "vue";
 
