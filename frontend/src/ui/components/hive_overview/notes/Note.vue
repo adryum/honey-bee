@@ -6,6 +6,7 @@ import IconDropdown from "../../input/dropdowns/IconDropdown.vue";
 import IconTextItem from "../../input/dropdowns/dropdownItems/bottom/IconTextItem.vue";
 import type { NoteModelDB } from "@/core/stores/Models";
 import { useNoteMutations } from "@/core/composables/useNote";
+import { formatDateWithOrdinal } from "@/core/utils/Utils";
 
 const s = useCssModule()
 const props = defineProps<{
@@ -28,7 +29,7 @@ const { remove } = useNoteMutations()
             />
         </div>
         <p :class="s.date">
-            {{ note.creationDate }}
+            {{ formatDateWithOrdinal(note.creationDate) }}
         </p>
         <IconDropdown
             :class="s.button" 
@@ -73,7 +74,7 @@ const { remove } = useNoteMutations()
 
     box-sizing: border-box
     padding: 1rem
-    background: var(--light-gray)
+    background: var(--white)
     border-radius: var(--border-radius-small)
     box-shadow: 0 0 1px 0 var(--faint-border)
 

@@ -42,3 +42,10 @@ export enum HiveType {
     MOVABLE    = "MOVABLE",
     NOT_A_TYPE = "NOT_A_TYPE"
 }
+
+export enum HistoryEntryType {
+    CALENDAR   = "CALENDAR",
+    EDIT       = "EDIT",
+    NOTE       = "NOTE",
+    INSPECTION = "INSPECTION"
+}

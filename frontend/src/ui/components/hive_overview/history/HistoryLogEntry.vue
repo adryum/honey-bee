@@ -1,13 +1,25 @@
 <script setup lang="ts">
-import { useCssModule } from "vue";
+import { computed, useCssModule } from "vue";
 import Icon from "../../Icon.vue";
 import { IconType, SVG } from "@/assets/svgs/SVGLoader";
-import type { HiveHistoryEntryDB } from "@/core/stores/Models";
+import type { HistoryEntryDB } from "@/core/stores/Models";
+import { formatDateWithOrdinal } from "@/core/utils/Utils";
+import { HistoryEntryType } from "@/core/DatabaseEnums";
 
 const s = useCssModule()
 const props = defineProps<{
-    entry: HiveHistoryEntryDB
+    entry: HistoryEntryDB
 }>()
+
+const svg = computed(() => {
+    switch (props.entry.type) {
+        case HistoryEntryType.CALENDAR:   return SVG.Calendar;
+        case HistoryEntryType.EDIT:       return SVG.Pencil;
+        case HistoryEntryType.INSPECTION: return SVG.Search;
+        case HistoryEntryType.NOTE:       return SVG.Clipboard;
+             default:                     return SVG.Info;
+    }
+})
 </script>
 
 <template>
@@ -16,13 +28,13 @@ const props = defineProps<{
         :class="s.decorationPoint"
     >
         <Icon
-            :svg="SVG.Cross"
+            :svg="svg"
             :type="IconType.SMALL"
         />
     </div>
 
     <div :class="s.header">
-        <h2 :class="s.time">{{ entry.creationDate }}</h2>
+        <h2 :class="s.time">{{ formatDateWithOrdinal(entry.creationDate, true) }}</h2>
         <div :class="s.userInfo">
             <img
                 alt="user image"
@@ -65,6 +77,7 @@ const props = defineProps<{
     width: 2rem
     border-radius: 50px
     background: var(--orange)
+    color: white
 
 .header
     display: flex
@@ -92,7 +105,7 @@ const props = defineProps<{
         
 
     .name
-        font-weight: 600
+        font-weight: 400
         letter-spacing: 0.02em
 
 .container
@@ -103,7 +116,7 @@ const props = defineProps<{
     box-sizing: border-box
     border-radius: 50px
 
-    gap: .5rem
+    gap: .25rem
     // overflow: hidden
 
 
@@ -116,5 +129,6 @@ const props = defineProps<{
         margin-left: 4rem
         box-sizing: border-box
         line-height: 1.5rem
-        font-size: var(--font-size-small)
+        font-weight: 500
+        font-size: var(--font-size-medium)
 </style>

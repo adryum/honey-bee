@@ -1,5 +1,5 @@
 <script setup lang="ts">
-import { ref, useCssModule } from "vue";
+import { onMounted, ref, useCssModule } from "vue";
 
 const s = useCssModule()
 const series = ref([{ name: 'series1', data: [31,40,28,51,42,109,100] }]);
@@ -8,6 +8,8 @@ const chartOptions = ref({
     chart: {
         type: 'area',
         height: '100%',
+        redrawOnWindowResize: true,
+        redrawOnParentResize: true,  
         animations: {
             enabled: true
         }
@@ -39,10 +41,20 @@ const chartOptions = ref({
         },
     },
 });
+const chart = ref<any>(null)
+
+onMounted(() => {
+    setTimeout(() => {
+        chart.value?.chart?.windowResizeHandler()
+    }, 100)
+})
 </script>
 
 <template>
-<div id="inenesums" :class="s.container">
+<div 
+    id="inenesums" 
+    :class="s.container"
+>
     <div :class="s.header">
         <label :class="s.label" for="inenesums">
             Iensesums
@@ -55,7 +67,13 @@ const chartOptions = ref({
         margin: 0
     }">
     <div :class="s.body">
-        <ApexChart :class="s.graph" :series="series" :options="chartOptions" type="area" height="100%"/>
+        <ApexChart 
+            ref="chart"
+            :class="s.graph" 
+            :series="series" 
+            :options="chartOptions" 
+            type="area" 
+            height="100%"/>
     </div>
 </div>
 </template>
@@ -89,6 +107,7 @@ const chartOptions = ref({
             padding-left: .5rem
 
     .body
+        height: 100%
         flex: 1
         box-sizing: border-box
 

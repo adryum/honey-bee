@@ -2,7 +2,7 @@ import type { HiveModelDB } from "../stores/Models";
 import axios from "axios"
 import { HiveCreateResponse_to_HiveModelDB } from "../Convertors";
 import { isValidValue } from "../utils/others";
-import type { HiveCreateResponseModel, HiveCreateRequestModel, HiveUpdateRequestModel } from "./Models";
+import type { HiveCreateResponseModel, HiveCreateRequestModel, HiveUpdateRequestModel, HiveHistoryCreateModel, HiveHistoryGetModel } from "./Models";
 
 export const hiveApi = {
     getHives: async (
@@ -60,10 +60,7 @@ export const hiveApi = {
         const result = await axios.post<number>("/hive/delete", { id: id})        
         return result.data
     },
-    
-    createCalendarEvent: () => {
 
-    }
 
     // async function createCalendarEvent(
     //     model: HiveCalendarEntryRequestModel

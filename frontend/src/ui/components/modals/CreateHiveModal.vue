@@ -51,7 +51,7 @@ function createHive() {
     }, 
     {
         onSuccess() {
-            close()
+            modal.value?.close()
         },
     })
     

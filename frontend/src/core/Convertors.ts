@@ -1,6 +1,6 @@
 import { String_to_HiveType, String_to_NoteTypes, String_to_Role } from "./DatabaseEnums";
-import type { ApiaryAccessResponseModel, ApiaryCreateResponseModel, HiveAccessResponseModel, HiveCreateResponseModel, InspectionCreateRequestModel, InspectionEntryResponseModel, InspectionReviewResponseModel, NoteCreateModelResponse, UserEntryResponseModel, UserProfileResponseModel, WhitelistEntryResponseModel } from "./api/Models";
-import type { ApiaryModelDB, HiveModelDB, InspectionDB, InspectionFormDB, InspectionFormUI, InspectionTableEntryModel, NoteModelDB, UserEntryModelDB, UserModelDB, WhitelistEntryModelDB } from "./stores/Models";
+import type { ApiaryAccessResponseModel, ApiaryCreateResponseModel, HiveAccessResponseModel, HiveCreateResponseModel, HiveHistoryGetModel, InspectionCreateRequestModel, InspectionEntryResponseModel, InspectionReviewResponseModel, NoteCreateModelResponse, UserEntryResponseModel, UserProfileResponseModel, WhitelistEntryResponseModel } from "./api/Models";
+import type { ApiaryModelDB, HistoryEntryDB, HiveModelDB, InspectionDB, InspectionFormDB, InspectionFormUI, InspectionTableEntryModel, NoteModelDB, UserEntryModelDB, UserModelDB, WhitelistEntryModelDB } from "./stores/Models";
 
 export function ApiaryCreateResponse_to_ApiaryModelDB(
     convertee: ApiaryCreateResponseModel
@@ -217,5 +217,20 @@ export function InspectionDB_To_InspectionTableEntryModel(
         userPicture:   convertee.userPicture,
         username:      convertee.username,
         creationDate:  convertee.creationDate
+    }
+}
+
+
+export function HiveHistoryGetModel_To_HistoryEntryDB(
+    convertee: HiveHistoryGetModel
+): HistoryEntryDB {
+    return {
+        id:           convertee.id,
+        text:         convertee.text,
+        type:         convertee.type,
+        userId:       convertee.user.id,
+        username:     convertee.user.username,
+        userImage:    convertee.user.image,
+        creationDate: convertee.creationDate,
     }
 }

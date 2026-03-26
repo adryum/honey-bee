@@ -4,7 +4,7 @@ import { db, pool } from "../config/Database";
 import { Role } from "../DatabaseEnums";
 import { requireRole } from "../Middleware";
 import { isValidValue } from "../utils";
-import { eq } from "drizzle-orm";
+import { asc, desc, eq } from "drizzle-orm";
 import { apiaries, hiveInspectionForms, hiveInspections, users } from "../db/schema";
 
 const router = Router()
@@ -120,6 +120,7 @@ router.get(
             },
             offset: offset,
             limit: limit,
+            orderBy: [desc(hiveInspections.creationDate)]
         })
         console.log("Done!");
         

@@ -5,6 +5,7 @@ import SideHeader from './ui/components/navigation/SideHeader.vue';
 import TopHeader from './ui/components/navigation/TopHeader.vue';
 import { storeToRefs } from 'pinia';
 import { useAuthStore } from './core/stores/useAuthStore';
+import ActionPopupList from './ui/components/action_notifications/ActionPopupList.vue';
 
 const s = useCssModule()
 const { user } = storeToRefs(useAuthStore())
@@ -22,6 +23,7 @@ const { user } = storeToRefs(useAuthStore())
                 v-if="user"
             />
             <RouterView />
+            <ActionPopupList />
         </div> 
     </div>
 </template>

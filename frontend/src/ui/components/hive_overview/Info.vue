@@ -137,8 +137,8 @@ const { apiary } = useApiaryQuery({
         display: flex
         align-items: center
         width: 100%
-        min-height: 2rem
-        max-height: 2rem
+        min-height: 2.5rem
+        max-height: 2.5rem
         // padding: .25rem
         padding-left: .5rem
         box-sizing: border-box

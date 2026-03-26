@@ -11,8 +11,11 @@ import { HiveTab } from '@/core/ViewTabEnums';
 import { useHiveQuery } from '@/core/composables/useHive';
 import { useRouter } from 'vue-router';
 import { RouterViewPaths } from '@/core/router';
+import { useHiveHistoryQuery } from '@/core/composables/useHiveHistory';
+import type { HistoryEntryDB } from '@/core/stores/Models';
 
 const s = useCssModule()
+const router = useRouter()
 const props = defineProps<{
     id:  number,
     tab: HiveTab
@@ -20,8 +23,10 @@ const props = defineProps<{
 
 const searchText = ref("")
 const currentTab = computed<HiveTab>(() => props.tab)
-const { hive }   = useHiveQuery({ id: toRef(() => props.id) })
-const router = useRouter()
+const { hive }   = useHiveQuery({ 
+    id:      toRef(() => props.id),
+})
+
 const fragmentHeight = computed((): string => {
     switch (currentTab.value) {
         case HiveTab.Calendar: return `calc(100% -  7rem)`
@@ -61,7 +66,7 @@ onMounted(() => console.log(props.tab))
                     :while-press="{ scale: 0.98}"
                     @click="changeTab(loopTab)"
                 >
-                    {{ loopTab }}
+                    {{ loopTab.toSentenceCase() }}
                 </motion.button>
                 <Button :style="{ marginLeft: 'auto'}" text="Add Inspection"></Button>
             </div>
@@ -84,7 +89,7 @@ onMounted(() => console.log(props.tab))
         <HiveGeneralFragment
             v-if="currentTab === HiveTab.General && hive"
             :class="s.fragment"
-            :style="{ height: fragmentHeight }" 
+            :style="{ maxHeight: fragmentHeight }" 
             :hive="hive"
         /> 
 
@@ -115,6 +120,8 @@ onMounted(() => console.log(props.tab))
 .container 
     flex: 1
     box-sizing: border-box
+    min-height: 0
+    max-height: calc(100vh - var(--header-height))
 
 .fragment
     flex: 1

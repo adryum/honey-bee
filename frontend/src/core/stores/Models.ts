@@ -1,4 +1,4 @@
-import type { HiveType, NoteTypes, Role } from "../DatabaseEnums"
+import type { HistoryEntryType, HiveType, NoteTypes, Role } from "../DatabaseEnums"
 
 export type ApiaryModelDB = {
     id:          number
@@ -20,7 +20,7 @@ export type HiveModelDB = {
     creatorId:    number
     creatorName:  string
     creatorImage: string
-    history:      HiveHistoryEntryDB[]
+    history:      HistoryEntryDB[]
     calendarId:   string
     calendarEvents: CalendarEventDB[]
 }
@@ -42,9 +42,10 @@ export type NoteModelDB = {
     creationDate: string
 }
 
-export type HiveHistoryEntryDB = {
+export type HistoryEntryDB = {
     id:           number 
     text:         string 
+    type:         HistoryEntryType
     userId:       number 
     username:     string 
     userImage:    string 

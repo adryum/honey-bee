@@ -49,3 +49,10 @@ export function String_to_HiveType(convertee: string) {
             return HiveType.NOT_A_TYPE
     }
 }
+
+export enum HistoryEntryType {
+    CALENDAR   = "CALENDAR",
+    EDIT       = "EDIT",
+    NOTE       = "NOTE",
+    INSPECTION = "INSPECTION"
+}

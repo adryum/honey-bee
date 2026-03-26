@@ -6,6 +6,7 @@ import { IconType, SVG } from '@/assets/svgs/SVGLoader';
 
 const props = withDefaults(defineProps<{
     svg?: SVG
+    isImportant?: boolean
 }>(), {
     svg: SVG.Cross
 })
@@ -13,7 +14,11 @@ const s = useCssModule()
 </script>
 
 <template>
-<motion.button :class="s.container"
+<motion.button 
+    :class="[
+        s.container,
+        isImportant && s.important
+    ]"
     :while-press="{scale: 0.9}"
 >
     <Icon  
@@ -26,6 +31,11 @@ const s = useCssModule()
 
 <style module lang='sass'>
 @use '/src/assets/_colors.sass' as colors
+.important
+    &:hover
+        background: var(--orange) !important
+        color: white !important
+
 .container
     all: unset
     display: inline-flex
@@ -40,12 +50,10 @@ const s = useCssModule()
 
     transition: .1s
     border-radius: var(--border-radius-tiny)
-    // background: var(--white)
 
     &:hover
-        background: var(--orange)
-        filter: brightness(98%)
-    
+        background: var(--gray)
+        
     .icon
         height: 1rem
         width: 1rem

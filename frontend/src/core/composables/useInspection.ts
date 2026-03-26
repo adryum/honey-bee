@@ -2,6 +2,9 @@ import { keepPreviousData, useMutation, useQuery, useQueryClient } from "@tansta
 import { computed, type Ref } from "vue";
 import { inspectionApi } from "../api/InspectionApi";
 import { isValidValue } from "../utils/others";
+import { ActionType, useActionsStore } from "../stores/ActionStore";
+import { useHiveHistoryMutations } from "./useHiveHistory";
+import { HistoryEntryType } from "../DatabaseEnums";
 
 export type InspectionFilters = {
     page?:   number   
@@ -54,12 +57,33 @@ export const useInspection = (
 
 export const useInspectionMutation = () => {
     const queryClient = useQueryClient()
+    const { createPopupAction }= useActionsStore()
+    const { create: createHiveHistory } = useHiveHistoryMutations()
 
     const { mutate: create, isPending: isCreatingInspection } = useMutation({
         mutationFn: inspectionApi.create,
         onSuccess: (newInspection) => {
             console.log("Created inspection!");
             queryClient.invalidateQueries({ queryKey: ['inspections'] })
+
+            createPopupAction({
+                label: "Inspection submitted successfully!",
+                type:  ActionType.Success
+            })
+
+            newInspection.forms.map(form => 
+                createHiveHistory({
+                    hiveId: form.hiveId,
+                    text:   "Created inspection",
+                    type:   HistoryEntryType.INSPECTION
+                })
+            )
+        },
+        onError: (error) => {
+            useActionsStore().createPopupAction({
+                label: "Failed to submit inspection!",
+                type:  ActionType.Error
+            })
         }
     })
 
@@ -67,6 +91,17 @@ export const useInspectionMutation = () => {
         mutationFn: inspectionApi.remove,
         onSuccess: (id) => {
             queryClient.invalidateQueries({ queryKey: ['inspections'] })
+      
+            createPopupAction({
+                label: "Inspection removed!",
+                type:  ActionType.Success
+            })
+        },
+        onError: (error) => {
+            useActionsStore().createPopupAction({
+                label: "Failed to remove inspection!",
+                type:  ActionType.Error
+            })
         }
     })
 

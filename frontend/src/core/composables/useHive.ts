@@ -1,13 +1,12 @@
 import { useMutation, useQuery, useQueryClient } from "@tanstack/vue-query";
 import { hiveApi } from "../api/HiveApi";
 import { computed, unref, type MaybeRef, type Ref } from "vue";
+import { ActionType, useActionsStore } from "../stores/ActionStore";
 
 export const useHiveQuery = ({
     id,
-}: {
-    id: Ref<number | undefined>
-}) => {
-    const { data: hive, isLoading, isError } = useQuery({
+}: { id: Ref<number | undefined>}) => {
+    const { data: hive, isLoading: isGettingHives, isError: isGettingHivesError } = useQuery({
         queryKey: ["hives", id],
         queryFn:  () => hiveApi.getHive(id.value!),
         enabled:  computed(() => id.value !== undefined)
@@ -15,8 +14,9 @@ export const useHiveQuery = ({
 
     return {
         hive,
-        isLoading,
-        isError,
+        history,
+        isGettingHives,
+        isGettingHivesError,
     }
 }
 
@@ -40,11 +40,22 @@ export const useHivesQuery = ({
 
 export const useHiveMutations = () => {
     const queryClient = useQueryClient()
+    const { createPopupAction } = useActionsStore()
 
     const { mutate: create, isPending: isCreatingHive } = useMutation({
         mutationFn: hiveApi.createHive,
         onSuccess: (newHive) => {
             queryClient.invalidateQueries({ queryKey: ['hives'] })
+            createPopupAction({
+                label: `Created hive: ${newHive.name}`,
+                type:  ActionType.Success
+            })
+        },
+        onError: (error) => {
+            createPopupAction({
+                label: "Failed to create hive!",
+                type:  ActionType.Error
+            })
         }
     })
 
@@ -52,6 +63,16 @@ export const useHiveMutations = () => {
         mutationFn: hiveApi.deleteHive,
         onSuccess: (id) => {
             queryClient.invalidateQueries({ queryKey: ['hives'] })
+            createPopupAction({
+                label: `Deleted hive: ${id}`,
+                type:  ActionType.Success
+            })
+        },
+        onError: (error) => {
+            createPopupAction({
+                label: "Failed to delete hive!",
+                type:  ActionType.Error
+            })
         }
     })
 
@@ -59,6 +80,17 @@ export const useHiveMutations = () => {
         mutationFn: hiveApi.updateHive,
         onSuccess: (updatedHive) => {
             queryClient.invalidateQueries({ queryKey: ['hives'] })
+
+            createPopupAction({
+                label: `Updated hive: ${updatedHive.name}`,
+                type:  ActionType.Success
+            })
+        },
+        onError: (error) => {
+            createPopupAction({
+                label: "Failed to update hive!",
+                type:  ActionType.Error
+            })
         }
     })
 

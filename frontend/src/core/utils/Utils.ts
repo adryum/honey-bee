@@ -1,4 +1,8 @@
-export function formatDateWithOrdinal(dateTime: string, showHoursAndSec: boolean = false): string {
+export function formatDateWithOrdinal(
+    dateTime: string, 
+    showHoursAndMinutes: boolean = false,
+    showSeconds: boolean = false
+): string {
     const date = new Date(dateTime.replace(" ", "T"));
 
     if (isNaN(date.getTime())) {
@@ -19,7 +23,8 @@ export function formatDateWithOrdinal(dateTime: string, showHoursAndSec: boolean
     const m = String(date.getMinutes()).padStart(2, '0')
     const s = String(date.getSeconds()).padStart(2, '0')
 
-    const hoursAndSeconds = showHoursAndSec ? `${h}:${m}:${s} ` : ""
+    const hoursAndMinutes = showHoursAndMinutes ? `${h}:${m} ` : ""
+    const seconds = showSeconds ? `${s} ` : ""
 
-    return hoursAndSeconds + `${day}${suffix} ${month}, ${year}`;
+    return hoursAndMinutes + seconds + `${day}${suffix} ${month}, ${year}`;
 }

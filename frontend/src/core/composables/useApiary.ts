@@ -1,6 +1,7 @@
 import { useQueryClient, useQuery, useMutation } from "@tanstack/vue-query";
 import { apiaryApi } from "../api/ApiaryApi";
 import { computed, type Ref } from "vue";
+import { ActionType, useActionsStore } from "../stores/ActionStore";
 
 export const useApiariesQuery = () => {
     const { data: apiaries, isLoading, isError } = useQuery({
@@ -47,11 +48,23 @@ export const useApiaryQuery = (model: UseApiaryQueryModel) => {
 
 export const useApiaryMutations = () => {
     const queryClient = useQueryClient()
+    const { createPopupAction } = useActionsStore()
 
     const { mutate: create, isPending: isCreatingApiary } = useMutation({
         mutationFn: apiaryApi.createApiary,
         onSuccess: (newApiary) => {
             queryClient.invalidateQueries({ queryKey: ['apiaries'] })
+
+            createPopupAction({
+                label: `Created apiary: ${newApiary.name}`,
+                type:  ActionType.Success
+            })
+        },
+        onError: (error) => {
+            createPopupAction({
+                label: "Failed to create apiary!",
+                type:  ActionType.Error
+            })
         }
     })
 
@@ -59,6 +72,17 @@ export const useApiaryMutations = () => {
         mutationFn: apiaryApi.deleteApiary,
         onSuccess: (id) => {
             queryClient.invalidateQueries({ queryKey: ['apiaries'] })
+
+            createPopupAction({
+                label: `Deleted apiary: ${id}`,
+                type:  ActionType.Success
+            })
+        },
+        onError: (error) => {
+            createPopupAction({
+                label: "Failed to delete apiary!",
+                type:  ActionType.Error
+            })
         }
     })
 
@@ -66,6 +90,17 @@ export const useApiaryMutations = () => {
         mutationFn: apiaryApi.assignHive,
         onSuccess: (result) => {
             queryClient.invalidateQueries({ queryKey: ['hives'] })
+
+            createPopupAction({
+                label: `Assigned hive ${result.hiveId} to apiary ${result.apiaryId}`,
+                type:  ActionType.Success
+            })
+        },
+        onError: (error) => {
+            createPopupAction({
+                label: "Failed to assign hive!",
+                type:  ActionType.Error
+            })
         }
     })
 

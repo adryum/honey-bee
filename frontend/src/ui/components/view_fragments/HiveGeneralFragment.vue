@@ -1,14 +1,21 @@
 <script setup lang="ts">
-import { useCssModule } from "vue";
+import { computed, toRef, useCssModule } from "vue";
 import Info from "../hive_overview/Info.vue";
 import HoneyProfitChart from "../hive_overview/supper/HoneyProfitChart.vue";
 import HistoryLog from "../hive_overview/history/HistoryLog.vue";
-import type { HiveModelDB } from "@/core/stores/Models";
+import type { HistoryEntryDB, HiveModelDB } from "@/core/stores/Models";
+import { useHiveHistoryQuery } from "@/core/composables/useHiveHistory";
+import { HiveHistoryGetModel_To_HistoryEntryDB } from "@/core/Convertors";
 
 const s = useCssModule()
 const props = defineProps<{
     hive:       HiveModelDB
 }>()
+
+const { history } = useHiveHistoryQuery( { hiveId: toRef(() => props.hive.id) } )
+const historyEntries = computed<HistoryEntryDB[]>(
+    () => history.value?.map(HiveHistoryGetModel_To_HistoryEntryDB) ?? []
+)
 </script>
 
 <template>
@@ -22,18 +29,12 @@ const props = defineProps<{
     <HoneyProfitChart :class="s.profit"/>
     <HistoryLog 
         :class="s.log"
-        :hive="hive"
+        :entries="historyEntries"
     />
 </div>
 </template>
 
 <style module lang='sass'>
-.heightChecker
-    position: absolute
-    background: green
-    width: 10rem
-    height: 100%
-    z-index: 10
 .container
     position: relative
     display: grid
@@ -41,6 +42,7 @@ const props = defineProps<{
     grid-template-rows: 1fr 1fr
     grid-template-areas: 'profit profit info' 'profit profit log'
     gap: 1rem
+    height: 100%
 
     .image
         grid-area: image

@@ -4,12 +4,12 @@ import { useI18n } from 'vue-i18n';
 import IconCubeButton from '../../input/buttons/IconCubeButton.vue';
 import { SVG } from '@/assets/svgs/SVGLoader';
 import HistoryLogEntry from './HistoryLogEntry.vue';
-import type { HiveModelDB } from '@/core/stores/Models';
+import type { HistoryEntryDB } from '@/core/stores/Models';
 
 const s = useCssModule()
 const { t } = useI18n()
 const props = defineProps<{
-    hive: HiveModelDB
+    entries: HistoryEntryDB[]
 }>()
 </script>
 
@@ -17,10 +17,10 @@ const props = defineProps<{
 <div :class="s.container">
     <div :class="s.header">
         <label :class="s.label">{{ t("hiveOverview.actionHistory") }}</label>
-        <div :class="s.buttons">
+        <!-- <div :class="s.buttons">
             <IconCubeButton :class="s.button" :svg="SVG.Checkmark"/>
             <IconCubeButton :class="s.button" :svg="SVG.Checkmark"/>
-        </div>
+        </div> -->
     </div>
     <hr :style="{
         position: 'relative',
@@ -33,7 +33,7 @@ const props = defineProps<{
     <hr :class="s.timelapseLine">
     <div :class="s.body">
         <HistoryLogEntry
-            v-for="entry in hive.history" 
+            v-for="entry in entries" 
             :key="entry.id" 
             :entry="entry"
         />
@@ -45,7 +45,7 @@ const props = defineProps<{
 .timelapseLine
     position: absolute
     left: calc(2.5rem - 1px)
-    top: 2.8rem
+    top: 3.3rem
     bottom: 0
 
     width: 2px
@@ -64,14 +64,15 @@ const props = defineProps<{
     border-radius: var(--border-radius-small)
     box-shadow: 0 0 1px 0 var(--faint-border)
     font-family: var(--font-family)
+    min-height: 0
 
     .header
         display: flex
         align-items: center
         width: 100%
-        min-height: 2rem
-        max-height: 2rem
-        height: 2rem
+        min-height: 2.5rem
+        max-height: 2.5rem
+        height: 2.5rem
         box-sizing: border-box
         border-radius: var(--border-radius-small)
 
@@ -94,7 +95,7 @@ const props = defineProps<{
         display: flex
         flex-direction: column
 
-        gap: .5rem
+        gap: 1.5rem
         margin: .25rem
 
         box-sizing: border-box

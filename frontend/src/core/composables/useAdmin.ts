@@ -1,5 +1,6 @@
 import { useMutation, useQuery, useQueryClient } from "@tanstack/vue-query";
 import { adminApi } from "../api/AdminApi";
+import { ActionType, useActionsStore } from "../stores/ActionStore";
 
 export const useAdminQuery = () => {
     const { 
@@ -32,6 +33,7 @@ export const useAdminQuery = () => {
 
 export const useAdminMutations = () => {
     const queryClient = useQueryClient()
+    const { createPopupAction } = useActionsStore()
 
     const { mutate: getApiaryAccess, isPending: isGettingApiaryAccess } = useMutation({
         mutationFn: adminApi.getApiaryAccess,
@@ -44,20 +46,44 @@ export const useAdminMutations = () => {
         mutationFn: adminApi.getHiveAccess,
         onSuccess: (access) => {
 
+        },
+        onError: (error) => {
+            createPopupAction({
+                label: "Failed to get hive access!",
+                type:  ActionType.Error
+            })
         }
     })
 
     const { mutate: updateAccessToApiary, isPending: isUpdatingAccessToApiary } = useMutation({
         mutationFn: adminApi.updateAccessToApiary,
         onSuccess: (access) => {
-
+            createPopupAction({
+                label: "Updated apiary access!",
+                type:  ActionType.Success
+            })
+        },
+        onError: (error) => {
+            createPopupAction({
+                label: "Failed to update apiary access!",
+                type:  ActionType.Error
+            })
         }
     })
 
     const { mutate: updateAccessToHive, isPending: isUpdatingAccessToHive } = useMutation({
         mutationFn: adminApi.updateAccessToHive,
         onSuccess: (access) => {
-
+            createPopupAction({
+                label: "Updated hive access!",
+                type:  ActionType.Success
+            })
+        },
+        onError: (error) => {
+            createPopupAction({
+                label: "Failed to update hive access!",
+                type:  ActionType.Error
+            })
         }
     })
 
@@ -66,6 +92,17 @@ export const useAdminMutations = () => {
         onSuccess: async (newUserEntry) => {
             await queryClient.invalidateQueries({ queryKey: ['whitelistEntries'] })
             await queryClient.invalidateQueries({ queryKey: ["registeredUserEntries"] })
+
+            createPopupAction({
+                label: "Updated registered user entry!",
+                type:  ActionType.Success
+            })
+        },
+        onError: (error) => {
+            createPopupAction({
+                label: "Failed to update registered user entry!",
+                type:  ActionType.Error
+            })
         }
     })
 
@@ -74,6 +111,17 @@ export const useAdminMutations = () => {
         onSuccess: async (newWhitelistEntry) => {
             await queryClient.invalidateQueries({ queryKey: ['whitelistEntries'] })
             await queryClient.invalidateQueries({ queryKey: ["registeredUserEntries"] })
+
+            createPopupAction({
+                label: "Updated whitelist entry!",
+                type:  ActionType.Success
+            })
+        },
+        onError: (error) => {
+            createPopupAction({
+                label: "Failed to update whitelist entry!",
+                type:  ActionType.Error
+            })
         }
     })
 
@@ -81,6 +129,17 @@ export const useAdminMutations = () => {
         mutationFn: adminApi.addToWhitelist,
         onSuccess: async (newWhitelistEntry) => {
             await queryClient.invalidateQueries({ queryKey: ['whitelistEntries'] })
+
+            createPopupAction({
+                label: "Added whitelist entry!",
+                type:  ActionType.Success
+            })
+        },
+        onError: (error) => {
+            createPopupAction({
+                label: "Failed to add whitelist entry!",
+                type:  ActionType.Error
+            })
         }
     })
 
@@ -89,6 +148,17 @@ export const useAdminMutations = () => {
         onSuccess: async (id) => {
             await queryClient.invalidateQueries({ queryKey: ['whitelistEntries'] })
             await queryClient.invalidateQueries({ queryKey: ["registeredUserEntries"] })
+            
+            createPopupAction({
+                label: "Removed whitelist entry!",
+                type:  ActionType.Success
+            })
+        },
+        onError: (error) => {
+            createPopupAction({
+                label: "Failed to remove whitelist entry!",
+                type:  ActionType.Error
+            })
         }
     })
 

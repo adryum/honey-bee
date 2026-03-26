@@ -132,7 +132,7 @@ onMounted(() => {
     flex-direction: column
 
     background: var(--white)
-    height: calc( 100vh - 5rem )
+    height: calc( 100vh - 5.5rem )
 
 .form
     overflow-y: scroll
@@ -211,10 +211,10 @@ onMounted(() => {
     display: grid
     grid-template-columns: 1fr 25rem
     grid-template-rows: 1fr
-    gap: .5rem
+    gap: 1rem
 
     padding: 1rem
     box-sizing: border-box
-    height: calc( 100vh - 3rem )
+    height: calc( 100vh - var(--header-height) )
     width: 100%
 </style>

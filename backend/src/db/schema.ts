@@ -1,5 +1,6 @@
 import { mysqlTable, mysqlSchema, AnyMySqlColumn, index, foreignKey, primaryKey, bigint, varchar, text, timestamp, int, mysqlEnum, datetime, tinyint } from "drizzle-orm/mysql-core"
 import { sql } from "drizzle-orm"
+import { HistoryEntryType } from "../DatabaseEnums";
 
 export const apiaries = mysqlTable("apiaries", {
 	id: bigint({ mode: "number" }).autoincrement().notNull(),
@@ -57,15 +58,13 @@ export const hiveInspections = mysqlTable("hive_inspections", {
 ]);
 
 export const hivehistory = mysqlTable("hivehistory", {
-	id: bigint({ mode: "number" }).autoincrement().notNull(),
-	text: varchar({ length: 200 }),
-	userId: bigint({ mode: "number" }).references(() => users.id, { onDelete: "cascade" } ),
-	hiveId: bigint({ mode: "number" }).references(() => hives.id, { onDelete: "cascade" } ),
-	creationDate: timestamp({ mode: 'string' }),
-},
-(table) => [
-	primaryKey({ columns: [table.id], name: "hivehistory_id"}),
-]);
+    id: bigint({ mode: "number" }).autoincrement().notNull().primaryKey(),
+    type: mysqlEnum(HistoryEntryType).notNull(),
+    text: varchar({ length: 200 }),
+    userId: bigint({ mode: "number" }).references(() => users.id, { onDelete: "cascade" }),
+    hiveId: bigint({ mode: "number" }).references(() => hives.id, { onDelete: "cascade" }),
+    creationDate: timestamp({ mode: 'string' }),
+});
 
 export const hives = mysqlTable("hives", {
 	id: bigint({ mode: "number" }).autoincrement().notNull(),

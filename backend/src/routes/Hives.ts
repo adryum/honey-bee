@@ -155,49 +155,6 @@ router.get(
     }
 })
 
-router.post('/history/create', requireRole([Role.ANY]), async (
-    req: Request<{},{},{
-        hiveid:    number
-        text:      string
-        creatorId: number
-    }>, 
-    res: Response
-) => {
-    console.log("# Create hive history entry");
-    const { hiveid, creatorId, text } = req.body
-    const creationDate = getCurrentUTCDateString()
-    
-    try {
-        console.log("Creating history entry...");
-        const [hiveHistoryInsertResult] = await pool.query<ResultSetHeader>(`
-            INSERT INTO hives
-            VALUES (
-                text = ?,
-                userId = ?,
-                hiveId = ?,
-                creationDate = ?
-            )`, 
-            [text, creatorId, hiveid, creationDate]
-        )
-        console.log("Done!");
-
-        console.log("Getting new entry data...");
-        const [[hiveHistoryGetResult]] = await pool.query<RowDataPacket[]>(`
-            SELECT * 
-            FROM hiveHistory 
-            WHERE id = ?
-            LIMIT 1`,
-            [hiveHistoryInsertResult.insertId]
-        )
-        console.log("Done!");
-        
-        res.status(200).json( hiveHistoryGetResult )
-    } catch (err) {
-        console.error(err);
-        res.status(500).send('Server error');
-    }
-})
-
 router.post('/update', requireRole([Role.ADMINISTRATOR, Role.APIARY_MAINTAINER]), upload.single("image"), async (
     req: Request<{},{},{
         id:          number
@@ -259,13 +216,18 @@ router.post('/update', requireRole([Role.ADMINISTRATOR, Role.APIARY_MAINTAINER])
 })
 
 // creates hive
-router.post('/create', requireRole([Role.ADMINISTRATOR, Role.APIARY_MAINTAINER]), upload.single("image"), async (req: Request<{},{},{
-    name:        string
-    description: string
-    type:        string
-    apiaryId:    number
-}>, 
-    res: Response
+router.post(
+    '/create', 
+    requireRole([Role.ADMINISTRATOR, Role.APIARY_MAINTAINER]), 
+    upload.single("image"), 
+    async (
+        req: Request<{},{},{
+            name:        string
+            description: string
+            type:        string
+            apiaryId:    number
+        }>, 
+        res: Response
 ) => {
     console.log("# Create hive");
     

@@ -1,5 +1,5 @@
-import type { HiveType, NoteTypes, Role } from "../DatabaseEnums"
-import type { HiveHistoryEntryDB } from "../stores/Models"
+import type { HistoryEntryType, HiveType, NoteTypes, Role } from "../DatabaseEnums"
+import type { HistoryEntryDB } from "../stores/Models"
 
 export type ApiaryCreateRequestModel = {
     name:        string
@@ -36,7 +36,7 @@ export type HiveCreateResponseModel = {
     creatorId:    number
     creatorName:  string
     creatorImage: string
-    history:      HiveHistoryEntryDB[]
+    history:      HistoryEntryDB[]
     calendarId:   string
 }
 
@@ -257,4 +257,23 @@ export type InspectionReviewResponseModel = {
             name: string
         }
     }[]
+}
+
+export type HiveHistoryCreateModel = {
+    hiveId: number
+    text:   string
+    type:   HistoryEntryType
+}
+
+export type HiveHistoryGetModel = {
+    id:           number
+    hiveId:       number
+    type:         HistoryEntryType
+    text:         string
+    creationDate: string
+    user:         {
+        id:       number
+        username: string
+        image:  string
+    }
 }

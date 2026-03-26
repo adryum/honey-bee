@@ -7,10 +7,13 @@ import IconTextItem from "../input/dropdowns/dropdownItems/bottom/IconTextItem.v
 import type { DropdownModel } from "@/core/models/Models";
 import { storeToRefs } from "pinia";
 import { Role } from "@/core/DatabaseEnums";
-import router, { RouterViewPaths } from "@/core/router";
+import { RouterViewPaths } from "@/core/router";
 import { useAuthStore } from "@/core/stores/useAuthStore";
+import { ProfileTab } from "@/core/ViewTabEnums";
+import { useRouter } from "vue-router";
 
 const s = useCssModule()
+const router = useRouter()
 const authStore = useAuthStore()
 const { logout } = authStore
 const { user } = storeToRefs(authStore)
@@ -49,7 +52,7 @@ function onClick(dropdown: DropdownModel, destination: SettingDestination) {
     dropdown.isShown.value = false
 
     switch (destination.name) {
-        case "Profile":     break;
+        case "Profile":     router.push(`/profile/${user.value?.id}/${ProfileTab.GENERAL}`); break;
         case "Settings":    break;
         case "Logout":      logout(); break;
         case "Admin Panel": router.push(RouterViewPaths.Admin); break;
