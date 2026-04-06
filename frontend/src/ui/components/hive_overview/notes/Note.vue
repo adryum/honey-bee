@@ -90,7 +90,7 @@ const { remove } = useNoteMutations()
             height: 2rem
             width: 2rem
 
-            background: var(--yellow)
+            background: var(--orange)
             border-radius: var(--border-radius-small)
             box-shadow: 0 1px 1px 0 var(--faint-border)
 

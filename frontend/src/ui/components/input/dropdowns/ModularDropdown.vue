@@ -70,8 +70,8 @@ const teleportTargetExists = computed(() => !!tpTargetId.value)
             :style="{ 
                 ...floaterStyle, 
                 boxShadow: `0 0 5px 0 ${props.color || 'var(--dark)'}`,
-                width: `calc(${floaterStyle.width} - 2px)`,
-                left: `calc(${floaterStyle.left} - 1px)`
+                width: `calc(${floaterStyle.width} )`,
+                left: `calc(${floaterStyle.left})`
             }"
         >
             <slot 

@@ -24,9 +24,9 @@ export type PlainMessagePopupCreateModel = {
 }
 
 export enum ActionType {
-    Info    = "yellow",
-    Error   = "Red",
-    Success = "#84d847"
+    Info    = "var(--yellow)",
+    Error   = "var(--red)",
+    Success = "var(--green)"
 }
 
 export type ActionModel = {

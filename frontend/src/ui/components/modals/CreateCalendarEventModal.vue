@@ -156,7 +156,7 @@ const { create } = usePopupCreator({
 
     &:hover
         background: var(--white)
-        box-shadow: 0 0 0 2px var(--yellow)
+        box-shadow: 0 0 0 2px var(--orange)
 
 
 .title

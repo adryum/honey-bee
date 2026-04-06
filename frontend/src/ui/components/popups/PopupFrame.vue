@@ -101,7 +101,7 @@ const objStyle = computed(() => {
         display: flex
         align-items: center
         height: 2.5rem
-        background: var(--yellow)
+        background: var(--orange)
         
         // padding: .5rem
         padding-left: 1rem

@@ -196,7 +196,7 @@ const { style: gridStyle } = useFlexibleGrid({
         display: flex
         align-items: center
         height: 2.5rem
-        background: var(--yellow)
+        background: var(--orange)
         border-radius: var(--border-radius-medium) var(--border-radius-medium) 0 0
         overflow: hidden
         // padding: .5rem
@@ -301,5 +301,5 @@ const { style: gridStyle } = useFlexibleGrid({
 
 
 .selected
-    background: var(--yellow) !important
+    background: var(--orange) !important
 </style>

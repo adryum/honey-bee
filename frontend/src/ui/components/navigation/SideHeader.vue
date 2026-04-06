@@ -132,6 +132,7 @@ onMounted(() => {
     flex-direction: column
     width: 6rem
     height: calc(100vh - var(--header-height))
+    // background: var(--white)
 
     .tip
         height: 3rem

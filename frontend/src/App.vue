@@ -34,7 +34,6 @@ const { user } = storeToRefs(useAuthStore())
     flex-direction: column
     background:  color-mix(in srgb, var(--black) 5%, var(--white) )
 
-
 .flex
     flex: 1
     display: flex

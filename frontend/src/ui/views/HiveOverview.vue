@@ -63,12 +63,11 @@ onMounted(() => console.log(props.tab))
                         s.button, 
                         loopTab === currentTab && s.selected
                     ]"
-                    :while-press="{ scale: 0.98}"
                     @click="changeTab(loopTab)"
                 >
                     {{ loopTab.toSentenceCase() }}
                 </motion.button>
-                <Button :style="{ marginLeft: 'auto'}" text="Add Inspection"></Button>
+                <Button :style="{ marginLeft: 'auto', alignSelf: 'center' }" text="Add Inspection"></Button>
             </div>
 
 
@@ -149,7 +148,7 @@ onMounted(() => console.log(props.tab))
         opacity: 0
 
         box-sizing: border-box
-        box-shadow: inset 0 1px 1px 0 var(--faint-border)
+        // box-shadow: inset 0 0 2px 0 var(--faint-border)
 
         gap: .2rem
 
@@ -164,27 +163,25 @@ onMounted(() => console.log(props.tab))
         display: flex
         min-height: 2.5rem
         max-height: 2.5rem
-        align-items: center
+        
         font-family: var(--font-family)
         font-size: var(--font-size-medium)
         font-weight: 500
-
-        padding: .25rem
         box-sizing: border-box
-        gap: .25rem
+        border-bottom: 1px solid var(--faint-border)
 
         .button
             all: unset
             position: relative
-            height: 100%
+            min-height: 100%
             box-sizing: border-box
             padding: .5rem 1rem
-            height: 2rem
-            border-radius: 2px
             cursor: pointer
             transition: .2s
-            opacity: .7
-            letter-spacing: .02em
+            color: #888
+
+            font-weight: 500
+            letter-spacing: .04em
 
             &::before
                 position: absolute
@@ -193,20 +190,19 @@ onMounted(() => console.log(props.tab))
                 height: 2px
                 
                 left: 0
-                bottom: 0
+                bottom: -1px
                 transition: .2s
-                border-radius: 100rem
 
 
             &.selected
-                opacity: 1
+                color: var(--black)
                 
                 &::before
                     background: var(--orange)
 
 
             &:hover
-                opacity: 1
+                color: var(--black)
                 backdrop-filter: brightness(90%)
 
         .verticalSpacer

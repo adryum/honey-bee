@@ -190,7 +190,7 @@ onMounted(() => {
 
 
 .today
-    background: var(--yellow)
+    background: var(--orange)
     // border: 5px solid rgba(20, 180, 20, .2)
 
 .weekend

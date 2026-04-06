@@ -111,11 +111,11 @@ onMounted(() => {
     box-shadow: inset 0 0 0 1px #E0E0E0
     border-radius: 6px
     background: var(--white)
-    outline: 0 solid color-mix(in srgb, var(--yellow) 20%, transparent);
+    outline: 0 solid color-mix(in srgb, var(--orange) 20%, transparent);
 
     &:focus     
-        outline: 2px solid color-mix(in srgb, var(--yellow) 20%, transparent);
-        box-shadow: inset 0 0 0 1px var(--yellow) !important
+        outline: 2px solid color-mix(in srgb, var(--orange) 20%, transparent);
+        box-shadow: inset 0 0 0 1px var(--orange) !important
 
     &.incorrect
         box-shadow: inset 0 0 0 1px var(--red)

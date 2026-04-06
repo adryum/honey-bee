@@ -139,7 +139,7 @@ const props = withDefaults(defineProps<{
             width: 2rem
             height: 2rem
             margin: .5rem
-            background: var(--yellow)
+            background: var(--orange)
             border-radius: var(--border-radius-big)
             box-shadow: 0 1px 0 0 var(--faint-border)
 
@@ -153,6 +153,6 @@ const props = withDefaults(defineProps<{
             object-fit: cover
             box-sizing: border-box
             // border-radius: var(--border-radius-small)
-            background: var(--yellow)
+            background: var(--orange)
 
 </style>

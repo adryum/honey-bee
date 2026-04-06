@@ -1,8 +1,6 @@
 <script setup lang="ts">
 import { useCssModule } from 'vue';
 import { useI18n } from 'vue-i18n';
-import IconCubeButton from '../../input/buttons/IconCubeButton.vue';
-import { SVG } from '@/assets/svgs/SVGLoader';
 import HistoryLogEntry from './HistoryLogEntry.vue';
 import type { HistoryEntryDB } from '@/core/stores/Models';
 
@@ -49,7 +47,7 @@ const props = defineProps<{
     bottom: 0
 
     width: 2px
-    background: var(--yellow)
+    background: var(--orange)
     border: none
 
 .container
