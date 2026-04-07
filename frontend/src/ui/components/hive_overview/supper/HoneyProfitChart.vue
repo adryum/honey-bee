@@ -68,7 +68,7 @@ onMounted(() => {
         </label>
     </div>
     <hr :style="{
-        height: '1px',
+        minHeight: '1px',
         border: 'none',
         background: 'rgba(0,0,0,.2)',
         margin: 0

@@ -9,6 +9,7 @@ import { RouterViewPaths } from "@/core/router";
 import { useProfileQuery } from "@/core/composables/useProfile";
 import { useAuthStore } from "@/core/stores/useAuthStore";
 import { storeToRefs } from "pinia";
+import { Role } from "@/core/DatabaseEnums";
 
 const s = useCssModule()
 const router = useRouter()
@@ -18,9 +19,18 @@ const props = defineProps<{
 }>()
 
 const { user, isLoading, isError } = useProfileQuery(props.userId)
-
 const { user: THEUser } = storeToRefs(useAuthStore()) 
 const isTHEUser = computed(() => user.value?.id === THEUser.value?.id)
+
+const showedTabs = computed(() => {
+    var tabs = Object.values(ProfileTab)
+
+    if (THEUser.value?.role !== Role.ADMINISTRATOR) {
+        tabs = tabs.filter(tab => tab !== ProfileTab.ACCESS)
+    }
+
+    return tabs
+})
 
 function changeTab(tab: ProfileTab) {
     router.replace({
@@ -91,7 +101,7 @@ function changeTab(tab: ProfileTab) {
             :class="s.navigation"
         >
             <button
-                v-for="loopTab in Object.values(ProfileTab)"
+                v-for="loopTab in showedTabs"
                 :key="loopTab"
                 :class="[
                     s.button,

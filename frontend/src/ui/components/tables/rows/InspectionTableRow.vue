@@ -33,14 +33,15 @@ function openInspection(id: number) {
     :key="entry.id"
 >
     <td 
-        :class="s.nr"
+        :class="[s.nr]"
     >
-        <p :class="s.columnText">{{ orderNumber + 1 }}</p>
+        <p :class="s.text" >{{ orderNumber + 1 }}</p>
     </td>
     <td 
         :class="s.email"
     >
         <p 
+            :class="s.text" 
             :style="{
                 display: 'flex',
                 alignItems: 'center',
@@ -53,7 +54,8 @@ function openInspection(id: number) {
     <td
         :class="s.inspectedHiveCount"
     >
-    <p 
+        <p
+            :class="s.text" 
             :style="{
                 display: 'flex',
                 alignItems: 'center',
@@ -67,10 +69,14 @@ function openInspection(id: number) {
         :class="s.hasBeenProcessed"
     >
         <p 
+            :class="[
+                s.text, 
+                s.tag, 
+                entry.processed ? s.true : s.false
+            ]" 
             :style="{
                 display: 'flex',
                 alignItems: 'center',
-                height: '100%',
             }"
         >
             {{ entry.processed }} 
@@ -80,6 +86,7 @@ function openInspection(id: number) {
         :class="s.creator"
     >
         <p 
+            :class="s.text" 
             :style="{
                 display: 'flex',
                 alignItems: 'center',
@@ -93,6 +100,7 @@ function openInspection(id: number) {
         :class="s.creationDate"
     >
         <p 
+            :class="s.text" 
             :style="{
                 display: 'flex',
                 alignItems: 'center',
@@ -141,13 +149,36 @@ function openInspection(id: number) {
     box-sizing: border-box
     background: var(--white)
     gap: .5rem
+
+
     min-height: 3rem
     height: 3rem
     max-height: 3rem
     font-weight: 300
-    opacity: .8
 
+.text
+    font-family: var(--font-family)
+    font-size: var(--font-size-medium)
+    letter-spacing: .02em
+    font-weight: 400
+    color: #444
 
+.tag
+    border-radius: var(--border-radius-tiny)
+    background: var(--black)
+    color: var(--white)
+    padding: .25rem .75rem
+    font-weight: 500
+    letter-spacing: .02em
+    text-transform: capitalize
+
+    &.true
+        background: var(--orange)
+        color: var(--black)
+
+    &.false
+        background: var(--black)
+        color: var(--white)
 td
     padding: 0
     height: 100%
@@ -159,9 +190,12 @@ td
     min-width: 3rem
 
 .hasBeenProcessed
+    display: flex
+    align-items: center
     min-width: 15rem
 .inspectedHiveCount
     min-width: 10rem
+
 .email
     width: 100%
 

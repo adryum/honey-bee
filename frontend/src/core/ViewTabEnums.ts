@@ -9,3 +9,8 @@ export enum ProfileTab {
     GENERAL = "general",
     ACCESS  = "access"
 }
+
+export enum AdminTab {
+    Whitelist = "whitelist",
+    Users     = "users",
+}

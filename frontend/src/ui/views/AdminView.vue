@@ -2,57 +2,60 @@
 import { ref, useCssModule } from "vue";
 import WhitelistFragment from "../components/view_fragments/admin/WhitelistFragment.vue";
 import UserlistFragment from "../components/view_fragments/admin/UserlistFragment.vue";
+import Navbar from "../components/Navbar.vue";
+import { AdminTab } from "@/core/ViewTabEnums";
+import { SVG } from "@/assets/svgs/SVGLoader";
+import CreateWhitelistEntryModal from "../components/modals/CreateWhitelistEntryModal.vue";
+import type { ModalBaseModel } from "@/core/composables/useModalBase";
+import IconTextButton from "../components/input/buttons/IconTextButton.vue";
 
-enum AdminFragment {
-    Whitelist = "Whitelist",
-    Users     = "Users",
-    // Access    = "Access"
-}
 const s = useCssModule()
-const seletedFragment = ref<AdminFragment>(AdminFragment.Whitelist)
+const seletedTab = ref<AdminTab>(AdminTab.Whitelist)
+const createWhitelistEntry = ref<ModalBaseModel | undefined>()
 
 </script>
 
 <template>
 <div :class="s.container">
-    <div :class="s.header">
-        <button
-            v-for="item in Object.values(AdminFragment)"
-            :class="[
-                s.button,
-                seletedFragment === item && s.selected
-            ]"
-            @click="seletedFragment = item"
-        >
-            <p>{{ item }}</p>
-        </button>
-    </div>
+    <Navbar 
+        :tabs="Object.values(AdminTab)" 
+        :selectedTab="seletedTab" 
+        @changeTab="(e) => seletedTab = e"
+    >
+        <IconTextButton
+            v-if="seletedTab === AdminTab.Whitelist"
+            text="Add entry"
+            :svg="SVG.Plus"
+            @click="createWhitelistEntry?.open()"
+        />
+    </Navbar>
 
     <WhitelistFragment
-        v-if="seletedFragment === AdminFragment.Whitelist"
+        v-if="seletedTab === AdminTab.Whitelist"
     />
 
     <UserlistFragment
-        v-if="seletedFragment === AdminFragment.Users"
+        v-if="seletedTab === AdminTab.Users"
+    />
+
+
+    <CreateWhitelistEntryModal
+        ref="createWhitelistEntry"
     />
 </div>
 </template>
 
 <style module lang='sass'>
-.header
-    width: 100%
-    // border-bottom: 4px solid var(--white)
 
 .selected
     background: var(--white) !important
-    transform:  translateY(0)
     & > *
         opacity: 1 !important
 
 .button
     margin:         0
     border:         none
-    background:     var(--dark)
+    background:     var(--black)
     padding:        0 1rem
     height:         2rem
     letter-spacing: .02em
@@ -78,4 +81,5 @@ const seletedFragment = ref<AdminFragment>(AdminFragment.Whitelist)
     width:          100%
     padding:        1rem
     box-sizing:     border-box
+    gap: 1rem
 </style>

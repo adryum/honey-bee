@@ -1,7 +1,6 @@
 <script setup lang="ts">
 import { SVG } from "@/assets/svgs/SVGLoader";
 import { computed, useCssModule } from "vue";
-import IconCubeButton from "../input/buttons/IconCubeButton.vue";
 import ModularDropdown from "../input/dropdowns/ModularDropdown.vue";
 import IconTextItem from "../input/dropdowns/dropdownItems/bottom/IconTextItem.vue";
 import type { DropdownModel } from "@/core/models/Models";
@@ -11,6 +10,7 @@ import { RouterViewPaths } from "@/core/router";
 import { useAuthStore } from "@/core/stores/useAuthStore";
 import { ProfileTab } from "@/core/ViewTabEnums";
 import { useRouter } from "vue-router";
+import IconCubeButton from "../input/buttons/IconCubeButton.vue";
 
 const s = useCssModule()
 const router = useRouter()

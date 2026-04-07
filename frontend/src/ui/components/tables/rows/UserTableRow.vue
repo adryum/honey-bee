@@ -65,6 +65,7 @@ function cancel() {
     >
         <p 
             v-if="!isEditingRow"
+            :class="s.text"
             :style="{
                 display: 'flex',
                 alignItems: 'center',
@@ -76,7 +77,7 @@ function cancel() {
         <input 
             v-else
             type="text"
-            :class="s.input"
+            :class="[s.input, s.text]"
             v-model="editableEntry.email"
         >
     </td>
@@ -91,6 +92,7 @@ function cancel() {
         >
             <template #head="{dropdown}">
                 <TableRowSelectionDropdownTopPart
+            :class="s.text"
                     :dropdown="dropdown"
                     :selectedValue="editableEntry.role"
                     :showIcon="isEditingRow"
@@ -118,6 +120,7 @@ function cancel() {
         >
             <template #head="{dropdown}">
                 <TableRowSelectionDropdownTopPart
+                    :class="s.text"
                     :dropdown="dropdown"
                     :selectedValue="editableEntry.isWhitelisted ? 'Yes' : 'No'"
                     :showIcon="isEditingRow"
@@ -126,11 +129,13 @@ function cancel() {
             </template>
             <template #list="{dropdown}">
                 <TextDropdownBottomPart
+                    :class="s.text"
                     :dropdown="dropdown" 
                     text="Allowed"
                     @click="editableEntry.isWhitelisted = true"
                 />
                 <TextDropdownBottomPart 
+                    :class="s.text"
                     :dropdown="dropdown" 
                     text="Denied"
                     @click="editableEntry.isWhitelisted = false"
@@ -166,14 +171,23 @@ function cancel() {
 </template>
 
 <style module lang='sass'>
+.text
+    font-family: var(--font-family)
+    font-size: var(--font-size-medium)
+    letter-spacing: .02em
+    font-weight: 400
+    color: #444
+
 .edited
     background: var(--gray) !important
 .input
-    all:        unset
+    background: transparent
+    border: none
+    margin: 0
+    padding: 0
     width:      100%
     height:     100%
     box-sizing: border-box
-    font-size:  var(--font-size-medium)
 
 .row
     display:     flex
@@ -184,9 +198,6 @@ function cancel() {
     min-height:  2.5rem
     height:      2.5rem
     max-height:  2.5rem
-    font-weight: 300
-    opacity:     .8
-
 
 td
     padding: 0

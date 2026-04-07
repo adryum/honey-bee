@@ -51,13 +51,14 @@ function cancel() {
     <td 
         :class="s.nr"
     >
-        <p :class="s.columnText">{{ orderNumber + 1 }}</p>
+        <p :class="s.text">{{ orderNumber + 1 }}</p>
     </td>
     <td 
         :class="s.email"
     >
         <p 
             v-if="!isEditingRow"
+            :class="s.text"
             :style="{
                 display: 'flex',
                 alignItems: 'center',
@@ -69,7 +70,7 @@ function cancel() {
         <input 
             v-else
             type="text"
-            :class="s.input"
+            :class="[s.input, s.text]"
             v-model="editableEntry.email"
         >
     </td>
@@ -84,6 +85,7 @@ function cancel() {
         >
             <template #head="{dropdown}">
                 <TableRowSelectionDropdownTopPart
+                    :class="s.text"
                     :dropdown="dropdown"
                     :selectedValue="editableEntry.role"
                     :showIcon="isEditingRow"
@@ -93,6 +95,7 @@ function cancel() {
             <template #list="{dropdown}">
                 <TextDropdownBottomPart
                     v-for="role in Object.values(Role).filter(role => role !== Role.NOT_A_ROLE)"
+                    :class="s.text"
                     :dropdown="dropdown" 
                     :text="role"
                     @click="editableEntry.role = role"
@@ -111,6 +114,7 @@ function cancel() {
         >
             <template #head="{dropdown}">
                 <TableRowSelectionDropdownTopPart
+                    :class="s.text"
                     :dropdown="dropdown"
                     :selectedValue="editableEntry.isEnabled ? 'Allowed' : 'Denied'"
                     :showIcon="isEditingRow"
@@ -119,11 +123,13 @@ function cancel() {
             </template>
             <template #list="{dropdown}">
                 <TextDropdownBottomPart
+                    :class="s.text"
                     :dropdown="dropdown" 
                     text="Allowed"
                     @click="editableEntry.isEnabled = true"
                 />
                 <TextDropdownBottomPart 
+                    :class="s.text"
                     :dropdown="dropdown" 
                     text="Denied"
                     @click="editableEntry.isEnabled = false"
@@ -160,27 +166,37 @@ function cancel() {
 </template>
 
 <style module lang='sass'>
+.text
+    font-family: var(--font-family)
+    font-size: var(--font-size-medium)
+    letter-spacing: .02em
+    font-weight: 400
+    color: #444
+
 .edited
     background: var(--gray) !important
 .input
-    all: unset
+    background: transparent
+    border: none
+    margin: 0
+    padding: 0
+    &:focus
+        outline: none
+
     width: 100%
     height: 100%
     box-sizing: border-box
     font-size: var(--font-size-medium)
 
 .row
-    display: flex
+    display:     flex
     align-items: center
-    box-sizing: border-box
-    background: var(--white)
-    gap: .5rem
-    min-height: 2.5rem
-    height: 2.5rem
-    max-height: 2.5rem
-    font-weight: 300
-    opacity: .8
-
+    box-sizing:  border-box
+    background:  var(--white)
+    gap:         .5rem
+    min-height:  2.5rem
+    height:      2.5rem
+    max-height:  2.5rem
 
 td
     padding: 0

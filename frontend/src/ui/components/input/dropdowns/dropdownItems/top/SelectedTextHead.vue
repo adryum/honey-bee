@@ -2,8 +2,8 @@
 import { IconType, SVG } from "@/assets/svgs/SVGLoader";
 import type { DropdownModel } from "@/core/models/Models";
 import { computed, onMounted, ref, useCssModule } from "vue";
-import IconButton from "../../../buttons/IconButton.vue";
 import type { FieldValidee } from "@/core/composables/useFormValidator";
+import IconCubeButton from "../../../buttons/IconCubeButton.vue";
 
 const s = useCssModule()
 const props = withDefaults(defineProps<{
@@ -41,7 +41,7 @@ onMounted(() => {
                 selection === '' && s.placeholder
             ]"
         > {{ selection || "selection" }}</p>
-        <IconButton
+        <IconCubeButton
             :class="s.button"
             :style="dropdown.isShown.value ? { transform: 'rotateZ(180deg)' } : {}"
             :svg="SVG.DropdownArrow"

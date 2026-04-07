@@ -89,7 +89,7 @@ router.get(
             const [user] = await pool.query<ResultSetHeader>(`
                 INSERT INTO users
                 (username, image, email, providerSub, provider, googleRefreshToken, role, isWhitelisted)
-                VALUES(?,?,?,?,?,?,?)`, 
+                VALUES(?,?,?,?,?,?,?, ?)`, 
                 [payload?.name, payload?.picture, payload?.email, payload?.sub, "GOOGLE", tokens.refresh_token, whitelistedUserQuery!.role, true]
             )
             console.log("Made new user!");

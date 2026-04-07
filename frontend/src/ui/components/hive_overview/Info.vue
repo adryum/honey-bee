@@ -28,12 +28,14 @@ const { apiary } = useApiaryQuery({
             />
         </div>
     </div>
+
     <hr :style="{
-        height: '1px',
+        minHeight: '1px',
         border: 'none',
         background: 'rgba(0,0,0,.2)',
         margin: 0
     }">
+
     <div :class="s.body">
         <p
             :class="s.name"
@@ -93,34 +95,33 @@ const { apiary } = useApiaryQuery({
     margin-top: .5rem
     font-size: var(--font-size-large)
     font-weight: 700
-    letter-spacing: .02em
+    letter-spacing: .04em
 .description
     margin-top: 1rem
     margin-bottom: 1rem
-    font-size: var(--font-size-small)
-    font-weight: 300
+    font-size: var(--font-size-medium)
+    color: var(--black)
+    font-weight: 400
     line-height: 1.5rem
     letter-spacing: .02em
 
 .grid
     margin-top: auto
     display: grid
-    grid-template-columns: 10rem 1fr
-    gap: 1rem
+    grid-template-columns: 1fr 1.5fr
+    row-gap: 1rem
 
 .gridLabels
     font-size: var(--font-size-medium)
-    font-weight: 300
-    color: var(--black)
+    font-weight: 400
+    color: #666
     letter-spacing: .02em
-    opacity: .8
 
 .gridValues
     font-size: var(--font-size-medium)
     font-weight: 500
     color: var(--black)
     letter-spacing: .02em
-
 
 .container
     display: flex
@@ -161,94 +162,12 @@ const { apiary } = useApiaryQuery({
         flex-direction: column
 
 
-        padding: .5rem
+        padding: 1rem
         // gap: 1rem
         // gap: .5rem
         box-sizing: border-box
         overflow: auto
 
         font-family: var(--font-family)
-        
 
-        .imageSide
-            grid-area: image
-            overflow: hidden
-            // background: rgba(0, 0, 0, .3)
-            margin: .25rem
-
-            img
-                border-radius: var(--border-radius-tiny)
-                width: 100%
-                height: 100%
-                object-fit: cover
-
-        .dataSide
-            grid-area: data
-            display: flex
-            flex-direction: column
-
-
-
-            // gap: .5rem
-            box-sizing: border-box
-            font-family: var(--font-family)
-
-            .labelGeneral
-                // background: rgba(200, 200, 220, .5)
-                display: flex
-                align-items: center
-                gap: .5rem
-                height: 2rem
-                max-height: 2rem
-                box-sizing: border-box
-                background: #f1f1f1
-                font-size: var(--font-size-small)
-                line-height: 1rem
-
-                padding: .5rem
-                border-radius: var(--border-radius-tiny)
-
-                .labelText
-                    line-height: 1rem
-
-
-            .grid
-                display: grid
-                grid-template-areas: 'nameLabel name' 'locationLabel location' 'typeLabel type' 'descriptionLabel description' 
-                grid-template-rows: 2rem 2rem 2rem auto
-                grid-template-columns: 8rem 1fr
-                row-gap: .25rem
-                box-sizing: border-box
-                padding: .5rem
-
-                & > *
-                    // display: flex
-                    // align-items: center
-                    padding: .5rem 0 
-
-                .label
-                    font-size: var(--font-size-small)
-                    font-weight: 500
-                    color: var(--black)
-                    letter-spacing: .02em
-                    opacity: .9
-                .text
-                    font-size: var(--font-size-small)
-                    font-weight: 300
-                    line-height: 1rem
-                    color: black
-                    opacity: 1
-                    // background: var(--gray)
-                    // border-left: 2px solid var(--faint-border)
-                    padding-left: .5rem
-                    border-radius: var(--border-radius-tiny)
-
-                .description
-                    min-height: 0
-                    overflow-y: scroll
-
-            .entry
-                padding: .5rem
-                background: var(--white)
-                border-radius: var(--border-radius-tiny)
 </style>

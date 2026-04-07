@@ -98,13 +98,13 @@ const props = withDefaults(defineProps<{
 
     box-sizing:    border-box
     padding: 0 1rem
-    border-radius: var(--border-radius-small)
+    border-radius: var(--border-radius-tiny)
 
     transition: .1s
 
     &:hover
-        // filter: brightness(95%)
-        background: var(--gray)
+        background: var(--black)
+        color: white
 
     &.submit
         height:     2.5rem
@@ -119,8 +119,6 @@ const props = withDefaults(defineProps<{
     &.enabled
         cursor: pointer
 
-       
-
 .icon
     align-self: center
     max-height: 1rem
@@ -131,6 +129,5 @@ const props = withDefaults(defineProps<{
     margin:      0
     font-weight: 500
     line-height: 1.5rem
-    color:       var(--black)
     white-space: nowrap
 </style>

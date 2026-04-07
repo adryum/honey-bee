@@ -1,10 +1,6 @@
 <script setup lang="ts">
 import { computed, onMounted, useCssModule } from "vue";
 import {ref} from "vue";
-import RegistrationInputField from "@/ui/components/input/fields/RegistrationInputField.vue";
-import CheckboxWText from "@/ui/components/input/fields/CheckboxWText.vue";
-import RegistrationButton from "@/ui/components/input/buttons/RegistrationButton.vue";
-import FaintButton from "@/ui/components/input/buttons/FaintButton.vue";
 import IconTextButton from "@/ui/components/input/buttons/IconTextButton.vue";
 import { SVG } from "@/assets/svgs/SVGLoader";
 import { useAuthStore } from "@/core/stores/useAuthStore";
@@ -34,17 +30,7 @@ onMounted(async () => {
     <form @submit.prevent="login" :class="s.container">
         <img :class="s.logo" src="@/assets/images/BeeLogo.png" alt="logo">
         <h1 :class="s.title">HoneyBee</h1>
-        <RegistrationInputField v-model="email"
-            hint="E-mail" type="email" :is-required="true"/>
-        <RegistrationInputField v-model="password"
-            hint="Password" type="password" :is-required="true"/>
-        <CheckboxWText v-model="rememberMe" text="Remember me!"/>
-        <div :class='s.container_bottom'>
-            <RegistrationButton  :is-enabled="isEverythingValid" type="submit" :class="s.submit" text="Login"/>
-            <FaintButton @click="$router.push('/recovery')" :class="s.left" text="Forgot Password!"/>
-            <FaintButton @click="$router.push('/signup')" :class="s.right" text="Create an account"/>
-        </div>
-
+        
         <IconTextButton
             :svg="SVG.Checkmark"
             text="Login with Google"

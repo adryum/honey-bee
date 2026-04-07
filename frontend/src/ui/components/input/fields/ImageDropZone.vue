@@ -1,10 +1,7 @@
 <script setup lang="ts">
 import { useDropZone } from "@vueuse/core";
 import { ref, useCssModule, watch } from "vue";
-import Button from "../buttons/Button.vue";
 import { motion } from 'motion-v';
-import IconCubeButton from "../buttons/IconCubeButton.vue";
-import IconButton from "../buttons/IconButton.vue";
 import { IconType, SVG } from "@/assets/svgs/SVGLoader";
 import Icon from "../../Icon.vue";
 

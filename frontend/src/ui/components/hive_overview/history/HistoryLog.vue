@@ -22,7 +22,7 @@ const props = defineProps<{
     </div>
     <hr :style="{
         position: 'relative',
-        height: '1px',
+        minHeight: '1px',
         border: 'none',
         background: 'rgba(0,0,0,.2)',
         margin: 0
@@ -47,7 +47,7 @@ const props = defineProps<{
     bottom: 0
 
     width: 2px
-    background: var(--orange)
+    background: rgba(0,0,0,.2)
     border: none
 
 .container

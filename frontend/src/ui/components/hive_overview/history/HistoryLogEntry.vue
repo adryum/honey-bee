@@ -34,7 +34,7 @@ const svg = computed(() => {
     </div>
 
     <div :class="s.header">
-        <h2 :class="s.time">{{ formatDateWithOrdinal(entry.creationDate, true) }}</h2>
+        <h2 :class="s.time">{{ entry.text }}</h2>
         <div :class="s.userInfo">
             <img
                 alt="user image"
@@ -44,7 +44,7 @@ const svg = computed(() => {
             <h1 :class="s.name">{{ entry.username }}</h1>
         </div>
     </div>
-    <p :class="s.content">{{ entry.text }}</p>
+    <p :class="s.content">{{ formatDateWithOrdinal(entry.creationDate, true) }} </p>
 </div>
 </template>
 
@@ -67,16 +67,16 @@ const svg = computed(() => {
     align-items: center
 
     top: .2rem
-    left: 1rem
+    left: 1.1rem
     // align-self: center
-    min-width: 2rem
-    min-height: 2rem
-    max-width: 2rem
-    max-height: 2rem
+    min-width: 1.75rem
+    min-height: 1.75rem
+    max-width: 1.75rem
+    max-height: 1.75rem
     height: 2rem
     width: 2rem
     border-radius: 50px
-    background: var(--orange)
+    background: var(--black)
     color: white
 
 .header
@@ -85,24 +85,21 @@ const svg = computed(() => {
     gap: 1rem
     
     // justify-content: center
-    padding-top: .2rem
+    padding-top: .1rem
 
-    margin-left: 4rem
+    margin-left: 3.5rem
 
     height: 1.5rem
     align-items: center
 
-    // min-width: 20%
-    // max-width: 20% 
     border-radius: 4px 0 0 4px
 
-    // background: var(--orange)
     font-size: var(--font-size-small)
 
     .time
-        font-weight: 400
-        letter-spacing: 0.02em
-        
+        line-height: 1.5rem
+        font-weight: 600
+        font-size: var(--font-size-medium)
 
     .name
         font-weight: 400
@@ -117,18 +114,14 @@ const svg = computed(() => {
     border-radius: 50px
 
     gap: .25rem
-    // overflow: hidden
 
-
-   
     .content
         flex: 1
-        // background: var(--gray)
-        // border-left: 2px solid var(--faint-border)
-        // padding: .5rem
-        margin-left: 4rem
+        margin-left: 3.5rem
         box-sizing: border-box
-        line-height: 1.5rem
-        font-weight: 500
-        font-size: var(--font-size-medium)
+        
+        font-weight: 400
+        letter-spacing: 0.02em
+        font-size: var(--font-size-small)
+
 </style>

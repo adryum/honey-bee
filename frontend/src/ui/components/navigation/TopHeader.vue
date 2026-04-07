@@ -1,7 +1,5 @@
 <script setup lang="ts">
 import { useCssModule } from 'vue';
-import IconCubeButton from '../input/buttons/IconCubeButton.vue'
-import { SVG } from '@/assets/svgs/SVGLoader';
 import ProfileWidget from '../settings/ProfileWidget.vue';
 
 
