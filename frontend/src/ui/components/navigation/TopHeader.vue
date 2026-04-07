@@ -28,7 +28,6 @@ const s = useCssModule()
     box-sizing: border-box
     padding: 0 .5rem
     
-
     background: var(--white)
     font-family: var(--font-family)
 

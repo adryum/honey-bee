@@ -123,7 +123,7 @@ function createEvent() {
                 
             <IconTextButton
                 text="Save"
-                :style="{ background: 'var(--yellow)' }"
+                :style="{ background: 'var(--orange)' }"
                 :disabled="!formValidator.isFormValid.value"
                 @click="createEvent"
             />

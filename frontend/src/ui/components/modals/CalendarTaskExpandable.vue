@@ -91,7 +91,7 @@ const isTaskOpen = ref(false)
 .description
     +descriptionText
 .shadow
-    box-shadow:    0 0 0 1px var(--yellow)
+    box-shadow:    0 0 0 1px var(--orange)
     border-radius: var(--border-radius-tiny)
 
 .grid
@@ -121,13 +121,13 @@ const isTaskOpen = ref(false)
         align-items: center
         width:       100%
         height:      3rem
-        background:  var(--yellow)
+        background:  var(--orange)
         padding:     0 1rem
         box-sizing:  border-box
         transition:  .3s
 
         &:hover
-            background:  color-mix(in srgb, var(--yellow) 70%, var(--orange) )
+            background:  color-mix(in srgb, var(--orange) 70%, var(--orange) )
 
         p
             font-family:    var(--font-family)

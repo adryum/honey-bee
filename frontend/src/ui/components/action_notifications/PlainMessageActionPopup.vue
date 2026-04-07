@@ -70,7 +70,7 @@ function onSlideComplete(event: AnimationEvent, action: ActionUIModel) {
     <div 
         :class="s.progressBar"
         :style="{
-            background: `linear-gradient(90deg,${action.type} ${action.progress.value}%, var(--dark) ${action.progress.value}%)`
+            background: `linear-gradient(90deg,${action.type} ${action.progress.value}%, var(--gray) ${action.progress.value}%)`
         }"
     ></div>
 </div>

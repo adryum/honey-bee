@@ -107,10 +107,10 @@ const props = withDefaults(defineProps<{
         background: var(--gray)
 
     &.submit
-        height:     3rem
-        min-height: 3rem
-        max-height: 3rem
-        background: var(--orange)
+        height:     2.5rem
+        min-height: 2.5rem
+        max-height: 2.5rem
+        background: var(--black)
         color: white
 
         &:hover

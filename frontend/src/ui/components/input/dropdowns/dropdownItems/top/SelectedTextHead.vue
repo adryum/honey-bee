@@ -76,8 +76,8 @@ onMounted(() => {
     outline-color: transparent
 
     &.focused
-        box-shadow: inset 0 0 0 1px var(--yellow)
-        outline:    2px solid color-mix(in srgb, var(--yellow) 20%, transparent)
+        box-shadow: inset 0 0 0 1px var(--orange)
+        outline:    2px solid color-mix(in srgb, var(--orange) 20%, transparent)
 
     .text
         line-height: 1rem

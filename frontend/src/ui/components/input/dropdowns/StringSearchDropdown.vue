@@ -199,7 +199,7 @@ watch(search , (newVal) => {
     gap: .25rem
 
     background: white
-    box-shadow: 0 0 0 1px var(--yellow)
+    box-shadow: 0 0 0 1px var(--orange)
     border-radius: var(--border-radius-small)
     padding: .25rem
     box-sizing: border-box
