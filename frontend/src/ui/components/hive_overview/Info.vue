@@ -148,6 +148,7 @@ const { apiary } = useApiaryQuery({
         .label
             font-size: var(--font-size-medium)
             font-weight: 500
+            letter-spacing: .02em
             text-transform: capitalize
 
         .buttons

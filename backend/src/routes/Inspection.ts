@@ -5,91 +5,9 @@ import { Role } from "../DatabaseEnums";
 import { requireRole } from "../Middleware";
 import { isValidValue } from "../utils";
 import { asc, desc, eq } from "drizzle-orm";
-import { apiaries, hiveInspectionForms, hiveInspections, users } from "../db/schema";
+import { apiaries, hiveHoneyProduction, hiveInspectionForms, hiveInspections } from "../db/schema";
 
 const router = Router()
-
-type InspectionResponse = {
-    id:            number;
-    apiaryId:      number;
-    apiaryName:    string
-    userIdCreator: number
-    userPicture:   string
-    username:      string
-    creationDate:  string
-    forms:    {
-        id:                           number;
-        hiveId:                       number;
-        isAbnormalBehavior:           boolean;
-        isSwarming:                   boolean;
-        needAdditionalFeeding:        boolean;
-        isQueenAlive:                 boolean;
-        isQueenLayingEggs:            boolean;
-        isQueenLayingEggsIncorrectly: boolean;
-        needMoreHoneyFrames:          boolean;
-        needMoreBreedingFrames:       boolean;
-        needMedicalAttention:         boolean;
-        hasHiveDamage:                boolean;
-        isTakingOutFrames:            boolean;
-        abnormalBehaviorDescription:  string;
-        medicalAttentionDescription:  string;
-        hiveDamageDescription:        string;
-        neededHoneyFrames:            number;
-        neededBreedingFrames:         number;
-        takenHoneyFrames:             number;
-        takenBreedingFrames:          number;
-    }[]
-}
-
-function getInspectionsQuery(where: string) {
-    return `
-        SELECT 
-            hive_inspections.id,
-            hive_inspections.apiaryId,
-            apiaries.name AS apiaryName,
-            hive_inspections.userIdCreator,
-            users.username,
-            users.image,
-            hive_inspections.creationDate,
-
-            COALESCE((
-                SELECT JSON_ARRAYAGG(
-                    JSON_OBJECT(
-                        'id',                           hive_inspection_forms.id,
-                        'isAbnormalBehavior',           hive_inspection_forms.isAbnormalBehavior,
-                        'abnormalBehaviorDescription',  hive_inspection_forms.abnormalBehaviorDescription,
-                        'isSwarming',                   hive_inspection_forms.isSwarming,
-                        'needFeeding',                  hive_inspection_forms.needFeeding,
-                        'isQueenAlive',                 hive_inspection_forms.isQueenAlive,
-                        'isQueenLayingEggs',            hive_inspection_forms.isQueenLayingEggs,
-                        'isQueenLayingEggsIncorrectly', hive_inspection_forms.isQueenLayingEggsIncorrectly,
-                        'needMoreHoneyFrames',          hive_inspection_forms.needMoreHoneyFrames,
-                        'needMoreHoneyFramesAmount',    hive_inspection_forms.needMoreHoneyFramesAmount,
-                        'needMoreBreedingFrames',       hive_inspection_forms.needMoreBreedingFrames,
-                        'needMoreBreedingFramesAmount', hive_inspection_forms.needMoreBreedingFramesAmount,
-                        'needMedicalAttention',         hive_inspection_forms.needMedicalAttention,
-                        'medicalAttentionDescription',  hive_inspection_forms.medicalAttentionDescription,
-                        'hasHiveDamage',                hive_inspection_forms.hasHiveDamage,
-                        'hiveDamageDescription',        hive_inspection_forms.hiveDamageDescription,
-                        'isTakingFrames',               hive_inspection_forms.isTakingFrames,
-                        'takenHoneyFrames',             hive_inspection_forms.takenHoneyFrames,
-                        'takenBreedingFrames',          hive_inspection_forms.takenBreedingFrames,
-                        'inspectionId',                 hive_inspection_forms.inspectionId,
-                        'hiveId',                       hive_inspection_forms.hiveId,
-                        'hiveName',                     hives.name
-                    )
-                )
-                FROM hive_inspection_forms
-                LEFT JOIN hives ON hive_inspection_forms.hiveId = hives.id
-                WHERE hive_inspections.id = hive_inspection_forms.inspectionId
-            ), JSON_ARRAY()) AS forms
-
-        FROM hive_inspections
-        LEFT JOIN users ON hive_inspections.userIdCreator = users.id
-        LEFT JOIN apiaries ON hive_inspections.apiaryId = apiaries.id
-        ${where}
-    `
-}
 
 router.get(
     '/entries', 
@@ -309,5 +227,43 @@ router.post(
     }
 });
 
+
+router.get(
+    '/:id/process', 
+    requireRole([Role.ANY]), 
+    async (
+        req: Request<{ id: string }>, 
+        res: Response
+) => {
+    console.log("# Process Inspection");
+    const inspectionId = parseInt(req.params.id)
+    
+    try {
+        console.log(`Processing  inspection...`);
+        await db.update(hiveInspections).set({ processed: true }).where(eq(hiveInspections.id, inspectionId))
+        const inspectionResult = await db.query.hiveInspections.findFirst({
+            where: eq(hiveInspections.id, inspectionId),
+            with: {
+                hiveInspectionForms: {
+                    with: {
+                        hive: {
+                            columns: {
+                                name: true
+                            }
+                        }
+                    }
+                },
+                apiary: true,
+                user: true
+            }
+        });
+        console.log("Done!");
+        
+        res.status(200).json(inspectionResult);
+    } catch (error) {
+        console.error(error);
+        res.status(500).send('Server error');
+    }
+})
 
 export default router

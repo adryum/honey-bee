@@ -14,6 +14,7 @@ import calendarRoute from "./routes/Calendar"
 import inspectionRoute from "./routes/Inspection"
 import profileRoute from "./routes/Profile"
 import hiveHistoryRoute from "./routes/HiveHistory"
+import hiveHoneyProductionRoute from "./routes/HiveHoneyProduction"
 
 import express from "express";
 import cors from "cors";
@@ -72,6 +73,7 @@ async function startServer() {
     app.use("/note", noteRoute)
     app.use("/profile", profileRoute)
     app.use("/hiveHistory", hiveHistoryRoute)
+    app.use("/hiveHoneyProduction", hiveHoneyProductionRoute)
 
     // starts express server
     httpServer.listen(port, () => {

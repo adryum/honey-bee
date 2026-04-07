@@ -1,8 +1,15 @@
 <script setup lang="ts">
-import { onMounted, ref, useCssModule } from "vue";
+import { useHiveHoneyProductionQuery } from "@/core/composables/useHiveHoneyProduction";
+import { computed, onMounted, ref, useCssModule } from "vue";
 
 const s = useCssModule()
-const series = ref([{ name: 'series1', data: [31,40,28,51,42,109,100] }]);
+const props = defineProps<{
+    hiveId: number
+}>()
+
+const { production } = useHiveHoneyProductionQuery({ hiveId: ref(props.hiveId) })
+
+const series = computed(() => [{ name: 'series1', data: [0, ...production.value?.map((item) => item.amount) ?? [] ] }]);
 
 const chartOptions = ref({
     chart: {
@@ -95,15 +102,17 @@ onMounted(() => {
         display: flex
         align-items: center
         width: 100%
-        min-height: 2rem
-        max-height: 2rem
-        height: 2rem
+        min-height: 2.5rem
+        max-height: 2.5rem
+        height: 2.5rem
         box-sizing: border-box
         border-radius: var(--border-radius-small)
 
         .label
             font-size: var(--font-size-medium)
             line-height: 1rem
+            font-weight: 500
+            letter-spacing: .02em
             padding-left: .5rem
 
     .body

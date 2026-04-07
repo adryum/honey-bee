@@ -97,32 +97,21 @@ export function HiveAccessResponseModel_To_Number(
 }
 
 
-export function InspectionEntryResponseModel_To_InspectionTableEntryModel(
-    convertee: InspectionEntryResponseModel
-): InspectionTableEntryModel {
-    return {
-        id:            convertee.id,
-        apiaryId:      convertee.apiaryId,
-        apiaryName:    convertee.apiary.name,
-        userIdCreator: convertee.userIdCreator,
-        userPicture:   convertee.user.image,
-        username:      convertee.user.username,
-        creationDate:  convertee.creationDate,
-    }
-}
+
 
 export function InspectionReviewResponseModel_To_InspectionFormDB(
     convertee: InspectionReviewResponseModel
 ): InspectionDB {
     return {
-        id:            convertee.id,
-        apiaryId:      convertee.apiaryId,
-        apiaryName:    convertee.apiary.name,
-        userIdCreator: convertee.userIdCreator,
-        userPicture:   convertee.user.image,
-        username:      convertee.user.username,
-        creationDate:  convertee.creationDate,
-        forms:         convertee.hiveInspectionForms.map(form => ({
+        id:               convertee.id,
+        apiaryId:         convertee.apiaryId,
+        apiaryName:       convertee.apiary.name,
+        userIdCreator:    convertee.userIdCreator,
+        userPicture:      convertee.user.image,
+        username:         convertee.user.username,
+        creationDate:     convertee.creationDate,
+        hasBeenProcessed: convertee.hasBeenProcessed,
+        forms:            convertee.hiveInspectionForms.map(form => ({
             id:                           form.id,
             hiveId:                       form.hiveId,
             hiveName:                     form.hive.name,
@@ -210,13 +199,31 @@ export function InspectionDB_To_InspectionTableEntryModel(
     convertee: InspectionDB
 ): InspectionTableEntryModel {
     return {
-        id:            convertee.id,
-        apiaryId:      convertee.apiaryId,
-        apiaryName:    convertee.apiaryName,
-        userIdCreator: convertee.userIdCreator,
-        userPicture:   convertee.userPicture,
-        username:      convertee.username,
-        creationDate:  convertee.creationDate
+        id:               convertee.id,
+        apiaryId:         convertee.apiaryId,
+        apiaryName:       convertee.apiaryName,
+        userIdCreator:    convertee.userIdCreator,
+        userPicture:      convertee.userPicture,
+        username:         convertee.username,
+        creationDate:     convertee.creationDate,
+        formCount:        convertee.forms.length,
+        processed: !!convertee.hasBeenProcessed,
+    }
+}
+
+export function InspectionEntryResponseModel_To_InspectionTableEntryModel(
+    convertee: InspectionEntryResponseModel
+): InspectionTableEntryModel {
+    return {
+        id:               convertee.id,
+        apiaryId:         convertee.apiaryId,
+        apiaryName:       convertee.apiary.name,
+        userIdCreator:    convertee.userIdCreator,
+        userPicture:      convertee.user.image,
+        formCount:        convertee.hiveInspectionForms.length,
+        username:         convertee.user.username,
+        processed: !!convertee.processed,
+        creationDate:     convertee.creationDate,
     }
 }
 

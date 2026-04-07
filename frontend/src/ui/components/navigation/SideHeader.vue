@@ -37,11 +37,6 @@ const tabs: Tab[] = [
         svg: SVG.Calendar
     },
     {
-        name: 'Admin panel',
-        pagePath: RouterViewPaths.Admin,
-        svg: SVG.Key
-    },
-    {
         name: 'Inspections',
         pagePath: RouterViewPaths.Inspections,
         svg: SVG.Clipboard
@@ -124,7 +119,6 @@ onMounted(() => {
 </template>
 
 <style module lang='sass'>
-@use '@/assets/_colors.sass' as colors
 .container
     top: 3rem
     position: sticky

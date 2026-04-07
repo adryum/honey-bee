@@ -2,7 +2,7 @@
 import { ref, useCssModule } from "vue";
 import ToolBar from "../components/ToolBar.vue";
 import InspectionTable from "../components/tables/InspectionTable.vue";
-import { useInspections, type InspectionFilters } from "@/core/composables/useInspection";
+import { useInspectionsQuery, type InspectionFilters } from "@/core/composables/useInspection";
 import IconTextButton from "../components/input/buttons/IconTextButton.vue";
 import { SVG } from "@/assets/svgs/SVGLoader";
 
@@ -15,7 +15,7 @@ const filters = ref<InspectionFilters>({
     hiveId: undefined,
     ids:    undefined
 })
-const { inspectionTableEntries, nextPage, prevPage } = useInspections(filters)
+const { inspectionTableEntries, nextPage, prevPage } = useInspectionsQuery(filters)
 
 </script>
 

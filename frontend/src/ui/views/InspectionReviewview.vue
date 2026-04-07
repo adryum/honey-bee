@@ -6,7 +6,7 @@ import IconTextButton from "../components/input/buttons/IconTextButton.vue";
 import InspectionForm from "../components/forms/InspectionForm.vue";
 import type { InspectionFormDB, InspectionFormUI } from "@/core/stores/Models";
 import { InspectionFormDB_To_InspectionFormUI } from "@/core/Convertors";
-import { useInspection, useInspectionMutation } from "@/core/composables/useInspection";
+import { useInspectionQuery, useInspectionMutation } from "@/core/composables/useInspection";
 import { watchOnce } from "@vueuse/core";
 import { useRouter } from "vue-router";
 
@@ -17,7 +17,7 @@ const props = defineProps<{
 }>()
 
 const {  } = useInspectionMutation()
-const { inspection } = useInspection({ id: props.id })
+const { inspection } = useInspectionQuery({ id: props.id })
 
 const forms            = computed(() => inspection.value?.forms || [])
 const selectedForm     = ref<InspectionFormDB | undefined>()

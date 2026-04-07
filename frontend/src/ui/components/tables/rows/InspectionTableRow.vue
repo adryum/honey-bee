@@ -5,14 +5,17 @@ import { IconType, SVG } from "@/assets/svgs/SVGLoader";
 import { formatDateWithOrdinal } from "@/core/utils/Utils";
 import IconTextButton from "../../input/buttons/IconTextButton.vue";
 import { useRouter } from "vue-router";
+import type { ModalBaseModel } from "@/core/composables/useModalBase";
+import ProcessInspectionModal from "../../modals/ProcessInspectionModal.vue";
 
 const s = useCssModule()
+const router = useRouter()
 const props = defineProps<{
     entry:       InspectionTableEntryModel
     orderNumber: number
 }>()
 const isEditingRow = ref(false)
-const router = useRouter()
+const processInspectionModal = ref<ModalBaseModel>()
 
 function openInspection(id: number) {
     router.push(`/inspection/${id}`)
@@ -45,6 +48,32 @@ function openInspection(id: number) {
             }"
         >
             #{{ entry.apiaryId + " " + entry.apiaryName }} 
+        </p>
+    </td>
+    <td
+        :class="s.inspectedHiveCount"
+    >
+    <p 
+            :style="{
+                display: 'flex',
+                alignItems: 'center',
+                height: '100%',
+            }"
+        >
+            {{ entry.formCount }} 
+        </p>
+    </td>
+    <td 
+        :class="s.hasBeenProcessed"
+    >
+        <p 
+            :style="{
+                display: 'flex',
+                alignItems: 'center',
+                height: '100%',
+            }"
+        >
+            {{ entry.processed }} 
         </p>
     </td>
     <td 
@@ -85,9 +114,14 @@ function openInspection(id: number) {
         <IconTextButton
             :svg="SVG.Cog"
             :type="IconType.SMALL"
-            text="Settings"
+            text="Process"
+            @click="processInspectionModal?.open()"
         />
     </td>
+    <ProcessInspectionModal
+        ref="processInspectionModal"
+        :inspection-id="entry.id"
+    />
 </tr>
 </template>
 
@@ -124,14 +158,18 @@ td
     justify-content: center
     min-width: 3rem
 
+.hasBeenProcessed
+    min-width: 15rem
+.inspectedHiveCount
+    min-width: 10rem
 .email
     width: 100%
 
 .creator
-    min-width: 20rem
+    min-width: 15rem
 
 .creationDate
-    min-width: 20rem
+    min-width: 15rem
 
 .actions
     display: flex

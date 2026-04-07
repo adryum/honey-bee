@@ -12,6 +12,7 @@ const props = withDefaults(defineProps<{
     isSubmit?:         boolean
     swapIconPosition?: boolean
     isAlignedCenter?:  boolean
+    hideIcon?:         boolean
 }>(), {
     svg:      SVG.Dollar,
     text:     'BUTTON',
@@ -31,7 +32,7 @@ const props = withDefaults(defineProps<{
     :disabled="disabled || isLoading"
 >
     <Icon 
-        v-if="!swapIconPosition"
+        v-if="!swapIconPosition && !hideIcon"
         :class="[
             s.icon,
             isLoading && s.rotate
@@ -41,7 +42,7 @@ const props = withDefaults(defineProps<{
     />
     <p :class="[isSubmit ? s.submitText : s.text]">{{ text }}</p>
     <Icon 
-        v-if="swapIconPosition"
+        v-if="swapIconPosition && !hideIcon"
         :class="[
             s.icon,
             isLoading && s.rotate

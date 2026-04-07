@@ -26,7 +26,10 @@ const historyEntries = computed<HistoryEntryDB[]>(
         :class="s.info"
         :hive="hive"
     />
-    <HoneyProfitChart :class="s.profit"/>
+    <HoneyProfitChart 
+        :class="s.profit"
+        :hiveId="hive.id"
+    />
     <HistoryLog 
         :class="s.log"
         :entries="historyEntries"

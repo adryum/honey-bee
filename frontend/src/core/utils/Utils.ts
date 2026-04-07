@@ -3,6 +3,8 @@ export function formatDateWithOrdinal(
     showHoursAndMinutes: boolean = false,
     showSeconds: boolean = false
 ): string {
+    if (!dateTime) return ""
+    
     const date = new Date(dateTime.replace(" ", "T"));
 
     if (isNaN(date.getTime())) {

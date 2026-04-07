@@ -1,5 +1,5 @@
 import { relations } from "drizzle-orm/relations";
-import { users, apiaries, hives, hiveInspectionForms, hiveInspections, hivehistory, notes, userapiaryaccess, userhiveaccess } from "./schema";
+import { users, apiaries, hives, hiveHoneyProduction, hiveInspections, hiveInspectionForms, hivehistory, notes, userapiaryaccess, userhiveaccess } from "./schema";
 
 export const apiariesRelations = relations(apiaries, ({one, many}) => ({
 	user: one(users, {
@@ -21,18 +21,19 @@ export const usersRelations = relations(users, ({many}) => ({
 	userhiveaccesses: many(userhiveaccess),
 }));
 
-export const hiveInspectionFormsRelations = relations(hiveInspectionForms, ({one}) => ({
+export const hiveHoneyProductionRelations = relations(hiveHoneyProduction, ({one}) => ({
 	hive: one(hives, {
-		fields: [hiveInspectionForms.hiveId],
+		fields: [hiveHoneyProduction.hiveId],
 		references: [hives.id]
 	}),
 	hiveInspection: one(hiveInspections, {
-		fields: [hiveInspectionForms.inspectionId],
+		fields: [hiveHoneyProduction.inspectionId],
 		references: [hiveInspections.id]
 	}),
 }));
 
 export const hivesRelations = relations(hives, ({one, many}) => ({
+	hiveHoneyProductions: many(hiveHoneyProduction),
 	hiveInspectionForms: many(hiveInspectionForms),
 	hivehistories: many(hivehistory),
 	apiary: one(apiaries, {
@@ -48,6 +49,7 @@ export const hivesRelations = relations(hives, ({one, many}) => ({
 }));
 
 export const hiveInspectionsRelations = relations(hiveInspections, ({one, many}) => ({
+	hiveHoneyProductions: many(hiveHoneyProduction),
 	hiveInspectionForms: many(hiveInspectionForms),
 	apiary: one(apiaries, {
 		fields: [hiveInspections.apiaryId],
@@ -56,6 +58,17 @@ export const hiveInspectionsRelations = relations(hiveInspections, ({one, many})
 	user: one(users, {
 		fields: [hiveInspections.userIdCreator],
 		references: [users.id]
+	}),
+}));
+
+export const hiveInspectionFormsRelations = relations(hiveInspectionForms, ({one}) => ({
+	hive: one(hives, {
+		fields: [hiveInspectionForms.hiveId],
+		references: [hives.id]
+	}),
+	hiveInspection: one(hiveInspections, {
+		fields: [hiveInspectionForms.inspectionId],
+		references: [hiveInspections.id]
 	}),
 }));
 

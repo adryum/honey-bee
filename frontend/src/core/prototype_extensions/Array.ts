@@ -1,5 +1,3 @@
-import type { ComponentPublicInstance } from "vue";
-// extended type
 export {};
 
 declare global {

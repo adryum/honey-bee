@@ -116,14 +116,15 @@ export type InspectionFormUI = {
 }
 
 export type InspectionDB = {
-    id:            number;
-    apiaryId:      number;
-    apiaryName:    string
-    userIdCreator: number
-    userPicture:   string
-    username:      string
-    creationDate:  string
-    forms:         InspectionFormDB[]
+    id:               number
+    apiaryId:         number
+    apiaryName:       string
+    userIdCreator:    number
+    userPicture:      string
+    username:         string
+    creationDate:     string
+    forms:            InspectionFormDB[]
+    hasBeenProcessed: boolean
 }
 
 export type InspectionFormDB = {
@@ -151,11 +152,13 @@ export type InspectionFormDB = {
 }
 
 export type InspectionTableEntryModel = {
-    id:            number
-    apiaryId:      number
-    apiaryName:    string
-    userIdCreator: number
-    userPicture:   string
-    username:      string
-    creationDate:  string
+    id:               number
+    apiaryId:         number
+    apiaryName:       string
+    formCount:        number
+    userIdCreator:    number
+    userPicture:      string
+    username:         string
+    creationDate:     string
+    processed: boolean
 }

@@ -33,6 +33,16 @@ const props = defineProps<{
             >
                 <p :class="s.columnText">Apiary</p>
             </td>
+            <td
+                :class="s.inspectedHiveCount"
+            >
+                <p :class="s.columnText">Hive count</p>
+            </td>
+            <td
+                :class="s.hasBeenProcessed"
+            >
+                <p :class="s.columnText">Has been Processed</p>
+            </td>
             <td 
                 :class="s.creator"
             >
@@ -140,11 +150,17 @@ td
 .email
     width: 100%
 
+.hasBeenProcessed
+    min-width: 15rem
+
+.inspectedHiveCount
+    min-width: 10rem
+
 .creator
-    min-width: 20rem
+    min-width: 15rem
 
 .creationDate
-    min-width: 20rem
+    min-width: 15rem
 
 .actions
     width: 100%

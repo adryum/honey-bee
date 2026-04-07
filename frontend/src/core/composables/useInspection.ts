@@ -13,7 +13,7 @@ export type InspectionFilters = {
     ids?:    number[]
 }
 
-export const useInspections = (
+export const useInspectionsQuery = (
     filters: Ref<InspectionFilters>
 ) => {
     const { data: inspectionTableEntries, isLoading, isError } = useQuery({
@@ -37,7 +37,7 @@ export const useInspections = (
     }
 }
 
-export const useInspection = (
+export const useInspectionQuery = (
     { id }: { 
         id: number 
     }
@@ -105,12 +105,17 @@ export const useInspectionMutation = () => {
         }
     })
 
-    // const { mutate: updateInspection } = useMutation({
-    //     mutationFn: inspectionApi.update,
-    //     onSuccess: (updatedInspection) => {
-    //         queryClient.invalidateQueries({ queryKey: ['inspections'] })
-    //     }
-    // })
+    const { mutate: processInspection, isPending: isProcessingInspection } = useMutation({
+        mutationFn: inspectionApi.processInspection,
+        onSuccess: (updatedInspection) => {
+            queryClient.invalidateQueries({ queryKey: ['inspections'] })
+
+            createPopupAction({
+                label: "Inspection processed!",
+                type:  ActionType.Success
+            })
+        }
+    })
 
     const { mutate: exportInspections, isPending: isExportingInspections } = useMutation({
         // mutationFn: () => inspectionApi.exportCsv(filters.value),
@@ -135,6 +140,8 @@ export const useInspectionMutation = () => {
         isExportingInspections,
         remove, 
         isRemovingInspection,
+        processInspection,
+        isProcessingInspection,
         // deleteInspection,
         // updateInspection
     }

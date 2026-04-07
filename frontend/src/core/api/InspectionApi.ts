@@ -21,6 +21,11 @@ export const inspectionApi = {
         return InspectionReviewResponseModel_To_InspectionFormDB(data)
     },
 
+    processInspection: async (id: number): Promise<InspectionDB> => {
+        const { data } = await axios.get<InspectionReviewResponseModel>(`/inspection/${id}/process`)
+        return InspectionReviewResponseModel_To_InspectionFormDB(data)
+    },
+
     create: async (
         inspectionData: InspectionCreateRequestModel
     ): Promise<InspectionDB> => {

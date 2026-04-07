@@ -78,6 +78,8 @@ const props = defineProps<{
 
         .label
             font-size: var(--font-size-medium)
+            font-weight: 500
+            letter-spacing: .02em
             line-height: 1rem
             padding-left: .5rem
 

@@ -207,13 +207,15 @@ export type InspectionCreateRequestModel = {
 }
 
 export type InspectionEntryResponseModel = {
-    id:            number;
-    apiaryId:      number;
-    userIdCreator: number
-    creationDate:  string
-    user: {
-        image:   string
-        username:      string
+    id:                  number;
+    apiaryId:            number;
+    userIdCreator:       number
+    creationDate:        string
+    processed:           boolean
+    hiveInspectionForms: []
+    user:                {
+        image:    string
+        username: string
     }
     apiary: {
         name:    string
@@ -221,11 +223,12 @@ export type InspectionEntryResponseModel = {
 }
 
 export type InspectionReviewResponseModel = {
-    id:            number;
-    apiaryId:      number;
-    userIdCreator: number
-    creationDate:  string
-    user: {
+    id:               number;
+    apiaryId:         number;
+    userIdCreator:    number
+    creationDate:     string
+    hasBeenProcessed: boolean
+    user:             {
         image:   string
         username:      string
     }

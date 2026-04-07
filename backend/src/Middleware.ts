@@ -1,6 +1,6 @@
 import { Request, Response, NextFunction } from "express";
-import { getSessionUserRole, redisClient } from "./config/RedisClient";
-import { Role, String_to_Role } from "./DatabaseEnums";
+import { getSessionUserRole } from "./config/RedisClient";
+import { Role } from "./DatabaseEnums";
 import { isValidValue } from "./utils";
 
 export function requireRole(requiredRoles: Role[]) {

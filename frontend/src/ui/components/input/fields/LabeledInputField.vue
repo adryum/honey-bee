@@ -1,7 +1,6 @@
 <script setup lang="ts">
 import { ref, useCssModule } from "vue";
 import InputField from "./InputField.vue";
-import type { FieldValidationOptions } from "@/core/composables/validators/UseFieldValidator";
 import Icon from "../../Icon.vue";
 import { IconType, SVG } from "@/assets/svgs/SVGLoader";
 import type { FieldValidee } from "@/core/composables/useFormValidator";
