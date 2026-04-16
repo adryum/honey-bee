@@ -8,7 +8,8 @@ import CreateCalendarEventModal from "../modals/CreateCalendarEventModal.vue";
 
 const s = useCssModule()
 const props = withDefaults(defineProps<{
-    day: CalendarDayModel
+    calendarId: string
+    day:        CalendarDayModel
 }>(), {
 
 })
@@ -98,6 +99,7 @@ onMounted(() => {
     </ul>
     <CreateCalendarEventModal
         v-if="showModal"
+        :calendar-id="calendarId"
         :day-model="day"
         @clickOutside="onClick"
         @close="onClick"

@@ -79,7 +79,7 @@ function openInspection(id: number) {
                 alignItems: 'center',
             }"
         >
-            {{ entry.processed }} 
+            {{ entry.processed ? "Yes" : "No" }} 
         </p>
     </td>
     <td 

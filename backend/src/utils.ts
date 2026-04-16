@@ -45,3 +45,16 @@ export function requireEnv(name: string): string {
     if (value === undefined) throw new Error(`Missing environment variable: ${name}`)
     return value
 }
+
+export async function withStatus<T>(label: string, fn: () => T |Promise<T>): Promise<T> {
+    const start = Date.now()
+    try {
+        const result = await Promise.resolve(fn())
+        // if (isDev) 
+        console.log(`✓ ${label} (${Date.now() - start}ms)`)
+        return result
+    } catch (err) {
+        console.log(`✗ ${label} failed (${Date.now() - start}ms)`)  // always log errors
+        throw err
+    }
+}

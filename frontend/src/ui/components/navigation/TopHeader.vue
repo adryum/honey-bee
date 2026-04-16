@@ -27,6 +27,7 @@ const s = useCssModule()
     padding: 0 .5rem
     
     background: var(--white)
+    // background: var(--black)
     font-family: var(--font-family)
 
     .profile

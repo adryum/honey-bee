@@ -29,7 +29,7 @@ export const scopes = [
     'openid',
     'email',
     'profile',
-    'https://www.googleapis.com/auth/calendar.events'
+    'https://www.googleapis.com/auth/calendar'
 ];
 
 /**
