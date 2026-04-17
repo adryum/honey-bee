@@ -280,3 +280,21 @@ export type HiveHistoryGetModel = {
         image:  string
     }
 }
+
+export type CalendarEventGetModel = {
+    calendarId:   string
+    eventId:      string
+    start:        string
+    end:          string
+    title:        string
+    description:  string
+    creatorEmail: string
+}
+
+export type CalendarEventCreateModel = {
+    calendarId:   string
+    start:        string
+    end:          string
+    title:        string
+    description:  string
+}

@@ -1,4 +1,5 @@
 export type CreateCalendarEventModel = {
+    calendarId:  string
     title:       string;
     description: string;
     start:       Date;
@@ -6,6 +7,7 @@ export type CreateCalendarEventModel = {
 };
 
 export type UpdateCalendarEventModel = {
+    calendarId:  string
     id:          string;
     title:       string;
     description: string;

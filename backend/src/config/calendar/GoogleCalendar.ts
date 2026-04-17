@@ -1,8 +1,8 @@
 import { calendar_v3, google } from 'googleapis'
 import { JWT } from 'google-auth-library'
-import { requireEnv, withStatus } from '../utils';
-import { CalendarEntryModel, CreateCalendarEventModel, UpdateCalendarEventModel } from './calendar/Models';
-import { Role, Role_to_GoogleCalendarRole } from '../DatabaseEnums';
+import { requireEnv, withStatus } from '../../utils';
+import { CalendarEntryModel, CreateCalendarEventModel, UpdateCalendarEventModel } from './Models';
+import { Role, Role_to_GoogleCalendarRole } from '../../DatabaseEnums';
 
 const GOOGLE_CLIENT_ID = requireEnv('GOOGLE_CLIENT_ID')
 const GOOGLE_CLIENT_SECRET = requireEnv('GOOGLE_CLIENT_SECRET')
@@ -31,13 +31,16 @@ export function getUserCalendarClient(userRefreshToken: string) {
     return google.calendar({ version: 'v3', auth: client })
 }
 
-export function useCalendar(calendarClient: calendar_v3.Calendar) {
-    async function createEvent(calendarId: string, model: CreateCalendarEventModel): Promise<CalendarEntryModel> {
+export function useCalendar() {
+    async function createEvent(
+        userCalendarClient: calendar_v3.Calendar,
+        model: CreateCalendarEventModel
+    ): Promise<CalendarEntryModel> {
         const { data } = await withStatus(
-            `Creating event in calendar ${calendarId}`, 
+            `Creating event in calendar ${model.calendarId}`, 
             () => {
-                return calendarClient.events.insert({
-                    calendarId:  calendarId,
+                return userCalendarClient.events.insert({
+                    calendarId:  model.calendarId,
                     requestBody: {
                         summary:     model.title,
                         description: model.description,
@@ -64,11 +67,14 @@ export function useCalendar(calendarClient: calendar_v3.Calendar) {
         }
     }
 
-    async function updateEvent(calendarId: string,  model: UpdateCalendarEventModel): Promise<CalendarEntryModel> {
-        const { data } = await withStatus(`Updating event in calendar ${calendarId}`, 
+    async function updateEvent(
+        userCalendarClient: calendar_v3.Calendar,
+        model: UpdateCalendarEventModel
+    ): Promise<CalendarEntryModel> {
+        const { data } = await withStatus(`Updating event in calendar ${model.calendarId}`, 
             () => {
-                return calendarClient.events.patch({
-                    calendarId:  calendarId,
+                return userCalendarClient.events.patch({
+                    calendarId:  model.calendarId,
                     eventId:     model.id,
                     requestBody: {
                         summary:     model.title,
@@ -96,19 +102,28 @@ export function useCalendar(calendarClient: calendar_v3.Calendar) {
         }
     }
 
-    async function deleteEvent(calendarId: string, eventId: string): Promise<string> {
+    async function deleteEvent({ calendarId, eventId, userCalendarClient }: { 
+        userCalendarClient: calendar_v3.Calendar,
+        calendarId: string, 
+        eventId: string 
+    }): Promise<string> {
         await withStatus(`Deleting event from calendar ${calendarId}`, 
-            () => calendarClient.events.delete({ calendarId, eventId })
+            () => userCalendarClient.events.delete({ calendarId: calendarId, eventId: eventId })
         )
         return eventId
     }
 
-    async function getEvents(calendarId: string, month: number, year: number): Promise<CalendarEntryModel[]> {
+    async function getEvents({ calendarId, month, year, userCalendarClient }: { 
+        calendarId: string,
+        userCalendarClient: calendar_v3.Calendar,
+        month: number, 
+        year: number 
+    }): Promise<CalendarEntryModel[]> {
         const timeMin = new Date(year, month, 1);
         const timeMax = new Date(year, month + 1, 1);
 
         const { data } = await withStatus(`Fetching events from calendar ${calendarId}`,
-            () => calendarClient.events.list({
+            () => userCalendarClient.events.list({
                 calendarId,
                 timeMin:       timeMin.toISOString(),
                 timeMax:       timeMax.toISOString(),
@@ -127,7 +142,10 @@ export function useCalendar(calendarClient: calendar_v3.Calendar) {
         })) ?? []
     }
 
-    async function createCalendar(name: string, description: string): Promise<string> {
+    async function createCalendar({ name, description }: { 
+        name: string, 
+        description: string 
+    }): Promise<string> {
          // 1. Create the calendar using service account
         const newCalendar = await withStatus(`Creating calendar ${name}`, () => 
             getAdminCalendarClient().calendars.insert({
@@ -158,10 +176,10 @@ export function useCalendar(calendarClient: calendar_v3.Calendar) {
         return calendarId
     }
 
-    async function deleteCalendar(
+    async function deleteCalendar({ calendarId, memberRefreshTokens }: { 
         calendarId: string,
         memberRefreshTokens: string[],  // all current hive members' refresh tokens
-    ): Promise<void> {
+    }): Promise<void> {
         // 1. Remove calendar from every member's calendar list
         await withStatus(`Removing calendar ${calendarId} from members' lists`, () => 
             Promise.all(
@@ -179,7 +197,12 @@ export function useCalendar(calendarClient: calendar_v3.Calendar) {
         )
     }
 
-    async function shareCalendar(calendarId: string, userEmail: string, role: Role): Promise<void> {
+    async function shareCalendar({ calendarId, userEmail, userRefreshToken, role }: { 
+        calendarId:        string,
+        userEmail:         string,
+        userRefreshToken:  string,
+        role:              Role
+    }): Promise<void> {
         const googleRole = Role_to_GoogleCalendarRole(role)
         
         // acl is calendar permissions!!!
@@ -196,13 +219,17 @@ export function useCalendar(calendarClient: calendar_v3.Calendar) {
 
         // 2. Add it to their calendar list so it appears immediately, no email needed
         await withStatus(`Adding calendar ${calendarId} to user's list`, () => 
-            calendarClient.calendarList.insert({
+            getUserCalendarClient(userRefreshToken).calendarList.insert({
                 requestBody: { id: calendarId },
             })
         )
     }
 
-    async function removeAccesToCalendar(calendarId: string, userEmail: string): Promise<void> {
+    async function removeAccesToCalendar({ calendarId, userEmail, userRefreshToken }: { 
+        calendarId: string, 
+        userEmail: string,
+        userRefreshToken: string
+    }): Promise<void> {
         // 1. Revoke permission via service account
         await withStatus(`Removing access to calendar ${calendarId} for ${userEmail}`, () => 
             getAdminCalendarClient().acl.delete({
@@ -213,7 +240,7 @@ export function useCalendar(calendarClient: calendar_v3.Calendar) {
 
         // 2. Remove it from their calendar list using their credentials
         await withStatus(`Removing calendar ${calendarId} from user's list`, () => 
-            calendarClient.calendarList.delete({
+            getUserCalendarClient(userRefreshToken).calendarList.delete({
                 calendarId,
             })
         )

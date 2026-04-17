@@ -1,35 +1,50 @@
 <script setup lang="ts">
-import { useCssModule } from 'vue';
-
+import type { ModalBaseModel } from "@/core/composables/useModalBase";
+import { getRandomId } from "@/core/utils/others";
+import { computed, ref, useCssModule } from "vue";
 const s = useCssModule()
-defineEmits<{
-    clickOutside: [],
+const props = defineProps<{
+    label: string
 }>()
+
+const id = ref(getRandomId("modal"))
+
+const dialogRef = ref<HTMLDialogElement>()
+const open      = () => dialogRef.value?.showModal()
+const close     = () => dialogRef.value?.close()
+
+defineExpose<ModalBaseModel>({ 
+    id, 
+    open, 
+    close, 
+    isOpen: computed(() => dialogRef.value?.open ?? false)
+})
 </script>
 
 <template>
-<Teleport to="body">
-    <div 
-        :class="s.container"
-        @click="$emit('clickOutside')"
-    >
-        <slot>
-
-        </slot>
-    </div>
-</Teleport>
+<dialog
+    :id="id"
+    ref="dialogRef"
+    :class="s.container"
+>
+   <slot />
+</dialog>
 </template>
 
 <style module lang="sass">
 .container
-    position:        fixed
-    top:             0
-    left:            0
-    width:           100vw
-    height:          100vh
-    gap:             1rem
-    padding:         1rem
-    box-sizing:      border-box
-    backdrop-filter: brightness(80%)
-    z-index:         100
+    border:     none
+    padding:    0
+    overflow:   visible
+    width:      100vw
+    height:     100vh
+    max-width:  100vw
+    max-height: 100vh
+    margin:     0
+    inset:      0
+    box-sizing: border-box
+    background: transparent
+    
+    &::backdrop
+        display: none
 </style>

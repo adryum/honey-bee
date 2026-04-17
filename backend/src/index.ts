@@ -1,8 +1,8 @@
 import dotenv from "dotenv";
 dotenv.config()
 
+import "./type_extensions/DateExtensions"
 import "./config/image_cloud/Cloudinary"
-import "./config/ServiceAcc"
 import { testConnection } from "./utils";
 
 import authentication from "./routes/Authentication"

@@ -6,13 +6,13 @@ import CalendarTaskExpandable from "./CalendarTaskExpandable.vue";
 import ModalPlate from "./ModalPlate.vue";
 import IconCubeButton from "../input/buttons/IconCubeButton.vue";
 import type { CalendarDayModel, HiveModelDB } from "@/core/stores/Models";
-import { usePopupCreator } from "@/core/utils/PopupHiarchy";
-import CalendarCreateEventPopup from "../popups/CalendarCreateEventPopup.vue";
+import { useModalBase, type ModalBaseModel } from "@/core/composables/useModalBase";
+import CalendarCreateEventModal from "./CalendarCreateEventModal.vue";
 
 const s = useCssModule()
 const props = defineProps<{
-    hive: HiveModelDB
-    dayModel: CalendarDayModel
+    calendarIds: string[]
+    dayModel:    CalendarDayModel
 }>()
 
 defineEmits<{
@@ -20,18 +20,18 @@ defineEmits<{
     close: []
 }>()
 
-const { create } = usePopupCreator({
-    popupComponent: CalendarCreateEventPopup,
-    maxCount: 1,
-    props: {
-        hive: props.hive,
-        selectedDate: props.dayModel.date
-    }
-})
+const { modal, exposed } = useModalBase()
+defineExpose(exposed)
+
+const createEventModal = ref<ModalBaseModel>()
+
 </script>
 
 <template>
 <ModalPlate
+    ref="modal"
+    label="Add Apiary"
+    :style="{ backdropFilter: 'brightness(.6)'}"
     @clickOutside="$emit('clickOutside')"
 >
         <div
@@ -60,7 +60,6 @@ const { create } = usePopupCreator({
             </div>
 
             <label 
-                v-if="hive"
                 for="tasks"
                 :class="s.label"
             >
@@ -71,9 +70,8 @@ const { create } = usePopupCreator({
                 :class="s.titleWrapper"
             >
                 <button 
-                    v-if="hive"
                     :class="s.button"
-                    @click="create"
+                    @click="createEventModal?.open"
                 >
                     <Icon
                         :svg="SVG.Plus"
@@ -105,6 +103,12 @@ const { create } = usePopupCreator({
                 />
             </div>
         </div>
+
+        <CalendarCreateEventModal
+            ref="createEventModal"
+            :date="dayModel.date"
+            :calendarIds="calendarIds"
+        />
 </ModalPlate>
 
 </template>
@@ -115,7 +119,6 @@ const { create } = usePopupCreator({
     flex-direction: column
     gap:            1rem
     background:     white
-    border-radius:  var(--border-radius-medium)
     padding:        1rem
     margin-left:    auto
     width:          40rem

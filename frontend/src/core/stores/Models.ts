@@ -1,3 +1,4 @@
+import type { CalendarEventGetModel } from "../api/Models"
 import type { HistoryEntryType, HiveType, NoteTypes, Role } from "../DatabaseEnums"
 
 export type ApiaryModelDB = {
@@ -20,9 +21,7 @@ export type HiveModelDB = {
     creatorId:    number
     creatorName:  string
     creatorImage: string
-    history:      HistoryEntryDB[]
     calendarId:   string
-    calendarEvents: CalendarEventDB[]
 }
 
 export type HiveCreateModel = {
@@ -53,13 +52,15 @@ export type HistoryEntryDB = {
 }
 
 export type CalendarEventDB = {
-    id:          string
-    start:       Date
-    end:         Date
-    title:       string
-    description: string
-    color:       string
-    type:        string
+    calendarId:   string
+    eventId:      string
+    start:        Date
+    end:          Date
+    title:        string
+    description:  string
+    creatorEmail: string
+    color:        string
+    type:         string
 }
 
 export type CalendarDayModel = {

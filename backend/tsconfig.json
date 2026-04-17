@@ -1,5 +1,8 @@
 {
-    "include":["src/**/*", "types/**/*"], 
+    "include":["src/**/*"], 
+    "ts-node": {
+        "files": true
+    },
     "compilerOptions": {
         "rootDir": "./src",
         "outDir": "./dist",
@@ -10,7 +13,7 @@
         "types": ["node", "express-session"],
 
         // Add this to help TS find your custom .d.ts files
-        "typeRoots": ["./node_modules/@types", "./types"],
+        "typeRoots": ["./node_modules/@types", "./src/types"],
 
         "strict": true,
         "esModuleInterop": true,

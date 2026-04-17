@@ -5,7 +5,7 @@ import { isValidValue } from "./utils";
 import { db } from "./config/Database";
 import { users } from "./db/schema";
 import { eq } from "drizzle-orm/sql/expressions/conditions";
-import { getUserCalendarClient } from "./config/GoogleCalendar";
+import { getUserCalendarClient } from "./config/calendar/GoogleCalendar";
 
 export function requireRole(requiredRoles: Role[]) {
     return async (req: Request, res: Response, next: NextFunction)  => {

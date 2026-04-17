@@ -4,40 +4,32 @@ import { useWindowSize } from "@vueuse/core";
 import Icon from "../Icon.vue";
 import { IconType, SVG } from "@/assets/svgs/SVGLoader";
 import type { CalendarDayModel } from "@/core/stores/Models";
-import CreateCalendarEventModal from "../modals/CreateCalendarEventModal.vue";
+import CalendarDayInfoModal from "../modals/CalendarDayInfoModal.vue";
+import type { ModalBaseModel } from "@/core/composables/useModalBase";
 
 const s = useCssModule()
-const props = withDefaults(defineProps<{
-    calendarId: string
-    day:        CalendarDayModel
-}>(), {
+const props = defineProps<{
+    calendarIds: string[]
+    day:         CalendarDayModel
+}>()
 
-})
+const isToday = computed(() => props.day.date.isToday())
+const isThisMonth = computed(() => props.day.date.isThisMonth())
+const isWeekend = computed(() => props.day.date.isWeekend())
 
-const isToday = computed(() => {
-    const date = props.day.date 
-    return date.toDateString() === new Date().toDateString()
-})
-const isWeekend = computed(() => {
-    const date = props.day.date 
-    const day = date.getDay() 
-    return day === 0 || day === 6
-})
-const isThisMonth = computed(() => {
-    const date = props.day.date 
-    return date.getMonth() === new Date().getMonth()
-})
 
 const { width, height } = useWindowSize()
 const container = ref<HTMLDivElement | null>()
 const availableRows = ref(0)
 
-var showModal = ref(false)
-function onClick() {
-    showModal.value = !showModal.value
-    console.log("Clicked on close!");
+const infoModal = ref<ModalBaseModel>()
+
+// function onClick() {
+//     infoModal.value.
+//     showModal.value = !showModal.value
+//     console.log("Clicked on close!");
     
-}
+// }
 
 function calculatePossibleListItemCount() {
     if (!container.value) return
@@ -78,7 +70,7 @@ onMounted(() => {
         isWeekend && s.weekend,
         !isThisMonth && s.notThisMonthDate
     ]"
-    @click="onClick"
+    @click="infoModal?.open"
 > 
     <p 
         :class="s.dayLabel"
@@ -97,12 +89,12 @@ onMounted(() => {
         </button>
         
     </ul>
-    <CreateCalendarEventModal
-        v-if="showModal"
-        :calendar-id="calendarId"
+    <CalendarDayInfoModal
+        ref="infoModal"
+        :calendarIds="calendarIds"
         :day-model="day"
-        @clickOutside="onClick"
-        @close="onClick"
+        @clickOutside="infoModal?.close"
+        @close="infoModal?.close"
     />
 </div>
 </template>

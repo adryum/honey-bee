@@ -1,16 +1,15 @@
 <script setup lang="ts">
 import { computed, onMounted, ref, toRef, useCssModule } from 'vue';
-import { motion } from 'motion-v';
 import HiveMedicineFragment from '../components/view_fragments/HiveMedicineFragment.vue';
 import HiveGeneralFragment from '../components/view_fragments/HiveGeneralFragment.vue';
 import HiveNoteFragment from '../components/view_fragments/HiveNoteFragment.vue';
-import CalendarView from './CalendarView.vue';
 import NoteFragmentToolbarPart from '../components/view_fragments/NoteFragmentToolbarPart.vue';
 import { HiveTab } from '@/core/ViewTabEnums';
 import { useHiveQuery } from '@/core/composables/useHive';
 import { useRouter } from 'vue-router';
 import { RouterViewPaths } from '@/core/router';
 import Navbar from '../components/Navbar.vue';
+import HiveCalendarFragment from '../components/view_fragments/HiveCalendarFragment.vue';
 
 const s = useCssModule()
 const router = useRouter()
@@ -73,10 +72,11 @@ onMounted(() => console.log(props.tab))
             :hive="hive"
         /> 
 
-        <CalendarView
+        <HiveCalendarFragment
             v-if="currentTab === HiveTab.Calendar && hive"
             :class="s.fragment"
             :style="{ height: fragmentHeight }" 
+            :hive="hive"
         />
 
         <HiveNoteFragment

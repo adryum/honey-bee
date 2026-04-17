@@ -51,10 +51,12 @@ export async function withStatus<T>(label: string, fn: () => T |Promise<T>): Pro
     try {
         const result = await Promise.resolve(fn())
         // if (isDev) 
-        console.log(`✓ ${label} (${Date.now() - start}ms)`)
+        const date = new Date()
+        console.log(`${date.toLoggerTimestamp('-')} [DONE] ${label} (${Date.now() - start}ms)`)
         return result
     } catch (err) {
-        console.log(`✗ ${label} failed (${Date.now() - start}ms)`)  // always log errors
+        const date = new Date()
+        console.log(`${date.toLoggerTimestamp('-')} [FAILED] ${label} failed (${Date.now() - start}ms)`)  // always log errors
         throw err
     }
 }

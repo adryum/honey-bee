@@ -6,6 +6,7 @@ import type { CalendarDayModel, CalendarEventDB } from "@/core/stores/Models";
 
 const s = useCssModule()
 const props = withDefaults(defineProps<{
+    calendarIds:  string[]
     events:       CalendarEventDB[]
     lookedAtDate: Date
     isMacdonalds: boolean
@@ -44,7 +45,7 @@ const currentMonthDays = computed((): CalendarDayModel[] => {
 
     return calendarDays.map<CalendarDayModel>(date=> ({
         date:   date,
-        events: props.events.filter(event => date >= event.start && date <= event.end) || []
+        events: props.events.filter(event => date.in(event.start, event.end)) || []
     })) 
 })
 
@@ -117,6 +118,7 @@ function getCalendarMonthWithDayPadding(
     <div ref="grid" :class="s.grid">
         <CalendarDayComponent 
             v-for="day in currentMonthDays"
+            :calendarIds="calendarIds"
             :day="day"
         />
     </div>

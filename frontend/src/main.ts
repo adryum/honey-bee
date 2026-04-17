@@ -1,5 +1,5 @@
 import '@/assets/_base.sass'
-import '/src/core/LightDarkMode.ts'
+import "@/core/prototype_extensions/Date"
 import axios from 'axios'
 import { createApp } from 'vue'
 import App from './App.vue'

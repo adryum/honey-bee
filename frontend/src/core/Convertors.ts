@@ -1,6 +1,6 @@
 import { String_to_HiveType, String_to_NoteTypes, String_to_Role } from "./DatabaseEnums";
-import type { ApiaryAccessResponseModel, ApiaryCreateResponseModel, HiveAccessResponseModel, HiveCreateResponseModel, HiveHistoryGetModel, InspectionCreateRequestModel, InspectionEntryResponseModel, InspectionReviewResponseModel, NoteCreateModelResponse, UserEntryResponseModel, UserProfileResponseModel, WhitelistEntryResponseModel } from "./api/Models";
-import type { ApiaryModelDB, HistoryEntryDB, HiveModelDB, InspectionDB, InspectionFormDB, InspectionFormUI, InspectionTableEntryModel, NoteModelDB, UserEntryModelDB, UserModelDB, WhitelistEntryModelDB } from "./stores/Models";
+import type { ApiaryAccessResponseModel, ApiaryCreateResponseModel, CalendarEventGetModel, HiveAccessResponseModel, HiveCreateResponseModel, HiveHistoryGetModel, InspectionCreateRequestModel, InspectionEntryResponseModel, InspectionReviewResponseModel, NoteCreateModelResponse, UserEntryResponseModel, UserProfileResponseModel, WhitelistEntryResponseModel } from "./api/Models";
+import type { ApiaryModelDB, CalendarEventDB, HistoryEntryDB, HiveModelDB, InspectionDB, InspectionFormDB, InspectionFormUI, InspectionTableEntryModel, NoteModelDB, UserEntryModelDB, UserModelDB, WhitelistEntryModelDB } from "./stores/Models";
 
 export function ApiaryCreateResponse_to_ApiaryModelDB(
     convertee: ApiaryCreateResponseModel
@@ -29,9 +29,7 @@ export function HiveCreateResponse_to_HiveModelDB(
         creatorId:    convertee.creatorId,
         creatorName:  convertee.creatorName,
         creatorImage: convertee.creatorImage,
-        history:      convertee.history,
         calendarId:   convertee.calendarId,
-        // calendarEvents: convertee.calendarEvents
     }
 }
 
@@ -239,5 +237,22 @@ export function HiveHistoryGetModel_To_HistoryEntryDB(
         username:     convertee.user.username,
         userImage:    convertee.user.image,
         creationDate: convertee.creationDate,
+    }
+}
+
+
+export function CalendarEventGetModel_To_CalendarEventDB(
+    convertee: CalendarEventGetModel
+): CalendarEventDB {
+    return {
+        calendarId:   convertee.calendarId,
+        eventId:      convertee.eventId,
+        start:        new Date(convertee.start),
+        end:          new Date(convertee.end),
+        title:        convertee.title,
+        description:  convertee.description,
+        creatorEmail: convertee.creatorEmail,
+        color:        "",
+        type:         ""
     }
 }

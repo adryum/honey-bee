@@ -2,7 +2,7 @@
 import { IconType, SVG } from "@/assets/svgs/SVGLoader";
 import type { ModalBaseModel } from "@/core/composables/useModalBase";
 import { getRandomId } from "@/core/utils/others";
-import { ref, useCssModule, type Ref } from "vue";
+import { computed, ref, useCssModule } from "vue";
 import Icon from "../Icon.vue";
 
 const s = useCssModule()
@@ -15,7 +15,13 @@ const id = ref(getRandomId("modal"))
 const dialogRef = ref<HTMLDialogElement>()
 const open      = () => dialogRef.value?.showModal()
 const close     = () => dialogRef.value?.close()
-defineExpose<ModalBaseModel>({ id, open, close })
+
+defineExpose<ModalBaseModel>({ 
+    id, 
+    open, 
+    close, 
+    isOpen: computed(() => dialogRef.value?.open ?? false)
+})
 </script>
 
 <template>

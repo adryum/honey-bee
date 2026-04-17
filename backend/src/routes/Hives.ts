@@ -4,12 +4,14 @@ import type { ResultSetHeader, RowDataPacket } from "mysql2";
 import { uploadImage } from "../config/image_cloud/Cloudinary";
 import { PublicIdBuilder } from "../config/image_cloud/PublicIdBuilder";
 import { upload } from "../config/Multer";
-import { requireRole } from "../Middleware";
+import { attachCalendarClient, requireRole } from "../Middleware";
 import { Role, String_to_Role } from "../DatabaseEnums";
 import { getValidToken } from "../config/GoogleAuth";
 import { getSessionUserRole } from "../config/RedisClient";
 import { and, eq, inArray } from "drizzle-orm";
 import { hives, userhiveaccess } from "../db/schema";
+import { getAdminCalendarClient, useCalendar } from "../config/calendar/GoogleCalendar";
+import { withStatus } from "../utils";
 
 const router = Router()
 const hiveModelQuery =`
@@ -231,6 +233,7 @@ router.post(
     
     const { name, description, type, apiaryId } = req.body
     const image = req.file
+    const { createCalendar, shareCalendar } = useCalendar()
     
     try {
         console.log("Creating hive...");
@@ -267,9 +270,11 @@ router.post(
             console.log("Done!");
         }
 
+        const calendarId = await createCalendar({
+            name: `Hive ${createResult.insertId}`,
+            description: `Calendar for hive ${name}`
+        })
 
-        console.log("Creating calendar...");
-        const calendarId = await createHiveCalendar(createResult.insertId)
         await pool.query<ResultSetHeader>(`
             UPDATE hives
             SET calendarId = ?
@@ -306,18 +311,16 @@ router.post(
         }))
         console.log("Done!");
         
-
-        console.log("Giving calendar access to each user...");
-        await Promise.all(userArray.map(async (user) => {
-            return await shareHiveCalendarWithUser(
-                calendarId,
-                user.email,
-                user.role
-            ) 
-        }))
-        console.log("Done!");
+        await withStatus("Giving calendar access to each user...", () => 
+            Promise.all(userArray.map(async (user) => 
+                await shareCalendar({
+                    userRefreshToken: await getValidToken(user.id),
+                    calendarId: calendarId,
+                    userEmail: user.email,
+                    role: user.role
+                }
+        ))))
     
-
         console.log("Getting new entry data...");
         const [[hiveGetResult]] = await pool.query<RowDataPacket[]>(
             hiveModelQuery + `
@@ -356,7 +359,7 @@ router.post('/delete', requireRole([Role.ANY]), upload.none(), async (req: Reque
     }
 })
 
-router.post('/calendar/create', requireRole([Role.ANY]), async (req: Request<{},{},{
+router.post('/calendar/create', requireRole([Role.ANY]), attachCalendarClient, async (req: Request<{},{},{
     hiveId:       number
     calendarId:   string
     start:        string
@@ -371,20 +374,14 @@ router.post('/calendar/create', requireRole([Role.ANY]), async (req: Request<{},
 
         if (!calendarId) res.status(400).send("Invalid credentials!")
 
-        console.log("Creating...");
-        const token = await getValidToken(req.session.userId!, req.session)
-        const result = await createHiveEvent(
-            {
-                calendarId: calendarId,
-                start: start,
-                end: end,
-                title: title,
-                description: description,
-                creatorEmail: creatorEmail
-            },
-            token
-        )
-        console.log("Done!");
+        const { createEvent } = useCalendar()
+        const result = await createEvent(req.calendarClient!, {
+            calendarId:  calendarId,
+            title:       title,
+            description: description,
+            start:       new Date(start),
+            end:         new Date(end)
+        })
 
         res.status(200).json({ 
             ...result, 
