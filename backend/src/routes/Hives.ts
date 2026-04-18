@@ -5,11 +5,10 @@ import { uploadImage } from "../config/image_cloud/Cloudinary";
 import { PublicIdBuilder } from "../config/image_cloud/PublicIdBuilder";
 import { upload } from "../config/Multer";
 import { attachCalendarClient, requireRole } from "../Middleware";
-import { Role, String_to_Role } from "../DatabaseEnums";
-import { getValidToken } from "../config/GoogleAuth";
+import { HiveType, Role, String_to_Role } from "../DatabaseEnums";
 import { getSessionUserRole } from "../config/RedisClient";
-import { and, eq, inArray } from "drizzle-orm";
-import { hives, userhiveaccess } from "../db/schema";
+import { and, eq, inArray, isNotNull, or } from "drizzle-orm";
+import { hives, userapiaryaccess, userhiveaccess, users } from "../db/schema";
 import { getAdminCalendarClient, useCalendar } from "../config/calendar/GoogleCalendar";
 import { withStatus } from "../utils";
 
@@ -224,7 +223,7 @@ router.post(
         req: Request<{},{},{
             name:        string
             description: string
-            type:        string
+            type:        HiveType
             apiaryId:    number
         }>, 
         res: Response
@@ -236,88 +235,81 @@ router.post(
     const { createCalendar, shareCalendar } = useCalendar()
     
     try {
-        console.log("Creating hive...");
-        const [createResult] = await pool.query<ResultSetHeader>(`
-            INSERT INTO hives (
-                name, 
-                description, 
-                type, 
-                userId,
-                apiaryId
-            )
-            VALUES(?, ?, ?, ?, ?)`, 
-            [name, description, type, req.session.userId, apiaryId]
+        const [createdHive] = await withStatus("Creating hive", () => 
+            db.insert(hives).values({
+                name:        name,
+                description: description,
+                type:        type,
+                userId:      req.session.userId,
+                apiaryId:    apiaryId
+            })
         )
-        console.log("Done!");
         
-
         // insert image
         if (image) {
-            console.log("Uplading image...");
-            const imageKey = new PublicIdBuilder(req.session.userId!.toString()).Apiary(createResult.insertId.toString()).getResource()
+            const url = await withStatus("Uploading image", async () => {
+                const imageKey = new PublicIdBuilder(req.session.userId!.toString()).Apiary(createdHive.insertId.toString()).getResource()
+                return await uploadImage(image, imageKey)
+            })
 
-            const url = await uploadImage(image, imageKey)
-            console.log(url);
-            console.log("Done!");
-
-            console.log("Updating hive entry with image...");
-            await pool.query<ResultSetHeader>(`
-                UPDATE hives
-                SET image = ?
-                WHERE id = ?`,
-                [url, createResult.insertId]
+            await withStatus("Assigning image url to hive...", () =>
+                db.update(hives)
+                .set({ image: url })
+                .where(eq(hives.id, createdHive.insertId))
             )
-            console.log("Done!");
         }
 
         const calendarId = await createCalendar({
-            name: `Hive ${createResult.insertId}`,
+            name: `Hive ${createdHive.insertId}`,
             description: `Calendar for hive ${name}`
         })
 
-        await pool.query<ResultSetHeader>(`
-            UPDATE hives
-            SET calendarId = ?
-            WHERE id = ?`,
-            [calendarId, createResult.insertId]
+        await withStatus("Assigning calendarId to hive...", () =>
+            db.update(hives)
+            .set({ calendarId: calendarId })
+            .where(eq(hives.id, createdHive.insertId))
         )
-        console.log("Done!");
 
-
-        console.log("Getting all users who should have access to this hive...");
-        var [users] = await pool.query<RowDataPacket[]>(`
-            SELECT u.id, u.email, u.role
-            FROM users AS u
-            LEFT JOIN userApiaryAccess AS uaa ON u.id = uaa.userId AND uaa.apiaryId = ?
-            WHERE (uaa.apiaryId IS NOT NULL AND u.role = "${Role.APIARY_MAINTAINER}")
-                OR u.role = "${Role.ADMINISTRATOR}"`,
-            [apiaryId]
+        // users who have access to appiary or admin 
+        const usersResult = await withStatus("Getting users with access to this apiary ", () =>
+            db.query.users.findMany({
+                columns: {
+                    id: true,
+                    email: true,
+                    role: true,
+                    googleRefreshToken: true
+                },
+                where: or(
+                    eq(users.role, Role.ADMINISTRATOR),
+                    and(
+                        inArray(
+                            users.id, 
+                            db.select({ id: userapiaryaccess.userId })
+                                .from(userapiaryaccess)
+                                .where(eq(userapiaryaccess.apiaryId, apiaryId))
+                        ),
+                        eq(users.role, Role.APIARY_MAINTAINER)
+                    )
+                )   
+            })
         )
-        const userArray = users.map(user => ({ 
-            id: user.id,
-            email: user.email ,
-            role: String_to_Role(user.role)
-        }))
-        console.log("Done!");
 
+        await withStatus("Giving users access to this hive...", () => 
+            db.insert(userhiveaccess).values(
+                usersResult.map((user) => ({
+                    userId: user.id,
+                    hiveId: createdHive.insertId
+                }))
+            )
+        )
 
-        console.log("Giving user access to this hive...");
-        await Promise.all(userArray.map(async (user) => {
-            return await pool.query<ResultSetHeader>(`
-                INSERT INTO userhiveaccess (userId, hiveId)
-                VALUES(?,?)`,
-                [user.id, createResult.insertId]
-            );
-        }))
-        console.log("Done!");
-        
-        await withStatus("Giving calendar access to each user...", () => 
-            Promise.all(userArray.map(async (user) => 
+        await withStatus("Giving calendar access to each user", () => 
+            Promise.all(usersResult.map(async (user) => 
                 await shareCalendar({
-                    userRefreshToken: await getValidToken(user.id),
-                    calendarId: calendarId,
-                    userEmail: user.email,
-                    role: user.role
+                    userRefreshToken: user.googleRefreshToken!,
+                    calendarId:       calendarId,
+                    userEmail:        user.email,
+                    role:             user.role
                 }
         ))))
     
@@ -326,7 +318,7 @@ router.post(
             hiveModelQuery + `
             WHERE h.id = ?
             LIMIT 1`, 
-            [createResult.insertId]
+            [createdHive.insertId]
         )
         console.log("Done!");
         res.status(200).json(hiveGetResult)

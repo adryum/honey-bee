@@ -221,7 +221,7 @@ onMounted(() => {
         background: var(--gray)
 
 .label
-    +bulletLabel
+    
     display: flex
     margin: 1rem 0 
 

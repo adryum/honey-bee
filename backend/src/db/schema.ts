@@ -1,6 +1,6 @@
 import { mysqlTable, mysqlSchema, AnyMySqlColumn, index, foreignKey, primaryKey, bigint, varchar, text, timestamp, float, int, mysqlEnum, datetime, tinyint } from "drizzle-orm/mysql-core"
 import { sql }                                                                                                                                                from "drizzle-orm"
-import { Role }                                                                                                                                               from "../DatabaseEnums";
+import { HiveType, Role }                                                                                                                                               from "../DatabaseEnums";
 import { boolean } from "drizzle-orm/mysql-core";
 
 export const apiaries = mysqlTable("apiaries", {
@@ -35,7 +35,7 @@ export const hives = mysqlTable("hives", {
 	name:         varchar({ length: 50 }),
 	image:        text(),
 	location:     varchar({ length: 50 }),
-	type:         mysqlEnum(['Stationary','Movable','Tower']),
+	type:         mysqlEnum(HiveType).notNull(),
 	description:  varchar({ length: 500 }),
 	apiaryId:     bigint({ mode: "number" }).references(() => apiaries.id, { onDelete: "set null" } ),
 	userId:       bigint({ mode: "number" }).references(() => users.id, { onDelete: "set null" } ),
@@ -84,7 +84,7 @@ export const users = mysqlTable("users", {
 	email:              varchar({ length: 30 }).default("").notNull(),
 	password:           varchar({ length: 30 }).default("").notNull(),
 	image:              text(),
-	role:               mysqlEnum(Role),
+	role:               mysqlEnum(Role).notNull(),
 	provider:           mysqlEnum(['GOOGLE']),
 	providerSub:        varchar({ length: 255 }),
 	googleRefreshToken: text(),

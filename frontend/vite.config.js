@@ -25,7 +25,7 @@ export default defineConfig({
     preprocessorOptions: {
       sass: {
         // This injects the import into every SASS file/block
-        additionalData: `\n@use "@/assets/_mixins.sass" as *\n` 
+        // additionalData: `\n@use "@/assets/_mixins.sass" as *\n` 
       },
     }
   }

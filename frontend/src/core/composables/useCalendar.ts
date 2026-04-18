@@ -1,18 +1,27 @@
 import { useMutation, useQuery, useQueryClient } from "@tanstack/vue-query";
 import { calendarApi } from "../api/CalendarApi";
 import { computed, type Ref } from "vue";
+import type { CalendarEventDB } from "../stores/Models";
 
 export const useCalendarQuery = (
     data: {
         calendarIds: Ref<string[]>
+        month:       Ref<number>
+        year:        Ref<number>
     }
 ) => {
-    const { calendarIds} = data
-
     const { data: events, isLoading, isError } = useQuery({
-        queryKey: computed(() => ["calendars", calendarIds.value]),
-        queryFn:  () => calendarApi.getEvents(calendarIds.value),
-        initialData: []
+        queryKey: computed(() => ["events", { 
+            calendarIds: data.calendarIds.value,
+            month:       data.month.value,
+            year:        data.year.value
+        }]),
+        queryFn:  () =>  calendarApi.getEvents(
+            data.calendarIds.value, 
+            data.month.value, 
+            data.year.value
+        ),
+        enabled: computed(() => data.calendarIds.value.length > 0)
     })
 
     return { events, isLoading, isError }
@@ -25,7 +34,7 @@ export const useCalendarMutation = () => {
     const { mutate: createEvent, isPending: isCreatingEvent } = useMutation({
         mutationFn: calendarApi.createEvent,
         onSuccess: (newEvent) => {
-
+            queryClient.invalidateQueries({ queryKey: ['events'] })
         }
     })
 

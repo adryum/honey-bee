@@ -1,9 +1,9 @@
 <script setup lang="ts">
 import { IconType, SVG } from "@/assets/svgs/SVGLoader";
 import type { ModalBaseModel } from "@/core/composables/useModalBase";
-import { getRandomId } from "@/core/utils/others";
 import { computed, ref, useCssModule } from "vue";
 import Icon from "../Icon.vue";
+import { getRandomId } from "@/core/utils/Utils";
 
 const s = useCssModule()
 const props = defineProps<{

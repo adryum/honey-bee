@@ -27,6 +27,7 @@ const { floaterStyle } = useFloatingUI({
 <template>
 <div 
     :class="s.container"
+
 >   
     <IconCubeButton
         ref="anchor"
@@ -34,7 +35,7 @@ const { floaterStyle } = useFloatingUI({
         :svg="svg"
         :transparent="transparent"
         :no-border-radius="noBorderRadius"
-        @click="isShown = !isShown"
+        @click.stop="isShown = !isShown"
     />
     <Teleport to="body">
         <ol 

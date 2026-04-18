@@ -44,8 +44,7 @@ async function startServer() {
         const originalJson = res.json;
 
         res.json = function (body) {
-            console.log(">>> Exit!");
-            console.log('JSON response:', body);
+            console.log('[EXIT] JSON response:', body);
             return originalJson.call(this, body);
         };
 

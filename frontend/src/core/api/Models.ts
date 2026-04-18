@@ -203,7 +203,7 @@ export type InspectionCreateRequestModel = {
         needMoreBreedingFramesAmount: number;
         takenHoneyFrames:             number;
         takenBreedingFrames:          number;
-    }[]
+    }[] | undefined
 }
 
 export type InspectionEntryResponseModel = {
@@ -216,10 +216,10 @@ export type InspectionEntryResponseModel = {
     user:                {
         image:    string
         username: string
-    }
+    } | undefined
     apiary: {
         name:    string
-    }
+    } | undefined
 }
 
 export type InspectionReviewResponseModel = {
@@ -231,10 +231,10 @@ export type InspectionReviewResponseModel = {
     user:             {
         image:   string
         username:      string
-    }
+    } | undefined
     apiary: {
         name:    string
-    }
+    } | undefined
     hiveInspectionForms:    {
         id:                           number
         hiveId:                       number
@@ -258,8 +258,8 @@ export type InspectionReviewResponseModel = {
         takenBreedingFrames:          number
         hive: {
             name: string
-        }
-    }[]
+        } | undefined
+    }[] | undefined
 }
 
 export type HiveHistoryCreateModel = {
@@ -278,7 +278,7 @@ export type HiveHistoryGetModel = {
         id:       number
         username: string
         image:  string
-    }
+    } | undefined
 }
 
 export type CalendarEventGetModel = {

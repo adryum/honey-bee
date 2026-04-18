@@ -8,7 +8,7 @@ declare global {
         nextMonth(): Date;
         in(from: Date, to: Date): boolean;
         isToday(): boolean;
-        isThisMonth(): boolean;
+        isThisMonth(date?: Date): boolean;
         isWeekend(): boolean;
     }
 }
@@ -50,10 +50,10 @@ Date.prototype.isToday = function(): boolean {
            this.getFullYear() === today.getFullYear();
 }
 
-Date.prototype.isThisMonth = function(): boolean {
-    const today = new Date();
-    return this.getMonth() === today.getMonth() &&
-           this.getFullYear() === today.getFullYear();
+Date.prototype.isThisMonth = function(date?: Date): boolean {
+    const compare = date ?? new Date();
+    return this.getMonth() === compare.getMonth() &&
+           this.getFullYear() === compare.getFullYear();
 }
 
 Date.prototype.isWeekend = function(): boolean {

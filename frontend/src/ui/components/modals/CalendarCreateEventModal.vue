@@ -11,8 +11,13 @@ import { useCalendarMutation } from '@/core/composables/useCalendar';
 
 const s = useCssModule()
 const props = defineProps<{
-    calendarIds: string[]
-    date:        Date
+    calendarId :       string
+    otherCalendarIds : string[]
+    date :             Date
+}>()
+
+const emits = defineEmits<{
+    create: []
 }>()
 
 const { modal, exposed } = useModalBase()
@@ -25,21 +30,19 @@ const title   = ref('')
 const content = ref('')
 
 async function create() {
-    if (!isFormValid.value || props.calendarIds.isEmpty()) return
+    if (!isFormValid.value || !props.calendarId) return
 
-    props.calendarIds.forEach(calendarId => {
-        createEvent({
-            calendarId:  calendarId,
-            title:       title.value,
-            description: content.value,
-            start:       props.date.toISOString(),
-            end:         props.date.toISOString()
-        }, {
-            onSuccess: () => {
-                !modal.value?.isOpen && modal.value?.close(); 
-                console.log("closed Modal!!!");
-            } 
-        })
+    createEvent({
+        calendarId:  props.calendarId,
+        title:       title.value,
+        description: content.value,
+        start:       props.date.toISOString(),
+        end:         props.date.toISOString()
+    }, {
+        onSuccess: () => {
+            emits('create')
+            modal.value?.close();
+        } 
     })
 }
 </script>

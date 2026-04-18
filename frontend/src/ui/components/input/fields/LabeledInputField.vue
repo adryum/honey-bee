@@ -4,12 +4,14 @@ import InputField from "./InputField.vue";
 import Icon from "../../Icon.vue";
 import { IconType, SVG } from "@/assets/svgs/SVGLoader";
 import type { FieldValidee } from "@/core/composables/useFormValidator";
+import { getRandomId } from "@/core/utils/Utils";
 
 const s = useCssModule()
 const props = defineProps<{
     label:   string
     validee: FieldValidee
 }>()
+const id = getRandomId("labeled-input")
 const input = defineModel('input', { default: '' })
 const shown = ref(false)
 </script>
@@ -18,9 +20,14 @@ const shown = ref(false)
 <div :class="s.container"
     @click="shown = !shown"
 >
-    <label :class="s.label" for="field">{{ label }}</label>
+    <label 
+        :class="s.label" 
+        :for="id"
+    >
+        {{ label }}
+    </label>
     <InputField 
-        id="field" 
+        :id="id" 
         :class="s.field"
         :validee="validee"
         v-model:input="input"

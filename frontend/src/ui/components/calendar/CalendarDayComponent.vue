@@ -1,20 +1,24 @@
 <script setup lang="ts">
 import { computed, onMounted, ref, useCssModule, watch } from "vue";
 import { useWindowSize } from "@vueuse/core";
-import Icon from "../Icon.vue";
-import { IconType, SVG } from "@/assets/svgs/SVGLoader";
 import type { CalendarDayModel } from "@/core/stores/Models";
 import CalendarDayInfoModal from "../modals/CalendarDayInfoModal.vue";
 import type { ModalBaseModel } from "@/core/composables/useModalBase";
 
 const s = useCssModule()
 const props = defineProps<{
-    calendarIds: string[]
-    day:         CalendarDayModel
+    selectedDate:     Date
+    calendarId:       string
+    otherCalendarIds: string[]
+    day:              CalendarDayModel
+}>()
+
+const emits = defineEmits<{
+    create: []
 }>()
 
 const isToday = computed(() => props.day.date.isToday())
-const isThisMonth = computed(() => props.day.date.isThisMonth())
+const isThisMonth = computed(() => props.day.date.isThisMonth(props.selectedDate))
 const isWeekend = computed(() => props.day.date.isWeekend())
 
 
@@ -37,19 +41,19 @@ function calculatePossibleListItemCount() {
     const rect = container.value.getBoundingClientRect()
 
     const bottomHeight = 22
-    const padding = 32
+
     const topHeight = 19 + 11
 
-    var trueHeight = rect.height - bottomHeight - padding - topHeight
-    const itemHeight = 20
+    var trueHeight = rect.height - bottomHeight - topHeight
+    const itemHeight = 16
 
     availableRows.value = Math.floor(trueHeight / itemHeight)
 
     trueHeight -= availableRows.value * 3.2
     availableRows.value = Math.floor(trueHeight / itemHeight)
 
-    console.log(availableRows.value);
-    console.log(trueHeight);
+    // console.log(availableRows.value);
+    // console.log(trueHeight);
 }
 
 watch([width, height], ([w, h]) => {
@@ -72,37 +76,62 @@ onMounted(() => {
     ]"
     @click="infoModal?.open"
 > 
-    <p 
-        :class="s.dayLabel"
+    <div 
+        :class="s.header"
     >
-        {{ day.date.getUTCDate() + (isToday ? " ( Today )" : "") }} 
-    </p>
+        <p 
+            :class="s.dayLabel"
+        >
+            {{ day.date.getUTCDate() + (isToday ? " ( Today )" : "") }} 
+        </p>
+
+        <p 
+            :class="s.right"
+        >
+            {{ day.events.length > availableRows ? `+${day.events.length - availableRows} tasks` : "" }} 
+        </p>
+    </div>
+    
     <ul 
         :class="s.taskList"
     >
-        <button 
-            v-for="event in day.events"
-            :class="s.button"
-        >
-            <Icon :class="s.icon" :type="IconType.SMALL" :svg="SVG.Dollar" />
-            <p :class="s.number">2</p>
-        </button>
+        <p
+            v-for="event in day.events.slice(0, availableRows)"
+            :class="[
+                s.task,
+                isToday && s.today,
+            ]"
+        >{{ event.title }}</p>
         
     </ul>
     <CalendarDayInfoModal
         ref="infoModal"
-        :calendarIds="calendarIds"
+        :calendar-id="calendarId"
+        :other-calendar-ids="otherCalendarIds"
         :day-model="day"
         @clickOutside="infoModal?.close"
         @close="infoModal?.close"
+        @create="emits('create')"
     />
 </div>
 </template>
 
 <style module lang='sass'>
-.dayLabel
-    +bulletLabel
- 
+.header
+    display: flex
+    justify-content: space-between
+    align-items: center
+    margin-bottom: .5rem
+
+    font-family: var(--font-family)
+    font-size: var(--font-size-small)
+    font-weight: 500
+    letter-spacing: .02em
+
+    .dayLabel
+
+    .right
+
 .container
     position: relative
     display: flex
@@ -117,9 +146,13 @@ onMounted(() => {
 
     &:hover
         z-index: 1
-        box-shadow: 0 0 0 1px rgba(200,200,200,1)
+        box-shadow: 0 4px 8px 0 rgba(0, 0, 0, 0.15), 0 6px 20px 0 rgba(0, 0, 0, 0.10)
+        transform: translateY(-2px)
+        // filter: brightness(.80)
+        // color: var(--black) !important
+
         // background: green
-        transform: scale(1.01)
+        // transform: scale(1.01)
 
     .day
         font-size: var(--font-size-medium)
@@ -167,11 +200,34 @@ onMounted(() => {
 
         .task
             all: unset
-            
-            padding: .2rem .5rem 
-            background: var(--gray)
-            border-left: 4px solid rgba(0, 0, 0, .5)
+
+            align-items: center
+
+
+            font-family: var(--font-family)
+            font-size: var(--font-size-small)
+            font-weight: 600
+            letter-spacing: .02em
+
+            height: 1.5rem
+            line-height: 1.5rem
+
+            padding: 0 .5rem 
             box-sizing: border-box
+            border-radius: var(--border-radius-tiny)
+            
+            color: var(--black)
+            background: var(--orange)
+            white-space: nowrap
+            overflow: hidden
+            text-overflow: ellipsis
+
+            &.today
+                background: white !important
+                color: var(--black)
+            // background: var(--gray)
+            // font-size: var(--font-size-small)
+            // border-left: 4px solid rgba(0, 0, 0, .5)
 
     .hint
         margin-top: .5rem
@@ -179,14 +235,13 @@ onMounted(() => {
 .thisMonthDate
 
 .notThisMonthDate
-    opacity: 0.6
-    background: var(--light-gray)
-
+    opacity: .6
 
 .today
-    background: var(--orange)
+    background: var(--orange) !important
     // border: 5px solid rgba(20, 180, 20, .2)
 
 .weekend
-    background: var(--faint-border)
+    background: var(--black)
+    color: white
 </style>

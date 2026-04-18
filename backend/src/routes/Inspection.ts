@@ -5,7 +5,7 @@ import { Role } from "../DatabaseEnums";
 import { requireRole } from "../Middleware";
 import { isValidValue } from "../utils";
 import { asc, desc, eq } from "drizzle-orm";
-import { apiaries, hiveHoneyProduction, hiveInspectionForms, hiveInspections } from "../db/schema";
+import {  hiveInspections } from "../db/schema";
 
 const router = Router()
 
@@ -29,12 +29,22 @@ router.get(
         const inspectionResult = await db.query.hiveInspections.findMany({
             with: {
                 hiveInspectionForms: {
-                    with: {
-                        hive: true
+                    columns: { 
+                        id: true,
                     }
                 },
-                apiary: true,
-                user: true
+                apiary: {
+                    columns: {
+                        id: true,
+                        name: true
+                    }
+                },
+                user: {
+                    columns: {
+                        id: true,
+                        username: true
+                    }
+                }
             },
             offset: offset,
             limit: limit,

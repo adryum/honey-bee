@@ -4,23 +4,42 @@ import { useCalendarQuery } from "@/core/composables/useCalendar";
 import { CalendarDate } from "@/core/Calendar";
 import type { HiveModelDB } from "@/core/stores/Models";
 import CalendarGrid from "../calendar/CalendarGrid.vue";
+import { useActionsStore } from "@/core/stores/ActionStore";
+import { useHiveMutations } from "@/core/composables/useHive";
+import { useHiveHistoryMutations } from "@/core/composables/useHiveHistory";
+import { HistoryEntryType } from "@/core/DatabaseEnums";
 
 const s = useCssModule()
 const props = defineProps<{
     hive: HiveModelDB
+    selectedDate: Date
 }>()
 
-const calendarIds = computed(() => props.hive.calendarId ? [props.hive.calendarId] : [])
-const { events } = useCalendarQuery({
-    calendarIds: calendarIds
+const { create } = useHiveHistoryMutations()
+const calendarIds = computed(() => {
+    console.log(props.hive.calendarId ? [props.hive.calendarId] : []);
+    return props.hive.calendarId ? [props.hive.calendarId] : []
+    
 })
-const date = new Date()
+const { events } = useCalendarQuery({
+    calendarIds: calendarIds,
+    month: computed(() => props.selectedDate.getMonth() + 1),
+    year: computed(() => props.selectedDate.getFullYear())
+})
+
 const today: CalendarDate = new CalendarDate(
-    date.getFullYear(),
-    date.getMonth() + 1,
-    date.getDate(),
+    props.selectedDate.getFullYear(),
+    props.selectedDate.getMonth() + 1,
+    props.selectedDate.getDate(),
 )
-const searchDate = reactive<CalendarDate>(today.copy())
+
+function onCreateEvent() {
+    create({
+        hiveId: props.hive.id,
+        text: "Created calendar task",
+        type: HistoryEntryType.CALENDAR
+    })
+}
 console.log(today);
 </script>
 
@@ -32,17 +51,18 @@ console.log(today);
             label="Calendar"
         /> -->
         <CalendarGrid 
-            :class="s.calendar" 
-            :calendarIds="calendarIds"
-            :events="events"
-            :looked-at-date="new Date()"
+            :class="s.calendar"
+            :calendar-id="hive.calendarId" 
+            :otherCalendarIDs="calendarIds"
+            :events="events ?? []"
+            :looked-at-date="selectedDate"
             :is-macdonalds="false"
+            @create="onCreateEvent"
         />
     </div>
 </template>
 
 <style module lang='sass'>
-@use '@/assets/_colors.sass' as colors
 
 .container
     padding: 1rem

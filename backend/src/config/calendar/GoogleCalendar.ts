@@ -4,9 +4,9 @@ import { requireEnv, withStatus } from '../../utils';
 import { CalendarEntryModel, CreateCalendarEventModel, UpdateCalendarEventModel } from './Models';
 import { Role, Role_to_GoogleCalendarRole } from '../../DatabaseEnums';
 
-const GOOGLE_CLIENT_ID = requireEnv('GOOGLE_CLIENT_ID')
+const GOOGLE_CLIENT_ID     = requireEnv('GOOGLE_CLIENT_ID')
 const GOOGLE_CLIENT_SECRET = requireEnv('GOOGLE_CLIENT_SECRET')
-const MAIN_PROD_EMAIL = requireEnv('MAIN_PROD_EMAIL')
+const MAIN_PROD_EMAIL      = requireEnv('MAIN_PROD_EMAIL')
 
 const client = new JWT({
     keyFile: process.env.PATH_TO_SERVICE_ACC!,
@@ -113,17 +113,16 @@ export function useCalendar() {
         return eventId
     }
 
-    async function getEvents({ calendarId, month, year, userCalendarClient }: { 
+    async function getEvents({ calendarId, month, year }: { 
         calendarId: string,
-        userCalendarClient: calendar_v3.Calendar,
         month: number, 
         year: number 
     }): Promise<CalendarEntryModel[]> {
-        const timeMin = new Date(year, month, 1);
-        const timeMax = new Date(year, month + 1, 1);
+        const timeMin = new Date(year, month - 1, 1);
+        const timeMax = new Date(year, month, 1);
 
         const { data } = await withStatus(`Fetching events from calendar ${calendarId}`,
-            () => userCalendarClient.events.list({
+            () => getAdminCalendarClient().events.list({
                 calendarId,
                 timeMin:       timeMin.toISOString(),
                 timeMax:       timeMax.toISOString(),
@@ -132,13 +131,13 @@ export function useCalendar() {
             })
         )
 
-        return data.items?.map<CalendarEntryModel>(ev => ({
-            id:          ev.id              ?? 'NO_ID',
-            title:       ev.summary         ?? 'NO_TITLE',
-            description: ev.description     ?? 'NO_DESCRIPTION',
-            start:       ev.start?.dateTime ?? ev.start?.date ?? 'NO_START_TIME',
-            end:         ev.end?.dateTime   ?? ev.end?.date   ?? "NO_END_TIME",
-            creatorEmail: ev.creator?.email  ?? "NO_EMAIL",
+        return data.items?.map<CalendarEntryModel>(event => ({
+            id:          event.id              ?? 'NO_ID',
+            title:       event.summary         ?? 'NO_TITLE',
+            description: event.description     ?? 'NO_DESCRIPTION',
+            start:       event.start?.dateTime ?? event.start?.date ?? 'NO_START_TIME',
+            end:         event.end?.dateTime   ?? event.end?.date   ?? "NO_END_TIME",
+            creatorEmail: event.creator?.email ?? "NO_EMAIL",
         })) ?? []
     }
 
@@ -159,10 +158,11 @@ export function useCalendar() {
 
         const calendarId = newCalendar.data.id!
 
+        // TODO: remember to remove this shit when I get main prods refresh token!!! 
         // 2. Give your prod account owner access
         //    (service account owns it by default, but it won't appear
         //    in your prod Google Calendar UI without this step)
-        await withStatus(`Granting dedicated account access to calendar ${calendarId}`, () => 
+        await withStatus(`Granting dedicated account access to calendar ${calendarId}`, () =>  
             getAdminCalendarClient().acl.insert({
                 calendarId,
                 requestBody: {

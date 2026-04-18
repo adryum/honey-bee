@@ -30,3 +30,7 @@ export function formatDateWithOrdinal(
 
     return hoursAndMinutes + seconds + `${day}${suffix} ${month}, ${year}`;
 }
+
+export function getRandomId(prefix: string): string {
+    return `${prefix}-${Math.random().toString(36).slice(2, 11)}`
+}

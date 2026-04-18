@@ -17,11 +17,9 @@ export const useInspectionsQuery = (
     filters: Ref<InspectionFilters>
 ) => {
     const { data: inspectionTableEntries, isLoading, isError } = useQuery({
-        queryKey: computed(() => ['inspections', filters.value]),
-        queryFn:  () => inspectionApi.getInspectionTableEntries(filters.value),
-        placeholderData: keepPreviousData
+        queryKey:  ['inspections', filters],
+        queryFn:  () => inspectionApi.getInspectionTableEntries(filters.value)
     })
-
 
     const nextPage = () => isValidValue(filters.value.page) && filters.value.page++
     const prevPage = () => {

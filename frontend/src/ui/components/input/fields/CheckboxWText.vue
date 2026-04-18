@@ -3,7 +3,7 @@ import { useCssModule } from "vue";
 import { IconType, SVG } from "@/assets/svgs/SVGLoader";
 import type { FormvalidatorAndItsOptionsModel } from "@/core/composables/validators/UseFormValidator";
 import Icon from "../../Icon.vue";
-import { getRandomId } from "@/core/utils/others";
+import { getRandomId } from "@/core/utils/Utils";
 
 const s = useCssModule()
 const props = defineProps<{

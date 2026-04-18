@@ -4,7 +4,7 @@ import type { FieldValidationOptions } from "@/core/composables/validators/UseFi
 import Icon from "../../Icon.vue";
 import { IconType, SVG } from "@/assets/svgs/SVGLoader";
 import TextareaField from "./TextareaField.vue";
-import { getRandomId } from "@/core/utils/others";
+import { getRandomId } from "@/core/utils/Utils";
 import type { FieldValidee } from "@/core/composables/useFormValidator";
 
 const s = useCssModule()

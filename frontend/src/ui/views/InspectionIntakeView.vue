@@ -277,7 +277,7 @@ onMounted(() => {
     gap: .5rem
 
 .label
-    +bulletLabel
+    
 
 .apiaryHives
     width: 100%

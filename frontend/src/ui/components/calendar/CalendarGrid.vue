@@ -6,13 +6,18 @@ import type { CalendarDayModel, CalendarEventDB } from "@/core/stores/Models";
 
 const s = useCssModule()
 const props = withDefaults(defineProps<{
-    calendarIds:  string[]
-    events:       CalendarEventDB[]
-    lookedAtDate: Date
-    isMacdonalds: boolean
+    calendarId:       string
+    otherCalendarIDs: string[]
+    events:           CalendarEventDB[]
+    lookedAtDate:     Date
+    isMacdonalds:     boolean
 }>(), {
     lookedAtDate: () => new Date()
 })
+
+const emits = defineEmits<{
+    create: []
+}>()
 
 const macdonadsWeekDays = [
     Days.Sunday,
@@ -38,7 +43,7 @@ const weekDays = computed(() => {
 
 const currentMonthDays = computed((): CalendarDayModel[] => {
     const date = props.lookedAtDate
-    const day = date.getDate()
+    // const day = date.getDate()
     const month = date.getMonth()
     const year = date.getFullYear()
     const calendarDays = getCalendarMonthWithDayPadding(year, month, !props.isMacdonalds) 
@@ -118,8 +123,11 @@ function getCalendarMonthWithDayPadding(
     <div ref="grid" :class="s.grid">
         <CalendarDayComponent 
             v-for="day in currentMonthDays"
-            :calendarIds="calendarIds"
+            :selectedDate="lookedAtDate"
+            :calendarId="calendarId"
+            :otherCalendarIds="otherCalendarIDs"
             :day="day"
+            @create="emits('create')"
         />
     </div>
 </div>
@@ -130,7 +138,7 @@ function getCalendarMonthWithDayPadding(
 .container
     display: flex
     flex-direction: column
-    gap: 1px
+    gap: 3px
     height: calc( 100vh - 6rem )
     
     .days
@@ -139,13 +147,19 @@ function getCalendarMonthWithDayPadding(
         min-height: 2rem
         gap: 1px
 
+        font-family: var(--font-family)
+        font-size: var(--font-size-medium)
+        font-weight: 500
+        letter-spacing: .02em
+
         .day
-            +bulletValue
             display: flex
             align-items: center
             justify-content: center
             flex: 1
-            background: white
+            background: var(--black)
+            color: white
+            border-radius: var(--border-radius-tiny)
 
 
     .grid

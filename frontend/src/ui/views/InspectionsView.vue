@@ -1,5 +1,5 @@
 <script setup lang="ts">
-import { ref, useCssModule } from "vue";
+import { ref, useCssModule, watch } from "vue";
 import ToolBar from "../components/ToolBar.vue";
 import InspectionTable from "../components/tables/InspectionTable.vue";
 import { useInspectionsQuery, type InspectionFilters } from "@/core/composables/useInspection";
@@ -11,12 +11,15 @@ const props = defineProps<{}>()
 
 const filters = ref<InspectionFilters>({
     page:   1,
-    limit:  14,
+    limit:  20,
     hiveId: undefined,
     ids:    undefined
 })
 const { inspectionTableEntries, nextPage, prevPage } = useInspectionsQuery(filters)
 
+watch(inspectionTableEntries, () => {
+    console.log(inspectionTableEntries.value);
+}, { immediate: true })
 </script>
 
 <template>

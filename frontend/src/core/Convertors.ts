@@ -103,16 +103,16 @@ export function InspectionReviewResponseModel_To_InspectionFormDB(
     return {
         id:               convertee.id,
         apiaryId:         convertee.apiaryId,
-        apiaryName:       convertee.apiary.name,
+        apiaryName:       convertee.apiary?.name || 'Unknown Apiary',
         userIdCreator:    convertee.userIdCreator,
-        userPicture:      convertee.user.image,
-        username:         convertee.user.username,
+        userPicture:      convertee.user?.image || '',
+        username:         convertee.user?.username || 'Unknown User',
         creationDate:     convertee.creationDate,
         hasBeenProcessed: convertee.hasBeenProcessed,
-        forms:            convertee.hiveInspectionForms.map(form => ({
+        forms:            convertee.hiveInspectionForms?.map(form => ({
             id:                           form.id,
             hiveId:                       form.hiveId,
-            hiveName:                     form.hive.name,
+            hiveName:                     form.hive?.name || 'Unknown Hive',
             isAbnormalBehavior:           form.isAbnormalBehavior,
             isSwarming:                   form.isSwarming,
             needAdditionalFeeding:        form.needAdditionalFeeding,
@@ -131,7 +131,7 @@ export function InspectionReviewResponseModel_To_InspectionFormDB(
             needMoreBreedingFramesAmount: form.needMoreBreedingFramesAmount,
             takenHoneyFrames:             form.takenHoneyFrames,
             takenBreedingFrames:          form.takenBreedingFrames
-        }))
+        })) ?? []
     }
 }
 
@@ -212,19 +212,19 @@ export function InspectionDB_To_InspectionTableEntryModel(
 export function InspectionEntryResponseModel_To_InspectionTableEntryModel(
     convertee: InspectionEntryResponseModel
 ): InspectionTableEntryModel {
+    console.log('converting:', convertee.id, 'user:', convertee.user, 'apiary:', convertee.apiary)
     return {
-        id:               convertee.id,
-        apiaryId:         convertee.apiaryId,
-        apiaryName:       convertee.apiary.name,
-        userIdCreator:    convertee.userIdCreator,
-        userPicture:      convertee.user.image,
-        formCount:        convertee.hiveInspectionForms.length,
-        username:         convertee.user.username,
-        processed: !!convertee.processed,
-        creationDate:     convertee.creationDate,
+        id:            convertee.id,
+        apiaryId:      convertee.apiaryId,
+        apiaryName:    convertee.apiary?.name || 'Unknown Apiary',
+        userIdCreator: convertee.userIdCreator,
+        userPicture:   convertee.user?.image || '',
+        username:      convertee.user?.username || 'Unknown User',
+        formCount:     convertee.hiveInspectionForms.length,
+        processed:     !!convertee.processed,
+        creationDate:  convertee.creationDate,
     }
 }
-
 
 export function HiveHistoryGetModel_To_HistoryEntryDB(
     convertee: HiveHistoryGetModel
@@ -233,9 +233,9 @@ export function HiveHistoryGetModel_To_HistoryEntryDB(
         id:           convertee.id,
         text:         convertee.text,
         type:         convertee.type,
-        userId:       convertee.user.id,
-        username:     convertee.user.username,
-        userImage:    convertee.user.image,
+        userId:       convertee.user?.id || -1,
+        username:     convertee.user?.username || 'Unknown User',
+        userImage:    convertee.user?.image || '',
         creationDate: convertee.creationDate,
     }
 }

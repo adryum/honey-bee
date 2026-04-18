@@ -8,16 +8,19 @@ import IconCubeButton from "../input/buttons/IconCubeButton.vue";
 import type { CalendarDayModel, HiveModelDB } from "@/core/stores/Models";
 import { useModalBase, type ModalBaseModel } from "@/core/composables/useModalBase";
 import CalendarCreateEventModal from "./CalendarCreateEventModal.vue";
+import IconTextButton from "../input/buttons/IconTextButton.vue";
 
 const s = useCssModule()
 const props = defineProps<{
-    calendarIds: string[]
-    dayModel:    CalendarDayModel
+    calendarId:       string
+    otherCalendarIds: string[]
+    dayModel:         CalendarDayModel
 }>()
 
-defineEmits<{
+const emits = defineEmits<{
     clickOutside: [],
-    close: []
+    close:        [],
+    create:       []
 }>()
 
 const { modal, exposed } = useModalBase()
@@ -43,7 +46,7 @@ const createEventModal = ref<ModalBaseModel>()
             >
                 <Icon
                     :svg="SVG.Calendar"
-                    :type="IconType.BIG"
+                    :type="IconType.MEDIUM"
                 />
                 <label 
                     :class="s.title"
@@ -69,18 +72,12 @@ const createEventModal = ref<ModalBaseModel>()
             <div 
                 :class="s.titleWrapper"
             >
-                <button 
-                    :class="s.button"
+                <IconTextButton
+                    text="Create task"
+                    :svg="SVG.Plus"
+                    :isSubmit="true"
                     @click="createEventModal?.open"
-                >
-                    <Icon
-                        :svg="SVG.Plus"
-                        :type="IconType.SMALL"
-                    />
-                    <p>
-                        Add task
-                    </p>
-                </button>
+                />
             </div>
             
             <label 
@@ -91,11 +88,20 @@ const createEventModal = ref<ModalBaseModel>()
             </label>
 
             <div :class="s.taskList">
+                <Icon
+                    v-if="dayModel.events.length === 0"
+                    :svg="SVG.FailedToFind"
+                    :type="IconType.GIGANTIC"
+                    :style="{
+                        margin: '2rem auto 1rem auto',
+                        opacity: .5
+                    }"
+                />
                 <p 
                     v-if="dayModel.events.length === 0"
                     :class="s.noTasksText"
                 >
-                    No tasks for this day
+                    Empty
                 </p>
                 <CalendarTaskExpandable
                     v-for="task in dayModel.events"
@@ -107,7 +113,9 @@ const createEventModal = ref<ModalBaseModel>()
         <CalendarCreateEventModal
             ref="createEventModal"
             :date="dayModel.date"
-            :calendarIds="calendarIds"
+            :calendarId="calendarId"
+            :otherCalendarIds="otherCalendarIds"
+            @create="emits('create')"
         />
 </ModalPlate>
 
@@ -134,7 +142,12 @@ const createEventModal = ref<ModalBaseModel>()
     padding:        1rem
 
 .label
-    +bulletLabel
+    font-family: var(--font-family)
+    font-size:   var(--font-size-medium)
+    opacity:     1
+    font-weight: 500
+    color:       var(--black)
+    line-height: 2rem
 
 .button
     border:        none
@@ -179,15 +192,14 @@ const createEventModal = ref<ModalBaseModel>()
     display:        inline-flex
     flex-direction: column
     overflow-y:     scroll
-    gap:            1rem
+    gap:            .5rem
     min-height:     4rem
     padding:        1px
-    background:     rgb(245, 245, 245)
     border-radius:  var(--border-radius-small)
 
 
     .noTasksText
-        +bulletLabel
+        font-family: var(--font-family)
         font-size: var(--font-size-large)
         font-weight: 600
         opacity: 1

@@ -175,9 +175,8 @@ async function processInspection() {
 .gridLabels
     font-size: var(--font-size-medium)
     font-weight: 300
-    color: var(--black)
+    color: var(--faint-text)
     letter-spacing: .02em
-    opacity: .8
 
 .gridValues
     font-size: var(--font-size-medium)

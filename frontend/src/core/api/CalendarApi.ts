@@ -2,6 +2,7 @@ import axios from "axios";
 import type { CalendarEventCreateModel, CalendarEventGetModel } from "./Models";
 import { CalendarEventGetModel_To_CalendarEventDB } from "../Convertors";
 import type { CalendarEventDB } from "../stores/Models";
+import qs from "qs";
 
 export const calendarApi = {
     createEvent: async (payload: CalendarEventCreateModel) => {
@@ -17,8 +18,11 @@ export const calendarApi = {
         
     },
     
-    getEvents: async (calendarIds: string[]): Promise<CalendarEventDB[]> => {
-        const { data } = await axios.get<CalendarEventGetModel[]>(`/calendar/get?ids=${calendarIds.join(",")}`)
+    getEvents: async (calendarIds: string[], month: number, year: number): Promise<CalendarEventDB[]> => {
+        const { data } = await axios.get<CalendarEventGetModel[]>("/calendar/events", {
+            params: { calendarId: calendarIds, month, year },
+            paramsSerializer: params => qs.stringify(params, { arrayFormat: 'repeat' })
+        })
         return data.map(CalendarEventGetModel_To_CalendarEventDB)
     }
 }

@@ -86,7 +86,7 @@ const emits = defineEmits<{
             padding: .5rem 1rem
             cursor: pointer
             transition: .2s
-            color: #888
+            color: var(--faint-text)
 
             font-weight: 500
             letter-spacing: .04em

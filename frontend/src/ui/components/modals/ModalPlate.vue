@@ -1,6 +1,6 @@
 <script setup lang="ts">
 import type { ModalBaseModel } from "@/core/composables/useModalBase";
-import { getRandomId } from "@/core/utils/others";
+import { getRandomId } from "@/core/utils/Utils";
 import { computed, ref, useCssModule } from "vue";
 const s = useCssModule()
 const props = defineProps<{
