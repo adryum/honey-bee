@@ -62,7 +62,7 @@ function createApiary() {
                 v-model:input="description"
             />
             <IconTextButton
-                :svg="SVG.Plus"
+                :icon="SVG.Plus"
                 :class="s.button" 
                 :is-submit="true"
                 :swap-icon-position="true"

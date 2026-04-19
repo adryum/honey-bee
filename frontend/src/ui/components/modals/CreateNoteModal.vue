@@ -92,7 +92,7 @@ async function createNote() {
             :disabled="!isFormValid" 
             :is-aligned-center="true"
             :is-submit="true"
-            :svg="SVG.Plus"
+            :icon="SVG.Plus"
             @click="createNote" 
         />
     </div>

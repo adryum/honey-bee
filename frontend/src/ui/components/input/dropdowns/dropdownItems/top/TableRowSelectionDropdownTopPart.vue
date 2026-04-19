@@ -27,7 +27,7 @@ const props = defineProps<{
             s.icon,
             dropdown.isShown.value && s.opened
         ]"
-        :svg="SVG.DropdownArrow"
+        :icon="SVG.DropdownArrow"
         :type="IconType.SMALL"
     />
 </div>

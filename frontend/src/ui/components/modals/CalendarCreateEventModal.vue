@@ -72,7 +72,7 @@ async function create() {
             :disabled="!isFormValid" 
             :is-aligned-center="true"
             :is-submit="true"
-            :svg="SVG.Plus"
+            :icon="SVG.Plus"
             @click="create" 
         />
     </div>

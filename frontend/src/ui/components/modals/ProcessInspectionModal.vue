@@ -153,7 +153,7 @@ async function processInspection() {
             <IconTextButton 
                 text="Process"
                 :disabled="!isFormValid" 
-                :svg="SVG.Plus"
+                :icon="SVG.Plus"
                 :is-submit="true"
                 :is-aligned-center="true"
                 :hide-icon="true"

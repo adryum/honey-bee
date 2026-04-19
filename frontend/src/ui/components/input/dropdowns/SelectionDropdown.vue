@@ -90,7 +90,7 @@ onMounted(async () => {
             <p :class="s.selection">{{ selected }}</p>
             <MotionSVG 
                 :initial="{ rotateZ: 270 }" 
-                :animate="isListShown ? { rotateZ: 270 } : { rotateZ: 90 }" :class="s.icon" :svg="SVG.Checkmark"/>
+                :animate="isListShown ? { rotateZ: 270 } : { rotateZ: 90 }" :class="s.icon" :icon="SVG.Checkmark"/>
         </div>
         
         <Teleport to="body"><AnimatePresence><motion.ol  ref="dropdownList" v-if="isListShown"
@@ -108,7 +108,7 @@ onMounted(async () => {
                 :while-hover="item.text != selected ? { transition: { duration: .1 }, filter: 'brightness(90%)'} : {}"
                 :while-press="{ scale: 0.9 }"
             >
-                <SVGComponent class="icon" :svg="item.svg" />
+                <SVGComponent class="icon" :icon="item.svg" />
                 <p class="text">{{ item.text }}</p> 
             </motion.li>
     

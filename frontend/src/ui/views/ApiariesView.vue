@@ -45,7 +45,7 @@ onResize(grid, (element) => {
         >
             <IconButton
                 text="Add apiary"
-                :svg="SVG.Plus"
+                :icon="SVG.Plus"
                 :class="s.button"
                 @click="createApiaryModal?.open()"
             />

@@ -16,7 +16,7 @@ const props = defineProps<{
     @click="options.onClick"
 >
     <Icon
-        :svg="options.svg"
+        :icon="options.svg"
         :type="IconType.SMALL"
     />
     <p :class="s.text">

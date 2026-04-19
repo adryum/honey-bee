@@ -33,7 +33,7 @@ const isTrue = defineModel("isTrue", { default: false })
         <Icon
             v-if="isTrue"
             :class="s.icon"
-            :svg="SVG.Checkmark"
+            :icon="SVG.Checkmark"
             :type="IconType.SMALL"
             color="white"
         />

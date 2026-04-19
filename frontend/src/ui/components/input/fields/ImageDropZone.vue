@@ -65,7 +65,7 @@ function handleFiles(event: Event) {
             :class="s.addImageText"
         >
             <Icon
-                :svg="SVG.Image"
+                :icon="SVG.Image"
                 :type="IconType.GIGANTIC"
             />
             <h1 
@@ -85,7 +85,7 @@ function handleFiles(event: Event) {
         v-if="imageSrc"
         :class="s.choseFileButton"
         :is-important="false"
-        :svg="SVG.Cross"
+        :icon="SVG.Cross"
         @click="imageSrc = ''"
     />
     <!-- <div :class="s.buttons">

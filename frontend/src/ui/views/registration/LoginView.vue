@@ -32,7 +32,7 @@ onMounted(async () => {
         <h1 :class="s.title">HoneyBee</h1>
         
         <IconTextButton
-            :svg="SVG.Checkmark"
+            :icon="SVG.Checkmark"
             text="Login with Google"
             @click="login"
         />

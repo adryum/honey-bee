@@ -129,7 +129,7 @@ onMounted(() => {
             :class="s.header"
         >
             <Icon
-                :svg="SVG.Hive"
+                :icon="SVG.Hive"
                 :type="IconType.MEDIUM"
             />
             <label 
@@ -141,7 +141,7 @@ onMounted(() => {
 
             <IconTextButton
                 :class="s.marginLeft"
-                :svg="SVG.Plus"
+                :icon="SVG.Plus"
                 text="Add note"
             />
         </div>
@@ -162,7 +162,7 @@ onMounted(() => {
             :class="s.header"
         >
             <Icon
-                :svg="SVG.Apiary"
+                :icon="SVG.Apiary"
                 :type="IconType.MEDIUM"
             />
             <label 

@@ -44,7 +44,7 @@ onMounted(() => {
         <IconCubeButton
             :class="s.button"
             :style="dropdown.isShown.value ? { transform: 'rotateZ(180deg)' } : {}"
-            :svg="SVG.DropdownArrow"
+            :icon="SVG.DropdownArrow"
             :type="IconType.MEDIUM"
             :transparent="true"
         />

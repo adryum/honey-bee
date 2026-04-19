@@ -25,7 +25,7 @@ const { remove } = useNoteMutations()
         <div :class="s.iconWrapper">
             <Icon 
                 :type="IconType.SMALL"
-                :svg="SVG.InfoCircle"
+                :icon="SVG.InfoCircle"
             />
         </div>
         <p :class="s.date">
@@ -33,7 +33,7 @@ const { remove } = useNoteMutations()
         </p>
         <IconDropdown
             :class="s.button" 
-            :svg="SVG.MoreDots" 
+            :icon="SVG.MoreDots" 
         >
             <IconTextItem
                 :options="{

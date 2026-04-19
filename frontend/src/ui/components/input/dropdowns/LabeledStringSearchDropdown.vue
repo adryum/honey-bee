@@ -39,7 +39,7 @@ const shown = ref(false)
         ]"
     >
         <Icon 
-            :svg="SVG.InfoCircle"
+            :icon="SVG.InfoCircle"
             :type="IconType.SMALL"
         />
         <p>

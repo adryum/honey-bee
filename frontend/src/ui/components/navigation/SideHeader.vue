@@ -31,11 +31,11 @@ const tabs: Tab[] = [
         pagePath: '/apiaries',
         svg: SVG.Apiary
     },
-    {
-        name: 'Calendar',
-        pagePath: '/calendar',
-        svg: SVG.Calendar
-    },
+    // {
+    //     name: 'Calendar',
+    //     pagePath: '/calendar',
+    //     svg: SVG.Calendar
+    // },
     {
         name: 'Inspections',
         pagePath: RouterViewPaths.Inspections,
@@ -89,7 +89,7 @@ onMounted(() => {
             <Icon 
                 :class="[s.icon, selectedTab.name === tab.name && s.selected]" 
                 :type="IconType.MEDIUM" 
-                :svg="tab.svg"
+                :icon="tab.svg"
             />
         </div>
 

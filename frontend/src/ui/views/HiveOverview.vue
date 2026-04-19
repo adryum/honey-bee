@@ -79,7 +79,7 @@ onMounted(() => console.log(props.tab))
                     @click="selectedDate = new Date()"
                 />
                 <IconCubeButton
-                    :svg="SVG.ArrowLeftSmall"
+                    :icon="SVG.ArrowLeftSmall"
                     @click="selectedDate = selectedDate.previousMonth()"
                 />
                 <p
@@ -88,7 +88,7 @@ onMounted(() => console.log(props.tab))
                     {{ selectedDate.toLocaleString('default', { month: 'long' }) }} {{ selectedDate.getFullYear() }}
                 </p>
                 <IconCubeButton
-                    :svg="SVG.ArrowRightSmall"
+                    :icon="SVG.ArrowRightSmall"
                     @click="selectedDate = selectedDate.nextMonth()"
                 />
             </div>

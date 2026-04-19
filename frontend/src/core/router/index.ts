@@ -22,7 +22,8 @@ const router = createRouter({
     {
         path: RouterViewPaths.Home,
         name: RouterViewPaths.Home,
-        component: () => import('@/ui/views/InspectionsView.vue'),
+        component: () => import('@/ui/views/CalendarView.vue'), 
+        // component: () => import('@/ui/views/InspectionsView.vue'),
     },
     {
         path: RouterViewPaths.Registration,

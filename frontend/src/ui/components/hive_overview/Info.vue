@@ -24,7 +24,7 @@ const { apiary } = useApiaryQuery({
         <div :class="s.buttons">
             <IconTextButton 
                 text="Edit"
-                :svg="SVG.Pencil"
+                :icon="SVG.Pencil"
             />
         </div>
     </div>

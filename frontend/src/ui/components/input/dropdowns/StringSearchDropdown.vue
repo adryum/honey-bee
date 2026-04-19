@@ -97,7 +97,7 @@ watch(search , (newVal) => {
                 v-if="options.showIcon"
                 :class="s.icon"
                 :type="IconType.SMALL"
-                :svg="SVG.Search"
+                :icon="SVG.Search"
                 @click="input.focus()"
             />
             <input 
@@ -130,7 +130,7 @@ watch(search , (newVal) => {
                         s.clearIcon,
                     ]"
                     :type="IconType.SMALL"
-                    :svg="SVG.Cross"
+                    :icon="SVG.Cross"
                 />
             </button>
         </div>

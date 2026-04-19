@@ -73,7 +73,7 @@ function changeTab(tab: ProfileTab) {
                         :class="s.tag"
                     >
                         <Icon
-                            :svg="SVG.Profile"
+                            :icon="SVG.Profile"
                             :type="IconType.SMALL"
                         />
                         <p>
@@ -85,7 +85,7 @@ function changeTab(tab: ProfileTab) {
                         :class="s.tag"
                     >
                         <Icon
-                            :svg="SVG.Profile"
+                            :icon="SVG.Profile"
                             :type="IconType.SMALL"
                         />
                         <p>

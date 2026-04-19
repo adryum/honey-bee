@@ -33,7 +33,7 @@ const props = withDefaults(defineProps<{
             <Icon 
                 :class="s.icon" 
                 :type="IconType.MEDIUM" 
-                :svg="SVG.HoneyHive" 
+                :icon="SVG.HoneyHive" 
             />
         </div> -->
         <img 

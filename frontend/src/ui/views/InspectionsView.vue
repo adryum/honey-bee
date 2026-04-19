@@ -37,14 +37,14 @@ watch(inspectionTableEntries, () => {
     >
         <IconTextButton 
             text="Previous"
-            :svg="SVG.ArrowLeftSmall"
+            :icon="SVG.ArrowLeftSmall"
             :disabled="(filters?.page) === 1"
             @click="prevPage"
         />
         <IconTextButton 
             text="Next"
             :swap-icon-position="true"
-            :svg="SVG.ArrowRightSmall"
+            :icon="SVG.ArrowRightSmall"
             :disabled="!nextPage"
             @click="nextPage"
         />

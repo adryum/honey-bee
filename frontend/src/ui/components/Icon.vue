@@ -4,7 +4,7 @@ import { computed, shallowRef, useCssModule, watch, type CSSProperties } from 'v
 
 const s = useCssModule()
 const props = withDefaults(defineProps<{ 
-    svg:    SVG
+    icon:    SVG
     type?:  IconType
     color?: string
 }>(), {
@@ -17,7 +17,7 @@ const map = Object.fromEntries(
   Object.entries(modules).map(([path, mod]) => [path, (mod && mod.default) || mod])
 )
 
-const currentPath = `/src/assets/svgs/${props.svg}.svg`
+const currentPath = `/src/assets/svgs/${props.icon}.svg`
 const Icon = shallowRef(map[currentPath] ?? null)
 
 const iconStyle = computed((): CSSProperties => {
@@ -80,7 +80,7 @@ const iconStyle = computed((): CSSProperties => {
     return { ...baseStyle, ...sizeStyle }
 })
 
-watch(() => props.svg, (newVal) => {
+watch(() => props.icon, (newVal) => {
     const newPath = `/src/assets/svgs/${newVal}.svg`
     if (map[newPath]) {
         Icon.value = map[newPath]

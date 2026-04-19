@@ -152,7 +152,7 @@ const form = useVModel(props, 'form', emit)
 
     <IconTextButton
         v-if="!isReviewing"
-        :svg="SVG.ArrowRight"
+        :icon="SVG.ArrowRight"
         :is-submit="true"
         :swap-icon-position="true"
         :is-aligned-center="true"

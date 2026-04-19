@@ -43,7 +43,7 @@ function onSlideComplete(event: AnimationEvent, action: ActionUIModel) {
             :class="s.iconWrapper"
         >
             <Icon
-                :svg="SVG.Cog"
+                :icon="SVG.Cog"
                 :type="IconType.MEDIUM"
             />
         </div>
@@ -61,7 +61,7 @@ function onSlideComplete(event: AnimationEvent, action: ActionUIModel) {
             {{ action.action.buttonText }}
         </button>
         <IconCubeButton 
-            :svg="SVG.Cross"
+            :icon="SVG.Cross"
             :transparent="true"
             :is-important="false"
             @click="hideAnimation(action)"

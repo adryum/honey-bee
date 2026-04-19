@@ -38,7 +38,7 @@ const props = withDefaults(defineProps<{
             isLoading && s.rotate
         ]" 
         :type="IconType.SMALL" 
-        :svg="isLoading ? SVG.Restart : svg"
+        :icon="isLoading ? SVG.Restart : svg"
     />
     <p :class="[isSubmit ? s.submitText : s.text]">{{ text }}</p>
     <Icon 
@@ -48,7 +48,7 @@ const props = withDefaults(defineProps<{
             isLoading && s.rotate
         ]" 
         :type="IconType.SMALL" 
-        :svg="isLoading ? SVG.Restart : svg"
+        :icon="isLoading ? SVG.Restart : svg"
     />
 </button>
 </template>

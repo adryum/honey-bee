@@ -114,13 +114,13 @@ function openInspection(id: number) {
         :class="s.actions"
     >
         <IconTextButton
-            :svg="SVG.Logout"
+            :icon="SVG.Logout"
             :type="IconType.SMALL"
             text="Open"
             @click="openInspection(entry.id)"
         />
         <IconTextButton
-            :svg="SVG.Cog"
+            :icon="SVG.Cog"
             :type="IconType.SMALL"
             text="Process"
             @click="processInspectionModal?.open()"

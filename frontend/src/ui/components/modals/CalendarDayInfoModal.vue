@@ -45,7 +45,7 @@ const createEventModal = ref<ModalBaseModel>()
                 :class="s.titleWrapper"
             >
                 <Icon
-                    :svg="SVG.Calendar"
+                    :icon="SVG.Calendar"
                     :type="IconType.MEDIUM"
                 />
                 <label 
@@ -74,7 +74,7 @@ const createEventModal = ref<ModalBaseModel>()
             >
                 <IconTextButton
                     text="Create task"
-                    :svg="SVG.Plus"
+                    :icon="SVG.Plus"
                     :isSubmit="true"
                     @click="createEventModal?.open"
                 />
@@ -90,7 +90,7 @@ const createEventModal = ref<ModalBaseModel>()
             <div :class="s.taskList">
                 <Icon
                     v-if="dayModel.events.length === 0"
-                    :svg="SVG.FailedToFind"
+                    :icon="SVG.FailedToFind"
                     :type="IconType.GIGANTIC"
                     :style="{
                         margin: '2rem auto 1rem auto',

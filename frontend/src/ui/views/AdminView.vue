@@ -25,7 +25,7 @@ const createWhitelistEntry = ref<ModalBaseModel | undefined>()
         <IconTextButton
             v-if="seletedTab === AdminTab.Whitelist"
             text="Add entry"
-            :svg="SVG.Plus"
+            :icon="SVG.Plus"
             @click="createWhitelistEntry?.open()"
         />
     </Navbar>

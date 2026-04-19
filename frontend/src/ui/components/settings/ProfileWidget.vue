@@ -89,7 +89,7 @@ function onClick(dropdown: DropdownModel, destination: SettingDestination) {
                 <p :class="s.email">{{ user?.email }}</p>
             </div>
             <IconCubeButton 
-                :svg="SVG.DropdownArrow"
+                :icon="SVG.DropdownArrow"
             />
         </div>
     </template>

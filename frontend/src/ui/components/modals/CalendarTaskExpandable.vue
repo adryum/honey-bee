@@ -30,7 +30,7 @@ const isTaskOpen = ref(false)
                 {{ task.title || "No title" }}
             </p>
             <IconDropdown
-                :svg="SVG.MoreDots"
+                :icon="SVG.MoreDots"
                 :class="s.editButton"
             >
                 <p>apple</p>

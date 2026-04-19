@@ -142,21 +142,21 @@ function cancel() {
     >
         <IconCubeButton 
             v-if="!isEditingRow"
-            :svg="SVG.Pencil"
+            :icon="SVG.Pencil"
             @click="isEditingRow = !isEditingRow"
         >
             <!-- <p>Edit</p> -->
         </IconCubeButton>
         <IconCubeButton 
             v-if="isEditingRow"
-            :svg="SVG.Save"
+            :icon="SVG.Save"
             @click="save"
         >
             <!-- <p>Save</p> -->
         </IconCubeButton>
         <IconCubeButton 
             v-if="isEditingRow"
-            :svg="SVG.Cross"
+            :icon="SVG.Cross"
             @click="cancel"
         >
             <!-- <p>Cancel</p> -->

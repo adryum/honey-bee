@@ -1,17 +1,28 @@
 <script setup lang="ts">
 import { onMounted, useCssModule } from "vue";
+import { SVG } from "@/assets/svgs/SVGLoader";
+import IconCubeButton from "./input/buttons/IconCubeButton.vue";
 
+const s = useCssModule()
 const props = withDefaults(defineProps<{
     label?: string,
+    showBackButton?: boolean
 }>(), {
     label: "{ PAGE }",
 })
 
-const s = useCssModule()
+const emits = defineEmits<{
+    back: []
+}>()
 </script>
 
 <template>
 <div :class="s.container">
+    <IconCubeButton
+        v-if="showBackButton"
+        :class="s.button"
+        :icon="SVG.ArrowLeftSmall"
+    />
     <h1 :class="[s.label]">{{ label }}</h1>
     <div :class="s.workComponents">
         <slot>
@@ -22,6 +33,14 @@ const s = useCssModule()
 </template>
 
 <style module lang='sass'>
+.button
+    width: 3rem
+    margin-right: 1rem
+
+    cursor: pointer
+
+    &:hover
+        background: #e8e6e0
  
 .container
     top: 0

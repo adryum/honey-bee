@@ -48,7 +48,7 @@ defineExpose<ModalBaseModel>({
             <Icon 
                 :class="s.icon" 
                 :type="IconType.SMALL"
-                :svg="SVG.Cross" 
+                :icon="SVG.Cross" 
             /> 
         </button> 
     </div>

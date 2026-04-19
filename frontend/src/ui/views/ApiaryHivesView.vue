@@ -58,13 +58,13 @@ function openHive(hiveId: number) {
         <IconTextButton
             v-if="apiary && !filteredHives.isEmpty()"
             text="Add inspection"
-            :svg="SVG.Plus"
+            :icon="SVG.Plus"
             :class="s.button"
             @click="startInspection(apiary.id)"
         />
         <IconTextButton
             text="Add hive"
-            :svg="SVG.Plus"
+            :icon="SVG.Plus"
             :class="s.button"
             @click="dialog?.open()"
         />

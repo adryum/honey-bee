@@ -32,7 +32,7 @@ const { floaterStyle } = useFloatingUI({
     <IconCubeButton
         ref="anchor"
         :class="s.icon"
-        :svg="svg"
+        :icon="svg"
         :transparent="transparent"
         :no-border-radius="noBorderRadius"
         @click.stop="isShown = !isShown"

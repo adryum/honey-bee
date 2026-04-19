@@ -19,7 +19,7 @@ const createNoteModal = ref<ModalBaseModel>()
     <IconTextButton
         text="Create note" 
         :class="s.create"
-        :svg="SVG.Pencil"
+        :icon="SVG.Pencil"
         @click="createNoteModal?.open()"
     />
     <StringSearchDropdown

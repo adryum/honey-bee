@@ -5,10 +5,10 @@ import Icon from '../../Icon.vue';
 import { IconType, SVG } from '@/assets/svgs/SVGLoader';
 
 const props = withDefaults(defineProps<{
-    svg?: SVG
+    icon?: SVG
     isImportant?: boolean
 }>(), {
-    svg: SVG.Cross
+    icon: SVG.Cross
 })
 const s = useCssModule()
 </script>
@@ -23,7 +23,7 @@ const s = useCssModule()
 >
     <Icon  
         :class="s.icon" 
-        :svg="svg"
+        :icon="icon"
         :type="IconType.SMALL"
     />
 </motion.button>

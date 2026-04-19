@@ -69,7 +69,6 @@ const teleportTargetExists = computed(() => !!tpTargetId.value)
             :class="$style.list"
             :style="{ 
                 ...floaterStyle, 
-                boxShadow: `0 0 5px 0 ${props.color || 'var(--dark)'}`,
                 width: `calc(${floaterStyle.width} )`,
                 left: `calc(${floaterStyle.left})`
             }"
@@ -103,6 +102,8 @@ const teleportTargetExists = computed(() => !!tpTargetId.value)
     box-sizing:     border-box
     gap:            .1rem
     overflow:       hidden
+    
+    box-shadow: 0 4px 8px 0 rgba(0, 0, 0, 0.15), 0 6px 20px 0 rgba(0, 0, 0, 0.10)
 
 .container
     display:        flex

@@ -28,7 +28,7 @@ const svg = computed(() => {
         :class="s.decorationPoint"
     >
         <Icon
-            :svg="svg"
+            :icon="svg"
             :type="IconType.SMALL"
         />
     </div>

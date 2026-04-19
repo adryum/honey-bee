@@ -55,7 +55,7 @@ onMounted(async () => {
 
 <template>
     <div :class="s.container">
-        <IconCubeButton ref="button" @click="isShown = !isShown" :svg="svg"/>
+        <IconCubeButton ref="button" @click="isShown = !isShown" :icon="svg"/>
         
         <AnimatePresence><Teleport to="body">
         <motion.ol ref="dropdown" @click.stop
@@ -72,7 +72,7 @@ onMounted(async () => {
             >
                 <Icon 
                     class="icon" 
-                    :svg="button.svg"
+                    :icon="button.svg"
                     :type="IconType.SMALL"
                 />
                 <p class="text" :style="{ color: button.color ?? 'black' }">{{ button.text }}</p> 

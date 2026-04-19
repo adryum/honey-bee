@@ -80,7 +80,7 @@ async function add() {
             <IconTextButton 
                 text="Add"
                 :disabled="!isFormValid" 
-                :svg="SVG.Plus"
+                :icon="SVG.Plus"
                 :is-submit="true"
                 :is-aligned-center="true"
                 @click="add"

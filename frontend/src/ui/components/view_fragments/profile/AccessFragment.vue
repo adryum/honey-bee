@@ -143,7 +143,7 @@ onMounted(() => {
     >
         <IconCubeButton
             v-if="openedApiaryId !== undefined"
-            :svg="SVG.ArrowLeftSmall"
+            :icon="SVG.ArrowLeftSmall"
             @click="closeApiary"
         />
         <p

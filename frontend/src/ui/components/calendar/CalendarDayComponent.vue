@@ -200,6 +200,7 @@ onMounted(() => {
 
         .task
             all: unset
+            position: relative
 
             align-items: center
 
@@ -214,20 +215,22 @@ onMounted(() => {
 
             padding: 0 .5rem 
             box-sizing: border-box
-            border-radius: var(--border-radius-tiny)
+            // border-radius: var(--border-radius-tiny)
             
             color: var(--black)
-            background: var(--orange)
+            // background: var(--orange)
+
             white-space: nowrap
             overflow: hidden
             text-overflow: ellipsis
 
+
+            border-left: 2px solid var(--orange)
             &.today
                 background: white !important
                 color: var(--black)
             // background: var(--gray)
             // font-size: var(--font-size-small)
-            // border-left: 4px solid rgba(0, 0, 0, .5)
 
     .hint
         margin-top: .5rem
@@ -242,6 +245,7 @@ onMounted(() => {
     // border: 5px solid rgba(20, 180, 20, .2)
 
 .weekend
-    background: var(--black)
-    color: white
+    background: #E8E6E0
+    // #E4E2DB
+    // color: white
 </style>

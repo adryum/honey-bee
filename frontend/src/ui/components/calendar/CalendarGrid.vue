@@ -157,8 +157,8 @@ function getCalendarMonthWithDayPadding(
             align-items: center
             justify-content: center
             flex: 1
-            background: var(--black)
-            color: white
+            color: var(--black)
+            background: #E8E6E0
             border-radius: var(--border-radius-tiny)
 
 
