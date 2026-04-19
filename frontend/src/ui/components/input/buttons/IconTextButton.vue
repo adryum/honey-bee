@@ -5,7 +5,7 @@ import Icon from "../../Icon.vue";
 
 const s = useCssModule()
 const props = withDefaults(defineProps<{
-    svg?:              SVG
+    icon?:              SVG
     text?:             string
     disabled?:         boolean
     isLoading?:        boolean
@@ -14,7 +14,7 @@ const props = withDefaults(defineProps<{
     isAlignedCenter?:  boolean
     hideIcon?:         boolean
 }>(), {
-    svg:      SVG.Dollar,
+    icon:      SVG.Dollar,
     text:     'BUTTON',
     disabled: false
 })
@@ -38,7 +38,7 @@ const props = withDefaults(defineProps<{
             isLoading && s.rotate
         ]" 
         :type="IconType.SMALL" 
-        :icon="isLoading ? SVG.Restart : svg"
+        :icon="isLoading ? SVG.Restart : icon"
     />
     <p :class="[isSubmit ? s.submitText : s.text]">{{ text }}</p>
     <Icon 
@@ -48,7 +48,7 @@ const props = withDefaults(defineProps<{
             isLoading && s.rotate
         ]" 
         :type="IconType.SMALL" 
-        :icon="isLoading ? SVG.Restart : svg"
+        :icon="isLoading ? SVG.Restart : icon"
     />
 </button>
 </template>

@@ -1,39 +1,26 @@
 <script setup lang="ts">
 import { computed, reactive, ref, useCssModule} from "vue"
 import CalendarGrid from '../components/calendar/CalendarGrid.vue';
-import { CalendarDate } from "../../core/Calendar";
 import ToolBar from "../components/ToolBar.vue";
 import ModularDropdown from "../components/input/dropdowns/ModularDropdown.vue";
 import Icon from "../components/Icon.vue";
 import { SVG } from "@/assets/svgs/SVGLoader";
-import { useApiariesQuery } from "@/core/composables/useApiary";
+import { useApiariesQuery, useApiaryQuery } from "@/core/composables/useApiary";
 import IconCubeButton from "../components/input/buttons/IconCubeButton.vue";
 import IconTextButton from "../components/input/buttons/IconTextButton.vue";
 import { useCalendarQuery } from "@/core/composables/useCalendar";
-import { useHivesQuery } from "@/core/composables/useHive";
 
 const s = useCssModule()
-const date = new Date()
-const today: CalendarDate = new CalendarDate(
-    date.getFullYear(),
-    date.getMonth() + 1,
-    date.getDate(),
-)
-const searchDate = reactive<CalendarDate>(today.copy())
-
-const { apiaries } = useApiariesQuery()
 const selectedApiary = ref<{id: number, name: string }>({ id: -1, name: "Selected"})
-
-const { hives } = useHivesQuery({ 
-    apiaryId: computed(() => selectedApiary.value.id)
-})
 const selectedDate = ref(new Date().nextMonth().previousMonth())
 
-// const calendarIds = computed(() => {
-//     console.log(hive.calendarId ? [ hive.calendarId] : []);
-//     return  hive.calendarId ? [ hive.calendarId] : []
-    
-// })
+const { apiaries } = useApiariesQuery()
+
+const { hives } = useApiaryQuery({
+    id:             computed(() => selectedApiary.value.id),
+    getApiaryHives: true
+})
+
 const { events } = useCalendarQuery({
     calendarIds: computed(() => hives.value?.map(item => item.calendarId) ?? []),
     month: computed(() =>  selectedDate.value.getMonth() + 1),
@@ -109,7 +96,7 @@ const { events } = useCalendarQuery({
             :calendarId="''"
             :otherCalendarIDs="[]"
             :events="events ?? []"
-            :looked-at-date="new Date()"
+            :looked-at-date="selectedDate"
             :is-macdonalds="false"
         />
     </div>
