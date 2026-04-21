@@ -47,7 +47,7 @@ function goToToday() {
     display: flex
     flex-direction: column
     gap: 1rem
-    background: var(--light-gray)
+    background: var(--secondary)
     padding: 1rem
     box-sizing: border-box
 

@@ -135,7 +135,7 @@ function openInspection(id: number) {
 
 <style module lang='sass'>
 .edited
-    background: var(--gray) !important
+    background: var(--secondary) !important
 .input
     all: unset
     width: 100%

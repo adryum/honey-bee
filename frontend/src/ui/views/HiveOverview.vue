@@ -13,6 +13,7 @@ import HiveCalendarFragment from '../components/view_fragments/HiveCalendarFragm
 import IconCubeButton from '../components/input/buttons/IconCubeButton.vue';
 import { SVG } from '@/assets/svgs/SVGLoader';
 import IconTextButton from '../components/input/buttons/IconTextButton.vue';
+import MonthChangerWidget from '../components/calendar/MonthChangerWidget.vue';
 
 const s = useCssModule()
 const router = useRouter()
@@ -72,24 +73,9 @@ onMounted(() => console.log(props.tab))
                 v-if="currentTab === HiveTab.Calendar"
                 :class="s.dateSelector"
             >
-                <IconTextButton
-                    :class="s.today"
-                    text="Today"
-                    :hideIcon="true"
-                    @click="selectedDate = new Date()"
-                />
-                <IconCubeButton
-                    :icon="SVG.ArrowLeftSmall"
-                    @click="selectedDate = selectedDate.previousMonth()"
-                />
-                <p
-                    :class="s.date"
-                >
-                    {{ selectedDate.toLocaleString('default', { month: 'long' }) }} {{ selectedDate.getFullYear() }}
-                </p>
-                <IconCubeButton
-                    :icon="SVG.ArrowRightSmall"
-                    @click="selectedDate = selectedDate.nextMonth()"
+                <MonthChangerWidget
+                    :selectedDate="selectedDate"
+                    @change="date => selectedDate = date"
                 />
             </div>
         </Navbar>
@@ -127,22 +113,6 @@ onMounted(() => console.log(props.tab))
 </template>
 
 <style module lang='sass'>
-
-.dateSelector
-    display: flex
-    align-items: center
-    font-family: var(--font-family)
-    font-size: var(--font-size-medium)
-    font-weight: 500
-    letter-spacing: .02em
-    width: 12rem
-    text-align: center
-
-    .today
-        margin-right: .5rem
-
-    .date
-        min-width: 10rem
 
 .navbar
     margin: 1rem

@@ -31,15 +31,17 @@ const props = withDefaults(defineProps<{
     ]"
     :disabled="disabled || isLoading"
 >
-    <Icon 
-        v-if="!swapIconPosition && !hideIcon"
-        :class="[
-            s.icon,
-            isLoading && s.rotate
-        ]" 
-        :type="IconType.SMALL" 
-        :icon="isLoading ? SVG.Restart : icon"
-    />
+    <slot>
+        <Icon 
+            v-if="!swapIconPosition && !hideIcon"
+            :class="[
+                s.icon,
+                isLoading && s.rotate
+            ]" 
+            :type="IconType.SMALL" 
+            :icon="isLoading ? SVG.Restart : icon"
+        />
+    </slot>
     <p :class="[isSubmit ? s.submitText : s.text]">{{ text }}</p>
     <Icon 
         v-if="swapIconPosition && !hideIcon"

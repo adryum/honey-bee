@@ -229,7 +229,7 @@ onMounted(() => {
             &.today
                 background: white !important
                 color: var(--black)
-            // background: var(--gray)
+            // background: var(--secondary)
             // font-size: var(--font-size-small)
 
     .hint
@@ -245,7 +245,7 @@ onMounted(() => {
     // border: 5px solid rgba(20, 180, 20, .2)
 
 .weekend
-    background: #E8E6E0
+    background: var(--secondary)
     // #E4E2DB
     // color: white
 </style>

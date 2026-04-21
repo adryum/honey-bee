@@ -10,7 +10,7 @@ export function ApiaryCreateResponse_to_ApiaryModelDB(
         name:        convertee.name,
         description: convertee.description,
         image:       convertee.image,
-        hiveCount:   0
+        hiveCount:   convertee.hiveCount
     }
 }
 

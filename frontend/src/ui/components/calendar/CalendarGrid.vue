@@ -116,6 +116,7 @@ function getCalendarMonthWithDayPadding(
         <p 
             v-for="day in weekDays"
             :class="s.day"
+            :style="day === 'Saturday' || day === 'Sunday' ? { background: 'var(--secondary)' } : { background: 'var(--white)' }"
         >
             {{ day }}
         </p>
@@ -158,7 +159,7 @@ function getCalendarMonthWithDayPadding(
             justify-content: center
             flex: 1
             color: var(--black)
-            background: #E8E6E0
+            background: var(--secondary)
             border-radius: var(--border-radius-tiny)
 
 
@@ -168,4 +169,5 @@ function getCalendarMonthWithDayPadding(
         grid-template-rows: repeat(6, calc( (100% / 6) - 1px * .83) )
         gap: 1px
         height: 100%
+        isolation: isolate
 </style>

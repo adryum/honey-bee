@@ -120,7 +120,7 @@ const isTaskOpen = ref(false)
     letter-spacing: .02em
 
 .shadow
-    box-shadow:    0 0 0 1px var(--gray)
+    box-shadow:    0 0 0 1px var(--secondary)
     border-radius: var(--border-radius-tiny)
 
 .grid
@@ -169,14 +169,14 @@ const isTaskOpen = ref(false)
         padding:     0 1rem
         box-sizing:  border-box
         transition:  .1s
-        background: var(--gray)
+        background: var(--secondary)
 
         cursor: pointer
 
       
 
         &.opened
-            background: var(--gray)
+            background: var(--secondary)
             &:hover
                 z-index: auto !important
                 box-shadow: none

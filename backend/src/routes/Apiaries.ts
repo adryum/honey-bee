@@ -7,9 +7,11 @@ import { upload } from "../config/Multer";
 import { requireRole } from "../Middleware";
 import { Role } from "../DatabaseEnums";
 import { getSessionUserRole } from "../config/RedisClient";
-import { and, eq, inArray } from "drizzle-orm";
+import { and, eq, getTableColumns, inArray } from "drizzle-orm";
 import { userhiveaccess, hives, userapiaryaccess, apiaries } from "../db/schema";
 import { isValidValue } from "../utils";
+import { sql } from "drizzle-orm/sql";
+import { count } from "drizzle-orm";
 
 const getApiaryQuery = (where: string) => `
 SELECT 
@@ -37,18 +39,30 @@ router.get('/', requireRole([Role.ANY]), async (
         var apiariesResult
         switch (role) {
             case Role.ADMINISTRATOR:
-                apiariesResult = await db.query.apiaries.findMany(); break;
+                apiariesResult = await db
+                    .select({
+                        ...getTableColumns(apiaries),
+                        hiveCount: count(hives.id)
+                    })
+                    .from(apiaries)
+                    .leftJoin(hives, eq(hives.apiaryId, apiaries.id))
+                    .groupBy(apiaries.id)
             default:
                 const apiaryAccess = await db.query.userapiaryaccess.findMany({
                     where: eq(userapiaryaccess.userId, userId)
                 })
 
-                apiariesResult = await db.query.apiaries.findMany({
-                    where: inArray(apiaries.id, apiaryAccess.map(item => item.apiaryId))
-                })
+                apiariesResult = await db
+                    .select({
+                        ...getTableColumns(apiaries),
+                        hiveCount: count(hives.id)
+                    })
+                    .from(apiaries)
+                    .leftJoin(hives, eq(hives.apiaryId, apiaries.id))
+                    .where(inArray(apiaries.id, apiaryAccess.map(item => item.apiaryId)))
+                    .groupBy(apiaries.id)
                 break;
         }
-        console.log("Done!");
 
         res.status(200).json(apiariesResult)
     } catch (err) {

@@ -50,7 +50,5 @@ const props = defineProps<{
         letter-spacing: .02em
 
     &:hover
-        background: var(--orange)
-        & > *
-            color: var(--white)
+        background: var(--secondary)
 </style>

@@ -123,7 +123,7 @@ const dropdownActions: DropdownItem[] = [
     font-family:   var(--font-family)
     border-radius: var(--border-radius-small)
     overflow: hidden
-    // box-shadow:    0 0 0 1px var(--light-gray)
+    // box-shadow:    0 0 0 1px var(--secondary)
 
     &:hover .image
         transform: scale(1.01)

@@ -32,7 +32,7 @@ const { user } = storeToRefs(useAuthStore())
 .skelet
     display: flex
     flex-direction: column
-    background:  color-mix(in srgb, var(--black) 5%, var(--white) )
+    background: var(--background)
 
 .flex
     flex: 1

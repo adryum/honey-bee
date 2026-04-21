@@ -9,6 +9,7 @@ import { useApiariesQuery, useApiaryQuery } from "@/core/composables/useApiary";
 import IconCubeButton from "../components/input/buttons/IconCubeButton.vue";
 import IconTextButton from "../components/input/buttons/IconTextButton.vue";
 import { useCalendarQuery } from "@/core/composables/useCalendar";
+import MonthChangerWidget from "../components/calendar/MonthChangerWidget.vue";
 
 const s = useCssModule()
 const selectedApiary = ref<{id: number, name: string }>({ id: -1, name: "Selected"})
@@ -33,26 +34,11 @@ const { events } = useCalendarQuery({
         :class="s.container"
     >
         <ToolBar 
-            label="Main calendar"
+            label="General calendar"
         >
-            <IconTextButton
-                :class="s.today"
-                text="Today"
-                :hideIcon="true"
-                @click="selectedDate = new Date()"
-            />
-            <IconCubeButton
-                :icon="SVG.ArrowLeftSmall"
-                @click="selectedDate = selectedDate.previousMonth()"
-            />
-            <p
-                :class="s.date"
-            >
-                {{ selectedDate.toLocaleString('default', { month: 'long' }) }} {{ selectedDate.getFullYear() }}
-            </p>
-            <IconCubeButton
-                :icon="SVG.ArrowRightSmall"
-                @click="selectedDate = selectedDate.nextMonth()"
+            <MonthChangerWidget
+                :selectedDate="selectedDate"
+                @change="date => selectedDate = date"
             />
             <ModularDropdown>
                 <template #head="{ dropdown }">
@@ -87,7 +73,15 @@ const { events } = useCalendarQuery({
                         v-for="apiary in apiaries"
                         :class="s.item"
                         @click="selectedApiary = { id: apiary.id, name: apiary.name }; dropdown.isShown.value = !dropdown.isShown.value"
-                    >{{ apiary.name }}</p>
+                    >
+                        {{ apiary.name }}
+                        <p :class="s.hives">
+                            <Icon
+                                :icon="SVG.Hive"
+                            />
+                            {{ apiary.hiveCount }}
+                        </p>
+                    </p>
                 </template>
             </ModularDropdown>
         </ToolBar>
@@ -121,6 +115,8 @@ const { events } = useCalendarQuery({
         min-width: 10rem
 
 .item
+    display: flex
+    gap: .5rem
     height: 3rem
     display: flex
     align-items: center
@@ -136,9 +132,14 @@ const { events } = useCalendarQuery({
     cursor: pointer
     transition: .1s
 
-    &:hover
-        background: #e8e6e0
+    .hives
+        margin-left: auto
+        gap: .5rem
+        display: flex
+        align-items: center
 
+    &:hover
+        background: var(--secondary)
 
 .header
     display: flex
@@ -160,10 +161,10 @@ const { events } = useCalendarQuery({
 
 
     &.open
-        background: #e8e6e0
+        background: var(--secondary)
         
     &:hover
-        background: #e8e6e0
+        background: var(--secondary)
         
 
     .label

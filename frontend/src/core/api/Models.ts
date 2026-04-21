@@ -12,6 +12,7 @@ export type ApiaryCreateResponseModel = {
     name:        string
     description: string
     image:       string
+    hiveCount:   number
 }
 
 export type HiveAssignResponseModel = {

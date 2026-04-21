@@ -70,7 +70,7 @@ function onSlideComplete(event: AnimationEvent, action: ActionUIModel) {
     <div 
         :class="s.progressBar"
         :style="{
-            background: `linear-gradient(90deg,${action.type} ${action.progress.value}%, var(--gray) ${action.progress.value}%)`
+            background: `linear-gradient(90deg,${action.type} ${action.progress.value}%, var(--secondary) ${action.progress.value}%)`
         }"
     ></div>
 </div>
@@ -109,7 +109,7 @@ function onSlideComplete(event: AnimationEvent, action: ActionUIModel) {
 .iconWrapper
     width: 2rem
     height: 2rem
-    background: var(--gray)
+    background: var(--secondary)
     border-radius: var(--border-radius-tiny)
 
     display: flex

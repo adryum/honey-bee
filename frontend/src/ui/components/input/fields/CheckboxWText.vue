@@ -65,11 +65,11 @@ const isTrue = defineModel("isTrue", { default: false })
         margin: 0
 
         background: var(--white)
-        box-shadow: inset 0 0 0 1px var(--gray)
+        box-shadow: inset 0 0 0 1px var(--secondary)
 
         &.disabled
-            background: var(--light-gray) !important
-            box-shadow: inset 0 0 0 1px var(--gray) !important
+            background: var(--secondary) !important
+            box-shadow: inset 0 0 0 1px var(--secondary) !important
             cursor: not-allowed
 
         &.isTrue

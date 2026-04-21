@@ -111,7 +111,7 @@ const emits = defineEmits<{
 
             &:hover
                 color: var(--black)
-                backdrop-filter: brightness(90%)
+                background: var(--secondary)
 
         .verticalSpacer
             all: unset

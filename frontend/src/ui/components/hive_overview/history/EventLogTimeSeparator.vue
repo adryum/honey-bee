@@ -24,6 +24,6 @@ const s = useCssModule()
     box-sizing: border-box
     font-size: var(--font-size-medium)
     font-family: var(--font-family)
-    background: var(--gray)
+    background: var(--secondary)
     box-shadow: inset 0 0 1px 0 var(--faint-border)
 </style>

@@ -81,7 +81,7 @@ function cancel() {
             :style="{
                 height: '100%'
             }"
-            color="var(--gray)"
+            color="var(--secondary)"
         >
             <template #head="{dropdown}">
                 <TableRowSelectionDropdownTopPart
@@ -110,7 +110,7 @@ function cancel() {
             :style="{
                 height: '100%'
             }"
-            color="var(--gray)"
+            color="var(--secondary)"
         >
             <template #head="{dropdown}">
                 <TableRowSelectionDropdownTopPart
@@ -174,7 +174,7 @@ function cancel() {
     color: #444
 
 .edited
-    background: var(--gray) !important
+    background: var(--secondary) !important
 .input
     background: transparent
     border: none

@@ -1,9 +1,9 @@
 import { useColorMode, useCssVar, useDark } from "@vueuse/core";
 import { watch } from "vue";
 
-const baseCssVar = useCssVar('--gray', document.documentElement)
+const baseCssVar = useCssVar('--secondary', document.documentElement)
 const accentCssVar = useCssVar('--orange', document.documentElement)
-const lightCssVar = useCssVar('--light-gray', document.documentElement)
+const lightCssVar = useCssVar('--secondary', document.documentElement)
 
 const mode = useColorMode({
     attribute: 'theme',

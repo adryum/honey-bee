@@ -48,7 +48,7 @@ const { t } = useI18n()
         padding: .25rem 0.5rem
         box-sizing: border-box
         background: white
-        border-top: 4px solid var(--light-gray)
+        border-top: 4px solid var(--secondary)
         // border-bottom: 1px solid rgba(0, 0, 0, .1)
         box-shadow: 0 2px 5px 0 rgba(0, 0, 0, .1)
 

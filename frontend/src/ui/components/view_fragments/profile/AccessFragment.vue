@@ -218,7 +218,7 @@ onMounted(() => {
         background: var(--white)
 
     &.noAccess
-        background: var(--gray)
+        background: var(--secondary)
 
 .label
     

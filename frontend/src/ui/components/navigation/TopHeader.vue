@@ -10,7 +10,6 @@ const s = useCssModule()
 <div :class='s.container'>
     <ProfileWidget
         :class="s.profile"
-    
     />
 </div>
 </template>

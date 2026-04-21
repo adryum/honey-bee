@@ -175,15 +175,15 @@ onMounted(() => {
 
         &.uncomplete
             background: white
-            box-shadow: 0 0 0 1px var(--gray)
+            box-shadow: 0 0 0 1px var(--secondary)
 
         &.started
             background: white
             box-shadow: 0 0 0 1px var(--orange)
 
         &.completed
-            background: var(--light-gray)
-            box-shadow: 0 0 0 1px var(--gray)
+            background: var(--secondary)
+            box-shadow: 0 0 0 1px var(--secondary)
 
         &.selected
             background: var(--orange)

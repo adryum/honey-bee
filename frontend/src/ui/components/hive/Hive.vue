@@ -73,7 +73,7 @@ const props = withDefaults(defineProps<{
 
     box-shadow: 0 0 1px 0 var(--faint-border)
     font-family: var(--font-family)
-    background: var(--light-gray)
+    background: var(--secondary)
     overflow: hidden
     border-radius: var(--border-radius-medium)
     transition: .2s

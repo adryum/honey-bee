@@ -80,7 +80,7 @@ const s = useCssModule()
                 letter-spacing: 0.02em
                 // border: 1px solid
                 padding: .25rem .5rem 
-                background: var(--grayishOnWhite)
+                background: var(--secondaryishOnWhite)
 
                 letter-spacing: 0.02em
                 padding: .25rem .5rem 

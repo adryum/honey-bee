@@ -90,6 +90,7 @@ export const useApiaryMutations = () => {
         mutationFn: apiaryApi.assignHive,
         onSuccess: (result) => {
             queryClient.invalidateQueries({ queryKey: ['hives'] })
+            queryClient.invalidateQueries({ queryKey: ['apiaries'] })
 
             createPopupAction({
                 label: `Assigned hive ${result.hiveId} to apiary ${result.apiaryId}`,

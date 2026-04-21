@@ -37,7 +37,7 @@ const profileCircleColor = computed(() => {
     switch (role) {
         case Role.ADMINISTRATOR:     return "var(--orange)"
         case Role.MANAGEMENT:        return "var(--red)"
-        case Role.APIARY_MAINTAINER: return "var(--light-gray)"
+        case Role.APIARY_MAINTAINER: return "var(--secondary)"
         case Role.HIVE_WORKER:       return "lime-green"
         default:                     return "var(--black)"
     }
@@ -63,7 +63,6 @@ function onClick(dropdown: DropdownModel, destination: SettingDestination) {
 
 <template>
 <ModularDropdown
-    color="var(--faint-border)"
     :floater-offset="8"
 >
     <template #head="{ dropdown }">
@@ -110,21 +109,20 @@ function onClick(dropdown: DropdownModel, destination: SettingDestination) {
 
 <style module lang='sass'>
 .filled
-    background: var(--gray)
+    background: var(--secondary)
 
 .profile
     display:       inline-flex
     max-width:     15rem
-    max-height:    2.5rem
-    min-height:    2.5rem
+    min-height:    3rem
     gap:           .5rem
     align-items:   center
-    padding:       .25rem
-    border-radius: var(--border-radius-small)
+    padding:       .5rem
+    border-radius: var(--border-radius-tiny)
     box-sizing:    border-box
 
     &:hover
-        background: var(--gray)
+        background: var(--secondary)
 
     .image
         width:         2rem

@@ -28,7 +28,7 @@ const router = createRouter({
     {
         path: RouterViewPaths.Registration,
         name: RouterViewPaths.Registration,
-        component: () => import('@/ui/views/registration/LoginView.vue')
+        component: () => import('@/ui/views/LoginView.vue')
     },
     {
         path: "/hive/:id/:tab",

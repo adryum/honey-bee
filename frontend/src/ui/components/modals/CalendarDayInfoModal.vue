@@ -159,9 +159,9 @@ const createEventModal = ref<ModalBaseModel>()
     height:        2.5rem
     border-radius: var(--border-radius-small)
     transition:    .3s
-    background:    var(--light-gray)
+    background:    var(--secondary)
     cursor:        pointer
-    box-shadow:    0 0 0 2px var(--gray)
+    box-shadow:    0 0 0 2px var(--secondary)
 
     font-family: var(--font-family)
     font-size:   var(--font-size-small)

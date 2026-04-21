@@ -40,7 +40,7 @@ const emits = defineEmits<{
     cursor: pointer
 
     &:hover
-        background: #e8e6e0
+        background: var(--secondary)
  
 .container
     top: 0
@@ -56,7 +56,7 @@ const emits = defineEmits<{
     font-family: var(--font-family)
 
     background: var(--white)
-    padding: 0 1rem
+    padding: 0 0 0 1rem
     box-sizing: border-box
     border-radius: var(--border-radius-tiny)
     box-shadow: 0 0 1px 0 var(--faint-border)

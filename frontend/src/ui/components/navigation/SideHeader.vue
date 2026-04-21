@@ -10,9 +10,6 @@ import { useRouter } from "vue-router";
 const s = useCssModule()
 const [isExtended, toggleExtension] = useToggle() 
 const router = useRouter()
-const toggleStyle = computed(() => ({
-    transform: `rotateZ(${isExtended.value ? 180 : 0 }deg)`
-} satisfies CSSProperties))
 
 interface Tab {
     name: string,
@@ -72,55 +69,125 @@ onMounted(() => {
     :variants="containerVariants"
     :animate="isExtended ? 'expanded' : 'collapsed'"
   >
-    <button :class="s.extender" :style="toggleStyle" @click="toggleExtension()">
-        <!-- icon here -->
-    </button>
+    
 
     <ul :class="s.list">
-      <motion.li
-        v-for="(tab, i) in tabs"
-        id="icon"
-        :key="i"  
-        :class="s.tab"
-        :while-press="{ scale: 0.9, transition: { duration: 0.1 } }"
-        @click="onTabSelect(tab); "
-        >
-        <div :class="s.iconWrapper">
-            <Icon 
-                :class="[s.icon, selectedTab.name === tab.name && s.selected]" 
-                :type="IconType.MEDIUM" 
-                :icon="tab.svg"
+        <motion.li
+            v-for="(tab, i) in tabs"
+            id="icon"
+            :key="i"  
+            :class="s.tab"
+            :while-press="{ scale: 0.9, transition: { duration: 0.1 } }"
+            @click="onTabSelect(tab); "
+            >
+            <div :class="s.iconWrapper">
+                <Icon 
+                    :class="[s.icon, selectedTab.name === tab.name && s.selected]" 
+                    :type="IconType.MEDIUM" 
+                    :icon="tab.svg"
+                />
+            </div>
+
+            <motion.label
+                for="icon"
+                :class="[
+                    s.text, 
+                    'button-text',
+                    selectedTab.name === tab.name && s.selected
+                ]"
+                :variants="tabVariants"
+                :initial="'collapsed'"
+                :animate="isExtended ? 'expanded' : 'collapsed'"
+            >
+            {{ tab.name }}
+            </motion.label>
+
+            <motion.div
+            v-if="selectedTab.name === tab.name"
+            :class="s.selectedBookmark"
+            layoutId="selected"
+            :transition="{ duration: 0.4, ease: [0, 0.71, 0.2, 1.01], type: 'spring' }"
             />
-        </div>
+        </motion.li>
 
-        <motion.label
-            for="icon"
-            :class="[
-                s.text, 
-                'button-text',
-                selectedTab.name === tab.name && s.selected
-            ]"
-            :variants="tabVariants"
-            :initial="'collapsed'"
-            :animate="isExtended ? 'expanded' : 'collapsed'"
-        >
-          {{ tab.name }}
-        </motion.label>
-
-        <motion.div
-          v-if="selectedTab.name === tab.name"
-          :class="s.selectedBookmark"
-          layoutId="selected"
-          :transition="{ duration: 0.4, ease: [0, 0.71, 0.2, 1.01], type: 'spring' }"
-        />
-      </motion.li>
+        <button :class="s.extender"  @click="toggleExtension()">
+            <div :class="s.iconWrapper">
+                <Icon 
+                    :class="[
+                        s.extenderIcon, 
+                        isExtended && s.open
+                    ]" 
+                    :type="IconType.SMALL" 
+                    :icon="SVG.DropdownArrow"
+                />
+            </div>
+            <p
+                :class="[
+                    s.text,
+                    isExtended && s.open
+                ]"
+            >{{ isExtended ? "Close" : "" }}</p>
+        </button>
     </ul>
   </motion.div>
 </template>
 
 <style module lang='sass'>
+.extender
+    all: unset
+    position: relative
+    margin-top: auto
+
+    display: flex
+    align-items: center
+    
+    width: 100%
+    height: 2.5rem
+
+    box-sizing: border-box
+    border-radius: 5px
+    cursor: pointer
+    transition: .3s 
+
+    background: var(--secondary)
+
+    .text
+        font-family: var(--font-family)
+        font-size: var(--font-size-medium)
+        font-weight: 500
+        letter-spacing: .02em
+        color: var(--black)
+        transition: .1s
+        opacity: 0
+
+        &.open
+            opacity: 1
+
+    .extenderIcon
+        transform: rotate(-90deg)
+        &.open
+            transform: rotate(90deg)
+
+.iconWrapper
+    display: flex
+    align-items: center
+    justify-content: center
+    
+    min-width: 2.5rem
+    min-height: 2.5rem
+    width: 2.5rem
+    height: 2.5rem
+
+    .icon
+        z-index: 2
+        transition: .2s
+
+        &.selected
+            color: white
+            scale: 1.2
+
 .container
-    top: 3rem
+    top: 3.5rem
     position: sticky
     display: flex
     flex-direction: column
@@ -134,7 +201,7 @@ onMounted(() => {
         height: 3rem
         width: 100%
         background: var(--white)
-        border-bottom: 2px solid var(--light-gray)
+        border-bottom: 2px solid var(--secondary)
 
     .list
         all: unset
@@ -142,6 +209,7 @@ onMounted(() => {
         flex-direction: column
         padding: 1rem .5rem 
         gap: .2rem
+        height: 100%
 
         .tab
             z-index: 0
@@ -163,27 +231,9 @@ onMounted(() => {
             transition: .1s ease-out
 
             &:hover
-                background-color: rgba(0, 0, 0, .1)
+                background: var(--secondary)
 
-            .iconWrapper
-                display: flex
-                align-items: center
-                justify-content: center
-                
-                min-width: 2.5rem
-                min-height: 2.5rem
-                width: 2.5rem
-                height: 2.5rem
-
-                .icon
-                    z-index: 2
-                    transition: .2s
-
-                    &.selected
-                        color: white
-
-                        scale: 1.2
-
+            
 
             .text
                 z-index: 2
@@ -209,26 +259,5 @@ onMounted(() => {
                 border-radius: 3px
                 background: var(--orange)
 
-    .extender
-        all: unset
-        position: absolute
-        display: flex
-        justify-content: center
-        align-items: center
-        background: var(--orange)
-        width: 2rem
-        height: 2rem
-
-        border-radius: 50px
-        bottom: 1rem
-        right: -.7rem
-
-        padding: .5rem
-        box-sizing: border-box
-
-        cursor: pointer
-        transition: .2s
-        &:hover
-            scale: 1.2
-
+    
 </style>

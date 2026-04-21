@@ -52,7 +52,7 @@ const s = useCssModule()
     border-radius: var(--border-radius-tiny)
 
     &:hover
-        background: var(--gray)
+        background: var(--secondary)
         
     .icon
         height: 1rem

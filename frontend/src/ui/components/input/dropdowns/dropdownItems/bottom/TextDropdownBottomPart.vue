@@ -47,5 +47,5 @@ const props = defineProps<{
         font-size: var(--font-size-small)
 
     &:hover
-        background: var(--gray)
+        background: var(--secondary)
 </style>

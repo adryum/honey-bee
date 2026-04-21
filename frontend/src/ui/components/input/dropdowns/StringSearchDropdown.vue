@@ -219,13 +219,13 @@ watch(search , (newVal) => {
         padding: 0 .5rem 
 
         &:hover
-            background: var(--gray)
+            background: var(--secondary)
             cursor: pointer
 
 
 .onHoverEffects
     &:hover
-        background: var(--gray)
+        background: var(--secondary)
 .noOpacity
     display: none
     opacity: 0 !important

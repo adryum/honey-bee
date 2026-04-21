@@ -1,11 +1,9 @@
 <script setup lang="ts">
-import { computed, reactive, toRef, useCssModule} from "vue"
+import { computed, useCssModule} from "vue"
 import { useCalendarQuery } from "@/core/composables/useCalendar";
 import { CalendarDate } from "@/core/Calendar";
 import type { HiveModelDB } from "@/core/stores/Models";
 import CalendarGrid from "../calendar/CalendarGrid.vue";
-import { useActionsStore } from "@/core/stores/ActionStore";
-import { useHiveMutations } from "@/core/composables/useHive";
 import { useHiveHistoryMutations } from "@/core/composables/useHiveHistory";
 import { HistoryEntryType } from "@/core/DatabaseEnums";
 

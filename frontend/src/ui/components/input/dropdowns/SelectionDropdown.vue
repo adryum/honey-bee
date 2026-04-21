@@ -104,7 +104,7 @@ onMounted(async () => {
                 class="li" 
                 @click="() => onItemClick(item)" 
                 @mouseover="selectedChoiceHover = i"
-                :animate="item.text === selected ? { backgroundColor: 'var(--light-gray)'} : {}"
+                :animate="item.text === selected ? { backgroundColor: 'var(--secondary)'} : {}"
                 :while-hover="item.text != selected ? { transition: { duration: .1 }, filter: 'brightness(90%)'} : {}"
                 :while-press="{ scale: 0.9 }"
             >
