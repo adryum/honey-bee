@@ -2,6 +2,7 @@ export enum HiveTab {
     General  = "general",
     Calendar = "calendar",
     Notes    = "notes",
+    Bees     = "bees"
     // Medicine = "sicknesAndRemedies"
 }
 

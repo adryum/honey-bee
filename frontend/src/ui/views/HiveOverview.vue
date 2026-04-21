@@ -1,6 +1,5 @@
 <script setup lang="ts">
 import { computed, onMounted, ref, toRef, useCssModule } from 'vue';
-import HiveMedicineFragment from '../components/view_fragments/HiveMedicineFragment.vue';
 import HiveGeneralFragment from '../components/view_fragments/HiveGeneralFragment.vue';
 import HiveNoteFragment from '../components/view_fragments/HiveNoteFragment.vue';
 import NoteFragmentToolbarPart from '../components/view_fragments/NoteFragmentToolbarPart.vue';
@@ -10,10 +9,8 @@ import { useRouter } from 'vue-router';
 import { RouterViewPaths } from '@/core/router';
 import Navbar from '../components/Navbar.vue';
 import HiveCalendarFragment from '../components/view_fragments/HiveCalendarFragment.vue';
-import IconCubeButton from '../components/input/buttons/IconCubeButton.vue';
-import { SVG } from '@/assets/svgs/SVGLoader';
-import IconTextButton from '../components/input/buttons/IconTextButton.vue';
 import MonthChangerWidget from '../components/calendar/MonthChangerWidget.vue';
+import HiveBeesFragment from '../components/view_fragments/bees/HiveBeesFragment.vue';
 
 const s = useCssModule()
 const router = useRouter()
@@ -33,6 +30,7 @@ const fragmentHeight = computed((): string => {
     switch (currentTab.value) {
         case HiveTab.Calendar: return `calc(100% -  7rem)`
         case HiveTab.General:  return `calc(100% -  7rem)`
+        case HiveTab.Bees:     return `calc(100% -  7rem)`
         // case HiveTab.Medicine: return `calc(100% -  7rem)`
         case HiveTab.Notes:    return `calc(100% -  7rem)`
         default:               return ""
@@ -101,6 +99,13 @@ onMounted(() => console.log(props.tab))
             :style="{ maxHeight: fragmentHeight }" 
             :search-text="searchText"
             :hive-id="hive.id"
+        />
+
+        <HiveBeesFragment
+            v-if="currentTab === HiveTab.Bees && hive"
+            :class="s.fragment"
+            :style="{ maxHeight: fragmentHeight }" 
+            :hive="hive"
         />
 
         <!-- <HiveMedicineFragment

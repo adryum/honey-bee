@@ -39,12 +39,6 @@ export type ApiarySearchOptions = {
     id?: number
 }
 
-export type LogModel = {
-    creator: string
-    creationDate: string
-    message: string
-}
-
 export type StringDropdownOptions<T> = {
     initialValue?: MaybeRef<T> 
     showIcon?: MaybeRef<boolean>

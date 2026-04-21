@@ -55,6 +55,7 @@ console.log(today);
             :events="events ?? []"
             :looked-at-date="selectedDate"
             :is-macdonalds="false"
+            :allowEventCreation="true"
             @create="onCreateEvent"
         />
     </div>

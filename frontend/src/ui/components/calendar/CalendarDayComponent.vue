@@ -7,10 +7,11 @@ import type { ModalBaseModel } from "@/core/composables/useModalBase";
 
 const s = useCssModule()
 const props = defineProps<{
-    selectedDate:     Date
-    calendarId:       string
-    otherCalendarIds: string[]
-    day:              CalendarDayModel
+    selectedDate :       Date
+    calendarId :         string
+    otherCalendarIds :   string[]
+    day :                CalendarDayModel
+    allowEventCreation?: boolean
 }>()
 
 const emits = defineEmits<{
@@ -109,6 +110,7 @@ onMounted(() => {
         :calendar-id="calendarId"
         :other-calendar-ids="otherCalendarIds"
         :day-model="day"
+        :allow-event-creation="allowEventCreation"
         @clickOutside="infoModal?.close"
         @close="infoModal?.close"
         @create="emits('create')"

@@ -15,6 +15,7 @@ const props = defineProps<{
     calendarId:       string
     otherCalendarIds: string[]
     dayModel:         CalendarDayModel
+    allowEventCreation?: boolean
 }>()
 
 const emits = defineEmits<{
@@ -63,6 +64,7 @@ const createEventModal = ref<ModalBaseModel>()
             </div>
 
             <label 
+                v-if="allowEventCreation"
                 for="tasks"
                 :class="s.label"
             >
@@ -70,6 +72,7 @@ const createEventModal = ref<ModalBaseModel>()
             </label>
 
             <div 
+                v-if="allowEventCreation"
                 :class="s.titleWrapper"
             >
                 <IconTextButton

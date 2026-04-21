@@ -163,3 +163,27 @@ export type InspectionTableEntryModel = {
     creationDate:     string
     processed: boolean
 }
+
+export type BeeHistoryModelDB = {
+    id:           number
+    species:      string
+    placedHereAt: string
+    timeInHive:   string
+} 
+
+export type BeeModelDB = {
+    id:              number
+    species:         string
+    lifeExpectancy:  string
+    age:             string
+    image:           string
+    bornDate:        Date
+    addedToHiveDate: Date
+} 
+
+export type MoreAboutSpeciesModel = {
+    species:     string
+    description: string
+    behavior:    string
+    preferences: string
+}

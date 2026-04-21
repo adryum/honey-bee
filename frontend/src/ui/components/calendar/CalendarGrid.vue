@@ -11,6 +11,7 @@ const props = withDefaults(defineProps<{
     events:           CalendarEventDB[]
     lookedAtDate:     Date
     isMacdonalds:     boolean
+    allowEventCreation: boolean
 }>(), {
     lookedAtDate: () => new Date()
 })
@@ -128,6 +129,7 @@ function getCalendarMonthWithDayPadding(
             :calendarId="calendarId"
             :otherCalendarIds="otherCalendarIDs"
             :day="day"
+            :allowEventCreation="allowEventCreation"
             @create="emits('create')"
         />
     </div>

@@ -91,6 +91,7 @@ const { events } = useCalendarQuery({
             :otherCalendarIDs="[]"
             :events="events ?? []"
             :looked-at-date="selectedDate"
+            :allowEventCreation="false"
             :is-macdonalds="false"
         />
     </div>
