@@ -4,6 +4,7 @@ import { ref, useCssModule, watch } from "vue";
 import { motion } from 'motion-v';
 import { IconType, SVG } from "@/assets/svgs/SVGLoader";
 import Icon from "../../Icon.vue";
+import IconTextButton from "../buttons/IconTextButton.vue";
 
 const s = useCssModule()
 const dropZoneRef = ref()
@@ -81,11 +82,12 @@ function handleFiles(event: Event) {
         style="display: none"
         @change="handleFiles"
     />
-    <icon-button
+    <IconTextButton
         v-if="imageSrc"
         :class="s.choseFileButton"
-        :is-important="false"
+        :is-submit="true"
         :icon="SVG.Cross"
+        text="Clear"
         @click="imageSrc = ''"
     />
     <!-- <div :class="s.buttons">

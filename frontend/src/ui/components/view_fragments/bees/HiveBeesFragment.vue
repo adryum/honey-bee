@@ -1,43 +1,43 @@
 <script setup lang="ts">
-import { ref, useCssModule } from "vue";
-import type { BeeHistoryModelDB, BeeModelDB, HiveModelDB, MoreAboutSpeciesModel } from "@/core/stores/Models";
+import { computed, ref, useCssModule } from "vue";
+import type { QueenHistoryModelDB, QueenModelDB, HiveModelDB, MoreAboutSpeciesModel } from "@/core/stores/Models";
 import QueenInfo from "./QueenInfo.vue";
 import QueenHistory from "./QueenHistory.vue";
 import MoreAboutSpecies from "./MoreAboutSpecies.vue";
+import { useQueensQuery } from "@/core/composables/useQueen";
+import { useSpeciesQuery } from "@/core/composables/useSpecies";
 
 const s = useCssModule()
 const props = defineProps<{
     hive: HiveModelDB
 }>()
 
-const bee = ref<BeeModelDB>({
-    id:              -1,
-    species:         "Bigus bitusus III",
-    image:           "",
-    lifeExpectancy:  "3 years",
-    age:             "2 years 2 months",
-    bornDate:        new Date(),
-    addedToHiveDate: new Date()
+const { queens } = useQueensQuery({
+    queenIds: undefined,
+    hiveIds: computed(() => [props.hive.id])
 })
-const beeHistory = ref<BeeHistoryModelDB[]>([{
+const queen = computed(() => {
+    console.log(queens.value?.[0]);
+    
+    return queens.value?.[0]}
+)
+const { species } = useSpeciesQuery()
+const queenSpecies = computed(() => species.value?.find(item => item.id === queen.value?.species.id))
+
+const beeHistory = ref<QueenHistoryModelDB[]>([{
     id: -1,
     species: "Bigus Bitusus III",
     placedHereAt: "",
     timeInHive: ""
 }])
-const moreAboutSpecies = ref<MoreAboutSpeciesModel>({
-    species: "Bigus bitusus III",
-    description: "<i>Apis mellifera</i>, or the western honey bee, is a social insect species known for producing honey and pollinating plants. It has a golden-brown body with black stripes, a hairy thorax, and specialized hind legs for collecting pollen. Colonies can contain tens of thousands of individuals, including a queen, workers, and drones.",
-    behavior: "This species is generally calm and non-aggressive, focusing mainly on foraging and maintaining the hive. However, it becomes defensive if the hive is threatened and may sting in response. Worker bees communicate using the waggle dance to share information about food sources.",
-    preferences: "<i>Apis mellifera</i> prefers environments with abundant flowering plants such as meadows, farms, and gardens. It feeds primarily on nectar for energy and pollen for protein, and also requires water to regulate hive temperature. The species adapts well to different climates as long as food sources are available."
-})
 </script>
 
 <template>
 <div :class="s.container">
     <QueenInfo
         :class="s.info"
-        :bee="bee"
+        :queen="queen"
+        :hive-id="hive.id"
     />
     <QueenHistory 
         :class="s.history"
@@ -45,7 +45,7 @@ const moreAboutSpecies = ref<MoreAboutSpeciesModel>({
     />
     <MoreAboutSpecies
         :class="s.description"
-        :moreInfo="moreAboutSpecies"
+        :species="queenSpecies"
     />
 </div>
 </template>

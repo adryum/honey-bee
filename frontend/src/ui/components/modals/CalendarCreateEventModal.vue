@@ -1,6 +1,6 @@
 <script setup lang="ts">
 import { SVG } from '@/assets/svgs/SVGLoader';
-import { useCssModule, ref, computed } from 'vue';
+import { useCssModule, ref, computed, watch } from 'vue';
 import LabeledTextareaField from '../input/fields/LabeledTextareaField.vue';
 import LabeledInputField from '../input/fields/LabeledInputField.vue';
 import IconTextButton from '../input/buttons/IconTextButton.vue';
@@ -8,6 +8,8 @@ import { useFormValidator } from '@/core/composables/useFormValidator';
 import ModalBase from './ModalBase.vue';
 import { useModalBase } from '@/core/composables/useModalBase';
 import { useCalendarMutation } from '@/core/composables/useCalendar';
+import StringField from '../input/fields/used/StringField.vue';
+import StringMultipleField from '../input/fields/used/StringMultipleField.vue';
 
 const s = useCssModule()
 const props = defineProps<{
@@ -24,7 +26,7 @@ const { modal, exposed } = useModalBase()
 defineExpose(exposed)
 
 const { createEvent } = useCalendarMutation()
-const { getFormValidee, isFormValid } = useFormValidator()
+const { getFormValidee, isFormValid, clear } = useFormValidator()
 
 const title   = ref('')
 const content = ref('')
@@ -45,6 +47,11 @@ async function create() {
         } 
     })
 }
+
+watch(() => exposed.isOpen(), (val) => {
+    if (!val) return 
+    clear()
+})
 </script>
 
 <template>
@@ -54,19 +61,29 @@ async function create() {
 >
     <template #body>
     <div :class="s.grid">
-        <LabeledInputField
+        <StringField
             label="Title"
             :class="s.title" 
-            :validee="getFormValidee(() => !!title)"
-            v-model:input="title"
+            :selection="title"
+            :validee="getFormValidee({
+                isValid: () => !!title,
+                onClear: () => title = '',
+                onInitialize: () => title = ''
+            })"
+            @input="value => title = value"
+        />
+
+        <StringMultipleField
+            label="Content"
+            :selection="content"
+            :validee="getFormValidee({
+                isValid: () => !!content,
+                onClear: () => content = '',
+                onInitialize: () => content = ''
+            })"
+            @input="value => content = value"
         />
        
-        <LabeledTextareaField
-            label="Content"
-            :style="{ height: '100%' }"
-            :validee="getFormValidee(() => !!content)"
-            v-model:input="content"
-        />
         <IconTextButton 
             text="Create"
             :disabled="!isFormValid" 

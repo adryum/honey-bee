@@ -1,8 +1,8 @@
 <script setup lang="ts">
 import { useCssModule } from 'vue';
 import { motion } from 'motion-v';
-import Icon from '../../Icon.vue';
 import { IconType, SVG } from '@/assets/svgs/SVGLoader';
+import Icon from '../../Icon.vue';
 
 const props = withDefaults(defineProps<{
     icon?: SVG

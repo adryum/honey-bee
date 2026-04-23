@@ -1,6 +1,7 @@
 import { String_to_HiveType, String_to_NoteTypes, String_to_Role } from "./DatabaseEnums";
-import type { ApiaryAccessResponseModel, ApiaryCreateResponseModel, CalendarEventGetModel, HiveAccessResponseModel, HiveCreateResponseModel, HiveHistoryGetModel, InspectionCreateRequestModel, InspectionEntryResponseModel, InspectionReviewResponseModel, NoteCreateModelResponse, UserEntryResponseModel, UserProfileResponseModel, WhitelistEntryResponseModel } from "./api/Models";
-import type { ApiaryModelDB, CalendarEventDB, HistoryEntryDB, HiveModelDB, InspectionDB, InspectionFormDB, InspectionFormUI, InspectionTableEntryModel, NoteModelDB, UserEntryModelDB, UserModelDB, WhitelistEntryModelDB } from "./stores/Models";
+import type { ApiaryAccessResponseModel, ApiaryCreateResponseModel, CalendarEventGetModel, HiveAccessResponseModel, HiveCreateResponseModel, HiveHistoryGetModel, InspectionCreateRequestModel, InspectionEntryResponseModel, InspectionReviewResponseModel, NoteCreateModelResponse, QueenGetModel, SpeciesGetModel, UserEntryResponseModel, UserProfileResponseModel, WhitelistEntryResponseModel } from "./api/Models";
+import type { ApiaryModelDB, QueenModelDB, CalendarEventDB, HistoryEntryDB, HiveModelDB, InspectionDB, InspectionFormDB, InspectionFormUI, InspectionTableEntryModel, NoteModelDB, UserEntryModelDB, UserModelDB, WhitelistEntryModelDB, SpeciesModelDB } from "./stores/Models";
+import { getAge } from "./utils/Utils";
 
 export function ApiaryCreateResponse_to_ApiaryModelDB(
     convertee: ApiaryCreateResponseModel
@@ -255,4 +256,37 @@ export function CalendarEventGetModel_To_CalendarEventDB(
         color:        "",
         type:         ""
     }
+}
+
+export function QueenGetModel_To_QueenModelDB(
+    convertee: QueenGetModel
+): QueenModelDB {
+    console.log(JSON.stringify(convertee, null, 2))
+    const age = getAge(convertee.bornDate, new Date().toString())
+    return {
+        id:       convertee.id,
+        species:  {
+            id: convertee.specie.id,
+            lifeExpectancy: convertee.specie.lifeExpectancy,
+            scientificName: convertee.specie.scientificName,
+        },
+        age:      age,
+        imageUrl: convertee.imageUrl,
+        bornDate: new Date(convertee.bornDate),
+        addedToHiveDate: new Date(convertee.addedToHiveDate)
+    }
+}
+
+export function SpeciesGetModel_To_SpeciesModelDB(
+    convertee: SpeciesGetModel
+): SpeciesModelDB {
+    return {
+        id:             convertee.id,
+        scientificName: convertee.scientificName,
+        knownAsName:    convertee.knownAsName,
+        lifeExpectancy: convertee.lifeExpectancy,
+        description:    convertee.description,
+        behavior:       convertee.behavior,
+        preferences:    convertee.preferences
+    }    
 }

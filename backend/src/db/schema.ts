@@ -1,7 +1,7 @@
 import { mysqlTable, mysqlSchema, AnyMySqlColumn, index, foreignKey, primaryKey, bigint, varchar, text, timestamp, float, int, mysqlEnum, datetime, tinyint } from "drizzle-orm/mysql-core"
 import { sql }                                                                                                                                                from "drizzle-orm"
-import { HiveType, Role }                                                                                                                                               from "../DatabaseEnums";
-import { boolean } from "drizzle-orm/mysql-core";
+import { HiveType, Role }                                                                                                                                     from "../DatabaseEnums";
+import { boolean }                                                                                                                                            from "drizzle-orm/mysql-core";
 
 export const apiaries = mysqlTable("apiaries", {
 	id:           bigint({ mode: "number" }).autoincrement().notNull(),
@@ -163,3 +163,39 @@ export const hiveHoneyProduction = mysqlTable("hive_honey_production", {
 	primaryKey({ columns: [table.id], name: "hive_honey_production_id"}),
 ]);
 
+export const hiveQueenHistory = mysqlTable("hive_queen_history", {
+	id:              bigint({ mode: "number" }).autoincrement().notNull(),
+	timeSpentInHive: varchar("time_spent_in_hive", { length: 50 }).default('0').notNull(),
+	placedHereDate:  timestamp("placed_here_date", { mode: 'string' }).notNull(),
+	imageUrl:        text("image_url"),
+	speciesId:       bigint("species_id", { mode: "number" }).notNull().references(() => species.id),
+	hiveId:          bigint("hive_id", { mode: "number" }).references(() => hives.id),
+},
+(table) => [
+	primaryKey({ columns: [table.id], name: "hive_queen_history_id"}),
+]);
+
+export const species = mysqlTable("species", {
+	id:             bigint({ mode: "number" }).autoincrement().notNull(),
+	scientificName: varchar("scientific_name", { length: 100 }).default("").notNull(),
+	knownAsName:    varchar("known_as_name", { length: 100 }).default("").notNull(),
+	lifeExpectancy: varchar("life_expectancy", { length: 50 }).default("").notNull(),
+	description:    text().notNull(),
+	behavior:       text().notNull(),
+	preferences:    text().notNull(),
+},
+(table) => [
+	primaryKey({ columns: [table.id], name: "queen_species_id"}),
+]);
+
+export const queens = mysqlTable("queens", {
+	id:              bigint({ mode: "number" }).autoincrement().notNull(),
+	bornDate:        datetime("born_date", { mode: 'string' }).notNull(),
+	addedToHiveDate: timestamp("added_to_hive_date", { mode: 'string' }).default(sql`now()`).notNull(),
+	imageUrl:        text("image_url"),
+	speciesId:       bigint("species_id", { mode: "number" }).notNull().references(() => species.id),
+	hiveId:          bigint("hive_id", { mode: "number" }).notNull().references(() => hives.id),
+},
+(table) => [
+	primaryKey({ columns: [table.id], name: "queens_id"}),
+]);

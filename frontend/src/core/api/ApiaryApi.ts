@@ -26,7 +26,7 @@ export const apiaryApi = {
 
         const formData = new FormData()
         formData.append("name", name)
-        formData.append("description", description)
+        if (description) formData.append("description", description)
         if (image) formData.append("image", image)
 
         const result = await axios.post<ApiaryCreateResponseModel>("/apiary/create", formData)

@@ -34,3 +34,32 @@ export function formatDateWithOrdinal(
 export function getRandomId(prefix: string): string {
     return `${prefix}-${Math.random().toString(36).slice(2, 11)}`
 }
+
+export function getAge(bornTs: string, todayTs: string): string {
+    const born = new Date(bornTs);
+    const today = new Date(todayTs);
+
+    let years = today.getFullYear() - born.getFullYear();
+    let months = today.getMonth() - born.getMonth();
+
+    if (months < 0) {
+        years--;
+        months += 12;
+    }
+
+    // If day hasn't been reached yet this month, subtract a month
+    if (today.getDate() < born.getDate()) {
+        months--;
+        if (months < 0) {
+        years--;
+        months += 12;
+        }
+    }
+
+    const parts: string[] = [];
+    if (years > 0) parts.push(`${years} year${years !== 1 ? 's' : ''}`);
+    if (months > 0) parts.push(`${months} month${months !== 1 ? 's' : ''}`);
+    if (parts.length === 0) parts.push('0 months');
+
+    return parts.join(' ');
+}

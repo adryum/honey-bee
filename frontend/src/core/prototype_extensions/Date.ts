@@ -2,6 +2,7 @@ declare global {
     interface Date {
         toDDMMYYYY(separator: string): string;
         toYYYYMMDD(separator: string): string;
+        toMySQLTimestamp(): string;
         firstDayOfMonth(): Date;
         lastDayOfMonth(): Date;
         previousMonth(): Date;
@@ -21,6 +22,10 @@ Date.prototype.toDDMMYYYY = function(separator: string): string {
 Date.prototype.toYYYYMMDD = function(separator: string): string {
     // this is the date value
     return `${this.getFullYear()}${separator}${(this.getMonth() + 1).toString().padStart(2, '0')}${separator}${this.getDate().toString().padStart(2, '0')}`
+}
+
+Date.prototype.toMySQLTimestamp = function (): string {
+    return this.toISOString().slice(0, 19).replace('T', ' ')
 }
 
 Date.prototype.firstDayOfMonth = function(): Date {

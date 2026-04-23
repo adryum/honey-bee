@@ -164,21 +164,24 @@ export type InspectionTableEntryModel = {
     processed: boolean
 }
 
-export type BeeHistoryModelDB = {
+export type QueenHistoryModelDB = {
     id:           number
     species:      string
     placedHereAt: string
     timeInHive:   string
 } 
 
-export type BeeModelDB = {
+export type QueenModelDB = {
     id:              number
-    species:         string
-    lifeExpectancy:  string
-    age:             string
-    image:           string
-    bornDate:        Date
+    species:         {
+        id:             number
+        scientificName: string
+        lifeExpectancy: string
+    }
     addedToHiveDate: Date
+    age:             string
+    imageUrl:        string
+    bornDate:        Date
 } 
 
 export type MoreAboutSpeciesModel = {
@@ -186,4 +189,14 @@ export type MoreAboutSpeciesModel = {
     description: string
     behavior:    string
     preferences: string
+}
+
+export type SpeciesModelDB = {
+    id:             number
+    scientificName: string
+    knownAsName:    string
+    lifeExpectancy: string
+    description:    string
+    behavior:       string
+    preferences:    string
 }

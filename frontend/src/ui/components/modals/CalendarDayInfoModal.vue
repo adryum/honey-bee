@@ -1,7 +1,6 @@
 <script setup lang="ts">
 import { IconType, SVG } from "@/assets/svgs/SVGLoader";
-import { ref, useCssModule } from "vue";
-import Icon from "../Icon.vue";
+import { onMounted, ref, useCssModule } from "vue";
 import CalendarTaskExpandable from "./CalendarTaskExpandable.vue";
 import ModalPlate from "./ModalPlate.vue";
 import IconCubeButton from "../input/buttons/IconCubeButton.vue";
@@ -9,6 +8,7 @@ import type { CalendarDayModel, HiveModelDB } from "@/core/stores/Models";
 import { useModalBase, type ModalBaseModel } from "@/core/composables/useModalBase";
 import CalendarCreateEventModal from "./CalendarCreateEventModal.vue";
 import IconTextButton from "../input/buttons/IconTextButton.vue";
+import Icon from "../Icon.vue";
 
 const s = useCssModule()
 const props = defineProps<{
@@ -28,7 +28,6 @@ const { modal, exposed } = useModalBase()
 defineExpose(exposed)
 
 const createEventModal = ref<ModalBaseModel>()
-
 </script>
 
 <template>

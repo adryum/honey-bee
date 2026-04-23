@@ -1,5 +1,5 @@
 import { relations } from "drizzle-orm/relations";
-import { users, apiaries, hives, hiveHoneyProduction, hiveInspections, hiveInspectionForms, hivehistory, notes, userapiaryaccess, userhiveaccess } from "./schema";
+import { users, apiaries, hives, hiveHoneyProduction, hiveInspections, hiveInspectionForms, hivehistory, notes, userapiaryaccess, userhiveaccess, hiveQueenHistory, species, queens } from "./schema";
 
 export const apiariesRelations = relations(apiaries, ({one, many}) => ({
 	user: one(users, {
@@ -21,18 +21,36 @@ export const usersRelations = relations(users, ({many}) => ({
 	userhiveaccesses: many(userhiveaccess),
 }));
 
-export const hiveHoneyProductionRelations = relations(hiveHoneyProduction, ({one}) => ({
+export const hiveQueenHistoryRelations = relations(hiveQueenHistory, ({one}) => ({
+	species: one(species, {
+		fields: [hiveQueenHistory.speciesId],
+		references: [species.id]
+	}),
 	hive: one(hives, {
-		fields: [hiveHoneyProduction.hiveId],
+		fields: [hiveQueenHistory.hiveId],
 		references: [hives.id]
 	}),
-	hiveInspection: one(hiveInspections, {
-		fields: [hiveHoneyProduction.inspectionId],
-		references: [hiveInspections.id]
+}));
+
+export const queenSpeciesRelations = relations(species, ({many}) => ({
+	hiveQueenHistories: many(hiveQueenHistory),
+	queens: many(queens),
+}));
+
+
+export const queensRelations = relations(queens, ({one}) => ({
+	specie: one(species, {
+		fields: [queens.speciesId],
+		references: [species.id]
+	}),
+	hive: one(hives, {
+		fields: [queens.hiveId],
+		references: [hives.id]
 	}),
 }));
 
 export const hivesRelations = relations(hives, ({one, many}) => ({
+	hiveBeeHistories: many(hiveQueenHistory),
 	hiveHoneyProductions: many(hiveHoneyProduction),
 	hiveInspectionForms: many(hiveInspectionForms),
 	hivehistories: many(hivehistory),
@@ -46,6 +64,17 @@ export const hivesRelations = relations(hives, ({one, many}) => ({
 	}),
 	notes: many(notes),
 	userhiveaccesses: many(userhiveaccess),
+}));
+
+export const hiveHoneyProductionRelations = relations(hiveHoneyProduction, ({one}) => ({
+	hive: one(hives, {
+		fields: [hiveHoneyProduction.hiveId],
+		references: [hives.id]
+	}),
+	hiveInspection: one(hiveInspections, {
+		fields: [hiveHoneyProduction.inspectionId],
+		references: [hiveInspections.id]
+	}),
 }));
 
 export const hiveInspectionsRelations = relations(hiveInspections, ({one, many}) => ({

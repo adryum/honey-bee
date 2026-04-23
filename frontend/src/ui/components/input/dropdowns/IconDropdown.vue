@@ -6,7 +6,7 @@ import type { SVG } from "@/assets/svgs/SVGLoader";
 
 const s = useCssModule()
 const props = withDefaults(defineProps<{
-    svg: SVG
+    icon: SVG
     transparent?: boolean
     noBorderRadius?: boolean
 }>(), {
@@ -32,7 +32,7 @@ const { floaterStyle } = useFloatingUI({
     <IconCubeButton
         ref="anchor"
         :class="s.icon"
-        :icon="svg"
+        :icon="icon"
         :transparent="transparent"
         :no-border-radius="noBorderRadius"
         @click.stop="isShown = !isShown"

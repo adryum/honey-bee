@@ -1,7 +1,7 @@
 <script setup lang="ts">
 import { SVG } from '@/assets/svgs/SVGLoader';
 import { useApiaryMutations } from '@/core/composables/useApiary';
-import { useCssModule, ref, onMounted, watch, watchEffect, isRef } from 'vue';
+import { useCssModule, ref, watch } from 'vue';
 import LabeledTextareaField from '../input/fields/LabeledTextareaField.vue';
 import LabeledInputField from '../input/fields/LabeledInputField.vue';
 import ImageDropZone from '../input/fields/ImageDropZone.vue';
@@ -9,30 +9,45 @@ import IconTextButton from '../input/buttons/IconTextButton.vue';
 import { useFormValidator } from '@/core/composables/useFormValidator';
 import ModalBase from './ModalBase.vue';
 import { useModalBase } from '@/core/composables/useModalBase';
+import { useHiveMutations } from '@/core/composables/useHive';
+import { HiveType } from '@/core/DatabaseEnums';
+import type { HiveModelDB } from '@/core/stores/Models';
 import StringField from '../input/fields/used/StringField.vue';
 import StringMultipleField from '../input/fields/used/StringMultipleField.vue';
+import ModularDropdown from '../input/dropdowns/ModularDropdown.vue';
+import StringFieldTopPart from '../input/dropdowns/dropdownItems/top/StringFieldTopPart.vue';
+import IconTextItem from '../input/dropdowns/dropdownItems/bottom/IconTextItem.vue';
 
 const s = useCssModule()
 const props = defineProps<{
+    hive: HiveModelDB
 }>()
 
 const { modal, exposed } = useModalBase()
 defineExpose(exposed)
 
-const { create, isCreatingApiary } = useApiaryMutations()
-const { getFormValidee, isFormValid, clear } = useFormValidator()
+const { update, isUpdatingHive } = useHiveMutations()
+const { getFormValidee, isFormValid, initialize } = useFormValidator()
 
 const imageFile = ref<File | undefined>()
-const name = ref<string | undefined>()
-const description = ref<string | undefined>()
+const name = ref('')
+const type = ref<HiveType | undefined>()
+const description = ref('')
+const hiveTypeModels: { name: HiveType, icon: SVG }[] = [
+    { name: HiveType.MOVABLE, icon: SVG.Apiary },
+    { name: HiveType.STATIONARY, icon: SVG.BeeHive },
+]
 
-function createApiary() {
-    if (!name.value) return
+function createHive() {
+    if (!type.value) return
 
-    create({
+    update({
+        id:          props.hive.id,
         name:        name.value,
         description: description.value,
-        image:       imageFile.value 
+        image:       imageFile.value,
+        type:        type.value,
+        apiaryId:    props.hive.apiaryId
     },
     {
         onSuccess: () => modal.value?.close()
@@ -41,14 +56,14 @@ function createApiary() {
 
 watch(() => exposed.isOpen(), (val) => {
     if (!val) return 
-    clear()
+    initialize()
 })
 </script>
 
 <template>
 <ModalBase
     ref="modal"
-    label="Add Apiary"
+    label="Edit hive"
 >
     <template #body>
     <div :class="s.grid">
@@ -62,33 +77,63 @@ watch(() => exposed.isOpen(), (val) => {
                 :selection="name"
                 :validee="getFormValidee({
                     isValid: () => !!name,
-                    onClear: () => name = undefined,
-                    onInitialize: () => name = undefined
+                    onClear: () => name = '',
+                    onInitialize: () => name = hive.name
                 })"
                 @input="value => name = value"
             />
+
+            <ModularDropdown
+                :teleport-target-id="modal?.id"
+            >
+                <template #head="{ dropdown }">
+                    <StringFieldTopPart
+                        label="Type"
+                        :dropdown="dropdown"
+                        :selection="type"
+                        :validee="getFormValidee({
+                            isValid: () => !!type,
+                            onClear: () => type = undefined,
+                            onInitialize: () => type = hive.type
+                        })"
+                        @click="dropdown.isShown.value = true"
+                    />
+                </template>
+                <template #list="{ dropdown }">
+                    <IconTextItem
+                        v-for="item in hiveTypeModels"
+                        :key="item.name"
+                        :options="{
+                            svg: item.icon,
+                            text: item.name
+                        }"
+                        @click="type = item.name; dropdown.isShown.value = false"
+                    />
+                </template>
+            </ModularDropdown>
 
             <StringMultipleField
                 label="Description"
                 :selection="description"
                 :validee="getFormValidee({
-                    isValid: () => !!description,
-                    onClear: () => description = undefined,
-                    onInitialize: () => description = undefined
+                    isValid: () => true,
+                    onClear: () => description = '',
+                    onInitialize: () => description = hive.description
                 })"
                 @input="value => description = value"
             />
 
             <IconTextButton
+                :icon="SVG.Plus"
                 :class="s.button" 
                 :is-submit="true"
                 :is-aligned-center="true"
                 :style="{marginTop: 'auto'}"
-                :is-loading="isCreatingApiary"
+                :is-loading="isUpdatingHive"
                 :disabled="!isFormValid"
                 :hide-icon="true"
-                text="Create"
-                @click="createApiary" 
+                text="Update"
+                @click="createHive" 
             />
         </div>
         

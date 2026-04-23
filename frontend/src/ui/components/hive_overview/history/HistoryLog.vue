@@ -15,10 +15,6 @@ const props = defineProps<{
 <div :class="s.container">
     <div :class="s.header">
         <label :class="s.label">{{ t("hiveOverview.actionHistory") }}</label>
-        <!-- <div :class="s.buttons">
-            <IconCubeButton :class="s.button" :icon="SVG.Checkmark"/>
-            <IconCubeButton :class="s.button" :icon="SVG.Checkmark"/>
-        </div> -->
     </div>
     <hr :style="{
         position: 'relative',

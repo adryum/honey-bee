@@ -1,5 +1,5 @@
 <script setup lang="ts">
-import { ref, useCssModule } from "vue";
+import { ref, useCssModule, watch } from "vue";
 import ModalBase from "./ModalBase.vue";
 import { Role } from "@/core/DatabaseEnums";
 import type { AddToWhitelistRequestModel } from "@/core/api/Models";
@@ -12,6 +12,8 @@ import SelectedTextHead from "../input/dropdowns/dropdownItems/top/SelectedTextH
 import IconTextItem from "../input/dropdowns/dropdownItems/bottom/IconTextItem.vue";
 import LabeledInputField from "../input/fields/LabeledInputField.vue";
 import IconTextButton from "../input/buttons/IconTextButton.vue";
+import StringField from "../input/fields/used/StringField.vue";
+import StringFieldTopPart from "../input/dropdowns/dropdownItems/top/StringFieldTopPart.vue";
 
 const s = useCssModule()
 const props = defineProps<{}>()
@@ -19,7 +21,7 @@ const props = defineProps<{}>()
 const { modal, exposed } = useModalBase()
 defineExpose(exposed)
 
-const { getFormValidee, isFormValid } = useFormValidator()
+const { getFormValidee, isFormValid, clear } = useFormValidator()
 const { addWhitelistEntry } = useAdminMutations()
 
 const email = ref('')
@@ -37,6 +39,11 @@ async function add() {
         onSuccess: () => modal.value?.close()
     })
 }
+
+watch(() => exposed.isOpen(), (val) => {
+    if (!val) return 
+    clear()
+})
 </script>
 
 <template>
@@ -47,33 +54,43 @@ async function add() {
     <template #body>
         <div :class="s.body">
             <div :class="s.fields">
-                <LabeledInputField 
+                <StringField
                     label="Email"
-                    :class="s.email"
-                    :validee="getFormValidee(() => !!email)"
-                    v-model:input="email"
+                    :selection="email"
+                    :validee="getFormValidee({
+                        isValid: () => !!email,
+                        onClear: () => email = '',
+                        onInitialize: () => email = ''
+                    })"
+                    @input="value => email = value"
                 />
+
                 <ModularDropdown
-                    label="Role"
-                    :class="s.role"
                     :teleport-target-id="modal?.id"
                 >
-                    <template #head="{dropdown}">
-                       <SelectedTextHead
-                            :selection="role"
+                    <template #head="{ dropdown }">
+                        <StringFieldTopPart
+                            label="Type"
                             :dropdown="dropdown"
-                            :validee="getFormValidee(() => !!role)"
+                            :selection="role"
+                            :validee="getFormValidee({
+                                isValid: () => !!role,
+                                onClear: () => role = undefined,
+                                onInitialize: () => role = undefined
+                            })"
+                            @click="dropdown.isShown.value = true"
                         />
                     </template>
                     <template #list="{ dropdown }">
                         <IconTextItem
                             v-for="item in Object.values(Role).filter(type => type !== Role.NOT_A_ROLE)"
+                            :key="item"
                             :options="{
                                 svg:  SVG.Apiaries,
                                 text: item.toSentenceCase()
                             }"
                             @click="role = item; dropdown.isShown.value = false"
-                        /> 
+                        />
                     </template>
                 </ModularDropdown>
             </div>

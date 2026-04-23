@@ -15,6 +15,8 @@ import inspectionRoute from "./routes/Inspection"
 import profileRoute from "./routes/Profile"
 import hiveHistoryRoute from "./routes/HiveHistory"
 import hiveHoneyProductionRoute from "./routes/HiveHoneyProduction"
+import speciesRoute from "./routes/Species"
+import queenRoute from "./routes/Queen"
 
 import express from "express";
 import cors from "cors";
@@ -73,6 +75,8 @@ async function startServer() {
     app.use("/profile", profileRoute)
     app.use("/hiveHistory", hiveHistoryRoute)
     app.use("/hiveHoneyProduction", hiveHoneyProductionRoute)
+    app.use("/species", speciesRoute)
+    app.use("/queen", queenRoute)
 
     // starts express server
     httpServer.listen(port, () => {

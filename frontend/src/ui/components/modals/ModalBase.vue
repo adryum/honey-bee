@@ -13,14 +13,15 @@ const props = defineProps<{
 const id = ref(getRandomId("modal"))
 
 const dialogRef = ref<HTMLDialogElement>()
-const open      = () => dialogRef.value?.showModal()
-const close     = () => dialogRef.value?.close()
+const isOpen = ref(false)
+const open   = () => { dialogRef.value?.showModal(); isOpen.value = true  }
+const close  = () => { dialogRef.value?.close();     isOpen.value = false }
 
 defineExpose<ModalBaseModel>({ 
     id, 
     open, 
     close, 
-    isOpen: computed(() => dialogRef.value?.open ?? false)
+    isOpen: () => isOpen.value
 })
 </script>
 

@@ -9,6 +9,7 @@ import IconTextButton from "../input/buttons/IconTextButton.vue";
 import { useInspectionMutation, useInspectionQuery } from "@/core/composables/useInspection";
 import { formatDateWithOrdinal } from "@/core/utils/Utils";
 import { useHiveHoneyProductionMutations } from "@/core/composables/useHiveHoneyProduction";
+import StringField from "../input/fields/used/StringField.vue";
 
 const s = useCssModule()
 const props = defineProps<{
@@ -138,15 +139,19 @@ async function processInspection() {
     
 
             <div :class="s.fields">
-                <LabeledInputField 
+                <StringField
                     label="Process honey in KG"
-                    :class="s.email"
-                    :validee="getFormValidee(() => !!procesedHoney)"
+                    :selection="procesedHoney"
                     :style="!!!takenHoneyFrames && {
                         opacity: 0.5,
                         pointerEvents: 'none'
                     }"
-                    v-model:input="procesedHoney"
+                    :validee="getFormValidee({
+                        isValid: () => !!procesedHoney,
+                        onClear: () => procesedHoney = '',
+                        onInitialize: () => procesedHoney = ''
+                    })"
+                    @input="value => procesedHoney = value"
                 />
                 
             </div>

@@ -2,9 +2,9 @@ import type { HistoryEntryType, HiveType, NoteTypes, Role } from "../DatabaseEnu
 import type { HistoryEntryDB } from "../stores/Models"
 
 export type ApiaryCreateRequestModel = {
-    name:        string
-    description: string
-    image?:      File
+    name :        string
+    description?: string
+    image?:       File
 }
 
 export type ApiaryCreateResponseModel = {
@@ -298,4 +298,44 @@ export type CalendarEventCreateModel = {
     end:          string
     title:        string
     description:  string
+}
+
+export type QueenCreateModel = {
+    image:     File | undefined
+    bornDate:  Date
+    speciesId: number
+    hiveId:    number
+}
+
+export type QueenGetModel = {
+    id:              number
+    imageUrl:        string
+    bornDate:        string
+    addedToHiveDate: string
+    specie:         {
+        id:             number
+        scientificName:    string
+        lifeExpectancy: string
+    },
+    hive: {
+        id:   number,
+        name: string
+    } | undefined 
+}
+
+export type QueenUpdateModel = {
+    id:         number
+    speciesId?: number
+    bornDate?:  Date
+    image?:     File
+}
+
+export type SpeciesGetModel = {
+    id:             number
+    scientificName: string
+    knownAsName:    string
+    lifeExpectancy: string
+    description:    string
+    behavior:       string
+    preferences:    string
 }

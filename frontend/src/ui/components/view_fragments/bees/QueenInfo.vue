@@ -1,19 +1,24 @@
 <script setup lang="ts">
-import {ref, toRef, useCssModule } from "vue";
+import {ref, useCssModule } from "vue";
 import { SVG } from "@/assets/svgs/SVGLoader";
-import type { BeeModelDB, HiveModelDB } from "@/core/stores/Models";
+import type { QueenModelDB } from "@/core/stores/Models";
 import IconTextButton from "../../input/buttons/IconTextButton.vue";
 import { getRandomId } from "@/core/utils/Utils";
+import QueenCreateModal from "../../modals/QueenCreateModal.vue";
+import type { ModalBaseModel } from "@/core/composables/useModalBase";
 
 const s = useCssModule()
 const props = defineProps<{
-    bee: BeeModelDB
+    hiveId: number
+    queen?: QueenModelDB
 }>()
 
 const bornId           = getRandomId("label")
 const lifeExpectancyId = getRandomId("label")
 const placedHereId     = getRandomId("label")
 const ageId            = getRandomId("label")
+
+const queenCreateModal = ref<ModalBaseModel>()
 
 </script>
 
@@ -27,15 +32,23 @@ const ageId            = getRandomId("label")
         </label>
 
         <p
+            v-if="queen"
             :class="s.species"
         >
-            {{ bee.species }}
+            {{ queen.species.scientificName }}
         </p>
 
         <div 
             :class="s.buttons"
-        >
+        >   
             <IconTextButton 
+                v-if="!queen"
+                text="Add"
+                :icon="SVG.Plus"
+                @click="queenCreateModal?.open"
+            />
+            <IconTextButton 
+                v-if="queen"
                 text="Edit"
                 :icon="SVG.Pencil"
             />
@@ -49,10 +62,20 @@ const ageId            = getRandomId("label")
         margin: 0
     }">
 
-    <div :class="s.body">
+    <p
+        v-if="!queen"
+        :class="s.noHistory"
+    >
+        No queen in this hive
+    </p>
+
+    <div 
+        v-if="queen"
+        :class="s.body"
+    >
         <img
             :class="s.image" 
-            src="@/assets/images/queen1.jpg" 
+            :src="queen.imageUrl" 
             alt="queen-picture"
         />
 
@@ -66,7 +89,7 @@ const ageId            = getRandomId("label")
             <p 
                 :id="bornId"
                 :class="s.gridValues"    
-            >{{ bee.bornDate.toLocaleDateString() }}</p>
+            >{{ queen.bornDate.toLocaleDateString() }}</p>
 
             <label 
                 :for="lifeExpectancyId"
@@ -75,7 +98,7 @@ const ageId            = getRandomId("label")
             <p 
                 :id="lifeExpectancyId"
                 :class="s.gridValues"    
-            >{{ bee.lifeExpectancy }}</p>
+            >{{ queen.species.lifeExpectancy }}</p>
              <label 
                 :for="placedHereId"
                 :class="s.gridLabels"
@@ -83,7 +106,7 @@ const ageId            = getRandomId("label")
             <p 
                 :id="placedHereId"
                 :class="s.gridValues"
-            >{{ bee.addedToHiveDate.toLocaleDateString() }}</p>
+            >{{ queen.addedToHiveDate.toLocaleDateString() }}</p>
 
             <label 
                 :for="ageId"
@@ -92,15 +115,25 @@ const ageId            = getRandomId("label")
             <p 
                 :id="ageId"
                 :class="s.gridValues"    
-            >{{ bee.age }}</p>
+            >{{ queen.age }}</p>
 
         </div>
     </div>
+    <QueenCreateModal
+        ref="queenCreateModal"
+        :hive-id="hiveId"
+    />
 </div>
 </template>
 
 <style module lang='sass'>
-
+.noHistory
+    font-family: var(--font-family)
+    font-size: var(--font-size-large)
+    font-weight: 600
+    opacity: 1
+    color: #71797E
+    margin: auto
 
 .image
     width: 100%
@@ -123,9 +156,9 @@ const ageId            = getRandomId("label")
     letter-spacing: .02em
 
 .grid
-    margin-top: 2rem
+    margin-top: 1rem
     display: grid
-    grid-template-columns: 1fr 1.5fr 1fr 1.5fr
+    grid-template-columns: 1fr 1fr 1fr 1fr
     row-gap: 1rem
 
 .gridLabels

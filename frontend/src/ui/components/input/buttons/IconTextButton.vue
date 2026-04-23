@@ -32,25 +32,32 @@ const props = withDefaults(defineProps<{
     :disabled="disabled || isLoading"
 >
     <slot>
-        <Icon 
-            v-if="!swapIconPosition && !hideIcon"
+        <Icon
+            v-if="isLoading"
             :class="[
                 s.icon,
                 isLoading && s.rotate
             ]" 
             :type="IconType.SMALL" 
-            :icon="isLoading ? SVG.Restart : icon"
+            :icon="SVG.Restart"
+        />
+        <Icon 
+            v-if="!swapIconPosition && !hideIcon && !isLoading"
+            :class="[
+                s.icon,
+            ]" 
+            :type="IconType.SMALL" 
+            :icon="icon"
         />
     </slot>
     <p :class="[isSubmit ? s.submitText : s.text]">{{ text }}</p>
     <Icon 
-        v-if="swapIconPosition && !hideIcon"
+        v-if="swapIconPosition && !hideIcon && !isLoading"
         :class="[
             s.icon,
-            isLoading && s.rotate
         ]" 
         :type="IconType.SMALL" 
-        :icon="isLoading ? SVG.Restart : icon"
+        :icon="icon"
     />
 </button>
 </template>

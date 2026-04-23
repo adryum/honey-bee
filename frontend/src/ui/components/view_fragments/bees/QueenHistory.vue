@@ -2,11 +2,11 @@
 import {ref, toRef, useCssModule } from "vue";
 import { SVG } from "@/assets/svgs/SVGLoader";
 import IconTextButton from "../../input/buttons/IconTextButton.vue";
-import type { BeeHistoryModelDB } from "@/core/stores/Models";
+import type { QueenHistoryModelDB } from "@/core/stores/Models";
 
 const s = useCssModule()
 const props = defineProps<{
-    previousBees: BeeHistoryModelDB[]
+    previousBees: QueenHistoryModelDB[]
 }>()
 
 </script>
@@ -45,7 +45,7 @@ const props = defineProps<{
             No queens has been in this hive
         </p>
         <div
-            v-for="bee in previousBees"
+            v-for="(bee, i) in previousBees"
             :class="s.queenCard"
         >
             <img
@@ -57,6 +57,18 @@ const props = defineProps<{
             <div
                 :class="s.description"
             >
+                <p
+                    :class="s.gridLabels"
+                >
+                    Order
+                </p>
+                <p
+                    :class="s.gridValues"
+                >
+                    {{ i + 1}}
+                </p>
+
+
                 <p
                     :class="s.gridLabels"
                 >

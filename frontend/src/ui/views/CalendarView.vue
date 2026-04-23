@@ -145,7 +145,7 @@ const { events } = useCalendarQuery({
 .header
     display: flex
     width: 15rem
-    height: 3rem
+    min-height: 3rem
 
     border-radius: var(--border-radius-tiny)
 

@@ -1,16 +1,19 @@
 <script setup lang="ts">
-import {toRef, useCssModule } from "vue";
+import {ref, toRef, useCssModule } from "vue";
 import { useI18n } from "vue-i18n";
 import IconTextButton from '../input/buttons/IconTextButton.vue'
 import { SVG } from "@/assets/svgs/SVGLoader";
 import type { HiveModelDB } from "@/core/stores/Models";
 import { useApiaryQuery } from "@/core/composables/useApiary";
+import HiveEditModal from "../modals/HiveEditModal.vue";
+import type { ModalBaseModel } from "@/core/composables/useModalBase";
 
 const s = useCssModule()
 const { t } = useI18n()
 const props = defineProps<{
-    hive:       HiveModelDB
+    hive: HiveModelDB
 }>()
+const hiveEditModal = ref<ModalBaseModel>()
 
 const { apiary } = useApiaryQuery({
     id: toRef(() => props.hive.apiaryId)
@@ -25,6 +28,7 @@ const { apiary } = useApiaryQuery({
             <IconTextButton 
                 text="Edit"
                 :icon="SVG.Pencil"
+                @click="hiveEditModal?.open"
             />
         </div>
     </div>
@@ -87,6 +91,10 @@ const { apiary } = useApiaryQuery({
 
         </div>
     </div>
+    <HiveEditModal
+        ref="hiveEditModal"
+        :hive="hive"
+    />
 </div>
 </template>
 

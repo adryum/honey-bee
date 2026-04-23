@@ -1,7 +1,7 @@
 <script setup lang="ts">
 import { SVG } from '@/assets/svgs/SVGLoader';
 import { useApiaryMutations } from '@/core/composables/useApiary';
-import { useCssModule, ref } from 'vue';
+import { useCssModule, ref, watch } from 'vue';
 import LabeledTextareaField from '../input/fields/LabeledTextareaField.vue';
 import LabeledInputField from '../input/fields/LabeledInputField.vue';
 import ImageDropZone from '../input/fields/ImageDropZone.vue';
@@ -16,6 +16,8 @@ import Hive from '../hive/Hive.vue';
 import { useFormValidator } from '@/core/composables/useFormValidator';
 import ModalBase from './ModalBase.vue';
 import { useModalBase } from '@/core/composables/useModalBase';
+import StringMultipleField from '../input/fields/used/StringMultipleField.vue';
+import StringField from '../input/fields/used/StringField.vue';
 
 const s = useCssModule()
 const props = defineProps<{
@@ -28,7 +30,7 @@ defineExpose(exposed)
 const { assignHive } = useApiaryMutations()
 const { create, isCreatingHive } = useHiveMutations()
 const { hives } = useHivesQuery({ apiaryId: undefined })
-const { getFormValidee, isFormValid, showThatIsRequired } = useFormValidator()
+const { getFormValidee, isFormValid, showThatIsRequired, clear } = useFormValidator()
 
 const tabs = ['Create New', 'Move Existing']
 const selectedTab = ref(tabs[0])
@@ -37,6 +39,12 @@ const name = ref('')
 const description = ref('')
 const type = ref<HiveType | undefined>(undefined)
 const file = ref<File | undefined>(undefined)
+
+const hiveTypeModels: { name: HiveType, icon: SVG }[] = [
+    { name: HiveType.MOVABLE, icon: SVG.Apiary },
+    { name: HiveType.STATIONARY, icon: SVG.BeeHive },
+]
+
 
 function createHive() {
     showThatIsRequired()
@@ -66,6 +74,11 @@ const { style: gridStyle } = useFlexibleGrid({
     gridRef: grid,
     itemMinWidthPx: 200,
     gapPx: 4
+})
+
+watch(() => exposed.isOpen(), (val) => {
+    if (!val) return 
+    clear()
 })
 </script>
 
@@ -128,36 +141,53 @@ const { style: gridStyle } = useFlexibleGrid({
                     v-model:image-file="file"
                 />
                 <div :class="s.list">
-                    <LabeledInputField
+                    <StringField
                         label="Name"
-                        :validee="getFormValidee(() => name !== '')"
-                        v-model:input="name"
+                        :selection="name"
+                        :validee="getFormValidee({
+                            isValid: () => !!name,
+                            onClear: () => name = '',
+                            onInitialize: () => name = ''
+                        })"
+                        @input="value => name = value"
                     />
-                    <LabeledTextareaField
-                        :class="s.description"
+
+                    <StringMultipleField
                         label="Description"
-                        :validee="getFormValidee(() => description !== '')"
-                        v-model:input="description"
+                        :selection="description"
+                        :validee="getFormValidee({
+                            isValid: () => !!description,
+                            onClear: () => description = '',
+                            onInitialize: () => description = ''
+                        })"
+                        @input="value => description = value"
                     />
+                    
                     <ModularDropdown
-                        label="Type"
                         :teleport-target-id="modal?.id"
                     >
                         <template #head="{ dropdown }">
-                            <SelectedTextHead
-                                :selection="type"
-                                :validee="getFormValidee(() => type !== undefined)"
+                            <StringFieldTopPart
+                                label="Type"
                                 :dropdown="dropdown"
+                                :selection="type"
+                                :validee="getFormValidee({
+                                    isValid: () => !!type,
+                                    onClear: () => type = undefined,
+                                    onInitialize: () => type = undefined
+                                })"
+                                @click="dropdown.isShown.value = true"
                             />
                         </template>
                         <template #list="{ dropdown }">
                             <IconTextItem
-                                v-for="item in Object.values(HiveType).filter(type => type !== HiveType.NOT_A_TYPE)"
+                                v-for="item in hiveTypeModels"
+                                :key="item.name"
                                 :options="{
-                                    svg: SVG.Apiaries,
-                                    text: item.toSentenceCase()
+                                    svg: item.icon,
+                                    text: item.name
                                 }"
-                                @click="type = item; dropdown.isShown.value = false"
+                                @click="type = item.name; dropdown.isShown.value = false"
                             />
                         </template>
                     </ModularDropdown>
@@ -254,8 +284,6 @@ const { style: gridStyle } = useFlexibleGrid({
     flex: 1
     gap: 1rem
 
-.description
-    height: 100%
 
 .body
     display: flex
