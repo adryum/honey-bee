@@ -1,7 +1,7 @@
 <script setup lang="ts">
 import { ref, useCssModule } from "vue";
-import WhitelistFragment from "../components/view_fragments/admin/WhitelistFragment.vue";
-import UserlistFragment from "../components/view_fragments/admin/UserlistFragment.vue";
+import WhitelistFragment from "@/ui/components/admin/WhitelistFragment.vue";
+import UserlistFragment from "../components/admin/UserlistFragment.vue";
 import Navbar from "../components/Navbar.vue";
 import { AdminTab } from "@/core/ViewTabEnums";
 import { SVG } from "@/assets/svgs/SVGLoader";

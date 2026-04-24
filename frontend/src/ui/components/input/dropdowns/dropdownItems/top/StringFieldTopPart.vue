@@ -94,6 +94,7 @@ onMounted(() => {
     border-radius: var(--border-radius-tiny)
 
     cursor: pointer
+    box-shadow: inset 0 0 0 1px var(--secondary)
     transition: .1s
 
     padding: .25rem 1rem .25rem 1rem

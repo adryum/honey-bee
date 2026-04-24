@@ -4,7 +4,6 @@ import ModalBase from "./ModalBase.vue";
 import { useFormValidator } from "@/core/composables/useFormValidator";
 import { SVG } from "@/assets/svgs/SVGLoader";
 import { useModalBase } from "@/core/composables/useModalBase";
-import LabeledInputField from "../input/fields/LabeledInputField.vue";
 import IconTextButton from "../input/buttons/IconTextButton.vue";
 import { useInspectionMutation, useInspectionQuery } from "@/core/composables/useInspection";
 import { formatDateWithOrdinal } from "@/core/utils/Utils";

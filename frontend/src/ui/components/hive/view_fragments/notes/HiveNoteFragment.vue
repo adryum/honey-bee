@@ -1,6 +1,6 @@
 <script setup lang="ts">
 import { computed, ref, toRef, useCssModule } from "vue";
-import Note from '../hive_overview/notes/Note.vue'
+import Note from './Note.vue'
 import { useFlexibleGrid } from "@/core/utils/others";
 import { useNotes } from "@/core/composables/useNote";
 

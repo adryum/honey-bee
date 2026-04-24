@@ -1,7 +1,7 @@
 <script setup lang="ts">
-import {ref, toRef, useCssModule } from "vue";
+import { useCssModule } from "vue";
 import { SVG } from "@/assets/svgs/SVGLoader";
-import IconTextButton from "../../input/buttons/IconTextButton.vue";
+import IconTextButton from "@/ui/components/input/buttons/IconTextButton.vue";
 import type { QueenHistoryModelDB } from "@/core/stores/Models";
 
 const s = useCssModule()

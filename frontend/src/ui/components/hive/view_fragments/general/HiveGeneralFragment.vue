@@ -1,8 +1,8 @@
 <script setup lang="ts">
 import { computed, toRef, useCssModule } from "vue";
-import Info from "../hive_overview/Info.vue";
-import HoneyProfitChart from "../hive_overview/supper/HoneyProfitChart.vue";
-import HistoryLog from "../hive_overview/history/HistoryLog.vue";
+import Info from "@/ui/components/hive/view_fragments/general/Info.vue";
+import HoneyYieldChart from "./HoneyYieldChart.vue";
+import HistoryLog from "./history/HistoryLog.vue";
 import type { HistoryEntryDB, HiveModelDB } from "@/core/stores/Models";
 import { useHiveHistoryQuery } from "@/core/composables/useHiveHistory";
 import { HiveHistoryGetModel_To_HistoryEntryDB } from "@/core/Convertors";
@@ -26,7 +26,7 @@ const historyEntries = computed<HistoryEntryDB[]>(
         :class="s.info"
         :hive="hive"
     />
-    <HoneyProfitChart 
+    <HoneyYieldChart 
         :class="s.profit"
         :hiveId="hive.id"
     />

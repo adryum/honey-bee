@@ -3,7 +3,7 @@ import { computed, useCssModule} from "vue"
 import { useCalendarQuery } from "@/core/composables/useCalendar";
 import { CalendarDate } from "@/core/Calendar";
 import type { HiveModelDB } from "@/core/stores/Models";
-import CalendarGrid from "../calendar/CalendarGrid.vue";
+import CalendarGrid from "@/ui/components/calendar/CalendarGrid.vue";
 import { useHiveHistoryMutations } from "@/core/composables/useHiveHistory";
 import { HistoryEntryType } from "@/core/DatabaseEnums";
 

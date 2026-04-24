@@ -1,11 +1,11 @@
 <script setup lang="ts">
 import {ref, toRef, useCssModule } from "vue";
 import { useI18n } from "vue-i18n";
-import IconTextButton from '../input/buttons/IconTextButton.vue'
+import IconTextButton from '@/ui/components/input/buttons/IconTextButton.vue'
 import { SVG } from "@/assets/svgs/SVGLoader";
 import type { HiveModelDB } from "@/core/stores/Models";
 import { useApiaryQuery } from "@/core/composables/useApiary";
-import HiveEditModal from "../modals/HiveEditModal.vue";
+import HiveEditModal from "@/ui/components/modals/HiveEditModal.vue";
 import type { ModalBaseModel } from "@/core/composables/useModalBase";
 
 const s = useCssModule()

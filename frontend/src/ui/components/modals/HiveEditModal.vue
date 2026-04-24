@@ -1,9 +1,6 @@
 <script setup lang="ts">
 import { SVG } from '@/assets/svgs/SVGLoader';
-import { useApiaryMutations } from '@/core/composables/useApiary';
 import { useCssModule, ref, watch } from 'vue';
-import LabeledTextareaField from '../input/fields/LabeledTextareaField.vue';
-import LabeledInputField from '../input/fields/LabeledInputField.vue';
 import ImageDropZone from '../input/fields/ImageDropZone.vue';
 import IconTextButton from '../input/buttons/IconTextButton.vue';
 import { useFormValidator } from '@/core/composables/useFormValidator';

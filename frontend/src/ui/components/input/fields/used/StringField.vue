@@ -85,12 +85,14 @@ onMounted(() => {
 .header
     display: flex
     min-height: 3rem
+    // background: var(--secondary)
     font-family: var(--font-family)
 
     border-radius: var(--border-radius-tiny)
 
     cursor: pointer
     transition: .1s
+    box-shadow: inset 0 0 0 1px var(--secondary)
 
     padding: .25rem 1rem .25rem 1rem
     box-sizing: border-box

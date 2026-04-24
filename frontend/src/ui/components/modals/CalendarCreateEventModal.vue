@@ -1,8 +1,6 @@
 <script setup lang="ts">
 import { SVG } from '@/assets/svgs/SVGLoader';
 import { useCssModule, ref, computed, watch } from 'vue';
-import LabeledTextareaField from '../input/fields/LabeledTextareaField.vue';
-import LabeledInputField from '../input/fields/LabeledInputField.vue';
 import IconTextButton from '../input/buttons/IconTextButton.vue';
 import { useFormValidator } from '@/core/composables/useFormValidator';
 import ModalBase from './ModalBase.vue';

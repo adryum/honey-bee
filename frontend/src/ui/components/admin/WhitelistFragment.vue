@@ -1,13 +1,12 @@
 <script setup lang="ts">
 import { useCssModule } from "vue";
-import UserTable from "../../tables/UserTable.vue";
-
+import WhitelistTable from "@/ui/components/tables/WhitelistTable.vue";
 const s = useCssModule()
 </script>
 
 <template>
 <div :class="s.container">
-    <UserTable />
+    <WhitelistTable/>
 </div>
 </template>
 

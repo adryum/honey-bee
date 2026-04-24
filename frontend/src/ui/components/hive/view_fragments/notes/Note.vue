@@ -1,9 +1,9 @@
 <script setup lang="ts">
 import { onMounted, ref, useCssModule } from "vue";
 import { IconType, SVG } from "@/assets/svgs/SVGLoader";
-import Icon from "../../Icon.vue";
-import IconDropdown from "../../input/dropdowns/IconDropdown.vue";
-import IconTextItem from "../../input/dropdowns/dropdownItems/bottom/IconTextItem.vue";
+import Icon from "@/ui/components/Icon.vue";
+import IconDropdown from "@/ui/components/input/dropdowns/IconDropdown.vue";
+import IconTextItem from "@/ui/components/input/dropdowns/dropdownItems/bottom/IconTextItem.vue";
 import type { NoteModelDB } from "@/core/stores/Models";
 import { useNoteMutations } from "@/core/composables/useNote";
 import { formatDateWithOrdinal } from "@/core/utils/Utils";

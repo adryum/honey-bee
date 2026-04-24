@@ -1,14 +1,11 @@
 <script setup lang="ts">
 import { SVG } from '@/assets/svgs/SVGLoader';
 import { useCssModule, ref, computed, watch } from 'vue';
-import LabeledTextareaField from '../input/fields/LabeledTextareaField.vue';
-import LabeledInputField from '../input/fields/LabeledInputField.vue';
 import { useNoteMutations } from '@/core/composables/useNote';
 import type { NoteCreateModelRequest } from '@/core/api/Models';
 import { isValidValue } from '@/core/utils/others';
 import { NoteTypes } from '@/core/DatabaseEnums';
 import IconTextButton from '../input/buttons/IconTextButton.vue';
-import SelectedTextHead from '../input/dropdowns/dropdownItems/top/SelectedTextHead.vue';
 import IconTextItem from '../input/dropdowns/dropdownItems/bottom/IconTextItem.vue';
 import ModularDropdown from '../input/dropdowns/ModularDropdown.vue';
 import { useFormValidator } from '@/core/composables/useFormValidator';

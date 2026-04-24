@@ -1,9 +1,9 @@
 <script setup lang="ts">
 import { ref, useCssModule } from "vue";
-import IconTextButton from "../input/buttons/IconTextButton.vue";
+import IconTextButton from "@/ui/components/input/buttons/IconTextButton.vue";
 import { SVG } from "@/assets/svgs/SVGLoader";
-import StringSearchDropdown from "../input/dropdowns/StringSearchDropdown.vue";
-import CreateNoteModal from "../modals/CreateNoteModal.vue";
+import StringSearchDropdown from "@/ui/components/input/dropdowns/StringSearchDropdown.vue";
+import CreateNoteModal from "@/ui/components/modals/CreateNoteModal.vue";
 import type { ModalBaseModel } from "@/core/composables/useModalBase";
 
 const s = useCssModule()

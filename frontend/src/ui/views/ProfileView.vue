@@ -2,7 +2,7 @@
 import { computed, ref, useCssModule } from "vue";
 import Icon from "../components/Icon.vue";
 import { IconType, SVG } from "@/assets/svgs/SVGLoader";
-import AccessFragment from "../components/view_fragments/profile/AccessFragment.vue";
+import AccessFragment from "../components/profile/AccessFragment.vue";
 import { ProfileTab } from "@/core/ViewTabEnums";
 import { useRouter } from "vue-router";
 import { RouterViewPaths } from "@/core/router";

@@ -2,9 +2,9 @@
 import {ref, useCssModule } from "vue";
 import { SVG } from "@/assets/svgs/SVGLoader";
 import type { QueenModelDB } from "@/core/stores/Models";
-import IconTextButton from "../../input/buttons/IconTextButton.vue";
+import IconTextButton from "@/ui/components/input/buttons/IconTextButton.vue";
 import { getRandomId } from "@/core/utils/Utils";
-import QueenCreateModal from "../../modals/QueenCreateModal.vue";
+import QueenCreateModal from "@/ui/components/modals/QueenCreateModal.vue";
 import type { ModalBaseModel } from "@/core/composables/useModalBase";
 
 const s = useCssModule()

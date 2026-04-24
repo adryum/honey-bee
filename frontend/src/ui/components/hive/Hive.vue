@@ -1,6 +1,8 @@
 <script setup lang="ts">
 import { useCssModule } from 'vue';
 import type { HiveModelDB } from '@/core/stores/Models';
+import Icon from '../Icon.vue';
+import { IconType, SVG } from '@/assets/svgs/SVGLoader';
 
 const s = useCssModule()
 const props = withDefaults(defineProps<{
@@ -23,7 +25,8 @@ const props = withDefaults(defineProps<{
     <div 
         :class="[
             s.body,
-            isDimmed && s.dimmedOut
+            isDimmed && s.dimmedOut,
+            // hive.image && s.vignette
         ]"
     >
         <!-- <div 
@@ -36,7 +39,14 @@ const props = withDefaults(defineProps<{
                 :icon="SVG.HoneyHive" 
             />
         </div> -->
+        <icon
+            v-if="!hive.image"
+            :class="s.icon" 
+            :type="IconType.GIGANTIC"
+            :icon="SVG.BeeHive"
+        />
         <img 
+            v-if="hive.image"
             :class="s.hiveImage" 
             :src="hive.image || 'src/assets/images/hive1.jpg'" 
             alt="hive image"
@@ -60,6 +70,10 @@ const props = withDefaults(defineProps<{
 </template>
 
 <style module lang='sass'>
+.icon
+    margin: auto
+    color:  #71797E
+
 .dimmedOut
     opacity: .5
     filter: brightness(.6)
@@ -115,19 +129,22 @@ const props = withDefaults(defineProps<{
 
     .body
         position: relative
+        display: flex
         min-height: 0
         flex: 1
         box-sizing: border-box
         // padding: .5rem
         padding-bottom: 0 
         cursor: pointer
-        box-shadow: inset 0 0 100px 0 black
 
-        &::after 
-            content: ''
-            position: absolute
-            inset: 0
-            box-shadow: inset 0 0 20px 5px rgba(0,0,0,.3)
+        &.vignette
+            box-shadow: inset 0 0 100px 0 black
+
+        // &::after 
+        //     content: ''
+        //     position: absolute
+        //     inset: 0
+        //     box-shadow: inset 0 0 20px 5px rgba(0,0,0,.3)
             
 
         .type
@@ -152,7 +169,5 @@ const props = withDefaults(defineProps<{
             max-height: 100%
             object-fit: cover
             box-sizing: border-box
-            // border-radius: var(--border-radius-small)
-            background: var(--orange)
 
 </style>

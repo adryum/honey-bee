@@ -2,15 +2,12 @@
 import { SVG } from '@/assets/svgs/SVGLoader';
 import { useApiaryMutations } from '@/core/composables/useApiary';
 import { useCssModule, ref, watch } from 'vue';
-import LabeledTextareaField from '../input/fields/LabeledTextareaField.vue';
-import LabeledInputField from '../input/fields/LabeledInputField.vue';
 import ImageDropZone from '../input/fields/ImageDropZone.vue';
 import IconTextButton from '../input/buttons/IconTextButton.vue';
 import { useHiveMutations, useHivesQuery } from '@/core/composables/useHive';
 import { HiveType } from '@/core/DatabaseEnums';
 import { useFlexibleGrid } from '@/core/utils/others';
 import ModularDropdown from '../input/dropdowns/ModularDropdown.vue';
-import SelectedTextHead from '../input/dropdowns/dropdownItems/top/SelectedTextHead.vue';
 import IconTextItem from '../input/dropdowns/dropdownItems/bottom/IconTextItem.vue';
 import Hive from '../hive/Hive.vue';
 import { useFormValidator } from '@/core/composables/useFormValidator';
@@ -18,6 +15,7 @@ import ModalBase from './ModalBase.vue';
 import { useModalBase } from '@/core/composables/useModalBase';
 import StringMultipleField from '../input/fields/used/StringMultipleField.vue';
 import StringField from '../input/fields/used/StringField.vue';
+import StringFieldTopPart from '../input/dropdowns/dropdownItems/top/StringFieldTopPart.vue';
 
 const s = useCssModule()
 const props = defineProps<{
@@ -176,6 +174,7 @@ watch(() => exposed.isOpen(), (val) => {
                                     onClear: () => type = undefined,
                                     onInitialize: () => type = undefined
                                 })"
+                                @input="value => type = value as HiveType"
                                 @click="dropdown.isShown.value = true"
                             />
                         </template>
@@ -196,7 +195,7 @@ watch(() => exposed.isOpen(), (val) => {
                         text="Create"
                         :disabled="!isFormValid"
                         :is-submit="true"
-                        :icon="SVG.Plus"
+                        :hide-icon="true"
                         :is-aligned-center="true"
                         :is-loading="isCreatingHive"
                         @click="createHive"

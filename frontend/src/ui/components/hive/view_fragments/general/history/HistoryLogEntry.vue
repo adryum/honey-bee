@@ -1,6 +1,6 @@
 <script setup lang="ts">
 import { computed, useCssModule } from "vue";
-import Icon from "../../Icon.vue";
+import Icon from "@/ui/components/Icon.vue";
 import { IconType, SVG } from "@/assets/svgs/SVGLoader";
 import type { HistoryEntryDB } from "@/core/stores/Models";
 import { formatDateWithOrdinal } from "@/core/utils/Utils";

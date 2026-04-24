@@ -83,6 +83,8 @@ onMounted(() => {
     display: flex
     font-family: var(--font-family)
     height: 100%
+    box-shadow: inset 0 0 0 1px var(--secondary)
+    // background: var(--secondary)
 
     border-radius: var(--border-radius-tiny)
 

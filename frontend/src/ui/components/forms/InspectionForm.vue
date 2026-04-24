@@ -4,7 +4,6 @@ import type { InspectionFormUI } from "@/core/stores/Models";
 import { computed, useCssModule } from "vue";
 import { useVModel } from '@vueuse/core'
 import CheckboxWText from "../input/fields/CheckboxWText.vue";
-import LabeledTextareaField from "../input/fields/LabeledTextareaField.vue";
 import IconTextButton from "../input/buttons/IconTextButton.vue";
 
 const s = useCssModule()

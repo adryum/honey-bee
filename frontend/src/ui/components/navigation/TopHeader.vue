@@ -1,6 +1,6 @@
 <script setup lang="ts">
 import { useCssModule } from 'vue';
-import ProfileWidget from '../settings/ProfileWidget.vue';
+import ProfileWidget from '@/ui/components/profile/ProfileWidget.vue';
 
 
 const s = useCssModule()

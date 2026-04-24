@@ -142,6 +142,7 @@ onMounted(() => {
     display: flex
     min-height: 3rem
 
+    box-shadow: inset 0 0 0 1px var(--secondary)
 
     border-radius: var(--border-radius-tiny)
     font-family: var(--font-family)
@@ -151,12 +152,12 @@ onMounted(() => {
 
     padding: .25rem 1rem .25rem 1rem
     box-sizing: border-box
+    // box-shadow: inset 0 0 0 1px  var(--red) !important
 
     .column
         display: flex
         flex-direction: column
         width: 100%
-
 
     &.open
         background: var(--secondary)

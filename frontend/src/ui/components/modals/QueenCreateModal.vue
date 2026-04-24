@@ -1,6 +1,5 @@
 <script setup lang="ts">
-import { SVG } from '@/assets/svgs/SVGLoader';
-import { useCssModule, ref, computed, watch } from 'vue';
+import { useCssModule, ref } from 'vue';
 import IconTextButton from '../input/buttons/IconTextButton.vue';
 import { useFormValidator } from '@/core/composables/useFormValidator';
 import ModalBase from './ModalBase.vue';

@@ -1,14 +1,14 @@
 <script setup lang="ts">
 import { computed, onMounted, ref, useCssModule } from "vue";
-import Apiary from "../../apiary/Apiary.vue";
+import Apiary from "../apiary/Apiary.vue";
 import { isValidValue, useFlexibleGrid } from "@/core/utils/others";
 import type { ApiaryModelDB, HiveModelDB } from "@/core/stores/Models";
 import { useProfileQuery } from "@/core/composables/useProfile";
 import { useAdminMutations } from "@/core/composables/useAdmin";
 import { useApiariesQuery, useApiaryQuery } from "@/core/composables/useApiary";
-import Hive from "../../hive/Hive.vue";
+import Hive from "../hive/Hive.vue";
 import { SVG } from "@/assets/svgs/SVGLoader";
-import IconCubeButton from "../../input/buttons/IconCubeButton.vue";
+import IconCubeButton from "../input/buttons/IconCubeButton.vue";
 
 const s = useCssModule()
 const props = defineProps<{
