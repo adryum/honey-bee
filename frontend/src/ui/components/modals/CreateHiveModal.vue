@@ -90,7 +90,7 @@ watch(() => exposed.isOpen(), (val) => {
             <div :class="s.header">
                 <p 
                     :class="[
-                        s.addType,
+                        s.tab,
                         selectedTab === tabs[0] && s.selected
                     ]"
                     @click="switchTab(tabs[0])"
@@ -99,7 +99,7 @@ watch(() => exposed.isOpen(), (val) => {
                 </p>
                 <p 
                     :class="[
-                        s.addType,
+                        s.tab,
                         selectedTab === tabs[1] && s.selected
                     ]"
                     @click="switchTab(tabs[1])"
@@ -301,9 +301,10 @@ watch(() => exposed.isOpen(), (val) => {
         display: flex
         height: 2rem
         min-height: 2rem
-        border-bottom: 2px solid rgba(0, 0, 0, .4)
+        border-bottom: 1px solid rgba(0, 0, 0, .4)
 
-        .addType
+        .tab
+            position: relative
             display: flex
             align-items: center
             justify-content: center
@@ -319,14 +320,28 @@ watch(() => exposed.isOpen(), (val) => {
             font-size: var(--font-size-medium)
 
             &:hover
-                filter: brightness(90%)  
+                background: var(--secondary)
 
 
             .text
                 z-index: 2
                 position: relative
 
+            &::before
+                position: absolute
+                content: ''
+                width: 100%
+                height: 2px
+                
+                left: 0
+                bottom: -1px
+                transition: .2s
 
-.selected
-    background: var(--orange) !important
+            &.selected
+                font-weight: 700
+                color: var(--black)
+                
+                &::before
+                    background: var(--black)
+
 </style>

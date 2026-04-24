@@ -1,10 +1,10 @@
 import { Router, type Request, type Response } from "express";
 import { db } from "../config/Database"
-import { HistoryEntryType, Role } from "../DatabaseEnums"
+import { HistoryActionType, Role } from "../DatabaseEnums"
 import { requireRole } from "../Middleware"
 import { getCurrentUTCDateString } from "../utils"
 import { eq } from "drizzle-orm/sql/expressions/conditions";
-import { hivehistory } from "../db/schema";
+import { hiveActionHistory } from "../db/schema";
 import { desc } from "drizzle-orm";
 
 const router = Router()
@@ -16,7 +16,7 @@ router.post(
         req: Request<{},{},{
             hiveId:    number
             text:      string,
-            type:      HistoryEntryType
+            type:      HistoryActionType
         }>, 
         res: Response
 ) => {
@@ -26,7 +26,7 @@ router.post(
     
     try {
         console.log("Creating history entry...");
-        const [result] = await db.insert(hivehistory).values({
+        const [result] = await db.insert(hiveActionHistory).values({
             text:         text,
             userId:       req.session.userId,
             hiveId:       hiveId,
@@ -36,8 +36,8 @@ router.post(
         console.log("Done!");
 
         console.log("Getting new entry data...");
-        const hiveHistoryGetResult = await db.query.hivehistory.findFirst({
-            where: eq(hivehistory.id, result.insertId),
+        const hiveHistoryGetResult = await db.query.hiveActionHistory.findFirst({
+            where: eq(hiveActionHistory.id, result.insertId),
             with: {
                 user: {
                     columns: {
@@ -69,8 +69,8 @@ router.get(
 
         try {
             console.log("Fetching hive history...");
-            const hiveHistoryGetResult = await db.query.hivehistory.findMany({
-                where: eq(hivehistory.hiveId, parseInt(id)),
+            const hiveHistoryGetResult = await db.query.hiveActionHistory.findMany({
+                where: eq(hiveActionHistory.hiveId, parseInt(id)),
                 with: {
                     user: {
                         columns: {
@@ -80,7 +80,7 @@ router.get(
                         }
                     }
                 },
-                orderBy: [desc(hivehistory.creationDate)]
+                orderBy: [desc(hiveActionHistory.creationTimestamp)]
             });
             console.log("Done!");
 

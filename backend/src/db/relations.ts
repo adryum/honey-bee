@@ -1,59 +1,68 @@
 import { relations } from "drizzle-orm/relations";
-import { users, apiaries, hives, hiveHoneyProduction, hiveInspections, hiveInspectionForms, hivehistory, notes, userapiaryaccess, userhiveaccess, hiveQueenHistory, species, queens } from "./schema";
+import { users, apiaries, historyActionTypes, apiaryActionHistory, hives, hiveActionHistory, hiveHoneyProduction, hiveInspections, hiveInspectionForms, species, hiveQueenHistory, notes, queens, userApiaryAccess, userHiveAccess } from "./schema";
 
 export const apiariesRelations = relations(apiaries, ({one, many}) => ({
 	user: one(users, {
 		fields: [apiaries.userId],
 		references: [users.id]
 	}),
+	apiaryActionHistories: many(apiaryActionHistory),
 	hiveInspections: many(hiveInspections),
 	hives: many(hives),
-	userapiaryaccesses: many(userapiaryaccess),
+	userApiaryAccesses: many(userApiaryAccess),
 }));
 
 export const usersRelations = relations(users, ({many}) => ({
 	apiaries: many(apiaries),
+	apiaryActionHistories: many(apiaryActionHistory),
+	hiveActionHistories: many(hiveActionHistory),
 	hiveInspections: many(hiveInspections),
-	hivehistories: many(hivehistory),
 	hives: many(hives),
 	notes: many(notes),
-	userapiaryaccesses: many(userapiaryaccess),
-	userhiveaccesses: many(userhiveaccess),
+	userApiaryAccesses: many(userApiaryAccess),
+	userHiveAccesses: many(userHiveAccess),
 }));
 
-export const hiveQueenHistoryRelations = relations(hiveQueenHistory, ({one}) => ({
-	species: one(species, {
-		fields: [hiveQueenHistory.speciesId],
-		references: [species.id]
+export const apiaryActionHistoryRelations = relations(apiaryActionHistory, ({one}) => ({
+	historyActionType: one(historyActionTypes, {
+		fields: [apiaryActionHistory.type],
+		references: [historyActionTypes.id]
 	}),
+	apiary: one(apiaries, {
+		fields: [apiaryActionHistory.apiaryId],
+		references: [apiaries.id]
+	}),
+	user: one(users, {
+		fields: [apiaryActionHistory.userId],
+		references: [users.id]
+	}),
+}));
+
+export const historyActionTypesRelations = relations(historyActionTypes, ({many}) => ({
+	apiaryActionHistories: many(apiaryActionHistory),
+	hiveActionHistories: many(hiveActionHistory),
+}));
+
+export const hiveActionHistoryRelations = relations(hiveActionHistory, ({one}) => ({
 	hive: one(hives, {
-		fields: [hiveQueenHistory.hiveId],
+		fields: [hiveActionHistory.hiveId],
 		references: [hives.id]
 	}),
-}));
-
-export const queenSpeciesRelations = relations(species, ({many}) => ({
-	hiveQueenHistories: many(hiveQueenHistory),
-	queens: many(queens),
-}));
-
-
-export const queensRelations = relations(queens, ({one}) => ({
-	specie: one(species, {
-		fields: [queens.speciesId],
-		references: [species.id]
+	user: one(users, {
+		fields: [hiveActionHistory.userId],
+		references: [users.id]
 	}),
-	hive: one(hives, {
-		fields: [queens.hiveId],
-		references: [hives.id]
+	historyActionType: one(historyActionTypes, {
+		fields: [hiveActionHistory.type],
+		references: [historyActionTypes.id]
 	}),
 }));
 
 export const hivesRelations = relations(hives, ({one, many}) => ({
-	hiveBeeHistories: many(hiveQueenHistory),
+	hiveActionHistories: many(hiveActionHistory),
 	hiveHoneyProductions: many(hiveHoneyProduction),
 	hiveInspectionForms: many(hiveInspectionForms),
-	hivehistories: many(hivehistory),
+	hiveQueenHistories: many(hiveQueenHistory),
 	apiary: one(apiaries, {
 		fields: [hives.apiaryId],
 		references: [apiaries.id]
@@ -63,7 +72,8 @@ export const hivesRelations = relations(hives, ({one, many}) => ({
 		references: [users.id]
 	}),
 	notes: many(notes),
-	userhiveaccesses: many(userhiveaccess),
+	queens: many(queens),
+	userHiveAccesses: many(userHiveAccess),
 }));
 
 export const hiveHoneyProductionRelations = relations(hiveHoneyProduction, ({one}) => ({
@@ -101,15 +111,20 @@ export const hiveInspectionFormsRelations = relations(hiveInspectionForms, ({one
 	}),
 }));
 
-export const hivehistoryRelations = relations(hivehistory, ({one}) => ({
+export const hiveQueenHistoryRelations = relations(hiveQueenHistory, ({one}) => ({
+	species: one(species, {
+		fields: [hiveQueenHistory.speciesId],
+		references: [species.id]
+	}),
 	hive: one(hives, {
-		fields: [hivehistory.hiveId],
+		fields: [hiveQueenHistory.hiveId],
 		references: [hives.id]
 	}),
-	user: one(users, {
-		fields: [hivehistory.userId],
-		references: [users.id]
-	}),
+}));
+
+export const speciesRelations = relations(species, ({many}) => ({
+	hiveQueenHistories: many(hiveQueenHistory),
+	queens: many(queens),
 }));
 
 export const notesRelations = relations(notes, ({one}) => ({
@@ -123,24 +138,35 @@ export const notesRelations = relations(notes, ({one}) => ({
 	}),
 }));
 
-export const userapiaryaccessRelations = relations(userapiaryaccess, ({one}) => ({
+export const queensRelations = relations(queens, ({one}) => ({
+	species: one(species, {
+		fields: [queens.speciesId],
+		references: [species.id]
+	}),
+	hive: one(hives, {
+		fields: [queens.hiveId],
+		references: [hives.id]
+	}),
+}));
+
+export const userApiaryAccessRelations = relations(userApiaryAccess, ({one}) => ({
 	apiary: one(apiaries, {
-		fields: [userapiaryaccess.apiaryId],
+		fields: [userApiaryAccess.apiaryId],
 		references: [apiaries.id]
 	}),
 	user: one(users, {
-		fields: [userapiaryaccess.userId],
+		fields: [userApiaryAccess.userId],
 		references: [users.id]
 	}),
 }));
 
-export const userhiveaccessRelations = relations(userhiveaccess, ({one}) => ({
+export const userHiveAccessRelations = relations(userHiveAccess, ({one}) => ({
 	hive: one(hives, {
-		fields: [userhiveaccess.hiveId],
+		fields: [userHiveAccess.hiveId],
 		references: [hives.id]
 	}),
 	user: one(users, {
-		fields: [userhiveaccess.userId],
+		fields: [userHiveAccess.userId],
 		references: [users.id]
 	}),
 }));

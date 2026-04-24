@@ -8,9 +8,8 @@ import { requireRole } from "../Middleware";
 import { Role } from "../DatabaseEnums";
 import { getSessionUserRole } from "../config/RedisClient";
 import { and, eq, getTableColumns, inArray } from "drizzle-orm";
-import { userhiveaccess, hives, userapiaryaccess, apiaries } from "../db/schema";
+import { userHiveAccess, hives, userApiaryAccess, apiaries } from "../db/schema";
 import { isValidValue } from "../utils";
-import { sql } from "drizzle-orm/sql";
 import { count } from "drizzle-orm";
 
 const getApiaryQuery = (where: string) => `
@@ -48,8 +47,8 @@ router.get('/', requireRole([Role.ANY]), async (
                     .leftJoin(hives, eq(hives.apiaryId, apiaries.id))
                     .groupBy(apiaries.id)
             default:
-                const apiaryAccess = await db.query.userapiaryaccess.findMany({
-                    where: eq(userapiaryaccess.userId, userId)
+                const apiaryAccess = await db.query.userApiaryAccess.findMany({
+                    where: eq(userApiaryAccess.userId, userId)
                 })
 
                 apiariesResult = await db
@@ -88,10 +87,10 @@ router.get(
         var hasAccess = true
 
         if (role !== Role.ADMINISTRATOR) {
-            const accessQuery = await db.query.userapiaryaccess.findFirst({
+            const accessQuery = await db.query.userApiaryAccess.findFirst({
                 where: and(
-                    eq(userapiaryaccess.userId, reqUserId), 
-                    eq(userapiaryaccess.apiaryId, apiaryId)
+                    eq(userApiaryAccess.userId, reqUserId), 
+                    eq(userApiaryAccess.apiaryId, apiaryId)
                 )
             })
             hasAccess = Boolean(accessQuery)
@@ -136,8 +135,8 @@ router.get(
                 });
                 break;
             default:
-                const hiveAccess = await db.query.userhiveaccess.findMany({
-                    where: eq(userhiveaccess.userId, userId)
+                const hiveAccess = await db.query.userHiveAccess.findMany({
+                    where: eq(userHiveAccess.userId, userId)
                 });
 
                 hivesResult = await db.query.hives.findMany({

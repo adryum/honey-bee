@@ -6,6 +6,12 @@ export enum HiveTab {
     // Medicine = "sicknesAndRemedies"
 }
 
+export enum ApiaryTab {
+    General = "general",
+    Hives = "hives",
+    // Medicine = "sicknesAndRemedies"
+}
+
 export enum ProfileTab {
     GENERAL = "general",
     ACCESS  = "access"

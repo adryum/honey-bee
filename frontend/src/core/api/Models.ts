@@ -8,11 +8,13 @@ export type ApiaryCreateRequestModel = {
 }
 
 export type ApiaryCreateResponseModel = {
-    id:          number
-    name:        string
-    description: string
-    image:       string
-    hiveCount:   number
+    id:           number
+    name:         string
+    description:  string
+    image:        string
+    creationDate: string
+    location:     string
+    hiveCount:    number
 }
 
 export type HiveAssignResponseModel = {

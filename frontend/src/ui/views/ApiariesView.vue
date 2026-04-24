@@ -28,7 +28,7 @@ const gridColumns = ref(0)
 const minHiveWidth = 550
 
 function openApiary(id: number) {
-    router.push(`/apiary/${id}/hives`)
+    router.push(`/apiary/${id}/general`)
 }
 
 onResize(grid, (element) => {
@@ -41,29 +41,34 @@ onResize(grid, (element) => {
     <div :class="s.container">
         <ToolBar 
             label="Apiaries"
+            :tabs="[]"
+            :selected-tab="[]"
             :class="s.toolbar"
         >
-            <IconButton
-                text="Add apiary"
-                :icon="SVG.Plus"
-                :class="s.button"
-                @click="createApiaryModal?.open()"
-            />
-            <StringSearchDropdown
-                :options="{
-                    initialValue: '',
-                    placeholder: 'Search by name...',
-                    showIcon: true,
-                    onHoverEffects: true,
-                    onInputChange(value: string) {
-                        searchWord = value
-                    }
-                }"   
-                :style="{
-                    minWidth: '15rem'
-                }"
-            />
+            <template #header>
+                <IconButton
+                    text="Add apiary"
+                    :icon="SVG.Plus"
+                    :class="s.button"
+                    @click="createApiaryModal?.open()"
+                />
+                <StringSearchDropdown
+                    :options="{
+                        initialValue: '',
+                        placeholder: 'Search by name...',
+                        showIcon: true,
+                        onHoverEffects: true,
+                        onInputChange(value: string) {
+                            searchWord = value
+                        }
+                    }"   
+                    :style="{
+                        minWidth: '15rem'
+                    }"
+                />
+            </template>
         </ToolBar>
+
         <div 
             ref="grid"
             :class="s.appiaries" 

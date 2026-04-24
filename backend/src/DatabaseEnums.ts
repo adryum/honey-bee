@@ -43,7 +43,7 @@ export enum HiveType {
     NOT_A_TYPE = "NOT_A_TYPE"
 }
 
-export enum HistoryEntryType {
+export enum   {
     CALENDAR   = "CALENDAR",
     EDIT       = "EDIT",
     NOTE       = "NOTE",

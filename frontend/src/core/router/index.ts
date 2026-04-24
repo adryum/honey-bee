@@ -1,19 +1,19 @@
 import { createRouter, createWebHistory } from 'vue-router'
 import { useAuthenticationApiStore } from '../network/AuthenticationApiStore'
-import type { HiveTab, ProfileTab } from '../ViewTabEnums';
+import type { ApiaryTab, HiveTab, ProfileTab } from '../ViewTabEnums';
 
 export enum RouterViewPaths {
-    Home         = '/',
-    Registration = "/registration",
-    Hives        = "/hives",
-    HiveOverview = "hiveOverview",
-    Apiaries     = "/apiaries",
-    ApiaryHives  = "/apiaryHives",
-    Settings     = "/settings",
-    Calendar     = "/calendar",
-    Admin        = "/admin",
-    Profile      = "/profile",
-    Inspections  = "/inspections"
+    Home           = '/',
+    Registration   = "/registration",
+    Hives          = "/hives",
+    HiveOverview   = "hiveOverview",
+    Apiaries       = "/apiaries",
+    ApiaryOverview = "/apiaryOverview",
+    Settings       = "/settings",
+    Calendar       = "/calendar",
+    Admin          = "/admin",
+    Profile        = "/profile",
+    Inspections    = "/inspections"
 }
 
 const router = createRouter({
@@ -45,11 +45,12 @@ const router = createRouter({
         component: () => import('@/ui/views/ApiariesView.vue')
     },
     {
-        path: "/apiary/:apiaryId/hives",
-        name: RouterViewPaths.ApiaryHives,
-        component: () => import('@/ui/views/ApiaryHivesView.vue'),
+        path: "/apiary/:id/:tab",
+        name: RouterViewPaths.ApiaryOverview,
+        component: () => import('@/ui/views/ApiaryOverview.vue'),
         props: (route) => ({
-            apiaryId: Number(route.params.apiaryId)
+            id:  Number(route.params.id),
+            tab: route.params.tab as ApiaryTab
         })
     },
     {

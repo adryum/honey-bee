@@ -10,6 +10,7 @@ import IconCubeButton from "../components/input/buttons/IconCubeButton.vue";
 import IconTextButton from "../components/input/buttons/IconTextButton.vue";
 import { useCalendarQuery } from "@/core/composables/useCalendar";
 import MonthChangerWidget from "../components/calendar/MonthChangerWidget.vue";
+import { HiveTab } from "@/core/ViewTabEnums";
 
 const s = useCssModule()
 const selectedApiary = ref<{id: number, name: string }>({ id: -1, name: "Selected"})
@@ -36,54 +37,56 @@ const { events } = useCalendarQuery({
         <ToolBar 
             label="General calendar"
         >
-            <MonthChangerWidget
-                :selectedDate="selectedDate"
-                @change="date => selectedDate = date"
-            />
-            <ModularDropdown>
-                <template #head="{ dropdown }">
-                    <div 
-                        :class="[
-                            s.header,
-                            dropdown.isShown.value && s.open
-                        ]"
-                        @click="dropdown.isShown.value = !dropdown.isShown.value"
-                    >
-                        <div
-                            :class="s.column"
+            <template #header>
+                <MonthChangerWidget
+                    :selectedDate="selectedDate"
+                    @change="date => selectedDate = date"
+                />
+                <ModularDropdown>
+                    <template #head="{ dropdown }">
+                        <div 
+                            :class="[
+                                s.header,
+                                dropdown.isShown.value && s.open
+                            ]"
+                            @click="dropdown.isShown.value = !dropdown.isShown.value"
                         >
                             <div
-                                :class="s.label"
+                                :class="s.column"
                             >
-                                <p
+                                <div
+                                    :class="s.label"
                                 >
-                                    Apiary
-                                </p>
+                                    <p
+                                    >
+                                        Apiary
+                                    </p>
+                                </div>
+                                <p>{{ selectedApiary.name === "" ? "Selected" : selectedApiary.name }}</p>
                             </div>
-                            <p>{{ selectedApiary.name === "" ? "Selected" : selectedApiary.name }}</p>
-                        </div>
-                        <Icon
-                            :class="s.icon"
-                            :icon="SVG.DropdownArrow"
-                        />
-                    </div>
-                </template>
-                <template #list="{ dropdown }">
-                    <p
-                        v-for="apiary in apiaries"
-                        :class="s.item"
-                        @click="selectedApiary = { id: apiary.id, name: apiary.name }; dropdown.isShown.value = !dropdown.isShown.value"
-                    >
-                        {{ apiary.name }}
-                        <p :class="s.hives">
                             <Icon
-                                :icon="SVG.Hive"
+                                :class="s.icon"
+                                :icon="SVG.DropdownArrow"
                             />
-                            {{ apiary.hiveCount }}
+                        </div>
+                    </template>
+                    <template #list="{ dropdown }">
+                        <p
+                            v-for="apiary in apiaries"
+                            :class="s.item"
+                            @click="selectedApiary = { id: apiary.id, name: apiary.name }; dropdown.isShown.value = !dropdown.isShown.value"
+                        >
+                            {{ apiary.name }}
+                            <p :class="s.hives">
+                                <Icon
+                                    :icon="SVG.Hive"
+                                />
+                                {{ apiary.hiveCount }}
+                            </p>
                         </p>
-                    </p>
-                </template>
-            </ModularDropdown>
+                    </template>
+                </ModularDropdown>
+            </template>
         </ToolBar>
         <CalendarGrid 
             :class="s.calendar" 

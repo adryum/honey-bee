@@ -3,32 +3,26 @@ import {ref, toRef, useCssModule } from "vue";
 import { useI18n } from "vue-i18n";
 import IconTextButton from '@/ui/components/input/buttons/IconTextButton.vue'
 import { SVG } from "@/assets/svgs/SVGLoader";
-import type { HiveModelDB } from "@/core/stores/Models";
-import { useApiaryQuery } from "@/core/composables/useApiary";
-import HiveEditModal from "@/ui/components/modals/HiveEditModal.vue";
+import type { ApiaryModelDB, HiveModelDB } from "@/core/stores/Models";
 import type { ModalBaseModel } from "@/core/composables/useModalBase";
 
 const s = useCssModule()
 const { t } = useI18n()
 const props = defineProps<{
-    hive: HiveModelDB
+    apiary: ApiaryModelDB
 }>()
-const hiveEditModal = ref<ModalBaseModel>()
-
-const { apiary } = useApiaryQuery({
-    id: toRef(() => props.hive.apiaryId)
-})
+const apiaryEditModal = ref<ModalBaseModel>()
 </script>
 
 <template>
 <div :class="s.container">
     <div :class="s.header">
-        <label :class="s.label">{{ t("hiveOverview.info") }}</label>
+        <label :class="s.label">Apiary</label>
         <div :class="s.buttons">
             <IconTextButton 
                 text="Edit"
                 :icon="SVG.Pencil"
-                @click="hiveEditModal?.open"
+                @click="apiaryEditModal?.open"
             />
         </div>
     </div>
@@ -44,25 +38,17 @@ const { apiary } = useApiaryQuery({
         <p
             :class="s.name"
         >
-            {{ hive.name }}
+            {{ apiary.name }}
         </p>
         <p
             :class="s.description"
         >
-            {{ hive.description }}
+            {{ apiary.description }}
         </p>
 
         <div 
             :class="s.grid"
         >
-            <label 
-                for="apiary"
-                :class="s.gridLabels"
-            >Apiary</label>
-            <p 
-                id="apiary"
-                :class="s.gridValues"    
-            >{{ apiary?.name ?? "No apiary" }}</p>
             <label 
                 for="created"
                 :class="s.gridLabels"
@@ -70,16 +56,8 @@ const { apiary } = useApiaryQuery({
             <p 
                 id="created"
                 :class="s.gridValues"    
-            >{{ hive.creationDate.toDDMMYYYY("-") }}</p>
-            <label 
-                for="type"
-                :class="s.gridLabels"
-            >Type</label>
-            <p 
-                id="type"
-                :class="s.gridValues"    
-            >{{ hive.type }}</p>
-
+            >{{ apiary.creationDate.toDDMMYYYY("-") }}</p>
+           
             <label 
                 for="loacaion"
                 :class="s.gridLabels"
@@ -87,13 +65,13 @@ const { apiary } = useApiaryQuery({
             <p 
                 id="loacaion"
                 :class="s.gridValues"
-            >{{ hive.location ?? "Not set"}}</p>
+            >{{ apiary.location ?? "Not set"}}</p>
 
         </div>
     </div>
-    <HiveEditModal
-        ref="hiveEditModal"
-        :hive="hive"
+    <ApiaryEditModal
+        ref="apiaryEditModal"
+        :apiary="apiary"
     />
 </div>
 </template>

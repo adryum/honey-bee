@@ -7,10 +7,10 @@ import { HiveTab } from '@/core/ViewTabEnums';
 import { useHiveQuery } from '@/core/composables/useHive';
 import { useRouter } from 'vue-router';
 import { RouterViewPaths } from '@/core/router';
-import Navbar from '../components/Navbar.vue';
 import HiveCalendarFragment from '@/ui/components/hive/view_fragments/HiveCalendarFragment.vue';
 import MonthChangerWidget from '@/ui/components/calendar/MonthChangerWidget.vue';
 import HiveBeesFragment from '@/ui/components/hive/view_fragments/bees/HiveBeesFragment.vue';
+import ToolBar from '../components/ToolBar.vue';
 
 const s = useCssModule()
 const router = useRouter()
@@ -28,11 +28,11 @@ const { hive }   = useHiveQuery({
 
 const fragmentHeight = computed((): string => {
     switch (currentTab.value) {
-        case HiveTab.Calendar: return `calc(100% -  7rem)`
-        case HiveTab.General:  return `calc(100% -  7rem)`
-        case HiveTab.Bees:     return `calc(100% -  7rem)`
+        case HiveTab.Calendar: return `calc(100% -  4rem)`
+        case HiveTab.General:  return `calc(100% -  4rem)`
+        case HiveTab.Bees:     return `calc(100% -  4rem)`
         // case HiveTab.Medicine: return `calc(100% -  7rem)`
-        case HiveTab.Notes:    return `calc(100% -  7rem)`
+        case HiveTab.Notes:    return `calc(100% -  4rem)`
         default:               return ""
     }
 })
@@ -55,28 +55,29 @@ onMounted(() => console.log(props.tab))
         v-if="hive"
         :class="s.container"
     >
-        <Navbar 
+        <ToolBar 
             :class="s.navbar"
+            :label="hive.name"
+            :show-back-button="true"
             :tabs="Object.values(HiveTab)" 
             :selectedTab="currentTab" 
             @changeTab="changeTab"
+            @back="router.back()"
         >
-            <NoteFragmentToolbarPart
-                v-if="currentTab === HiveTab.Notes"
-                :hiveId="hive.id"
-                v-model:searchText="searchText"
-            />
+            <template #header>
+                <NoteFragmentToolbarPart
+                    v-if="currentTab === HiveTab.Notes"
+                    :hiveId="hive.id"
+                    v-model:searchText="searchText"
+                />
 
-            <div
-                v-if="currentTab === HiveTab.Calendar"
-                :class="s.dateSelector"
-            >
                 <MonthChangerWidget
+                    v-if="currentTab === HiveTab.Calendar"
                     :selectedDate="selectedDate"
                     @change="date => selectedDate = date"
                 />
-            </div>
-        </Navbar>
+            </template>
+        </ToolBar>
 
         <HiveGeneralFragment
             v-if="currentTab === HiveTab.General && hive"
@@ -122,6 +123,7 @@ onMounted(() => console.log(props.tab))
 .navbar
     margin: 1rem
     margin-bottom: 0
+    // box-sizing: border-box
 .container 
     flex: 1
     box-sizing: border-box

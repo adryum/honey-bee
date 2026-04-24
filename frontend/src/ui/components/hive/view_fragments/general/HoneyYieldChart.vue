@@ -10,44 +10,35 @@ const props = defineProps<{
 const { production } = useHiveHoneyProductionQuery({ hiveId: ref(props.hiveId) })
 
 const series = computed(() => [{ name: 'series1', data: [0, ...production.value?.map((item) => item.amount) ?? [] ] }]);
-
-const chartOptions = ref({
+const chartOptions = computed(() => ({
     chart: {
         type: 'area',
         height: '100%',
         redrawOnWindowResize: true,
         redrawOnParentResize: true,  
-        animations: {
-            enabled: true
-        }
+        animations: { enabled: true }
     },
-    dataLabels: {
-        enabled: false
-    },
-    stroke: {
-        curve: 'smooth'
-    },
-    colors: ['#ffbf44'], // <-- change line colors here
-
+    dataLabels: { enabled: false },
+    stroke: { curve: 'smooth' },
+    colors: ['#ffbf44'],
     fill: {
         type: 'gradient',
         gradient: {
-        shadeIntensity: .7,
-        opacityFrom: 0.4,
-        opacityTo: 0.4,
-        stops: [0, 90, 100]
+            shadeIntensity: .7,
+            opacityFrom: 0.4,
+            opacityTo: 0.4,
+            stops: [0, 90, 100]
         }
     },
     xaxis: {
         type: 'datetime',
-        categories: ["2018-09-19T00:00:00.000Z", "2018-09-19T01:30:00.000Z", "2018-09-19T02:30:00.000Z", "2018-09-19T03:30:00.000Z", "2018-09-19T04:30:00.000Z", "2018-09-19T05:30:00.000Z", "2018-09-19T06:30:00.000Z"]
+        categories: [null, ...production.value?.map((item) => item.createdAt) ?? []]
+        //                                                        ^ whatever your date field is called
     },
     tooltip: {
-        x: {
-        format: 'dd/MM/yy HH:mm'
-        },
+        x: { format: 'dd/MM/yy HH:mm' },
     },
-});
+}))
 const chart = ref<any>(null)
 
 onMounted(() => {

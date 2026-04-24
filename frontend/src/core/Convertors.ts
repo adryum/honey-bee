@@ -7,11 +7,13 @@ export function ApiaryCreateResponse_to_ApiaryModelDB(
     convertee: ApiaryCreateResponseModel
 ): ApiaryModelDB {
     return {
-        id:          convertee.id,
-        name:        convertee.name,
-        description: convertee.description,
-        image:       convertee.image,
-        hiveCount:   convertee.hiveCount
+        id:           convertee.id,
+        name:         convertee.name,
+        description:  convertee.description,
+        image:        convertee.image,
+        creationDate: new Date(convertee.creationDate),
+        location:     convertee.location,
+        hiveCount:    convertee.hiveCount
     }
 }
 
@@ -26,7 +28,7 @@ export function HiveCreateResponse_to_HiveModelDB(
         location:     convertee.location,
         type:         String_to_HiveType(convertee.type),
         apiaryId:     convertee.apiaryId,
-        creationDate: convertee.creationDate,
+        creationDate: new Date(convertee.creationDate),
         creatorId:    convertee.creatorId,
         creatorName:  convertee.creatorName,
         creatorImage: convertee.creatorImage,

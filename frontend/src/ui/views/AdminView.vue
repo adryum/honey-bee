@@ -2,12 +2,12 @@
 import { ref, useCssModule } from "vue";
 import WhitelistFragment from "@/ui/components/admin/WhitelistFragment.vue";
 import UserlistFragment from "../components/admin/UserlistFragment.vue";
-import Navbar from "../components/Navbar.vue";
 import { AdminTab } from "@/core/ViewTabEnums";
 import { SVG } from "@/assets/svgs/SVGLoader";
 import CreateWhitelistEntryModal from "../components/modals/CreateWhitelistEntryModal.vue";
 import type { ModalBaseModel } from "@/core/composables/useModalBase";
 import IconTextButton from "../components/input/buttons/IconTextButton.vue";
+import ToolBar from "../components/ToolBar.vue";
 
 const s = useCssModule()
 const seletedTab = ref<AdminTab>(AdminTab.Whitelist)
@@ -17,7 +17,8 @@ const createWhitelistEntry = ref<ModalBaseModel | undefined>()
 
 <template>
 <div :class="s.container">
-    <Navbar 
+    <ToolBar 
+        label="Admin panel"
         :tabs="Object.values(AdminTab)" 
         :selectedTab="seletedTab" 
         @changeTab="(e) => seletedTab = e"
@@ -28,7 +29,7 @@ const createWhitelistEntry = ref<ModalBaseModel | undefined>()
             :icon="SVG.Plus"
             @click="createWhitelistEntry?.open()"
         />
-    </Navbar>
+    </ToolBar>
 
     <WhitelistFragment
         v-if="seletedTab === AdminTab.Whitelist"
