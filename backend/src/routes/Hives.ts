@@ -1,55 +1,18 @@
 import { Router, type Request, type Response } from "express";
 import { db, pool } from "../config/Database";
-import type { ResultSetHeader, RowDataPacket } from "mysql2";
+import type { ResultSetHeader } from "mysql2";
 import { uploadImage } from "../config/image_cloud/Cloudinary";
 import { PublicIdBuilder } from "../config/image_cloud/PublicIdBuilder";
 import { upload } from "../config/Multer";
 import { attachCalendarClient, requireRole } from "../Middleware";
-import { HiveType, Role, String_to_Role } from "../DatabaseEnums";
+import { HiveType, Role } from "../DatabaseEnums";
 import { getSessionUserRole } from "../config/RedisClient";
-import { and, eq, inArray, isNotNull, or } from "drizzle-orm";
-import { hives, userapiaryaccess, userhiveaccess, users } from "../db/schema";
-import { getAdminCalendarClient, useCalendar } from "../config/calendar/GoogleCalendar";
+import { and, eq, inArray, or } from "drizzle-orm";
+import { hives, userApiaryAccess, userHiveAccess, users } from "../db/schema";
+import { useCalendar } from "../config/calendar/GoogleCalendar";
 import { withStatus } from "../utils";
 
 const router = Router()
-const hiveModelQuery =`
-    SELECT 
-        h.id, 
-        h.name,
-        h.description,
-        h.image,
-        h.location,
-        h.type,
-        h.apiaryId,
-        h.userId,
-        h.creationDate,
-        h.calendarId,
-        u.id as creatorId,
-        u.username as creatorName,
-        u.image as creatorImage,
-
-        COALESCE(
-            (
-                SELECT JSON_ARRAYAGG(
-                    JSON_OBJECT(
-                        'id', hh.id,
-                        'text', hh.text,
-                        'userId', hh.userId,
-                        'username', uh.username,
-                        'userImage', uh.image,
-                        'creationDate', hh.creationDate
-                    )
-                )
-                FROM hiveHistory hh
-                LEFT JOIN users uh ON hh.userId = uh.id
-                WHERE hh.hiveId = h.id
-            ),
-            JSON_ARRAY()
-        ) AS history
-
-    FROM hives as h
-    LEFT JOIN users AS u ON h.userId = u.id`
 
 router.get(
     "/",
@@ -71,8 +34,8 @@ router.get(
                 hivesResult = await db.query.hives.findMany();
                 break;
             default:
-                const hiveAccess = await db.query.userhiveaccess.findMany({
-                    where: eq(userhiveaccess.userId, userId)
+                const hiveAccess = await db.query.userHiveAccess.findMany({
+                    where: eq(userHiveAccess.userId, userId)
                 });
 
                 hivesResult = await db.query.hives.findMany({
@@ -80,30 +43,6 @@ router.get(
                 });
                 break;
         }
-        console.log("Done!");
-
-        // console.log("Getting calendar events...");
-        // const hivesWithEvents = await Promise.all(
-        //     hives.map(async (hive) => {
-        //         // 1. Only fetch if there is a calendarId
-        //         if (!hive.calendarId) {
-        //             return { ...hive, events: [] }; // Return hive with empty events prop
-        //         }
-
-        //         // 2. Fetch the data from Google
-        //         const events = await getHiveEvents(hive.calendarId);
-        //         console.table(events);
-                
-
-        //         // 3. Return a NEW object that has all original hive props 
-        //         // PLUS the new 'events' property (prop3)
-        //         return {
-        //             ...hive,       // prop1, prop2, etc.
-        //             events: events // prop3
-        //         };
-        //     })
-        // );
-        // console.log("Done!");
 
         return res.status(200).json(hivesResult)
     } catch (err) {
@@ -129,10 +68,10 @@ router.get(
         var hasAccess = true
 
         if (role !== Role.ADMINISTRATOR) {
-            const accessQuery = await db.query.userhiveaccess.findFirst({
+            const accessQuery = await db.query.userHiveAccess.findFirst({
                 where: and(
-                    eq(userhiveaccess.userId, reqUserId), 
-                    eq(userhiveaccess.hiveId, hiveId)
+                    eq(userHiveAccess.userId, reqUserId), 
+                    eq(userHiveAccess.hiveId, hiveId)
                 )
             })
             hasAccess = Boolean(accessQuery)
@@ -203,11 +142,11 @@ router.post('/update', requireRole([Role.ADMINISTRATOR, Role.APIARY_MAINTAINER])
             console.log("Done!");
         }
 
-        console.log("Getting new update info...");
-        const [[hiveGetResult]] = await pool.query<RowDataPacket[]>(hiveModelQuery + ` WHERE h.id = ?`, [id])
-        console.log("Done!");
+        const hive = await withStatus("Getting new row", () => db.query.hives.findFirst({
+            where: eq(hives.id, id)
+        }))
         
-        res.status(200).json( hiveGetResult )
+        res.status(200).json( hive )
     } catch (err) {
         console.error(err);
         res.status(500).send('Server error');
@@ -245,8 +184,8 @@ router.post(
             })
         )
         
-        // insert image
         if (image) {
+            // insert image
             const url = await withStatus("Uploading image", async () => {
                 const imageKey = new PublicIdBuilder(req.session.userId!.toString()).Apiary(createdHive.insertId.toString()).getResource()
                 return await uploadImage(image, imageKey)
@@ -284,9 +223,9 @@ router.post(
                     and(
                         inArray(
                             users.id, 
-                            db.select({ id: userapiaryaccess.userId })
-                                .from(userapiaryaccess)
-                                .where(eq(userapiaryaccess.apiaryId, apiaryId))
+                            db.select({ id: userApiaryAccess.userId })
+                                .from(userApiaryAccess)
+                                .where(eq(userApiaryAccess.apiaryId, apiaryId))
                         ),
                         eq(users.role, Role.APIARY_MAINTAINER)
                     )
@@ -295,7 +234,7 @@ router.post(
         )
 
         await withStatus("Giving users access to this hive...", () => 
-            db.insert(userhiveaccess).values(
+            db.insert(userHiveAccess).values(
                 usersResult.map((user) => ({
                     userId: user.id,
                     hiveId: createdHive.insertId
@@ -313,15 +252,11 @@ router.post(
                 }
         ))))
     
-        console.log("Getting new entry data...");
-        const [[hiveGetResult]] = await pool.query<RowDataPacket[]>(
-            hiveModelQuery + `
-            WHERE h.id = ?
-            LIMIT 1`, 
-            [createdHive.insertId]
-        )
-        console.log("Done!");
-        res.status(200).json(hiveGetResult)
+        const hive = await withStatus("Getting new row", () => db.query.hives.findFirst({
+            where: eq(hives.id, createdHive.insertId)
+        }))
+
+        res.status(200).json(hive)
     } catch (error) {
         console.error(error);
         res.status(500).send('Server error');
@@ -364,7 +299,7 @@ router.post('/calendar/create', requireRole([Role.ANY]), attachCalendarClient, a
         console.log("# Create calendar entry");
         const { calendarId, start, end, title, description, creatorEmail, hiveId } = req.body
 
-        if (!calendarId) res.status(400).send("Invalid credentials!")
+        if (!calendarId) return res.status(400).send("Invalid credentials!")
 
         const { createEvent } = useCalendar()
         const result = await createEvent(req.calendarClient!, {

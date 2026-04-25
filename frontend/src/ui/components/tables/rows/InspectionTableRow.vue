@@ -1,8 +1,7 @@
 <script setup lang="ts">
-import type { InspectionTableEntryModel } from "@/core/stores/Models";
+import type { InspectionEntryModelDB } from "@/core/stores/Models";
 import { ref, useCssModule } from "vue";
 import { IconType, SVG } from "@/assets/svgs/SVGLoader";
-import { formatDateWithOrdinal } from "@/core/utils/Utils";
 import IconTextButton from "../../input/buttons/IconTextButton.vue";
 import { useRouter } from "vue-router";
 import type { ModalBaseModel } from "@/core/composables/useModalBase";
@@ -11,7 +10,7 @@ import ProcessInspectionModal from "../../modals/ProcessInspectionModal.vue";
 const s = useCssModule()
 const router = useRouter()
 const props = defineProps<{
-    entry:       InspectionTableEntryModel
+    entry:       InspectionEntryModelDB
     orderNumber: number
 }>()
 const isEditingRow = ref(false)
@@ -38,9 +37,9 @@ function openInspection(id: number) {
         <p :class="s.text" >{{ orderNumber + 1 }}</p>
     </td>
     <td 
-        :class="s.email"
+        :class="s.apiary"
     >
-        <p 
+        <p  
             :class="s.text" 
             :style="{
                 display: 'flex',
@@ -48,7 +47,7 @@ function openInspection(id: number) {
                 height: '100%',
             }"
         >
-            #{{ entry.apiaryId + " " + entry.apiaryName }} 
+            {{ entry.apiary ? `#${entry.apiary.id} ${entry.apiary.name} ` : "Deleted apiary" }} 
         </p>
     </td>
     <td
@@ -93,7 +92,7 @@ function openInspection(id: number) {
                 height: '100%',
             }"
         >
-            {{ entry.username }} 
+            {{ entry.user ? entry.user.username : "Deleted user" }} 
         </p>
     </td>
     <td 
@@ -107,7 +106,7 @@ function openInspection(id: number) {
                 height: '100%',
             }"
         >
-            {{ formatDateWithOrdinal(entry.creationDate, true) }} 
+            {{ entry.createdAt.toDateString() }} 
         </p>
     </td>
     <td 
@@ -196,7 +195,7 @@ td
 .inspectedHiveCount
     min-width: 10rem
 
-.email
+.apiary
     width: 100%
 
 .creator

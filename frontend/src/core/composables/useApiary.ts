@@ -2,6 +2,9 @@ import { useQueryClient, useQuery, useMutation } from "@tanstack/vue-query";
 import { apiaryApi } from "../api/ApiaryApi";
 import { computed, type Ref } from "vue";
 import { ActionType, useActionsStore } from "../stores/ActionStore";
+import { useApiaryHistoryMutations } from "./useApiaryHistory";
+import { HistoryActionType } from "../DatabaseEnums";
+import type { DateRange } from "../stores/Models";
 
 export const useApiariesQuery = () => {
     const { data: apiaries, isLoading, isError } = useQuery({
@@ -17,13 +20,15 @@ export const useApiariesQuery = () => {
 }
 
 export type UseApiaryQueryModel = {
-    id :             Ref<number | undefined>
-    getApiaryHives?: boolean,
+    id:              Ref<number | undefined>
+    getApiaryHives?: boolean
     getApiary?:      boolean
+    getHiveYields?:  DateRange | false
 }
 
 export const useApiaryQuery = (model: UseApiaryQueryModel) => {
-    const { getApiary, getApiaryHives } = model
+    const { getApiary, getApiaryHives, getHiveYields } = model
+
     const { data: apiary, isLoading: isGettingApiary, isError: isGettingApiaryError } = useQuery({
         queryKey: ["apiaries", model.id],
         queryFn:  () => apiaryApi.getApiary(model.id.value!),
@@ -36,24 +41,40 @@ export const useApiaryQuery = (model: UseApiaryQueryModel) => {
         enabled:  computed(() => model.id.value !== undefined && getApiaryHives)
     })
 
+    const { data: hiveYields, isLoading: isGettingHiveYields, isError: isGettingHivesYieldsError } = useQuery({
+        queryKey: ["hives-yields", { apiaryId: model.id }],
+        queryFn:  () => apiaryApi.getHiveYields(model.id.value!, getHiveYields as DateRange),
+        enabled:  computed(() => model.id.value !== undefined && !!getHiveYields)
+    })
+
     return {
         apiary,
         isGettingApiary,
         isGettingApiaryError,
         hives,
         isGettingHives,
-        isGettingHivesError
+        isGettingHivesError,
+        hiveYields,
+        isGettingHiveYields,
+        isGettingHivesYieldsError
     }
 }
 
 export const useApiaryMutations = () => {
     const queryClient = useQueryClient()
     const { createPopupAction } = useActionsStore()
+    const { create: createApiaryHistory } = useApiaryHistoryMutations()
 
     const { mutate: create, isPending: isCreatingApiary } = useMutation({
         mutationFn: apiaryApi.createApiary,
         onSuccess: (newApiary) => {
             queryClient.invalidateQueries({ queryKey: ['apiaries'] })
+
+            createApiaryHistory({
+                apiaryId: newApiary.id,
+                text: "Created apiary",
+                type: HistoryActionType.EDIT
+            })
 
             createPopupAction({
                 label: `Created apiary: ${newApiary.name}`,
@@ -92,8 +113,29 @@ export const useApiaryMutations = () => {
             queryClient.invalidateQueries({ queryKey: ['hives'] })
             queryClient.invalidateQueries({ queryKey: ['apiaries'] })
 
+            console.log("assing result", JSON.stringify(result, null, 2));
+            
+            if (result.previousApiary) {
+                createApiaryHistory({
+                    apiaryId: result.newApiary.id,
+                    text: `Added hive #${result.hive.id} from apiary #${result.previousApiary.id}`,
+                    type: HistoryActionType.EDIT
+                })
+                createApiaryHistory({
+                    apiaryId: result.previousApiary.id,
+                    text: `Moved hive #${result.hive.id} to apiary #${result.newApiary.id} `,
+                    type: HistoryActionType.EDIT
+                })
+            } else {
+                createApiaryHistory({
+                    apiaryId: result.newApiary.id,
+                    text: `Added hive #${result.hive.id}`,
+                    type: HistoryActionType.EDIT
+                })
+            }
+
             createPopupAction({
-                label: `Assigned hive ${result.hiveId} to apiary ${result.apiaryId}`,
+                label: `Added hive #${result.hive.id} to apiary ${result.newApiary.name}`,
                 type:  ActionType.Success
             })
         },

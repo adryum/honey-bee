@@ -60,3 +60,14 @@ export async function withStatus<T>(label: string, fn: () => T |Promise<T>): Pro
         throw err
     }
 }
+
+export class LoggedMap<K, V> extends Map<K, V> {
+    constructor(private name: string) {
+        super();
+    }
+    get(key: K) {
+        const value = super.get(key);
+        console.log(`[${this.name}] get(${String(key)}) =>`, value);
+        return value;
+    }
+}

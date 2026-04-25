@@ -1,18 +1,31 @@
 <script setup lang="ts">
 import { computed, toRef, useCssModule } from "vue";
-import type { ApiaryModelDB, HistoryEntryDB } from "@/core/stores/Models";
+import type { ApiaryModelDB } from "@/core/stores/Models";
 import ApiaryInfo from "./ApiaryInfo.vue";
-import { HiveHistoryGetModel_To_HistoryEntryDB } from "@/core/Convertors";
+import { useApiaryHistoryQuery } from "@/core/composables/useApiaryHistory";
+import HistoryLog from "@/ui/components/hive/view_fragments/general/history/HistoryLog.vue";
+import LineGraph from "@/ui/components/charts/LineGraph.vue";
+import { useApiaryQuery } from "@/core/composables/useApiary";
+import { HiveYieldGetModels_To_LineGraphLineModels } from "@/core/Convertors";
 
 const s = useCssModule()
 const props = defineProps<{
     apiary: ApiaryModelDB
 }>()
 
-// const { history } = useHiveHistoryQuery( { apiaryId: toRef(() => props.apiary.id) } )
-// const historyEntries = computed<HistoryEntryDB[]>(
-//     () => history.value?.map(HiveHistoryGetModel_To_HistoryEntryDB) ?? []
-// )
+const { history } = useApiaryHistoryQuery( { apiaryId: toRef(() => props.apiary.id) } )
+const { hiveYields } = useApiaryQuery({
+    id:            computed(() => props.apiary.id),
+    getHiveYields: {
+        fromISO: new Date().firstDayOfMonth().toISOString(),
+        toISO: new Date().lastDayOfMonth().toISOString(),
+    }
+})
+
+const convertedYields = computed(() => hiveYields.value 
+    ? HiveYieldGetModels_To_LineGraphLineModels(hiveYields.value)
+    : []
+)
 </script>
 
 <template>
@@ -23,14 +36,14 @@ const props = defineProps<{
         :class="s.info"
         :apiary="apiary"
     />
-    <!-- <HoneyYieldChart 
+    <LineGraph
         :class="s.profit"
-        :hiveId="hive.id"
-    /> -->
-    <!-- <HistoryLog 
+        :entries="convertedYields"
+    />
+    <HistoryLog 
         :class="s.log"
-        :entries="historyEntries"
-    /> -->
+        :entries="history ?? []"
+    />
 </div>
 </template>
 

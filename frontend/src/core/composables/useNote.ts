@@ -3,7 +3,7 @@ import { computed, type Ref } from "vue";
 import { noteApi } from "../api/NoteApi";
 import { ActionType, useActionsStore } from "../stores/ActionStore";
 import { useHiveHistoryMutations } from "./useHiveHistory";
-import { HistoryEntryType } from "../DatabaseEnums";
+import { HistoryActionType } from "../DatabaseEnums";
 
 export const useNotes = ({
     hiveId
@@ -44,7 +44,7 @@ export const useNoteMutations = () => {
             createHiveHistory({
                 hiveId: newNote.hiveId,
                 text:   "Created note",
-                type:   HistoryEntryType.NOTE
+                type:   HistoryActionType.NOTE
             })
         },
         onError: (error) => {

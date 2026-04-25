@@ -7,20 +7,10 @@ import { upload } from "../config/Multer";
 import { requireRole } from "../Middleware";
 import { Role } from "../DatabaseEnums";
 import { getSessionUserRole } from "../config/RedisClient";
-import { and, eq, getTableColumns, inArray } from "drizzle-orm";
-import { userHiveAccess, hives, userApiaryAccess, apiaries } from "../db/schema";
-import { isValidValue } from "../utils";
+import { and, eq, getTableColumns, inArray, gte, lte } from "drizzle-orm";
+import { userHiveAccess, hives, userApiaryAccess, apiaries, hiveHoneyProduction } from "../db/schema";
+import { isValidValue, withStatus } from "../utils";
 import { count } from "drizzle-orm";
-
-const getApiaryQuery = (where: string) => `
-SELECT 
-    a.id, 
-    a.name,
-    a.location,
-    a.description,
-    a.image
-FROM apiaries as a
-`
 
 const router = Router()
 
@@ -157,63 +147,48 @@ router.get(
 })
 
 // creates apiary
-router.post('/create', upload.single("image"), async (req: Request<{},{},{
+router.post('/', upload.single("image"), async (req: Request<{},{},{
     name: string
     location: string
     description: string
 }>, res: Response) => {
     console.log("# Create apiary");
     const { name, location, description } = req.body
-    const file = req.file;
+    const image = req.file;
 
     // missing credentials
     if (!name) 
         return res.status(400).send('incorrect information!') 
 
     try {
-        console.log("Inserting apirary...");
-        const [result] = await pool.query<ResultSetHeader>(`
-            INSERT INTO apiaries (
-            name, 
-            location, 
-            description, 
-            userId
-            )
-            VALUES(?, ?, ?, ?)`, 
-            [name, location, description, req.session.userId]
+        const [result] = await withStatus("Inserting apirary entry", () =>
+            db.insert(apiaries).values({
+                name: name,
+                description: description,
+                location: location,
+                userIdCreator: req.session.userId
+            })
         )
-        console.log("Done!");
     
-        if (file) {
-            console.log("Uploading image to cloud...");
-            const imageKey = new PublicIdBuilder(req.session.userId!.toString()).Apiary(result.insertId.toString()).getResource()
+        if (image) {
+            // insert image
+            const url = await withStatus("Uploading image", async () => {
+                const imageKey = new PublicIdBuilder(req.session.userId!.toString()).Apiary(result.insertId.toString()).getResource()
+                return await uploadImage(image, imageKey)
+            })
 
-            const url = await uploadImage(file, imageKey)
-            console.log(url);
-            console.log("Done!");
-
-            console.log("Updating entry with image...");
-            
-            await pool.query<ResultSetHeader>(`
-                UPDATE apiaries
-                SET image = ?
-                WHERE id = ?`,
-                [url, result.insertId]
+            await withStatus("Assigning image url to DB entry", () =>
+                db.update(apiaries)
+                .set({ imageUrl: url })
+                .where(eq(apiaries.id, result.insertId))
             )
-            console.log("Done!");
         }
 
-        console.log("Getting new entry data...");
-        var [[getNewApiary]] = await pool.query<RowDataPacket[]>(`
-            ${getApiaryQuery("")}
-            WHERE a.id = ? 
-            GROUP BY a.id
-            LIMIT 1
-            `,
-            [result.insertId]
-        )
+        const apiaryGetResult = await withStatus("Getting new entry data", () => db.query.apiaries.findFirst({
+            where: eq(apiaries.id, result.insertId)
+        }))
         
-        res.status(201).json(getNewApiary)
+        res.status(201).json(apiaryGetResult)
     } catch (err) {
         console.error(err);
         res.status(500).send('Server error');
@@ -240,18 +215,147 @@ router.post(
     }
 
     try {
-        console.log("Changing hive apiary...");
+        const oldHiveData = await withStatus("Getting hive data", 
+            () => db.query.hives.findFirst({ 
+                where: eq(hives.id, hiveId),
+                with: {
+                    apiary: {
+                        columns: {
+                            id: true,
+                            name: true
+                        }
+                    }
+                }
+            })
+        )
 
-        await db.update(hives).set({ apiaryId: apiaryId }).where(eq(hives.id, hiveId))
-        const hiveResult = await db.query.hives.findFirst({ where: eq(hives.id, hiveId) })
-        console.log("Done!");
+        await withStatus("Changing hive apiary", () => db.update(hives)
+            .set({ apiaryId: apiaryId })
+            .where(eq(hives.id, hiveId))
+        )
 
-        res.status(201).json(hiveResult)
+        const updatedHive = await withStatus("Getting updated entry", 
+            () => db.query.hives.findFirst({ 
+                columns: {
+                    id: true,
+                    name: true
+                },
+                where: eq(hives.id, hiveId),
+                with: {
+                    apiary: {
+                        columns: {
+                            id: true,
+                            name: true
+                        }
+                    }
+                } 
+            })
+        )
+
+        const assignGetResult = {
+            previousApiary: oldHiveData?.apiary ? {
+                id:   oldHiveData.apiary.id,
+                name: oldHiveData.apiary.name,
+            } : undefined,
+            newApiary: {
+                id:   updatedHive?.apiary?.id,
+                name: updatedHive?.apiary?.name,
+            },
+            hive: {
+                id:   updatedHive?.id,
+                name: updatedHive?.name,
+            }
+        }
+
+        res.status(201).json(assignGetResult)
     } catch (err) {
         console.error(err);
         res.status(500).send('Server error');
     }
 })
 
+router.get(
+    "/:id/yields",
+    requireRole([Role.ANY]),
+    async (
+        req: Request<{ id: string }, {}, {}, {
+            fromISO: string
+            toISO: string
+        }>, 
+        res: Response
+) => {
+    console.log("# Get apiary hive yields");
+    const apiaryId = parseInt(req.params.id)
+    const { toISO, fromISO } = req.query;
+
+    if (!toISO || !fromISO) return res.status(400).send("Invalid credentials!")
+
+    const fromDate = fromISO.split('T')[0]!;
+    const toDate   = toISO.split('T')[0]!;
+
+    try {
+        // TODO: need to fech hives user has access to
+        const hivesResult = await withStatus("Getting apiary hives", 
+            () => db.query.hives.findMany({
+                columns: { id: true }, 
+                where: eq(hives.apiaryId, apiaryId)
+            })
+        )
+
+        const yieldsGetResult = await withStatus("Getting yields",
+            () => db.query.hiveHoneyProduction.findMany({
+                columns: {
+                    hiveId: false
+                },
+                with: {
+                    hive: {
+                        columns: {
+                            id: true,
+                            name: true
+                        }
+                    }
+                },
+                where: and(
+                    inArray(hiveHoneyProduction.hiveId, hivesResult.map(item => item.id)),
+                    gte(hiveHoneyProduction.createdAt, fromDate),
+                    lte(hiveHoneyProduction.createdAt, toDate)
+                )
+            })
+        )
+
+        return res.status(200).json(yieldsGetResult);
+
+
+        // console.log("Getting hives user has access to...");
+
+        // var hivesResult
+        // switch (role) {
+        //     case Role.ADMINISTRATOR:
+        //         hivesResult = await db.query.hives.findMany({
+        //             where: eq(hives.apiaryId, apiaryId)
+        //         });
+        //         break;
+        //     default:
+        //         const hiveAccess = await db.query.userHiveAccess.findMany({
+        //             where: eq(userHiveAccess.userId, userId)
+        //         });
+
+        //         hivesResult = await db.query.hives.findMany({
+        //             where: and(
+        //                 eq(hives.apiaryId, apiaryId), 
+        //                 inArray(hives.id, hiveAccess.map(item => item.hiveId))
+        //             )
+        //         });
+        //         break;
+        // }
+        // console.log("Done!");
+
+
+        return res.status(200).json(hivesResult)
+    } catch (err) {
+        console.error(err);
+        res.status(500).send('Server error');
+    }
+})
 
 export default router

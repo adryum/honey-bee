@@ -43,9 +43,10 @@ export enum HiveType {
     NOT_A_TYPE = "NOT_A_TYPE"
 }
 
-export enum   {
+export enum HistoryActionType {
     CALENDAR   = "CALENDAR",
     EDIT       = "EDIT",
     NOTE       = "NOTE",
-    INSPECTION = "INSPECTION"
+    INSPECTION = "INSPECTION",
+    QUEEN      = "QUEEN",
 }

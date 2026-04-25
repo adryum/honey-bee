@@ -1,4 +1,4 @@
-import type { HistoryEntryType, HiveType, NoteTypes, Role } from "../DatabaseEnums"
+import type { HistoryActionType, HiveType, NoteTypes, Role } from "../DatabaseEnums"
 
 export type ApiaryModelDB = {
     id:           number
@@ -45,7 +45,7 @@ export type NoteModelDB = {
 export type HistoryEntryDB = {
     id:           number 
     text:         string 
-    type:         HistoryEntryType
+    type:         HistoryActionType
     userId:       number 
     username:     string 
     userImage:    string 
@@ -124,7 +124,7 @@ export type InspectionDB = {
     userIdCreator:    number
     userPicture:      string
     username:         string
-    creationDate:     string
+    creationDate:     Date
     forms:            InspectionFormDB[]
     hasBeenProcessed: boolean
 }
@@ -153,16 +153,20 @@ export type InspectionFormDB = {
     takenBreedingFrames:          number;
 }
 
-export type InspectionTableEntryModel = {
-    id:               number
-    apiaryId:         number
-    apiaryName:       string
-    formCount:        number
-    userIdCreator:    number
-    userPicture:      string
-    username:         string
-    creationDate:     string
+export type InspectionEntryModelDB = {
+    id:        number
+    formCount: number
     processed: boolean
+    createdAt: Date
+    user:      {
+        id:       number
+        image:    string
+        username: string
+    } | undefined
+    apiary: {
+        id:   number
+        name: string
+    } | undefined
 }
 
 export type QueenHistoryModelDB = {
@@ -200,4 +204,19 @@ export type SpeciesModelDB = {
     description:    string
     behavior:       string
     preferences:    string
+}
+
+export type LineGraphLineModel = {
+    id:    number,
+    name:  string
+    color: string
+    data:  {
+        value:     number
+        timestamp: string
+    }[]
+}
+
+export type DateRange = {
+    fromISO: string
+    toISO:   string
 }

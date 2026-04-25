@@ -16,10 +16,6 @@ const filters = ref<InspectionFilters>({
     ids:    undefined
 })
 const { inspectionTableEntries, nextPage, prevPage } = useInspectionsQuery(filters)
-
-watch(inspectionTableEntries, () => {
-    console.log(inspectionTableEntries.value);
-}, { immediate: true })
 </script>
 
 <template>

@@ -1,12 +1,11 @@
 import { Role } from "../DatabaseEnums"
-import { attachCalendarClient, requireRole } from "../Middleware"
+import { requireRole } from "../Middleware"
 import { Router, type Request, type Response } from "express";
-import { isValidValue, withStatus } from "../utils";
-import { db, pool } from "../config/Database";
-import { and, eq, getTableColumns, inArray } from "drizzle-orm";
-import { queens, species } from "../db/schema";
+import { withStatus } from "../utils";
+import { db } from "../config/Database";
+import { and, eq, inArray } from "drizzle-orm";
+import { queens } from "../db/schema";
 import { upload } from "../config/Multer";
-import { ResultSetHeader } from "mysql2";
 import { uploadImage } from "../config/image_cloud/Cloudinary";
 import { PublicIdBuilder } from "../config/image_cloud/PublicIdBuilder";
 
@@ -25,10 +24,14 @@ router.get(
     console.log({ queenIds, hiveIds })
 
     try {
-        const queenResult = await withStatus(`Fetching queens`, () => {
+        const queenGetResult = await withStatus(`Fetching queens`, () => {
             return db.query.queens.findMany({
+                columns: {
+                    speciesId: false,
+                    hiveId:    false
+                },
                 with: {
-                    specie: {
+                    species: {
                         columns: {
                             id:             true,
                             scientificName: true,
@@ -48,21 +51,8 @@ router.get(
                 )
             })
         })
-        // const queenResult = await withStatus(`Fetching queens`, () => {
-        //     return db.select({
-        //         ...getTableColumns(queens),
-        //         speciesId:      queenSpecies.id,
-        //         scientificName: queenSpecies.scientificName,
-        //         knownAsName:    queenSpecies.knownAsName,
-        //     })
-        //     .from(queens)
-        //     .leftJoin(queenSpecies, eq(queens.speciesId, queenSpecies.id))
-        //     .where(and(
-        //         queenIds.length ? inArray(queens.id, queenIds) : undefined,
-        //         hiveIds.length  ? inArray(queens.hiveId, hiveIds) : undefined
-        //     ))
-        // })
-        res.status(200).json(queenResult)
+
+        res.status(200).json(queenGetResult)
     } catch (error) {
         console.error(error);
         res.status(500).send('Server error');
@@ -112,7 +102,7 @@ router.post(
             db.query.queens.findFirst({
                 where: eq(queens.id, insertResult.insertId),
                 with: {
-                    specie: {
+                    species: {
                         columns: {
                             id: true,
                             knownAsName: true,

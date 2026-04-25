@@ -50,9 +50,10 @@ export function String_to_HiveType(convertee: string) {
     }
 }
 
-export enum HistoryEntryType {
+export enum HistoryActionType {
     CALENDAR   = "CALENDAR",
     EDIT       = "EDIT",
     NOTE       = "NOTE",
-    INSPECTION = "INSPECTION"
+    INSPECTION = "INSPECTION",
+    QUEEN      = "QUEEN",
 }

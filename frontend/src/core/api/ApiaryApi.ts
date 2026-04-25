@@ -1,16 +1,30 @@
 import axios from "axios"
 import { ApiaryCreateResponse_to_ApiaryModelDB, HiveCreateResponse_to_HiveModelDB } from "../Convertors";
-import type { ApiaryCreateResponseModel, ApiaryCreateRequestModel, HiveAssignRequestModel, HiveAssignResponseModel, HiveCreateResponseModel } from "./Models";
-import type { ApiaryModelDB, HiveModelDB } from "../stores/Models";
+import type { ApiaryGetModel, ApiaryCreateRequestModel, HiveAssignRequestModel, HiveAssignGetModel, HiveCreateResponseModel, HiveYieldGetModel } from "./Models";
+import type { ApiaryModelDB, DateRange, HiveModelDB } from "../stores/Models";
 
 export const apiaryApi = {
+    getHiveYields: async (
+        apiaryId: number,
+        range:    DateRange
+    ): Promise<HiveYieldGetModel[]> => {
+        const { data } = await axios.get<HiveYieldGetModel[]>(`/apiary/${apiaryId}/yields`, {
+            params: { 
+                toISO: range.toISO, 
+                fromISO: range.fromISO 
+            }
+        })
+        
+        return data
+    },
+
     getApiaries: async (): Promise<ApiaryModelDB[]> => {
-        const { data } = await axios.get<ApiaryCreateResponseModel[]>("/apiary")
+        const { data } = await axios.get<ApiaryGetModel[]>("/apiary")
         return data.map(ApiaryCreateResponse_to_ApiaryModelDB)
     },
 
     getApiary: async (id: number) => {
-        const { data } = await axios.get<ApiaryCreateResponseModel>(`/apiary/${id}`)
+        const { data } = await axios.get<ApiaryGetModel>(`/apiary/${id}`)
         return ApiaryCreateResponse_to_ApiaryModelDB(data)
     },
 
@@ -29,10 +43,8 @@ export const apiaryApi = {
         if (description) formData.append("description", description)
         if (image) formData.append("image", image)
 
-        const result = await axios.post<ApiaryCreateResponseModel>("/apiary/create", formData)
-
-        console.log("Gote apiaria : ", result.data);
-    
+        const result = await axios.post<ApiaryGetModel>("/apiary", formData)
+        
         return ApiaryCreateResponse_to_ApiaryModelDB(result.data)
     },
 
@@ -43,8 +55,8 @@ export const apiaryApi = {
 
     assignHive: async (
         requestModel: HiveAssignRequestModel
-    ): Promise<HiveAssignResponseModel> => {
-        const result = await axios.post<HiveAssignResponseModel>("/apiary/assignHive", requestModel)
+    ): Promise<HiveAssignGetModel> => {
+        const result = await axios.post<HiveAssignGetModel>("/apiary/assignHive", requestModel)
         return result.data
     },
     

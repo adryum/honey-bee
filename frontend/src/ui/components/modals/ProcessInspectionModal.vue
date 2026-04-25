@@ -19,7 +19,11 @@ const { modal, exposed } = useModalBase()
 defineExpose(exposed)
 
 const { getFormValidee, isFormValid } = useFormValidator()
-const { inspection } = useInspectionQuery({ id: props.inspectionId })
+const { inspection } = useInspectionQuery({ 
+    id:            props.inspectionId,
+    allowFetching: computed(() => exposed.isOpen()) 
+})
+
 const { create } = useHiveHoneyProductionMutations()
 const { processInspection: process } = useInspectionMutation()
 
@@ -32,7 +36,7 @@ const honeyAveragePerFrame = computed(() => {
     const result = frameCount > 0 ? totalHoney / frameCount : 0;
     return result.toFixed(2);
 })
-        
+
 async function processInspection() {
     process(props.inspectionId,{
         onSuccess: () => {
@@ -103,7 +107,7 @@ async function processInspection() {
                 <p 
                     id="type"
                     :class="s.gridValues"    
-                >{{ formatDateWithOrdinal(inspection?.creationDate ?? "") }}</p>
+                >{{ inspection ? inspection.creationDate.toDateString() : "" }}</p>
 
 
                 <label 
@@ -140,6 +144,7 @@ async function processInspection() {
             <div :class="s.fields">
                 <StringField
                     label="Process honey in KG"
+                    :class="s.field"
                     :selection="procesedHoney"
                     :style="!!!takenHoneyFrames && {
                         opacity: 0.5,
@@ -169,6 +174,8 @@ async function processInspection() {
 </template>
 
 <style module lang="sass">
+.field
+    width: 100%
 
 .grid
     margin-top: auto
@@ -200,13 +207,6 @@ async function processInspection() {
 
     .fields
         display: flex
-        margin-top: 1rem
         gap: .5rem
-        .email
-            width: 100%
-        .role
-            width: 100%
-
-        .button
-            margin-top: auto
+       
 </style>

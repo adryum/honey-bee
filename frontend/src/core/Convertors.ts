@@ -1,17 +1,17 @@
 import { String_to_HiveType, String_to_NoteTypes, String_to_Role } from "./DatabaseEnums";
-import type { ApiaryAccessResponseModel, ApiaryCreateResponseModel, CalendarEventGetModel, HiveAccessResponseModel, HiveCreateResponseModel, HiveHistoryGetModel, InspectionCreateRequestModel, InspectionEntryResponseModel, InspectionReviewResponseModel, NoteCreateModelResponse, QueenGetModel, SpeciesGetModel, UserEntryResponseModel, UserProfileResponseModel, WhitelistEntryResponseModel } from "./api/Models";
-import type { ApiaryModelDB, QueenModelDB, CalendarEventDB, HistoryEntryDB, HiveModelDB, InspectionDB, InspectionFormDB, InspectionFormUI, InspectionTableEntryModel, NoteModelDB, UserEntryModelDB, UserModelDB, WhitelistEntryModelDB, SpeciesModelDB } from "./stores/Models";
+import type { ApiaryAccessResponseModel, ApiaryGetModel, ApiaryHistoryGetModel, CalendarEventGetModel, HiveAccessResponseModel, HiveCreateResponseModel, HiveHistoryGetModel, HiveYieldGetModel, InspectionCreateRequestModel, InspectionEntryGetModel, InspectionReviewGetModel, NoteCreateModelResponse, QueenGetModel, SpeciesGetModel, UserEntryResponseModel, UserProfileResponseModel, WhitelistEntryResponseModel } from "./api/Models";
+import type { ApiaryModelDB, QueenModelDB, CalendarEventDB, HistoryEntryDB, HiveModelDB, InspectionDB, InspectionFormDB, InspectionFormUI, InspectionEntryModelDB, NoteModelDB, UserEntryModelDB, UserModelDB, WhitelistEntryModelDB, SpeciesModelDB, LineGraphLineModel } from "./stores/Models";
 import { getAge } from "./utils/Utils";
 
 export function ApiaryCreateResponse_to_ApiaryModelDB(
-    convertee: ApiaryCreateResponseModel
+    convertee: ApiaryGetModel
 ): ApiaryModelDB {
     return {
         id:           convertee.id,
         name:         convertee.name,
         description:  convertee.description,
         image:        convertee.image,
-        creationDate: new Date(convertee.creationDate),
+        creationDate: new Date(convertee.creationTimestamp),
         location:     convertee.location,
         hiveCount:    convertee.hiveCount
     }
@@ -101,7 +101,7 @@ export function HiveAccessResponseModel_To_Number(
 
 
 export function InspectionReviewResponseModel_To_InspectionFormDB(
-    convertee: InspectionReviewResponseModel
+    convertee: InspectionReviewGetModel
 ): InspectionDB {
     return {
         id:               convertee.id,
@@ -110,7 +110,7 @@ export function InspectionReviewResponseModel_To_InspectionFormDB(
         userIdCreator:    convertee.userIdCreator,
         userPicture:      convertee.user?.image || '',
         username:         convertee.user?.username || 'Unknown User',
-        creationDate:     convertee.creationDate,
+        creationDate:     new Date(convertee.creationTimestamp),
         hasBeenProcessed: convertee.hasBeenProcessed,
         forms:            convertee.hiveInspectionForms?.map(form => ({
             id:                           form.id,
@@ -196,36 +196,24 @@ export function InspectionFormDB_To_InspectionFormUI(
     }
 }
 
-export function InspectionDB_To_InspectionTableEntryModel(
-    convertee: InspectionDB
-): InspectionTableEntryModel {
-    return {
-        id:               convertee.id,
-        apiaryId:         convertee.apiaryId,
-        apiaryName:       convertee.apiaryName,
-        userIdCreator:    convertee.userIdCreator,
-        userPicture:      convertee.userPicture,
-        username:         convertee.username,
-        creationDate:     convertee.creationDate,
-        formCount:        convertee.forms.length,
-        processed: !!convertee.hasBeenProcessed,
-    }
-}
-
-export function InspectionEntryResponseModel_To_InspectionTableEntryModel(
-    convertee: InspectionEntryResponseModel
-): InspectionTableEntryModel {
+export function InspectionEntryGetModel_To_InspectionTableEntryModel(
+    convertee: InspectionEntryGetModel
+): InspectionEntryModelDB {
     console.log('converting:', convertee.id, 'user:', convertee.user, 'apiary:', convertee.apiary)
     return {
-        id:            convertee.id,
-        apiaryId:      convertee.apiaryId,
-        apiaryName:    convertee.apiary?.name || 'Unknown Apiary',
-        userIdCreator: convertee.userIdCreator,
-        userPicture:   convertee.user?.image || '',
-        username:      convertee.user?.username || 'Unknown User',
-        formCount:     convertee.hiveInspectionForms.length,
-        processed:     !!convertee.processed,
-        creationDate:  convertee.creationDate,
+        id:                convertee.id,
+        formCount:         convertee.formCount,
+        processed:         convertee.processed,
+        createdAt: new Date(convertee.creationTimestamp),
+        user: convertee.user ? {
+            id:       convertee.user.id,
+            image:    convertee.user.image,
+            username: convertee.user.username
+        }: undefined,
+        apiary: convertee.apiary ? {
+            id:   convertee.apiary.id,
+            name: convertee.apiary.name
+        } : undefined
     }
 }
 
@@ -235,14 +223,27 @@ export function HiveHistoryGetModel_To_HistoryEntryDB(
     return {
         id:           convertee.id,
         text:         convertee.text,
-        type:         convertee.type,
+        type:         convertee.historyActionType.type,
         userId:       convertee.user?.id || -1,
-        username:     convertee.user?.username || 'Unknown User',
+        username:     convertee.user?.username || 'Deleted User',
         userImage:    convertee.user?.image || '',
-        creationDate: convertee.creationDate,
+        creationDate: convertee.creationTimestamp,
     }
 }
 
+export function ApiaryHistoryGetModel_To_HistoryEntryDB(
+    convertee: ApiaryHistoryGetModel
+): HistoryEntryDB {
+    return {
+        id:           convertee.id,
+        text:         convertee.text,
+        type:         convertee.historyActionType.type,
+        userId:       convertee.user?.id || -1,
+        username:     convertee.user?.username || 'Deleted User',
+        userImage:    convertee.user?.image || '',
+        creationDate: convertee.creationTimestamp,
+    }
+}
 
 export function CalendarEventGetModel_To_CalendarEventDB(
     convertee: CalendarEventGetModel
@@ -266,15 +267,15 @@ export function QueenGetModel_To_QueenModelDB(
     console.log(JSON.stringify(convertee, null, 2))
     const age = getAge(convertee.bornDate, new Date().toString())
     return {
-        id:       convertee.id,
+        id: convertee.id,
         species:  {
-            id: convertee.specie.id,
-            lifeExpectancy: convertee.specie.lifeExpectancy,
-            scientificName: convertee.specie.scientificName,
+            id:             convertee.species.id,
+            lifeExpectancy: convertee.species.lifeExpectancy,
+            scientificName: convertee.species.scientificName,
         },
-        age:      age,
-        imageUrl: convertee.imageUrl,
-        bornDate: new Date(convertee.bornDate),
+        age:             age,
+        imageUrl:        convertee.imageUrl,
+        bornDate:        new Date(convertee.bornDate),
         addedToHiveDate: new Date(convertee.addedToHiveDate)
     }
 }
@@ -291,4 +292,22 @@ export function SpeciesGetModel_To_SpeciesModelDB(
         behavior:       convertee.behavior,
         preferences:    convertee.preferences
     }    
+}
+
+
+export function HiveYieldGetModels_To_LineGraphLineModels(
+    convertee: HiveYieldGetModel[]
+): LineGraphLineModel[] {
+    return [...convertee.groupBy(item => item.hive.id).entries()].map(([_, items]) => {
+        const first = items[0];
+        return {
+            id:    first.hive.id,
+            name:  first.hive.name,
+            color: '#' + Math.floor(Math.random() * 0xFFFFFF).toString(16).padStart(6, '0'),
+            data:  items.map(item => ({
+                value:     item.amount,
+                timestamp: item.createdAt
+            }))
+        };
+    });
 }

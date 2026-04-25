@@ -1,12 +1,11 @@
 <script setup lang="ts">
 import { useCssModule } from "vue";
 import InspectionTableRow from "./rows/InspectionTableRow.vue";
-
-import type { InspectionTableEntryModel } from "@/core/stores/Models";
+import type { InspectionEntryModelDB } from "@/core/stores/Models";
 
 const s = useCssModule()
 const props = defineProps<{
-    entries: InspectionTableEntryModel[]
+    entries: InspectionEntryModelDB[]
     page: number
     limit: number
 }>()

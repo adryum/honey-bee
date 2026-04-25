@@ -16,6 +16,7 @@ import { useModalBase } from '@/core/composables/useModalBase';
 import StringMultipleField from '../input/fields/used/StringMultipleField.vue';
 import StringField from '../input/fields/used/StringField.vue';
 import StringFieldTopPart from '../input/dropdowns/dropdownItems/top/StringFieldTopPart.vue';
+import type { HiveModelDB } from '@/core/stores/Models';
 
 const s = useCssModule()
 const props = defineProps<{
@@ -24,6 +25,10 @@ const props = defineProps<{
 
 const { modal, exposed } = useModalBase()
 defineExpose(exposed)
+
+const emits = defineEmits<{
+    create: [id: number]
+}>()
 
 const { assignHive } = useApiaryMutations()
 const { create, isCreatingHive } = useHiveMutations()
@@ -43,7 +48,6 @@ const hiveTypeModels: { name: HiveType, icon: SVG }[] = [
     { name: HiveType.STATIONARY, icon: SVG.BeeHive },
 ]
 
-
 function createHive() {
     showThatIsRequired()
     if (!isFormValid.value) return
@@ -56,7 +60,8 @@ function createHive() {
         apiaryId: props.apiaryId
     }, 
     {
-        onSuccess() {
+        onSuccess(hive: HiveModelDB) {
+            emits("create", hive.id)
             modal.value?.close()
         },
     })

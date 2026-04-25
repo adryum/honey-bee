@@ -2,6 +2,8 @@ import { useMutation, useQuery, useQueryClient } from "@tanstack/vue-query";
 import { hiveApi } from "../api/HiveApi";
 import { computed, unref, type MaybeRef, type Ref } from "vue";
 import { ActionType, useActionsStore } from "../stores/ActionStore";
+import { useHiveHistoryMutations } from "./useHiveHistory";
+import { HistoryActionType } from "../DatabaseEnums";
 
 export const useHiveQuery = ({
     id,
@@ -41,11 +43,19 @@ export const useHivesQuery = ({
 export const useHiveMutations = () => {
     const queryClient = useQueryClient()
     const { createPopupAction } = useActionsStore()
+    const { create: createHiveHistory } = useHiveHistoryMutations()
 
     const { mutate: create, isPending: isCreatingHive } = useMutation({
         mutationFn: hiveApi.createHive,
         onSuccess: (newHive) => {
             queryClient.invalidateQueries({ queryKey: ['hives'] })
+            
+            createHiveHistory({
+                hiveId: newHive.id,
+                text: "Created hive",
+                type: HistoryActionType.EDIT
+            })
+
             createPopupAction({
                 label: `Created hive: ${newHive.name}`,
                 type:  ActionType.Success
@@ -80,6 +90,12 @@ export const useHiveMutations = () => {
         mutationFn: hiveApi.updateHive,
         onSuccess: (updatedHive) => {
             queryClient.invalidateQueries({ queryKey: ['hives'] })
+
+            createHiveHistory({
+                hiveId: updatedHive.id,
+                text: "Updated hive information",
+                type: HistoryActionType.EDIT
+            })
 
             createPopupAction({
                 label: `Updated hive: ${updatedHive.name}`,

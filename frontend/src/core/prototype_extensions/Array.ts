@@ -12,6 +12,8 @@ declare global {
         isEmpty(): boolean
 
         replace(item: T, expression: (item: T) => boolean): void
+
+        groupBy(key: (item: T) => number | string): Map<number | string, T[]>
     }
 }
 
@@ -46,4 +48,14 @@ Array.prototype.replace = function<T>(item: T, expression: (item: T) => boolean)
 
     const index = this.indexOf(result)
     this[index] = item
+}
+
+Array.prototype.groupBy = function<T>(key: (item: T) => number | string): Map<number | string, T[]> {
+    const grouped = new Map<number | string, T[]>();
+    for (const item of this) {
+        const k = key(item);
+        if (!grouped.has(k)) grouped.set(k, []);
+        grouped.get(k)!.push(item);
+    }
+    return grouped;
 }

@@ -1,11 +1,10 @@
 <script setup lang="ts">
-import { computed, toRef, useCssModule } from "vue";
+import { toRef, useCssModule } from "vue";
 import Info from "@/ui/components/hive/view_fragments/general/Info.vue";
 import HoneyYieldChart from "./HoneyYieldChart.vue";
 import HistoryLog from "./history/HistoryLog.vue";
-import type { HistoryEntryDB, HiveModelDB } from "@/core/stores/Models";
+import type { HiveModelDB } from "@/core/stores/Models";
 import { useHiveHistoryQuery } from "@/core/composables/useHiveHistory";
-import { HiveHistoryGetModel_To_HistoryEntryDB } from "@/core/Convertors";
 
 const s = useCssModule()
 const props = defineProps<{
@@ -13,9 +12,6 @@ const props = defineProps<{
 }>()
 
 const { history } = useHiveHistoryQuery( { hiveId: toRef(() => props.hive.id) } )
-const historyEntries = computed<HistoryEntryDB[]>(
-    () => history.value?.map(HiveHistoryGetModel_To_HistoryEntryDB) ?? []
-)
 </script>
 
 <template>
@@ -32,7 +28,7 @@ const historyEntries = computed<HistoryEntryDB[]>(
     />
     <HistoryLog 
         :class="s.log"
-        :entries="historyEntries"
+        :entries="history ?? []"
     />
 </div>
 </template>

@@ -7,7 +7,7 @@ import { SVG } from '@/assets/svgs/SVGLoader';
 import Apiary from '../components/apiary/Apiary.vue';
 import StringSearchDropdown from "../components/input/dropdowns/StringSearchDropdown.vue";
 import { useApiariesQuery } from "@/core/composables/useApiary";
-import CreateApiaryModal from "../components/modals/CreateApiaryModal.vue";
+import ApiaryCreateModal from "../components/modals/ApiaryCreateModal.vue";
 import { useRouter } from "vue-router";
 import type { ModalBaseModel } from "@/core/composables/useModalBase";
 
@@ -81,7 +81,7 @@ onResize(grid, (element) => {
                 @click="openApiary(apiary.id)"
             />
         </div>
-        <CreateApiaryModal 
+        <ApiaryCreateModal 
             ref="createApiaryModal"
         />
     </div>

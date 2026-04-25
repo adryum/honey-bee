@@ -3,7 +3,7 @@ import { computed, type Ref } from "vue";
 import { noteApi } from "../api/NoteApi";
 import { ActionType, useActionsStore } from "../stores/ActionStore";
 import { useHiveHistoryMutations } from "./useHiveHistory";
-import { HistoryEntryType } from "../DatabaseEnums";
+import { HistoryActionType } from "../DatabaseEnums";
 import { speciesApi } from "../api/SpeciesApi";
 
 export const useSpeciesQuery = () => {

@@ -17,7 +17,7 @@ router.post(
             end:          string
             title:        string
             description:  string
-        }>, 
+        }, {}>, 
         res: Response
 ) => {
     console.log("# Create calendar event");

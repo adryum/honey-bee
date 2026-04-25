@@ -5,7 +5,7 @@ import { CalendarDate } from "@/core/Calendar";
 import type { HiveModelDB } from "@/core/stores/Models";
 import CalendarGrid from "@/ui/components/calendar/CalendarGrid.vue";
 import { useHiveHistoryMutations } from "@/core/composables/useHiveHistory";
-import { HistoryEntryType } from "@/core/DatabaseEnums";
+import { HistoryActionType } from "@/core/DatabaseEnums";
 
 const s = useCssModule()
 const props = defineProps<{
@@ -35,7 +35,7 @@ function onCreateEvent() {
     create({
         hiveId: props.hive.id,
         text: "Created calendar task",
-        type: HistoryEntryType.CALENDAR
+        type: HistoryActionType.CALENDAR
     })
 }
 console.log(today);

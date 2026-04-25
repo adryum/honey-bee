@@ -1,4 +1,4 @@
-import type { HistoryEntryType, HiveType, NoteTypes, Role } from "../DatabaseEnums"
+import type { HistoryActionType, HiveType, NoteTypes, Role } from "../DatabaseEnums"
 import type { HistoryEntryDB } from "../stores/Models"
 
 export type ApiaryCreateRequestModel = {
@@ -7,19 +7,29 @@ export type ApiaryCreateRequestModel = {
     image?:       File
 }
 
-export type ApiaryCreateResponseModel = {
-    id:           number
-    name:         string
-    description:  string
-    image:        string
-    creationDate: string
-    location:     string
-    hiveCount:    number
+export type ApiaryGetModel = {
+    id:                number
+    name:              string
+    image:             string
+    location:          string
+    description:       string
+    creationTimestamp: string
+    hiveCount:         number
 }
 
-export type HiveAssignResponseModel = {
-    hiveId:   number
-    apiaryId: number
+export type HiveAssignGetModel = {
+    previousApiary: {
+        id:   number
+        name: string
+    } | undefined,
+    newApiary: {
+        id:   number
+        name: string
+    },
+    hive: {
+        id:   number
+        name: string
+    }
 }
 
 export type HiveAssignRequestModel = {
@@ -209,29 +219,29 @@ export type InspectionCreateRequestModel = {
     }[] | undefined
 }
 
-export type InspectionEntryResponseModel = {
-    id:                  number;
-    apiaryId:            number;
-    userIdCreator:       number
-    creationDate:        string
-    processed:           boolean
-    hiveInspectionForms: []
-    user:                {
+export type InspectionEntryGetModel = {
+    id:                number
+    formCount:         number
+    processed:         boolean
+    creationTimestamp: string
+    user: {
+        id:       number
         image:    string
         username: string
     } | undefined
     apiary: {
-        name:    string
+        id:   number
+        name: string
     } | undefined
 }
 
-export type InspectionReviewResponseModel = {
-    id:               number;
-    apiaryId:         number;
-    userIdCreator:    number
-    creationDate:     string
-    hasBeenProcessed: boolean
-    user:             {
+export type InspectionReviewGetModel = {
+    id:                number;
+    apiaryId:          number;
+    userIdCreator:     number
+    creationTimestamp: string
+    hasBeenProcessed:  boolean
+    user:              {
         image:   string
         username:      string
     } | undefined
@@ -268,19 +278,44 @@ export type InspectionReviewResponseModel = {
 export type HiveHistoryCreateModel = {
     hiveId: number
     text:   string
-    type:   HistoryEntryType
+    type:   HistoryActionType
 }
 
 export type HiveHistoryGetModel = {
-    id:           number
-    hiveId:       number
-    type:         HistoryEntryType
-    text:         string
-    creationDate: string
+    id:                number
+    text:              string
+    hiveId:            number
+    creationTimestamp: string
+    historyActionType: {
+        id:   number
+        type: HistoryActionType
+    }
     user:         {
         id:       number
         username: string
-        image:  string
+        image:    string
+    } | undefined
+}
+
+export type ApiaryHistoryCreateModel = {
+    apiaryId: number
+    text:     string
+    type:     HistoryActionType
+}
+
+export type ApiaryHistoryGetModel = {
+    id:                number
+    text:              string
+    apiaryId:          number
+    creationTimestamp: string
+    historyActionType: {
+        id:   number
+        type: HistoryActionType
+    }
+    user:         {
+        id:       number
+        username: string
+        image:    string
     } | undefined
 }
 
@@ -314,9 +349,9 @@ export type QueenGetModel = {
     imageUrl:        string
     bornDate:        string
     addedToHiveDate: string
-    specie:         {
+    species:         {
         id:             number
-        scientificName:    string
+        scientificName: string
         lifeExpectancy: string
     },
     hive: {
@@ -340,4 +375,13 @@ export type SpeciesGetModel = {
     description:    string
     behavior:       string
     preferences:    string
+}
+
+export type HiveYieldGetModel = {
+    id: number
+    amount: number
+    hiveId: 81,
+    inspectionId: 96,
+    createdAt: '2026-04-07 12:42:56',
+    hive: { id: 81, name: 'sad' }
 }

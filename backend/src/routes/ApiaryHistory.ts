@@ -4,17 +4,17 @@ import { HistoryActionType, Role } from "../DatabaseEnums"
 import { requireRole } from "../Middleware"
 import { withStatus } from "../utils"
 import { eq } from "drizzle-orm/sql/expressions/conditions";
-import { hiveActionHistory } from "../db/schema";
-import { DBQueryConfig, ExtractTablesWithRelations, desc } from "drizzle-orm";
+import { apiaryActionHistory } from "../db/schema";
+import { DBQueryConfig, desc, ExtractTablesWithRelations } from "drizzle-orm";
 import { HistoryActionTypeMap } from "../initialization";
-import type * as schemaImport from "../db/schema";
+import type * as schema from "../db/schema";
 
 const router = Router()
 
-type Schema = ExtractTablesWithRelations<typeof schemaImport>;
-type HiveHistoryQueryConfig = DBQueryConfig<"many", true, Schema, Schema["hiveActionHistory"]>;
+type Schema = ExtractTablesWithRelations<typeof schema>;
+type ApiaryHistoryQueryConfig = DBQueryConfig<"many", true, Schema, Schema["apiaryActionHistory"]>;
 
-const hiveHistoryGetParts = {
+const apiaryHistoryGetParts = {
     columns: {
         userId: false,
         historyActionTypeId: false
@@ -29,40 +29,40 @@ const hiveHistoryGetParts = {
             }
         }
     }
-} satisfies HiveHistoryQueryConfig;
+} satisfies ApiaryHistoryQueryConfig;
 
 router.post(
     '/', 
     requireRole([Role.ANY]), 
     async (
         req: Request<{},{},{
-            hiveId:    number
-            text:      string,
-            type:      HistoryActionType
+            apiaryId: number
+            text:     string,
+            type:     HistoryActionType
         }>, 
         res: Response
 ) => {
-    console.log("# Create hive history entry");
-    const { hiveId, text, type } = req.body
+    console.log("# Create apiary history entry");
+    const { apiaryId, text, type } = req.body
     
     try {
         const [result] = await withStatus("Creating history entry", 
-            () => db.insert(hiveActionHistory).values({
+            () => db.insert(apiaryActionHistory).values({
                 text:                text,
                 userId:              req.session.userId,
-                hiveId:              hiveId,
+                apiaryId:            apiaryId,
                 historyActionTypeId: HistoryActionTypeMap.get(type)!
             })
         )
 
-        const hiveHistoryGetResult = await withStatus("Getting new entry data", 
-            () => db.query.hiveActionHistory.findFirst({
-                ...hiveHistoryGetParts,
-                where: eq(hiveActionHistory.id, result.insertId),
+        const apiaryHistoryGetResult = await withStatus("Getting new entry data", 
+            () => db.query.apiaryActionHistory.findFirst({
+                ...apiaryHistoryGetParts,
+                where: eq(apiaryActionHistory.id, result.insertId),
             })
         )
         
-        res.status(200).json(hiveHistoryGetResult)
+        res.status(200).json(apiaryHistoryGetResult)
     } catch (err) {
         console.error(err);
         res.status(500).send('Server error');
@@ -70,25 +70,25 @@ router.post(
 })
 
 router.get(
-    '/hive/:id', 
+    '/apiary/:id', 
     requireRole([Role.ANY]), 
     async (
         req: Request<{ id: string }>, 
         res: Response
     ) => {
-        console.log("# Get hive history");
+        console.log("# Get apiary history");
         const { id } = req.params
 
         try {
-            const hiveHistoryGetResult = await withStatus("Getting hive history", 
-                () => db.query.hiveActionHistory.findMany({
-                    ...hiveHistoryGetParts,
-                    where: eq(hiveActionHistory.hiveId, parseInt(id)),
-                    orderBy: [desc(hiveActionHistory.creationTimestamp)]
+            const apiaryHistoryGetResult = await withStatus("Getting apiary history", 
+                () => db.query.apiaryActionHistory.findMany({
+                    ...apiaryHistoryGetParts,
+                    where: eq(apiaryActionHistory.apiaryId, parseInt(id)),
+                    orderBy: [desc(apiaryActionHistory.creationTimestamp)]
                 })
             )
 
-            res.status(200).json(hiveHistoryGetResult)
+            res.status(200).json(apiaryHistoryGetResult)
         } catch (err) {
             console.error(err);
             res.status(500).send('Server error');

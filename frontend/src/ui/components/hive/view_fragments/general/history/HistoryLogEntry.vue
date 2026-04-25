@@ -4,7 +4,7 @@ import Icon from "@/ui/components/Icon.vue";
 import { IconType, SVG } from "@/assets/svgs/SVGLoader";
 import type { HistoryEntryDB } from "@/core/stores/Models";
 import { formatDateWithOrdinal } from "@/core/utils/Utils";
-import { HistoryEntryType } from "@/core/DatabaseEnums";
+import { HistoryActionType } from "@/core/DatabaseEnums";
 
 const s = useCssModule()
 const props = defineProps<{
@@ -13,10 +13,10 @@ const props = defineProps<{
 
 const svg = computed(() => {
     switch (props.entry.type) {
-        case HistoryEntryType.CALENDAR:   return SVG.Calendar;
-        case HistoryEntryType.EDIT:       return SVG.Pencil;
-        case HistoryEntryType.INSPECTION: return SVG.Search;
-        case HistoryEntryType.NOTE:       return SVG.Clipboard;
+        case HistoryActionType.CALENDAR:   return SVG.Calendar;
+        case HistoryActionType.EDIT:       return SVG.Pencil;
+        case HistoryActionType.INSPECTION: return SVG.Search;
+        case HistoryActionType.NOTE:       return SVG.Clipboard;
              default:                     return SVG.Info;
     }
 })
@@ -34,7 +34,7 @@ const svg = computed(() => {
     </div>
 
     <div :class="s.header">
-        <h2 :class="s.time">{{ entry.text }}</h2>
+        <h2 :class="s.text">{{ entry.text }}</h2>
         <div :class="s.userInfo">
             <img
                 alt="user image"
@@ -66,7 +66,7 @@ const svg = computed(() => {
     justify-content: center
     align-items: center
 
-    top: .2rem
+    top: .25rem
     left: 1.1rem
     // align-self: center
     min-width: 1.75rem
@@ -89,14 +89,14 @@ const svg = computed(() => {
 
     margin-left: 3.5rem
 
-    height: 1.5rem
+    min-height: 1.5rem
     align-items: center
 
     border-radius: 4px 0 0 4px
 
     font-size: var(--font-size-small)
 
-    .time
+    .text
         line-height: 1.5rem
         font-weight: 600
         font-size: var(--font-size-medium)

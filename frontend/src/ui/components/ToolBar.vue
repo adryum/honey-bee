@@ -106,6 +106,10 @@ const hasFooter = computed(() => !!slots.footer?.()?.length)
         letter-spacing: .02em
         line-height: 2rem
 
+        white-space: nowrap
+        overflow: hidden
+        text-overflow: ellipsis
+
 .footer
     display: flex
     width: 100%

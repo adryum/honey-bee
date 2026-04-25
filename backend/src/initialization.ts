@@ -1,13 +1,19 @@
-export var HIVE_ACTION_HISTORY_TYPE_IDS: Record<string, number> = {
-    'inspection': 1,
-    'feeding':    2,
-    'treatment':  3,
-}
+import { db } from "./config/Database";
+import { HistoryActionType } from "./DatabaseEnums";
+import { LoggedMap, withStatus } from "./utils";
 
-async function setupHiveActionHistoryMap() {
+export var HistoryActionTypeMap: LoggedMap<HistoryActionType, number> = new LoggedMap("HistoryActionTypeMap");
+
+export async function setupHistoryActionTypeMap() {
     try {
-        
+        const historyActionTypesResult = await withStatus("Getting all HiveActionType enums", 
+            () => db.query.historyActionTypes.findMany({})
+        )
+
+        historyActionTypesResult.forEach(item => {
+            HistoryActionTypeMap.set(item.type, item.id)
+        })
     } catch (error) {
-        
+        console.error(error);
     }
 }
