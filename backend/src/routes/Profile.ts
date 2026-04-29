@@ -1,6 +1,6 @@
 import { Router, type Request, type Response } from "express";
 import { db } from "../config/Database";
-import { Role } from "../DatabaseEnums";
+import { UserRoles } from "../DatabaseEnums";
 import { requireRole } from "../Middleware";
 import { isValidValue } from "../utils";
 import { eq } from "drizzle-orm";
@@ -10,7 +10,7 @@ const router = Router()
 
 router.get(
     '/me',
-    requireRole([Role.ANY]), 
+    requireRole([UserRoles.ANY]), 
     async (
         req: Request, 
         res: Response
@@ -26,11 +26,11 @@ router.get(
         const userResult = await db.query.users.findFirst({
             where: eq(users.id, userId),
             columns: {
-                id: true,
+                id:       true,
                 username: true,
-                email: true,
-                role: true,
-                image: true
+                email:    true,
+                role:     true,
+                imageUrl: true
             }
         })
 
@@ -43,7 +43,7 @@ router.get(
 
 router.get(
     '/:id',
-    requireRole([Role.ANY]), 
+    requireRole([UserRoles.ANY]), 
     async (
         req: Request<{ id: string }>, 
         res: Response
@@ -59,11 +59,11 @@ router.get(
         const userResult = await db.query.users.findFirst({
             where: eq(users.id, userId),
             columns: {
-                id: true,
+                id:       true,
                 username: true,
-                email: true,
-                role: true,
-                image: true
+                email:    true,
+                role:     true,
+                imageUrl: true
             }
         })
 

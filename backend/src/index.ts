@@ -46,14 +46,24 @@ async function startServer() {
     app.use((req, res, next) => {
         // monkey-patches .json function
 
-        const originalJson = res.json;
+        const originalJson = res.json
+        const originalSend = res.send
+        let isJson = false
 
         res.json = function (body) {
-            console.log('[EXIT] JSON response:', body);
-            return originalJson.call(this, body);
-        };
+            isJson = true
+            console.log('[EXIT] JSON response:', body)
+            return originalJson.call(this, body)
+        }
 
-        next();
+        res.send = function (body) {
+            if (!isJson) {
+                console.log('[EXIT] Send response:', body)
+            }
+            return originalSend.call(this, body)
+        }
+
+        next()
     });
 
     // middle man between request and resposne

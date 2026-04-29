@@ -1,6 +1,6 @@
 import { pool } from "./config/Database";
 import { redisClient } from "./config/RedisClient";
-import { Role } from "./DatabaseEnums";
+import { UserRoles } from "./DatabaseEnums";
 
 export async function testConnection() {
   try {
@@ -37,6 +37,7 @@ export function isValidValue(value: unknown): value is NonNullable<typeof value>
     if (typeof value === 'number') return !Number.isNaN(value)
     if (typeof value === 'string') return value !== ''
     if (typeof value === 'boolean') return value
+    if (Array.isArray(value)) return value.length > 0
     return true
 }
 

@@ -70,7 +70,7 @@ const { apiary } = useApiaryQuery({
             <p 
                 id="created"
                 :class="s.gridValues"    
-            >{{ hive.creationDate.toDDMMYYYY("-") }}</p>
+            >{{ hive.creationTimestampDate.toDDMMYYYY("-") }}</p>
             <label 
                 for="type"
                 :class="s.gridLabels"

@@ -1,13 +1,13 @@
 import { Request, Response, NextFunction } from "express";
 import { getSessionUserRole } from "./config/RedisClient";
-import { Role } from "./DatabaseEnums";
+import { UserRoles } from "./DatabaseEnums";
 import { isValidValue } from "./utils";
 import { db } from "./config/Database";
 import { users } from "./db/schema";
 import { eq } from "drizzle-orm/sql/expressions/conditions";
 import { getUserCalendarClient } from "./config/calendar/GoogleCalendar";
 
-export function requireRole(requiredRoles: Role[]) {
+export function requireRole(requiredRoles: UserRoles[]) {
     return async (req: Request, res: Response, next: NextFunction)  => {
         const userId = req.session.userId;
 
@@ -19,7 +19,7 @@ export function requireRole(requiredRoles: Role[]) {
         const role = await getSessionUserRole(userId)
 
         // checks if role matches requirements
-        if (!requiredRoles.includes(Role.ANY) && !requiredRoles.includes(role)) {
+        if (!requiredRoles.includes(UserRoles.ANY) && !requiredRoles.includes(role)) {
             return res.sendStatus(403);
         }
 

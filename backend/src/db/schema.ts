@@ -1,10 +1,10 @@
-import { mysqlTable, index, primaryKey, bigint, varchar, text, timestamp, float, int, mysqlEnum, datetime, boolean } from "drizzle-orm/mysql-core"
-import { sql } from "drizzle-orm"
-import { HistoryActionType, HiveType, Role } from "../DatabaseEnums";
+import { mysqlTable, mysqlSchema, AnyMySqlColumn, index, foreignKey, primaryKey, bigint, varchar, text, timestamp, float, int, mysqlEnum, datetime, boolean } from "drizzle-orm/mysql-core"
+import { sql }                                                                                                                                       from "drizzle-orm"
+import { HistoryActionType, HiveType, NoteTypes, UserRoles } from "../DatabaseEnums";
 
 export const apiaries = mysqlTable("apiaries", {
 	id:                bigint({ mode: "number" }).autoincrement().notNull(),
-	name:              varchar({ length: 50 }),
+	name:              varchar({ length: 50 }).notNull(),
 	imageUrl:          text("image_url"),
 	location:          varchar({ length: 50 }),
 	description:       varchar({ length: 500 }),
@@ -48,17 +48,17 @@ export const hiveActionHistory = mysqlTable("hive_action_history", {
 	primaryKey({ columns: [table.id], name: "hive_action_history_id"}),
 ]);
 
-export const hiveHoneyProduction = mysqlTable("hive_honey_production", {
-	id:           bigint({ mode: "number" }).autoincrement().notNull(),
-	amount:       float(),
-	hiveId:       bigint({ mode: "number" }).notNull().references(() => hives.id),
-	inspectionId: bigint({ mode: "number" }).notNull().references(() => hiveInspections.id),
-	createdAt:    timestamp({ mode: 'string' }).defaultNow(),
+export const hiveHoneyYield = mysqlTable("hive_honey_yield", {
+	id:                bigint({ mode: "number" }).autoincrement().notNull(),
+	amount:            float(),
+	hiveId:            bigint("hive_id", { mode: "number" }).notNull().references(() => hives.id, { onDelete: "cascade" } ),
+	inspectionId:      bigint("inspection_id", { mode: "number" }).notNull().references(() => inspections.id, { onDelete: "cascade" } ),
+	creationTimestamp: timestamp("creation_timestamp", { mode: 'string' }).default(sql`(now())`).notNull(),
 },
 (table) => [
 	index("hiveId_idx").on(table.hiveId),
 	index("inspectionId_idx").on(table.inspectionId),
-	primaryKey({ columns: [table.id], name: "hive_honey_production_id"}),
+	primaryKey({ columns: [table.id], name: "hive_honey_yield_id"}),
 ]);
 
 export const hiveInspectionForms = mysqlTable("hive_inspection_forms", {
@@ -81,7 +81,7 @@ export const hiveInspectionForms = mysqlTable("hive_inspection_forms", {
 	takingFrames:                    boolean("taking_frames").notNull(),
 	takenHoneyFrames:                int("taken_honey_frames"),
 	takenBreedingFrames:             int("taken_breeding_frames"),
-	inspectionId:                    bigint("inspection_id", { mode: "number" }).notNull().references(() => hiveInspections.id, { onDelete: "cascade" } ),
+	inspectionId:                    bigint("inspection_id", { mode: "number" }).notNull().references(() => inspections.id, { onDelete: "cascade" } ),
 	hiveId:                          bigint("hive_id", { mode: "number" }).references(() => hives.id, { onDelete: "set null" } ),
 },
 (table) => [
@@ -90,7 +90,49 @@ export const hiveInspectionForms = mysqlTable("hive_inspection_forms", {
 	primaryKey({ columns: [table.id], name: "hive_inspection_forms_id"}),
 ]);
 
-export const hiveInspections = mysqlTable("hive_inspections", {
+export const hiveNotes = mysqlTable("hive_notes", {
+	id:                bigint({ mode: "number" }).autoincrement().notNull(),
+	title:             varchar({ length: 30 }),
+	content:           varchar({ length: 500 }),
+	type:              mysqlEnum(NoteTypes),
+	userId:            bigint("user_id", { mode: "number" }).references(() => users.id, { onDelete: "set null" } ),
+	hiveId:            bigint("hive_id", { mode: "number" }).notNull().references(() => hives.id, { onDelete: "cascade" } ),
+	creationTimestamp: timestamp("creation_timestamp", { mode: 'string' }),
+},
+(table) => [
+	primaryKey({ columns: [table.id], name: "hive_notes_id"}),
+]);
+
+export const hiveQueenHistory = mysqlTable("hive_queen_history", {
+	id:                  bigint({ mode: "number" }).autoincrement().notNull(),
+	timeSpentInHive:     varchar("time_spent_in_hive", { length: 50 }).default('0').notNull(),
+	imageUrl:            text("image_url"),
+	queenSpeciesId:      bigint("queen_species_id", { mode: "number" }).notNull().references(() => queenSpecies.id),
+	hiveId:              bigint("hive_id", { mode: "number" }).references(() => hives.id),
+	placedHereTimestamp: timestamp("placed_here_timestamp", { mode: 'string' }).default(sql`(now())`).notNull(),
+},
+(table) => [
+	primaryKey({ columns: [table.id], name: "hive_queen_history_id"}),
+]);
+
+export const hives = mysqlTable("hives", {
+	id:                bigint({ mode: "number" }).autoincrement().notNull(),
+	name:              varchar({ length: 50 }).notNull(),
+	imageUrl:          text("image_url"),
+	location:          varchar({ length: 50 }),
+	type:              mysqlEnum(HiveType).notNull(),
+	description:       varchar({ length: 500 }),
+	apiaryId:          bigint("apiary_id", { mode: "number" }).references(() => apiaries.id, { onDelete: "set null" } ),
+	userId:            bigint("user_id", { mode: "number" }).references(() => users.id, { onDelete: "set null" } ),
+	creationTimestamp: timestamp("creation_timestamp", { mode: 'string' }).default(sql`(now())`).notNull(),
+	calendarId:        text("calendar_id"),
+},
+(table) => [
+	index("FK_hive_user").on(table.userId),
+	primaryKey({ columns: [table.id], name: "hives_id"}),
+]);
+
+export const inspections = mysqlTable("inspections", {
 	id:                bigint({ mode: "number" }).autoincrement().notNull(),
 	processed:         boolean().default(false).notNull(),
 	apiaryId:          bigint("apiary_id", { mode: "number" }).references(() => apiaries.id, { onDelete: "set null" } ),
@@ -100,105 +142,59 @@ export const hiveInspections = mysqlTable("hive_inspections", {
 (table) => [
 	index("apiaryId_idx").on(table.apiaryId),
 	index("userId_idx").on(table.userIdCreator),
-	primaryKey({ columns: [table.id], name: "hive_inspections_id"}),
+	primaryKey({ columns: [table.id], name: "inspections_id"}),
 ]);
 
-export const hiveQueenHistory = mysqlTable("hive_queen_history", {
-	id:                  bigint({ mode: "number" }).autoincrement().notNull(),
-	timeSpentInHive:     varchar("time_spent_in_hive", { length: 50 }).default('0').notNull(),
-	imageUrl:            text("image_url"),
-	speciesId:           bigint("species_id", { mode: "number" }).notNull().references(() => species.id),
-	hiveId:              bigint("hive_id", { mode: "number" }).references(() => hives.id),
-	placedHereTimestamp: timestamp("placed_here_timestamp", { mode: 'string' }).default(sql`(now())`).notNull(),
-},
-(table) => [
-	primaryKey({ columns: [table.id], name: "hive_queen_history_id"}),
-]);
-
-export const hives = mysqlTable("hives", {
-	id:           bigint({ mode: "number" }).autoincrement().notNull(),
-	name:         varchar({ length: 50 }),
-	image:        text(),
-	location:     varchar({ length: 50 }),
-	type:         mysqlEnum(HiveType),
-	description:  varchar({ length: 500 }),
-	apiaryId:     bigint({ mode: "number" }).references(() => apiaries.id, { onDelete: "set null" } ),
-	userId:       bigint({ mode: "number" }).references(() => users.id, { onDelete: "set null" } ),
-	creationDate: timestamp({ mode: 'string' }).default(sql`(now())`),
-	calendarId:   text(),
-},
-(table) => [
-	index("FK_hive_user").on(table.userId),
-	primaryKey({ columns: [table.id], name: "hives_id"}),
-]);
-
-export const notes = mysqlTable("notes", {
-	id:           bigint({ mode: "number" }).autoincrement().notNull(),
-	title:        varchar({ length: 30 }),
-	content:      varchar({ length: 500 }),
-	creationDate: datetime({ mode: 'string'}),
-	type:         mysqlEnum(['WARNING','INFORMATIONAL']),
-	userId:       bigint({ mode: "number" }).references(() => users.id, { onDelete: "set null" } ),
-	hiveId:       bigint({ mode: "number" }).references(() => hives.id, { onDelete: "set null" } ),
-},
-(table) => [
-	primaryKey({ columns: [table.id], name: "notes_id"}),
-]);
-
-export const queens = mysqlTable("queens", {
-	id:              bigint({ mode: "number" }).autoincrement().notNull(),
-	bornDate:        datetime("born_date", { mode: 'string'}).notNull(),
-	imageUrl:        text("image_url"),
-	speciesId:       bigint("species_id", { mode: "number" }).notNull().references(() => species.id),
-	hiveId:          bigint("hive_id", { mode: "number" }).notNull().references(() => hives.id),
-	addedToHiveDate: timestamp("added_to_hive_date", { mode: 'string' }).default(sql`(now())`),
-},
-(table) => [
-	primaryKey({ columns: [table.id], name: "queens_id"}),
-]);
-
-export const species = mysqlTable("species", {
+export const queenSpecies = mysqlTable("queen_species", {
 	id:             bigint({ mode: "number" }).autoincrement().notNull(),
 	knownAsName:    varchar("known_as_name", { length: 100 }).default("").notNull(),
 	scientificName: varchar("scientific_name", { length: 100 }).default("").notNull(),
-	lifeExpectancy: varchar("life_expectancy", { length: 50 }),
+	lifeExpectancy: varchar("life_expectancy", { length: 50 }).notNull(),
 	description:    text().notNull(),
 	behavior:       text().notNull(),
 	preferences:    text().notNull(),
 },
 (table) => [
-	primaryKey({ columns: [table.id], name: "species_id"}),
+	primaryKey({ columns: [table.id], name: "queen_species_id"}),
+]);
+
+export const queens = mysqlTable("queens", {
+	id:                   bigint({ mode: "number" }).autoincrement().notNull(),
+	imageUrl:             text("image_url"),
+	bornDate:             datetime("born_date", { mode: 'string'}).notNull(),
+	addedToHiveTimestamp: timestamp("added_to_hive_timestamp", { mode: 'string' }),
+	queenSpeciesId:       bigint("queen_species_id", { mode: "number" }).notNull().references(() => queenSpecies.id),
+	hiveId:               bigint("hive_id", { mode: "number" }).notNull().references(() => hives.id),
+},
+(table) => [
+	primaryKey({ columns: [table.id], name: "queens_id"}),
 ]);
 
 export const userApiaryAccess = mysqlTable("user_apiary_access", {
-	id:       bigint({ mode: "number" }).autoincrement().notNull(),
 	userId:   bigint("user_id", { mode: "number" }).notNull().references(() => users.id, { onDelete: "cascade" } ),
 	apiaryId: bigint("apiary_id", { mode: "number" }).notNull().references(() => apiaries.id, { onDelete: "cascade" } ),
 },
 (table) => [
-	primaryKey({ columns: [table.id], name: "user_apiary_access_id"}),
+	primaryKey({ columns: [table.userId, table.apiaryId], name: "user_apiary_access_user_id_apiary_id"}),
 ]);
 
 export const userHiveAccess = mysqlTable("user_hive_access", {
-	id:     bigint({ mode: "number" }).autoincrement().notNull(),
 	userId: bigint("user_id", { mode: "number" }).notNull().references(() => users.id, { onDelete: "cascade" } ),
 	hiveId: bigint("hive_id", { mode: "number" }).notNull().references(() => hives.id, { onDelete: "cascade" } ),
 },
 (table) => [
-	primaryKey({ columns: [table.id], name: "user_hive_access_id"}),
+	primaryKey({ columns: [table.userId, table.hiveId], name: "user_hive_access_user_id_hive_id"}),
 ]);
 
 export const users = mysqlTable("users", {
 	id:                 bigint({ mode: "number" }).autoincrement().notNull(),
 	username:           varchar({ length: 20 }).notNull(),
 	email:              varchar({ length: 30 }).default("").notNull(),
-	password:           varchar({ length: 30 }).default("").notNull(),
-	image:              text(),
-	role:               mysqlEnum(Role).notNull(),
+	imageUrl:           text("image_url"),
+	role:               mysqlEnum(UserRoles).notNull(),
 	provider:           mysqlEnum(['GOOGLE']),
-	providerSub:        varchar({ length: 255 }),
-	googleRefreshToken: text(),
-	isWhitelisted:      boolean().default(false).notNull(),
+	providerSub:        varchar("provider_sub", { length: 255 }),
+	googleRefreshToken: text("google_refresh_token"),
 },
 (table) => [
 	primaryKey({ columns: [table.id], name: "users_id"}),
@@ -206,9 +202,10 @@ export const users = mysqlTable("users", {
 
 export const whitelist = mysqlTable("whitelist", {
 	id:     bigint({ mode: "number" }).autoincrement().notNull(),
-	email:  varchar({ length: 60 }),
-	role:   mysqlEnum(Role).notNull(),
-	status: boolean().default(true),
+	email:  varchar({ length: 60 }).notNull(),
+	role:   mysqlEnum(UserRoles).notNull(),
+	status: boolean().default(false).notNull(),
+	userId: bigint("user_id", { mode: "number" }).references(() => users.id),
 },
 (table) => [
 	primaryKey({ columns: [table.id], name: "whitelist_id"}),

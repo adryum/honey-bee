@@ -40,15 +40,15 @@ const props = withDefaults(defineProps<{
             />
         </div> -->
         <icon
-            v-if="!hive.image"
+            v-if="!hive.imageUrl"
             :class="s.icon" 
             :type="IconType.GIGANTIC"
             :icon="SVG.BeeHive"
         />
         <img 
-            v-if="hive.image"
+            v-if="hive.imageUrl"
             :class="s.hiveImage" 
-            :src="hive.image || 'src/assets/images/hive1.jpg'" 
+            :src="hive.imageUrl || 'src/assets/images/hive1.jpg'" 
             alt="hive image"
         >
     </div>

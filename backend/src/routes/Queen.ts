@@ -1,4 +1,4 @@
-import { Role } from "../DatabaseEnums"
+import { UserRoles } from "../DatabaseEnums"
 import { requireRole } from "../Middleware"
 import { Router, type Request, type Response } from "express";
 import { withStatus } from "../utils";
@@ -13,7 +13,7 @@ const router = Router()
 
 router.get(
     "/",
-    requireRole([Role.ANY]),
+    requireRole([UserRoles.ANY]),
     async (
         req: Request<{},{},{}, { queenIds: string[], hiveIds: string[] }>, 
         res: Response
@@ -27,11 +27,11 @@ router.get(
         const queenGetResult = await withStatus(`Fetching queens`, () => {
             return db.query.queens.findMany({
                 columns: {
-                    speciesId: false,
-                    hiveId:    false
+                    queenSpeciesId: false,
+                    hiveId:         false
                 },
                 with: {
-                    species: {
+                    queenSpecy: {
                         columns: {
                             id:             true,
                             scientificName: true,
@@ -61,7 +61,7 @@ router.get(
 
 router.post(
     "/",
-    requireRole([Role.ANY]),
+    requireRole([UserRoles.ANY]),
     upload.single("image"),
     async (
         req: Request<{},{},{
@@ -78,9 +78,9 @@ router.post(
     try {
         const [insertResult] = await withStatus("Creating queen entry", () => 
             db.insert(queens).values({
-                bornDate:  bornDate,
-                speciesId: speciesId,
-                hiveId:    hiveId
+                bornDate:       bornDate,
+                queenSpeciesId: speciesId,
+                hiveId:         hiveId
             })
         )
 
@@ -102,7 +102,7 @@ router.post(
             db.query.queens.findFirst({
                 where: eq(queens.id, insertResult.insertId),
                 with: {
-                    species: {
+                    queenSpecy: {
                         columns: {
                             id: true,
                             knownAsName: true,

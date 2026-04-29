@@ -1,28 +1,18 @@
 import { Router, type Request, type Response } from "express";
 import { ResultSetHeader, RowDataPacket } from "mysql2";
-import { getCurrentUTCDateString, isNumber, isValidValue } from "../utils";
+import { getCurrentUTCDateString, isNumber, isValidValue, withStatus } from "../utils";
 import { upload } from "../config/Multer";
-import { pool } from "../config/Database";
+import { db, pool } from "../config/Database";
 import { requireRole } from "../Middleware";
-import { Role } from "../DatabaseEnums";
+import { NoteTypes, UserRoles } from "../DatabaseEnums";
+import { eq } from "drizzle-orm";
+import { hiveNotes } from "../db/schema";
 
 const router = Router()
-const getNotesQuery = `
-    SELECT 
-        id,
-        title,
-        content,
-        creationDate,
-        type,
-        userId,
-        hiveId
-    FROM notes
-    `
- 
+
 router.get(
     '/hive/:hiveId', 
-    requireRole([Role.ANY]), 
-    upload.none(), 
+    requireRole([UserRoles.ANY]),
     async (
         req: Request<{ hiveId: string }>, 
         res: Response
@@ -31,12 +21,10 @@ router.get(
     const hiveId = Number.parseInt(req.params.hiveId)
 
     try {
-        console.log("Getting notes...");
-        const [notes] = await pool.query<RowDataPacket[]>(
-            getNotesQuery + "where hiveId = ?",
-            [hiveId]
-        )
-        console.log("Done!");
+        const notes = await withStatus("Getting notes", () => db.query.hiveNotes.findMany({
+            where: eq(hiveNotes.hiveId, hiveId)
+        }))
+      
         return res.status(200).json(notes);
     } catch (err) {
         console.error(err);
@@ -44,157 +32,65 @@ router.get(
     }
 })
  
-router.post('/create', requireRole([Role.ANY]), upload.none(), async (req: Request<{},{},{
-    title: string
-    content: string
-    type: string
-    hiveId: number
-}>, res: Response) => {
+router.post(
+    '/', 
+    requireRole([UserRoles.ANY]), 
+    async (req: Request<{},{},{
+        title:   string
+        content: string
+        type:    NoteTypes
+        hiveId:  number
+    }>, res: Response
+) => {
     console.log("# Create note");
     let { title, content, type, hiveId } = req.body
 
     if (!title || !type || !isValidValue(hiveId)) 
         return res.status(401).send('incorrect credentials!')
 
-    const currentTime = getCurrentUTCDateString();
-
     try {
-        console.log("Inserting note...");
-        const [noteInsertResult] = await pool.query<ResultSetHeader>(`
-            INSERT INTO notes
-            (title, content, creationDate, type, userId, hiveId) 
-            VALUES (?,?,?,?,?, ?)`,
-            [title, content, currentTime, type, req.session.userId, hiveId]
+        const [noteInsertResult] = await withStatus("Inserting note", () => db.insert(hiveNotes).values({
+            title:   title,
+            content: content,
+            type:    type,
+            hiveId:  hiveId,
+            userId:  req.session.userId
+        })) 
+
+        const noteGetResult = await withStatus("Getting insterted note", () => 
+            db.query.hiveNotes.findFirst({
+                where: eq(hiveNotes.id, noteInsertResult.insertId)
+            })
         )
-        console.log("Done!");
         
-        console.log("Getting insterted data...");
-        const [[getNotesResult]] = await pool.query<RowDataPacket[]>(
-            getNotesQuery + " WHERE id = ?",
-            [noteInsertResult.insertId]
-        )
-        console.log("Done!");
-        
-        res.status(200).json(getNotesResult)
+        res.status(200).json(noteGetResult)
     } catch (err) {
         console.error(err);
         res.status(500).send('Server error');
     }
 })
 
-router.post('/delete', requireRole([Role.ANY]), upload.none(), async (req: Request<{},{},{
-    id: number
-}>, res: Response) => {
-    console.log("# Delete note");
-    let { id } = req.body
+router.delete(
+    '/:id', 
+    requireRole([UserRoles.ANY]), 
+    async (
+        req: Request<{ id: string },{},{}>, 
+        res: Response
+) => {
+    console.log("# Delete hive note");
+    const id = Number.parseInt(req.params.id)
 
-    if (!isNumber(id)) 
+    if (!isValidValue(id)) 
         return res.status(401).send('incorrect credentials!')
 
     try {
-        console.log("Deleting entry...");
+        await withStatus("Deleting note", () => db.delete(hiveNotes).where(eq(hiveNotes.id, id)))
         
-        await pool.query<ResultSetHeader>(`
-            DELETE FROM Notes
-            WHERE id = ?`,
-            [id]
-        )
-        console.log("Done!");
-
         res.status(200).json({ id: id })
     } catch (err) {
         console.error(err);
         res.status(500).send('Server error');
     }
 })
-
-// router.post('/update', upload.none(), async (req: Request<{},{},{
-//     id: number
-//     title: string
-//     content: string
-//     type: string
-
-//     removeHiveIds: number[]
-//     removeQueenIds: number[] 
-//     removeApiaryIds: number[] 
-//     removeInventoryIds: number[]
-//     addHiveIds: number[]
-//     addQueenIds: number[] 
-//     addApiaryIds: number[] 
-//     addInventoryIds: number[] 
-// }>, res: Response) => {
-//     const { 
-//         identification,
-//         id,
-//         title, 
-//         content, 
-//         type,
-//         removeHiveIds,
-//         removeApiaryIds,
-//         removeInventoryIds,
-//         removeQueenIds,
-//         addApiaryIds,
-//         addHiveIds,
-//         addInventoryIds,
-//         addQueenIds
-//     } = req.body
-
-//     if (!identification.id || !title || !content || !type) 
-//         return res.status(401).send('incorrect credentials!')
-
-//     try {
-//         const [noteUpdateResult] = await db.query<ResultSetHeader>(`
-//             UPDATE ${NoteT.tableName}
-//             SET 
-//             ${NoteT.title} = ?,
-//             ${NoteT.content} = ?,
-//             ${NoteT.type} = ?,
-//             ) 
-//             WHERE id = ? AND user_id = ?`,
-//             [title, content, type, id, identification.id]
-//         )
-
-//         const insertHivesResult = await insertHives(id, addHiveIds)
-
-//         const removeHivesResult = await removeHives(id, removeHiveIds)
-
-//         const [[getNotesResult]] = await db.query<RowDataPacket[]>(
-//             getNotesQuery + " WHERE id = ?",
-//             [id]
-//         )
-        
-//         console.log(getNotesResult);
-//         res.status(200).json(getNotesResult)
-//     } catch (err) {
-//         console.error(err);
-//         res.status(500).send('Server error');
-//     }
-// })
-
-async function insertHives(noteId: number, hiveIds: number[]): Promise<ResultSetHeader | undefined> {
-    var notePlaceHiveInsertResult: ResultSetHeader | undefined = undefined;
-    if (hiveIds.length > 0) {
-        const values = hiveIds.map(hiveId => [noteId, hiveId]);
-        [notePlaceHiveInsertResult] = await pool.query<ResultSetHeader>(`
-            UPDATE INTO note_place__hive
-            (note_id, hive_id) 
-            VALUES ?`,
-            [values]
-        )
-    }
-    return notePlaceHiveInsertResult
-}
-
-async function removeHives(noteId: number, hiveIds: number[]): Promise<ResultSetHeader | undefined> {
-    var notePlaceHiveRemoveResult: ResultSetHeader | undefined = undefined;
-    if (hiveIds.length > 0) {;
-        [notePlaceHiveRemoveResult] = await pool.query<ResultSetHeader>(`
-            DELETE FROM note_place__hive
-            WHERE note_id = ? AND hive_id IN (?)`,
-            [noteId, hiveIds]
-        )
-    }
-    return notePlaceHiveRemoveResult
-}
 
 export default router

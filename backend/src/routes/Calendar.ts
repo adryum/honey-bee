@@ -1,5 +1,5 @@
 import { useCalendar } from "../config/calendar/GoogleCalendar";
-import { Role } from "../DatabaseEnums"
+import { UserRoles } from "../DatabaseEnums"
 import { attachCalendarClient, requireRole } from "../Middleware"
 import { Router, type Request, type Response } from "express";
 import { withStatus } from "../utils";
@@ -8,7 +8,7 @@ const router = Router()
 
 router.post(
     '/create', 
-    requireRole([Role.ANY]),
+    requireRole([UserRoles.ANY]),
     attachCalendarClient,
     async (
         req: Request<{},{},{
@@ -46,7 +46,7 @@ router.post(
 
 router.get(
     "/events",
-    requireRole([Role.ANY]),
+    requireRole([UserRoles.ANY]),
     async (
         req: Request<{},{},{}, { calendarId: string[], month: string, year: string }>, 
         res: Response

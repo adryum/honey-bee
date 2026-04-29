@@ -1,17 +1,17 @@
 import { Router, type Request, type Response } from "express";
 import { RowDataPacket, ResultSetHeader } from "mysql2";
 import { db, pool } from "../config/Database";
-import { Role } from "../DatabaseEnums";
+import { UserRoles } from "../DatabaseEnums";
 import { requireRole } from "../Middleware";
 import { isValidValue, withStatus } from "../utils";
 import { asc, count, desc, eq } from "drizzle-orm";
-import {  apiaries, hiveInspectionForms, hiveInspections, users } from "../db/schema";
+import {  apiaries, hiveInspectionForms, inspections, users } from "../db/schema";
 
 const router = Router()
 
 router.get(
     '/entries', 
-    requireRole([Role.ANY]), 
+    requireRole([UserRoles.ANY]), 
     async (
         req: Request<{ 
             page:  string
@@ -29,13 +29,13 @@ router.get(
             `Getting Limit: ${limit} Offset: ${offset} inspection table entries`,
             () => db
                 .select({
-                    id: hiveInspections.id,
-                    processed: hiveInspections.processed,
-                    creationTimestamp: hiveInspections.creationTimestamp,
+                    id: inspections.id,
+                    processed: inspections.processed,
+                    creationTimestamp: inspections.creationTimestamp,
                     formCount: db
                         .select({ count: count().as('count') })
                         .from(hiveInspectionForms)
-                        .where(eq(hiveInspectionForms.inspectionId, hiveInspections.id))
+                        .where(eq(hiveInspectionForms.inspectionId, inspections.id))
                         .as('formCount'),
                     apiary: {
                         id: apiaries.id,
@@ -44,13 +44,13 @@ router.get(
                     user: {
                         id: users.id,
                         username: users.username,
-                        image: users.image
+                        image: users.imageUrl
                     },
                 })
-                .from(hiveInspections)
-                .leftJoin(apiaries, eq(hiveInspections.apiaryId, apiaries.id))
-                .leftJoin(users, eq(hiveInspections.userIdCreator, users.id))
-                .orderBy(desc(hiveInspections.creationTimestamp))
+                .from(inspections)
+                .leftJoin(apiaries, eq(inspections.apiaryId, apiaries.id))
+                .leftJoin(users, eq(inspections.userIdCreator, users.id))
+                .orderBy(desc(inspections.creationTimestamp))
                 .limit(limit)
                 .offset(offset)
         )
@@ -64,7 +64,7 @@ router.get(
 
 router.get(
     '/:id', 
-    requireRole([Role.ANY]), 
+    requireRole([UserRoles.ANY]), 
     async (
         req: Request<{ id: string }>, 
         res: Response
@@ -74,8 +74,8 @@ router.get(
     
     try {
         console.log(`Getting inspection...`);
-        const inspectionResult = await db.query.hiveInspections.findFirst({
-            where: eq(hiveInspections.id, inspectionId),
+        const inspectionResult = await db.query.inspections.findFirst({
+            where: eq(inspections.id, inspectionId),
             with: {
                 hiveInspectionForms: {
                     with: {
@@ -101,7 +101,7 @@ router.get(
 
 router.post(
     '/', 
-    requireRole([Role.ANY]), 
+    requireRole([UserRoles.ANY]), 
     async (
         req: Request<{},{},{
             apiaryId: number;
@@ -145,7 +145,7 @@ router.post(
         var inspectionCreateResult: ResultSetHeader
         await db.transaction(async (transaction) => {
             [inspectionCreateResult] = await withStatus("Inserting new Inspection entry", () =>  
-                transaction.insert(hiveInspections).values({
+                transaction.insert(inspections).values({
                     apiaryId:      apiaryId,
                     userIdCreator: req.session.userId,
                 })
@@ -180,8 +180,8 @@ router.post(
         })
 
         const inspectionResult = await withStatus("Getting inspection", 
-            () => db.query.hiveInspections.findFirst({
-                where: eq(hiveInspections.id, inspectionCreateResult.insertId),
+            () => db.query.inspections.findFirst({
+                where: eq(inspections.id, inspectionCreateResult.insertId),
                 with: {
                     hiveInspectionForms: {
                         with: {
@@ -208,7 +208,7 @@ router.post(
 
 router.get(
     '/:id/process', 
-    requireRole([Role.ANY]), 
+    requireRole([UserRoles.ANY]), 
     async (
         req: Request<{ id: string }>, 
         res: Response
@@ -218,9 +218,9 @@ router.get(
     
     try {
         console.log(`Processing  inspection...`);
-        await db.update(hiveInspections).set({ processed: true }).where(eq(hiveInspections.id, inspectionId))
-        const inspectionResult = await db.query.hiveInspections.findFirst({
-            where: eq(hiveInspections.id, inspectionId),
+        await db.update(inspections).set({ processed: true }).where(eq(inspections.id, inspectionId))
+        const inspectionResult = await db.query.inspections.findFirst({
+            where: eq(inspections.id, inspectionId),
             with: {
                 hiveInspectionForms: {
                     with: {

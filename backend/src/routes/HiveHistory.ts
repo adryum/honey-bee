@@ -1,6 +1,6 @@
 import { Router, type Request, type Response } from "express";
 import { db } from "../config/Database"
-import { HistoryActionType, Role } from "../DatabaseEnums"
+import { HistoryActionType, UserRoles } from "../DatabaseEnums"
 import { requireRole } from "../Middleware"
 import { withStatus } from "../utils"
 import { eq } from "drizzle-orm/sql/expressions/conditions";
@@ -33,7 +33,7 @@ const hiveHistoryGetParts = {
 
 router.post(
     '/', 
-    requireRole([Role.ANY]), 
+    requireRole([UserRoles.ANY]), 
     async (
         req: Request<{},{},{
             hiveId:    number
@@ -71,7 +71,7 @@ router.post(
 
 router.get(
     '/hive/:id', 
-    requireRole([Role.ANY]), 
+    requireRole([UserRoles.ANY]), 
     async (
         req: Request<{ id: string }>, 
         res: Response

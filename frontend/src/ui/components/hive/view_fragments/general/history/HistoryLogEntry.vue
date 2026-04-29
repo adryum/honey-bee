@@ -5,6 +5,7 @@ import { IconType, SVG } from "@/assets/svgs/SVGLoader";
 import type { HistoryEntryDB } from "@/core/stores/Models";
 import { formatDateWithOrdinal } from "@/core/utils/Utils";
 import { HistoryActionType } from "@/core/DatabaseEnums";
+import placeholderImage from '@/assets/images/ProfilePlaceholder.jpg'
 
 const s = useCssModule()
 const props = defineProps<{
@@ -39,7 +40,7 @@ const svg = computed(() => {
             <img
                 alt="user image"
                 :class="s.image" 
-                :src="entry.userImage" 
+                :src="entry.userImage || placeholderImage" 
             >
             <h1 :class="s.name">{{ entry.username }}</h1>
         </div>

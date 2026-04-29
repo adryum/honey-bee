@@ -5,7 +5,7 @@ import { uploadImage } from "../config/image_cloud/Cloudinary";
 import { PublicIdBuilder } from "../config/image_cloud/PublicIdBuilder";
 import { upload } from "../config/Multer";
 import { attachCalendarClient, requireRole } from "../Middleware";
-import { HiveType, Role } from "../DatabaseEnums";
+import { HiveType, UserRoles } from "../DatabaseEnums";
 import { getSessionUserRole } from "../config/RedisClient";
 import { and, eq, inArray, or } from "drizzle-orm";
 import { hives, userApiaryAccess, userHiveAccess, users } from "../db/schema";
@@ -16,7 +16,7 @@ const router = Router()
 
 router.get(
     "/",
-    requireRole([Role.ANY]),
+    requireRole([UserRoles.ANY]),
     async (
         req: Request, 
         res: Response
@@ -30,7 +30,7 @@ router.get(
 
         var hivesResult
         switch (role) {
-            case Role.ADMINISTRATOR:
+            case UserRoles.ADMINISTRATOR:
                 hivesResult = await db.query.hives.findMany();
                 break;
             default:
@@ -53,7 +53,7 @@ router.get(
 
 router.get(
     "/:id", 
-    requireRole([Role.ANY]), 
+    requireRole([UserRoles.ANY]), 
     async (
         req: Request<{ id: string }>, 
         res: Response
@@ -67,7 +67,7 @@ router.get(
         console.log("Checking if user has access to hive...");
         var hasAccess = true
 
-        if (role !== Role.ADMINISTRATOR) {
+        if (role !== UserRoles.ADMINISTRATOR) {
             const accessQuery = await db.query.userHiveAccess.findFirst({
                 where: and(
                     eq(userHiveAccess.userId, reqUserId), 
@@ -93,7 +93,7 @@ router.get(
     }
 })
 
-router.post('/update', requireRole([Role.ADMINISTRATOR, Role.APIARY_MAINTAINER]), upload.single("image"), async (
+router.post('/update', requireRole([UserRoles.ADMINISTRATOR, UserRoles.APIARY_MAINTAINER]), upload.single("image"), async (
     req: Request<{},{},{
         id:          number
         name:        string
@@ -156,7 +156,7 @@ router.post('/update', requireRole([Role.ADMINISTRATOR, Role.APIARY_MAINTAINER])
 // creates hive
 router.post(
     '/create', 
-    requireRole([Role.ADMINISTRATOR, Role.APIARY_MAINTAINER]), 
+    requireRole([UserRoles.ADMINISTRATOR, UserRoles.APIARY_MAINTAINER]), 
     upload.single("image"), 
     async (
         req: Request<{},{},{
@@ -193,7 +193,7 @@ router.post(
 
             await withStatus("Assigning image url to hive...", () =>
                 db.update(hives)
-                .set({ image: url })
+                .set({ imageUrl: url })
                 .where(eq(hives.id, createdHive.insertId))
             )
         }
@@ -219,7 +219,7 @@ router.post(
                     googleRefreshToken: true
                 },
                 where: or(
-                    eq(users.role, Role.ADMINISTRATOR),
+                    eq(users.role, UserRoles.ADMINISTRATOR),
                     and(
                         inArray(
                             users.id, 
@@ -227,7 +227,7 @@ router.post(
                                 .from(userApiaryAccess)
                                 .where(eq(userApiaryAccess.apiaryId, apiaryId))
                         ),
-                        eq(users.role, Role.APIARY_MAINTAINER)
+                        eq(users.role, UserRoles.APIARY_MAINTAINER)
                     )
                 )   
             })
@@ -264,7 +264,7 @@ router.post(
 })
 
 // delete hive
-router.post('/delete', requireRole([Role.ANY]), upload.none(), async (req: Request<{},{},{
+router.post('/delete', requireRole([UserRoles.ANY]), upload.none(), async (req: Request<{},{},{
     id: string
 }>, res: Response) => {
     console.log("# Delete hive");
@@ -286,7 +286,7 @@ router.post('/delete', requireRole([Role.ANY]), upload.none(), async (req: Reque
     }
 })
 
-router.post('/calendar/create', requireRole([Role.ANY]), attachCalendarClient, async (req: Request<{},{},{
+router.post('/calendar/create', requireRole([UserRoles.ANY]), attachCalendarClient, async (req: Request<{},{},{
     hiveId:       number
     calendarId:   string
     start:        string

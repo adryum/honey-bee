@@ -10,6 +10,7 @@ import { useProfileQuery } from "@/core/composables/useProfile";
 import { useAuthStore } from "@/core/stores/useAuthStore";
 import { storeToRefs } from "pinia";
 import { Role } from "@/core/DatabaseEnums";
+import placeholderImage from '@/assets/images/ProfilePlaceholder.jpg'
 
 const s = useCssModule()
 const router = useRouter()
@@ -55,7 +56,7 @@ function changeTab(tab: ProfileTab) {
             :class="s.topLine"
         >
             <img 
-                :src="user.picture || '@/assets/images/axe.jpg'" alt="Profile Picture" 
+                :src="user.picture || placeholderImage" alt="Profile Picture" 
                 :class="s.img"    
             />
             <div 

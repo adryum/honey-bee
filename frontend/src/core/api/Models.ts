@@ -37,20 +37,21 @@ export type HiveAssignRequestModel = {
     apiaryId: number
 }
 
-export type HiveCreateResponseModel = {
+export type HiveGetModel = {
     id:           number
     name:         string
-    description:  string
-    image:        string
+    imageUrl:        string
     location:     string
     type:         string
+    description:  string
     apiaryId:     number
-    creationDate: string
-    creatorId:    number
-    creatorName:  string
-    creatorImage: string
-    history:      HistoryEntryDB[]
+    creationTimestamp: string
     calendarId:   string
+    user: {
+        id:       number
+        username: string
+        imageUrl: string
+    } | undefined
 }
 
 export type HiveCreateRequestModel = {
@@ -86,14 +87,14 @@ export type NoteCreateModelRequest = {
     hiveId:  number
 }
 
-export type NoteCreateModelResponse = {
-    id:           number
-    title:        string
-    content:      string
-    type:         string
-    userId:       number
-    hiveId:       number
-    creationDate: string
+export type NoteGetModel = {
+    id:                number
+    title:             string
+    content:           string
+    type:              string
+    userId:            number
+    hiveId:            number
+    creationTimestamp: string
 }
 
 export type  NoteUpdateRequestModel = {
@@ -124,75 +125,52 @@ export type HiveCalendarEntryResponseModel = {
     creatorEmail: string
 }
 
-export type WhitelistEntryResponseModel = {
-    id:           number
-    email:        string
-    role:         string
-    status:       number
-    isRegistered: number
+export type WhitelistEntryGetModel = {
+    id:     number
+    email:  string
+    role:   string
+    status: boolean
+    userId: number
 }
-export type UpdateWhitelistEntryRequestModel = {
+
+export type WhitelistEntryUpdateModel = {
     id:        number
     email:     string
     role:      Role
     isEnabled: boolean
 }
-export type UpdateUserEntryRequestModel = {
+
+export type WhitelistEntryCreateModel = {
+    email:     string
+    role:      string
+    isEnabled: boolean
+}
+export type UserEntryUpdateModel = {
     id:            number
     email:         string
     role:          Role
     isWhitelisted: boolean
 }
-export type UserEntryResponseModel = {
-    id:            number
-    email:         string
-    role:          Role
-    isWhitelisted: number
+export type UserEntryGetModel = {
+    id:              number
+    email:           string
+    role:            Role
+    whitelistStatus: boolean | null
 }
 
 export type UpdateWhitelistEntryResponseModel = {
-    whitelistEntry: WhitelistEntryResponseModel
-    userEntry:      UserEntryResponseModel
-}
-export type AddToWhitelistRequestModel = {
-    email:     string
-    role:      string
-    isEnabled: boolean
+    whitelistEntry: WhitelistEntryGetModel
+    userEntry:      UserEntryGetModel
 }
 
-
-export type UpdateApiaryAccessRequestModel = {
-    userId:     number
-    apiaryId:   number
-    giveAccess: boolean
-}
-
-
-export type UpdateApiaryAccessResponseModel = {
-    userId:    number
-    apiaryId:  number
-    hasAccess: boolean
-}
-
-export type UpdateHiveAccessRequestModel = {
-    userId:   number
-    hiveId:   number
-    giveAccess: boolean
-}
-
-export type UpdateHiveAccessResponseModel = {
-    userId:   number
-    hiveId:   number
-    hasAccess: boolean
-}
-
-export type ApiaryAccessResponseModel = {
+export type ApiaryAccessGetModel = {
+    userId: number
     apiaryId: number
 }
-export type HiveAccessResponseModel = {
+export type HiveAccessGetModel = {
+    userId: number
     hiveId: number
 }
-
 
 export type InspectionCreateRequestModel = {
     apiaryId: number;
@@ -384,4 +362,14 @@ export type HiveYieldGetModel = {
     inspectionId: 96,
     createdAt: '2026-04-07 12:42:56',
     hive: { id: 81, name: 'sad' }
+}
+
+export type HiveAccessModifyModel = {
+    userId: number
+    hiveId: number
+}
+
+export type ApiaryAccessModifyModel = {
+    userId:   number
+    apiaryId: number
 }

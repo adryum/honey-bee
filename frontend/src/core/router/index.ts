@@ -1,6 +1,6 @@
 import { createRouter, createWebHistory } from 'vue-router'
-import { useAuthenticationApiStore } from '../network/AuthenticationApiStore'
-import type { ApiaryTab, HiveTab, ProfileTab } from '../ViewTabEnums';
+import type { AdminTab, ApiaryTab, HiveTab, ProfileTab } from '../ViewTabEnums';
+import { useAuthStore } from '../stores/useAuthStore';
 
 export enum RouterViewPaths {
     Home           = '/',
@@ -17,11 +17,11 @@ export enum RouterViewPaths {
 }
 
 const router = createRouter({
-  history: createWebHistory(import.meta.env.BASE_URL),
+  history: createWebHistory("/"),
   routes: [
     {
-        path: RouterViewPaths.Home,
-        name: RouterViewPaths.Home,
+        path: '/',
+        name: '/',
         component: () => import('@/ui/views/CalendarView.vue'), 
         // component: () => import('@/ui/views/InspectionsView.vue'),
     },
@@ -40,8 +40,8 @@ const router = createRouter({
         })
     },
     {
-        path: RouterViewPaths.Apiaries,
-        name: RouterViewPaths.Apiaries,
+        path: "/apiaries",
+        name: "/apiaries",
         component: () => import('@/ui/views/ApiariesView.vue')
     },
     {
@@ -80,9 +80,12 @@ const router = createRouter({
         component: () => import('@/ui/views/CalendarView.vue'), 
     },
     {
-        path: RouterViewPaths.Admin,
+        path: "/admin/:tab",
         name: RouterViewPaths.Admin,
-        component: () => import('@/ui/views/AdminView.vue')
+        component: () => import('@/ui/views/AdminView.vue'),
+        props: (route) => ({
+            tab: route.params.tab as AdminTab
+        })
     },
     {
         path: "/profile/:userId/:tab",
@@ -105,12 +108,16 @@ const router = createRouter({
 })
 
 router.beforeEach(async (to, from) => {
-    console.log("Routing to: ", to.fullPath);
+    const store = useAuthStore()
+    await store.checkSession()
 
-    if (to.name !== RouterViewPaths.Registration) {
-        const store = useAuthenticationApiStore()
-        await store.checkSession()
-    } 
+    if (store.user && to.name === RouterViewPaths.Registration) {
+        return { name: RouterViewPaths.Home }
+    }
+
+    if (!store.user && to.name !== RouterViewPaths.Registration) {
+        return { name: RouterViewPaths.Registration }
+    }
 })
 
 export default router

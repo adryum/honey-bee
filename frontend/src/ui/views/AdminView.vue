@@ -4,15 +4,30 @@ import WhitelistFragment from "@/ui/components/admin/WhitelistFragment.vue";
 import UserlistFragment from "../components/admin/UserlistFragment.vue";
 import { AdminTab } from "@/core/ViewTabEnums";
 import { SVG } from "@/assets/svgs/SVGLoader";
-import CreateWhitelistEntryModal from "../components/modals/CreateWhitelistEntryModal.vue";
+import WhitelistEntryCreateModal from "../components/modals/WhitelistEntryCreateModal.vue";
 import type { ModalBaseModel } from "@/core/composables/useModalBase";
-import IconTextButton from "../components/input/buttons/IconTextButton.vue";
 import ToolBar from "../components/ToolBar.vue";
+import { useRouter } from "vue-router";
+import { RouterViewPaths } from "@/core/router";
+import IconTextButton from "../components/input/buttons/IconTextButton.vue";
 
 const s = useCssModule()
-const seletedTab = ref<AdminTab>(AdminTab.Whitelist)
+const props = defineProps<{
+    tab: AdminTab
+}>()
+const router = useRouter()
 const createWhitelistEntry = ref<ModalBaseModel | undefined>()
 
+function changeTab(tab: AdminTab) {
+    console.log("change", tab);
+    
+    router.replace({
+        name: RouterViewPaths.Admin,
+        params: { 
+            tab: tab 
+        }
+    })
+}
 </script>
 
 <template>
@@ -20,27 +35,29 @@ const createWhitelistEntry = ref<ModalBaseModel | undefined>()
     <ToolBar 
         label="Admin panel"
         :tabs="Object.values(AdminTab)" 
-        :selectedTab="seletedTab" 
-        @changeTab="(e) => seletedTab = e"
+        :selectedTab="tab" 
+        @changeTab="changeTab"
     >
-        <IconTextButton
-            v-if="seletedTab === AdminTab.Whitelist"
-            text="Add entry"
-            :icon="SVG.Plus"
-            @click="createWhitelistEntry?.open()"
-        />
+        <template #header>
+            <IconTextButton
+                v-if="tab === AdminTab.Whitelist"
+                text="Add entry"
+                :icon="SVG.Plus"
+                @click="createWhitelistEntry?.open()"
+            />
+        </template>
     </ToolBar>
 
     <WhitelistFragment
-        v-if="seletedTab === AdminTab.Whitelist"
+        v-if="tab === AdminTab.Whitelist"
     />
 
     <UserlistFragment
-        v-if="seletedTab === AdminTab.Users"
+        v-if="tab === AdminTab.Users"
     />
 
 
-    <CreateWhitelistEntryModal
+    <WhitelistEntryCreateModal
         ref="createWhitelistEntry"
     />
 </div>

@@ -1,6 +1,6 @@
 import axios from "axios"
 import { ApiaryCreateResponse_to_ApiaryModelDB, HiveCreateResponse_to_HiveModelDB } from "../Convertors";
-import type { ApiaryGetModel, ApiaryCreateRequestModel, HiveAssignRequestModel, HiveAssignGetModel, HiveCreateResponseModel, HiveYieldGetModel } from "./Models";
+import type { ApiaryGetModel, ApiaryCreateRequestModel, HiveAssignRequestModel, HiveAssignGetModel, HiveGetModel, HiveYieldGetModel } from "./Models";
 import type { ApiaryModelDB, DateRange, HiveModelDB } from "../stores/Models";
 
 export const apiaryApi = {
@@ -29,7 +29,7 @@ export const apiaryApi = {
     },
 
     getApiaryHives: async (apiaryId: number): Promise<HiveModelDB[]> => {
-        const { data } = await axios.get<HiveCreateResponseModel[]>(`/apiary/${apiaryId}/hives`)
+        const { data } = await axios.get<HiveGetModel[]>(`/apiary/${apiaryId}/hives`)
         return data.map(HiveCreateResponse_to_HiveModelDB)
     },
 

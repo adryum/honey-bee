@@ -2,13 +2,13 @@ import type { HiveModelDB } from "../stores/Models";
 import axios from "axios"
 import { HiveCreateResponse_to_HiveModelDB } from "../Convertors";
 import { isValidValue } from "../utils/others";
-import type { HiveCreateResponseModel, HiveCreateRequestModel, HiveUpdateRequestModel, HiveHistoryCreateModel, HiveHistoryGetModel } from "./Models";
+import type { HiveGetModel, HiveCreateRequestModel, HiveUpdateRequestModel, HiveHistoryCreateModel, HiveHistoryGetModel } from "./Models";
 
 export const hiveApi = {
     getHives: async (
         apiaryId: number | undefined
     ) => {
-        const { data } = await axios.get<HiveCreateResponseModel[]>("/hive", {
+        const { data } = await axios.get<HiveGetModel[]>("/hive", {
             params: {
                 apiaryId: apiaryId
             }
@@ -19,7 +19,7 @@ export const hiveApi = {
     getHive: async (
         id: number
     ) => {
-        const { data } = await axios.get<HiveCreateResponseModel>(`/hive/${id}`)
+        const { data } = await axios.get<HiveGetModel>(`/hive/${id}`)
         return HiveCreateResponse_to_HiveModelDB(data)
     },
 
@@ -33,7 +33,7 @@ export const hiveApi = {
         if (isValidValue(model.apiaryId)) formData.append("apiaryId", model.apiaryId.toString())
         if (model.image) formData.append("image", model.image)
 
-        const result = await axios.post<HiveCreateResponseModel>("/hive/create", formData)
+        const result = await axios.post<HiveGetModel>("/hive/create", formData)
         
         return HiveCreateResponse_to_HiveModelDB(result.data)
     },
@@ -49,7 +49,7 @@ export const hiveApi = {
         formData.append("apiaryId", isValidValue(model.apiaryId) ? model.apiaryId!.toString() : "") 
         if (model.image) formData.append("image", model.image)
 
-        const result = await axios.post<HiveCreateResponseModel>("/hive/update", formData)
+        const result = await axios.post<HiveGetModel>("/hive/update", formData)
         
         return HiveCreateResponse_to_HiveModelDB(result.data)
     },

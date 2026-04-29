@@ -1,5 +1,5 @@
 import { createClient, RedisClientType } from "redis";
-import { Role, String_to_Role } from "../DatabaseEnums";
+import { UserRoles, String_to_Role } from "../DatabaseEnums";
 import type { Application, Request } from "express";
 import session from "express-session";
 import { RedisStore } from "connect-redis";
@@ -54,9 +54,9 @@ export async function connectRedis(app: Application) {
 export type UserAuthenticationModel = {
     req:   Request
     id?:   number
-    role?: Role
+    role?: UserRoles
 }
-export async function authenticateUser(model: UserAuthenticationModel) {
+export async function createSession(model: UserAuthenticationModel) {
     const { id, role, req } = model
 
     if (!isValidValue(id) || !role) {
@@ -90,7 +90,7 @@ export async function authenticateUser(model: UserAuthenticationModel) {
 
 export type UserUpdateModel = {
     id?:   number
-    role?: Role
+    role?: UserRoles
 }
 /**
  * Changes user session data on server and sends a page refresh request to the client.
@@ -119,6 +119,6 @@ export async function updateUserSession(model: UserUpdateModel, event?: ClientEv
 }
 
 
-export async function getSessionUserRole(userId: number): Promise<Role> {
+export async function getSessionUserRole(userId: number): Promise<UserRoles> {
     return String_to_Role(await redisClient.hGet(`user:${userId}`, 'role') ?? "")
 }

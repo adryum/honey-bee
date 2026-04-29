@@ -2,7 +2,7 @@ import { calendar_v3, google } from 'googleapis'
 import { JWT } from 'google-auth-library'
 import { requireEnv, withStatus } from '../../utils';
 import { CalendarEntryModel, CreateCalendarEventModel, UpdateCalendarEventModel } from './Models';
-import { Role, Role_to_GoogleCalendarRole } from '../../DatabaseEnums';
+import { UserRoles, Role_to_GoogleCalendarRole } from '../../DatabaseEnums';
 
 const GOOGLE_CLIENT_ID     = requireEnv('GOOGLE_CLIENT_ID')
 const GOOGLE_CLIENT_SECRET = requireEnv('GOOGLE_CLIENT_SECRET')
@@ -201,7 +201,7 @@ export function useCalendar() {
         calendarId:        string,
         userEmail:         string,
         userRefreshToken:  string,
-        role:              Role
+        role:              UserRoles
     }): Promise<void> {
         const googleRole = Role_to_GoogleCalendarRole(role)
         

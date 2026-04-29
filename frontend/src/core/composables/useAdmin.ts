@@ -38,14 +38,26 @@ export const useAdminMutations = () => {
     const { mutate: getApiaryAccess, isPending: isGettingApiaryAccess } = useMutation({
         mutationFn: adminApi.getApiaryAccess,
         onSuccess: (access) => {
-
+            createPopupAction({
+                label: "Got apiary access!",
+                type:  ActionType.Success
+            })
+        },
+        onError: (error) => {
+            createPopupAction({
+                label: "Failed to get apiary access!",
+                type:  ActionType.Error
+            })
         }
     })
 
     const { mutate: getHiveAccess, isPending: isGettingHiveAccess } = useMutation({
         mutationFn: adminApi.getHiveAccess,
         onSuccess: (access) => {
-
+            createPopupAction({
+                label: "Got hive access!",
+                type:  ActionType.Success
+            })
         },
         onError: (error) => {
             createPopupAction({
@@ -55,33 +67,65 @@ export const useAdminMutations = () => {
         }
     })
 
-    const { mutate: updateAccessToApiary, isPending: isUpdatingAccessToApiary } = useMutation({
-        mutationFn: adminApi.updateAccessToApiary,
+    const { mutate: grantApiaryAccess, isPending: isGrantingApiaryAccess } = useMutation({
+        mutationFn: adminApi.grantApiaryAccess,
         onSuccess: (access) => {
             createPopupAction({
-                label: "Updated apiary access!",
+                label: "Granted apiary access!",
                 type:  ActionType.Success
             })
         },
         onError: (error) => {
             createPopupAction({
-                label: "Failed to update apiary access!",
+                label: "Failed to grant apiary access!",
                 type:  ActionType.Error
             })
         }
     })
 
-    const { mutate: updateAccessToHive, isPending: isUpdatingAccessToHive } = useMutation({
-        mutationFn: adminApi.updateAccessToHive,
+    const { mutate: grantHiveAccess, isPending: isGrantingHiveAccess } = useMutation({
+        mutationFn: adminApi.grantHiveAccess,
         onSuccess: (access) => {
             createPopupAction({
-                label: "Updated hive access!",
+                label: "Granted hive access!",
                 type:  ActionType.Success
             })
         },
         onError: (error) => {
             createPopupAction({
-                label: "Failed to update hive access!",
+                label: "Failed to grant hive access!",
+                type:  ActionType.Error
+            })
+        }
+    })
+
+    const { mutate: revokeApiaryAccess, isPending: isRevokingApiaryAccess } = useMutation({
+        mutationFn: adminApi.revokeApiaryAccess,
+        onSuccess: (access) => {
+            createPopupAction({
+                label: "Revoked apiary access!",
+                type:  ActionType.Success
+            })
+        },
+        onError: (error) => {
+            createPopupAction({
+                label: "Failed to revoke apiary access!",
+                type:  ActionType.Error
+            })
+        }
+    })
+
+    const { mutate: revokeHiveAccess, isPending: isRevokingHiveAccess } = useMutation({
+        mutationFn: adminApi.revokeHiveAccess,
+        onSuccess: (access) => {
+            createPopupAction({
+                label: "Revoked hive access!",
+                type:  ActionType.Success
+            })
+        },
+        onError: (error) => {
+            createPopupAction({
+                label: "Failed to revoke hive access!",
                 type:  ActionType.Error
             })
         }
@@ -163,18 +207,22 @@ export const useAdminMutations = () => {
     })
 
     return {
+        grantApiaryAccess,
+        grantHiveAccess,
+        revokeApiaryAccess,
+        revokeHiveAccess,
         getApiaryAccess,
         getHiveAccess,
-        updateAccessToApiary,
-        updateAccessToHive,
         updateRegisteredUserEntry,
         updateWhitelistEntry,
         addWhitelistEntry,
         removeWhitelistEntry,
+        isGrantingApiaryAccess,
+        isGrantingHiveAccess,
+        isRevokingApiaryAccess,
+        isRevokingHiveAccess,
         isGettingApiaryAccess,
         isGettingHiveAccess,
-        isUpdatingAccessToApiary,
-        isUpdatingAccessToHive,
         isUpdatingRegisteredUserEntry,
         isUpdatingWhitelistEntry,
         isAddingWhitelistEntry,

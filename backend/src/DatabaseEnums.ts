@@ -1,4 +1,4 @@
-export enum Role {
+export enum UserRoles {
     ADMINISTRATOR     = "ADMINISTRATOR",
     APIARY_MAINTAINER = "APIARY_MAINTAINER",
     MANAGEMENT        = "MANAGEMENT",
@@ -9,22 +9,22 @@ export enum Role {
 
 export function String_to_Role(convertee: string) {
     switch (convertee.toUpperCase()) {
-        case Role.ADMINISTRATOR: return Role.ADMINISTRATOR 
-        case Role.APIARY_MAINTAINER: return Role.APIARY_MAINTAINER
-        case Role.MANAGEMENT: return Role.MANAGEMENT
-        case Role.HIVE_WORKER: return Role.HIVE_WORKER
+        case UserRoles.ADMINISTRATOR: return UserRoles.ADMINISTRATOR 
+        case UserRoles.APIARY_MAINTAINER: return UserRoles.APIARY_MAINTAINER
+        case UserRoles.MANAGEMENT: return UserRoles.MANAGEMENT
+        case UserRoles.HIVE_WORKER: return UserRoles.HIVE_WORKER
         default:
             console.error("Failed to convert ROLE: ", convertee);
-            return Role.NOT_A_ROLE
+            return UserRoles.NOT_A_ROLE
     }
 }
 
-export function Role_to_GoogleCalendarRole(role: Role): string {
+export function Role_to_GoogleCalendarRole(role: UserRoles): string {
     switch (role) {
-        case Role.ADMINISTRATOR: return 'writer'
-        case Role.APIARY_MAINTAINER: return  'writer'
-        case Role.MANAGEMENT: return 'reader'
-        case Role.HIVE_WORKER: return 'reader'
+        case UserRoles.ADMINISTRATOR: return 'writer'
+        case UserRoles.APIARY_MAINTAINER: return  'writer'
+        case UserRoles.MANAGEMENT: return 'reader'
+        case UserRoles.HIVE_WORKER: return 'reader'
         default:
             console.error("Failed to convert ROLE: ", role);
             return ""
@@ -33,8 +33,7 @@ export function Role_to_GoogleCalendarRole(role: Role): string {
 
 export enum NoteTypes {
     WARNING       = "WARNING",
-    INFORMATIONAL = "INFORMATIONAL",
-    NOT_A_TYPE    = "NOT_A_TYPE"
+    INFORMATIONAL = "INFORMATIONAL"
 }
 
 export enum HiveType {

@@ -10,10 +10,12 @@ import VueApexCharts from "vue3-apexcharts";
 import "@/core/prototype_extensions/StringExtensions"
 import "@/core/prototype_extensions/Array"
 import { QueryClient, VueQueryPlugin } from '@tanstack/vue-query'
+import { useAuthStore } from './core/stores/useAuthStore'
 
-axios.defaults.baseURL = import.meta.env.VITE_API;
-axios.defaults.withCredentials = true;
+console.log('window location:', window.location.pathname)
 
+axios.defaults.baseURL = import.meta.env.VITE_API
+axios.defaults.withCredentials = true
 
 const queryClient = new QueryClient({
     defaultOptions: {
@@ -26,17 +28,13 @@ const queryClient = new QueryClient({
     }
 })
 
-const app = createApp(App)
-const pinia = createPinia()
+const app       = createApp(App)
+const pinia     = createPinia()
 
 app.use(VueApexCharts);
 app.component('ApexChart', VueApexCharts);
-
 app.use(pinia)
-app.use(router)
 app.use(i18n)
-
 app.use(VueQueryPlugin, { queryClient })
-
+app.use(router)
 app.mount('#app')
-router.push(RouterViewPaths.Registration)

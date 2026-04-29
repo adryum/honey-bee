@@ -1,5 +1,5 @@
 import { String_to_HiveType, String_to_NoteTypes, String_to_Role } from "./DatabaseEnums";
-import type { ApiaryAccessResponseModel, ApiaryGetModel, ApiaryHistoryGetModel, CalendarEventGetModel, HiveAccessResponseModel, HiveCreateResponseModel, HiveHistoryGetModel, HiveYieldGetModel, InspectionCreateRequestModel, InspectionEntryGetModel, InspectionReviewGetModel, NoteCreateModelResponse, QueenGetModel, SpeciesGetModel, UserEntryResponseModel, UserProfileResponseModel, WhitelistEntryResponseModel } from "./api/Models";
+import type { ApiaryAccessGetModel, ApiaryGetModel, ApiaryHistoryGetModel, CalendarEventGetModel, HiveAccessGetModel, HiveGetModel, HiveHistoryGetModel, HiveYieldGetModel, InspectionCreateRequestModel, InspectionEntryGetModel, InspectionReviewGetModel, NoteGetModel, QueenGetModel, SpeciesGetModel, UserEntryGetModel, UserProfileResponseModel, WhitelistEntryGetModel } from "./api/Models";
 import type { ApiaryModelDB, QueenModelDB, CalendarEventDB, HistoryEntryDB, HiveModelDB, InspectionDB, InspectionFormDB, InspectionFormUI, InspectionEntryModelDB, NoteModelDB, UserEntryModelDB, UserModelDB, WhitelistEntryModelDB, SpeciesModelDB, LineGraphLineModel } from "./stores/Models";
 import { getAge } from "./utils/Utils";
 
@@ -18,26 +18,24 @@ export function ApiaryCreateResponse_to_ApiaryModelDB(
 }
 
 export function HiveCreateResponse_to_HiveModelDB(
-    convertee: HiveCreateResponseModel
+    convertee: HiveGetModel
 ): HiveModelDB {
     return {
-        id:           convertee.id,
-        name:         convertee.name,
-        description:  convertee.description,
-        image:        convertee.image,
-        location:     convertee.location,
-        type:         String_to_HiveType(convertee.type),
-        apiaryId:     convertee.apiaryId,
-        creationDate: new Date(convertee.creationDate),
-        creatorId:    convertee.creatorId,
-        creatorName:  convertee.creatorName,
-        creatorImage: convertee.creatorImage,
-        calendarId:   convertee.calendarId,
+        id:                    convertee.id,
+        name:                  convertee.name,
+        description:           convertee.description,
+        imageUrl:              convertee.imageUrl,
+        location:              convertee.location,
+        type:                  String_to_HiveType(convertee.type),
+        apiaryId:              convertee.apiaryId,
+        calendarId:            convertee.calendarId,
+        creationTimestampDate: new Date(convertee.creationTimestamp),
+        user:                  convertee.user,
     }
 }
 
 export function NoteCreateModelResponse_to_NoteModelDB(
-    convertee: NoteCreateModelResponse
+    convertee: NoteGetModel
 ): NoteModelDB {
     return {
         id:           convertee.id,
@@ -46,30 +44,30 @@ export function NoteCreateModelResponse_to_NoteModelDB(
         type:         String_to_NoteTypes(convertee.type),
         userId:       convertee.userId,
         hiveId:       convertee.hiveId,
-        creationDate: convertee.creationDate
+        creationDate: convertee.creationTimestamp
     }
 }
 
 export function WhitelistEntryResponseModel_To_WhitelistEntryDB(
-    convertee: WhitelistEntryResponseModel
+    convertee: WhitelistEntryGetModel
 ): WhitelistEntryModelDB {
     return {
         id:           convertee.id,
         email:        convertee.email,
         role:         String_to_Role(convertee.role),
-        isRegistered: Boolean(convertee.isRegistered),
-        isEnabled:    Boolean(convertee.status)
+        isRegistered: !!convertee.userId,
+        isEnabled:    convertee.status
     } 
 }
 
-export function UserEntryResponseModel_To_UserEntryModelDB(
-    convertee: UserEntryResponseModel
+export function UserEntryGetModel_To_UserEntryModelDB(
+    convertee: UserEntryGetModel
 ): UserEntryModelDB {
     return {
         id:            convertee.id,
         email:         convertee.email,
         role:          convertee.role,
-        isWhitelisted: Boolean(convertee.isWhitelisted)
+        isWhitelisted: !!convertee.whitelistStatus
     }
 }
 
@@ -86,19 +84,16 @@ export function UserProfileResponseModel_To_UserProfileModelDB(
 }
 
 export function ApiaryAccessResponseModel_To_Number(
-    convertee: ApiaryAccessResponseModel
+    convertee: ApiaryAccessGetModel
 ) {
     return convertee.apiaryId
 }
 
 export function HiveAccessResponseModel_To_Number(
-    convertee: HiveAccessResponseModel
+    convertee: HiveAccessGetModel
 ) {
     return convertee.hiveId
 }
-
-
-
 
 export function InspectionReviewResponseModel_To_InspectionFormDB(
     convertee: InspectionReviewGetModel

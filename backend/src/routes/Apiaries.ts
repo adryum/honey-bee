@@ -5,16 +5,16 @@ import { uploadImage } from "../config/image_cloud/Cloudinary";
 import { PublicIdBuilder } from "../config/image_cloud/PublicIdBuilder";
 import { upload } from "../config/Multer";
 import { requireRole } from "../Middleware";
-import { Role } from "../DatabaseEnums";
+import { UserRoles } from "../DatabaseEnums";
 import { getSessionUserRole } from "../config/RedisClient";
 import { and, eq, getTableColumns, inArray, gte, lte } from "drizzle-orm";
-import { userHiveAccess, hives, userApiaryAccess, apiaries, hiveHoneyProduction } from "../db/schema";
+import { userHiveAccess, hives, userApiaryAccess, apiaries, hiveHoneyYield } from "../db/schema";
 import { isValidValue, withStatus } from "../utils";
 import { count } from "drizzle-orm";
 
 const router = Router()
 
-router.get('/', requireRole([Role.ANY]), async (
+router.get('/', requireRole([UserRoles.ANY]), async (
     req: Request<{},{},{}>, 
     res: Response
 ) => {
@@ -23,11 +23,11 @@ router.get('/', requireRole([Role.ANY]), async (
     const role   = await getSessionUserRole(userId)
 
     try {
-        console.log("Getting apiaries you have access to...");
+        console.log("Getting apiaries you have access to " + role);
 
         var apiariesResult
         switch (role) {
-            case Role.ADMINISTRATOR:
+            case UserRoles.ADMINISTRATOR:
                 apiariesResult = await db
                     .select({
                         ...getTableColumns(apiaries),
@@ -36,6 +36,7 @@ router.get('/', requireRole([Role.ANY]), async (
                     .from(apiaries)
                     .leftJoin(hives, eq(hives.apiaryId, apiaries.id))
                     .groupBy(apiaries.id)
+                break
             default:
                 const apiaryAccess = await db.query.userApiaryAccess.findMany({
                     where: eq(userApiaryAccess.userId, userId)
@@ -62,7 +63,7 @@ router.get('/', requireRole([Role.ANY]), async (
 
 router.get(
     "/:id", 
-    requireRole([Role.ANY]), 
+    requireRole([UserRoles.ANY]), 
     async (
         req: Request<{ id: string }>, 
         res: Response
@@ -76,7 +77,7 @@ router.get(
         console.log("Checking if user has access to apiary...");
         var hasAccess = true
 
-        if (role !== Role.ADMINISTRATOR) {
+        if (role !== UserRoles.ADMINISTRATOR) {
             const accessQuery = await db.query.userApiaryAccess.findFirst({
                 where: and(
                     eq(userApiaryAccess.userId, reqUserId), 
@@ -104,7 +105,7 @@ router.get(
 
 router.get(
     "/:id/hives",
-    requireRole([Role.ANY]),
+    requireRole([UserRoles.ANY]),
     async (
         req: Request<{ id: string }>, 
         res: Response
@@ -119,7 +120,7 @@ router.get(
 
         var hivesResult
         switch (role) {
-            case Role.ADMINISTRATOR:
+            case UserRoles.ADMINISTRATOR:
                 hivesResult = await db.query.hives.findMany({
                     where: eq(hives.apiaryId, apiaryId)
                 });
@@ -199,7 +200,7 @@ router.post('/', upload.single("image"), async (req: Request<{},{},{
 // creates apiary
 router.post(
     "/assignHive", 
-    requireRole([Role.ADMINISTRATOR, Role.APIARY_MAINTAINER]),
+    requireRole([UserRoles.ADMINISTRATOR, UserRoles.APIARY_MAINTAINER]),
     async (
         req: Request<{},{},{
             hiveId:   number
@@ -276,7 +277,7 @@ router.post(
 
 router.get(
     "/:id/yields",
-    requireRole([Role.ANY]),
+    requireRole([UserRoles.ANY]),
     async (
         req: Request<{ id: string }, {}, {}, {
             fromISO: string
@@ -303,7 +304,7 @@ router.get(
         )
 
         const yieldsGetResult = await withStatus("Getting yields",
-            () => db.query.hiveHoneyProduction.findMany({
+            () => db.query.hiveHoneyYield.findMany({
                 columns: {
                     hiveId: false
                 },
@@ -316,9 +317,9 @@ router.get(
                     }
                 },
                 where: and(
-                    inArray(hiveHoneyProduction.hiveId, hivesResult.map(item => item.id)),
-                    gte(hiveHoneyProduction.createdAt, fromDate),
-                    lte(hiveHoneyProduction.createdAt, toDate)
+                    inArray(hiveHoneyYield.hiveId, hivesResult.map(item => item.id)),
+                    gte(hiveHoneyYield.creationTimestamp, fromDate),
+                    lte(hiveHoneyYield.creationTimestamp, toDate)
                 )
             })
         )

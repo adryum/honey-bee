@@ -17,7 +17,7 @@ const props = defineProps<{
 const isEditingRow = ref(false)
 
 const editableEntry = reactive<WhitelistEntryModelDB>({ ...props.entry })
-const { updateWhitelistEntry } = useAdminMutations()
+const { updateWhitelistEntry, removeWhitelistEntry } = useAdminMutations()
 
 function save() {
     updateWhitelistEntry({
@@ -43,7 +43,8 @@ function cancel() {
 <tr 
     :class="[
         s.row,
-        isEditingRow && s.edited
+        isEditingRow && s.edited,
+        entry.isRegistered && s.registered
     ]"
     :style="(orderNumber + 1) % 2 === 0 && { filter: 'brightness(98%)' }"
     :key="entry.id"
@@ -161,6 +162,11 @@ function cancel() {
         >
             <!-- <p>Cancel</p> -->
         </IconCubeButton>
+        <IconCubeButton
+            v-if="isEditingRow"
+            :icon="SVG.Trash"
+            @click="removeWhitelistEntry(entry.id)"
+        />
     </td>
 </tr>
 </template>
@@ -172,6 +178,14 @@ function cancel() {
     letter-spacing: .02em
     font-weight: 400
     color: #444
+
+.registered
+    &::before
+        position: absolute
+        content: ""
+        width: 3px
+        height: 100%
+        background: var(--orange)
 
 .edited
     background: var(--secondary) !important
@@ -189,6 +203,7 @@ function cancel() {
     font-size: var(--font-size-medium)
 
 .row
+    position:    relative
     display:     flex
     align-items: center
     box-sizing:  border-box

@@ -2,7 +2,7 @@
 import { ref, useCssModule, watch } from "vue";
 import ModalBase from "./ModalBase.vue";
 import { Role } from "@/core/DatabaseEnums";
-import type { AddToWhitelistRequestModel } from "@/core/api/Models";
+import type { WhitelistEntryCreateModel } from "@/core/api/Models";
 import { useAdminMutations } from "@/core/composables/useAdmin";
 import { useFormValidator } from "@/core/composables/useFormValidator";
 import { SVG } from "@/assets/svgs/SVGLoader";
@@ -27,7 +27,7 @@ const role = ref<Role | undefined>()
 const isEnabled = ref<boolean>(true)
         
 async function add() {
-    const payload: AddToWhitelistRequestModel  = {
+    const payload: WhitelistEntryCreateModel  = {
         email: email.value,
         role: role.value!,
         isEnabled: isEnabled.value
@@ -53,6 +53,7 @@ watch(() => exposed.isOpen(), (val) => {
         <div :class="s.body">
             <div :class="s.fields">
                 <StringField
+                    :class="s.email"
                     label="Email"
                     :selection="email"
                     :validee="getFormValidee({
@@ -64,6 +65,7 @@ watch(() => exposed.isOpen(), (val) => {
                 />
 
                 <ModularDropdown
+                    :class="s.role"
                     :teleport-target-id="modal?.id"
                 >
                     <template #head="{ dropdown }">
@@ -76,6 +78,7 @@ watch(() => exposed.isOpen(), (val) => {
                                 onClear: () => role = undefined,
                                 onInitialize: () => role = undefined
                             })"
+                            @input="value => role = value as Role"
                             @click="dropdown.isShown.value = true"
                         />
                     </template>
@@ -95,7 +98,7 @@ watch(() => exposed.isOpen(), (val) => {
             <IconTextButton 
                 text="Add"
                 :disabled="!isFormValid" 
-                :icon="SVG.Plus"
+                :hide-icon="true"
                 :is-submit="true"
                 :is-aligned-center="true"
                 @click="add"

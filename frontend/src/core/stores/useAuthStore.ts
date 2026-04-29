@@ -1,37 +1,46 @@
 import { defineStore } from "pinia";
 import { ref } from "vue";
 import type { UserModelDB } from "./Models";
-import router, { RouterViewPaths } from "../router";
 import { startSocket } from "../composables/useSocket";
 import { authApi } from "../api/AuthApi";
 import { useMutation } from "@tanstack/vue-query";
 import { profileApi } from "../api/ProfileApi";
+import { useRouter } from "vue-router";
+import { RouterViewPaths } from "../router";
 
 export const useAuthStore = defineStore("auth store", () => {
+    const router = useRouter()
     const user = ref<UserModelDB | undefined>(undefined)
+    let sessionChecked = false
 
     // socket setup
     startSocket(user)
 
     const { mutate: authenticate, isPending: isAuthenticating } = useMutation({
         mutationFn: profileApi.getMe,
-        onSuccess:  (userModel) => {
+        onSuccess: (userModel) => {
             user.value = userModel
-            router.push(RouterViewPaths.Home)
         }
     })
 
-    const { mutate: checkSession, isPending: isCheckingSession } = useMutation({
-        mutationFn: authApi.checkSession,
-        onError: () => {
+    async function checkSession() {
+        if (sessionChecked) return
+
+        try {
+            await authApi.checkSession()
+            user.value = await profileApi.getMe()
+        } catch {
             user.value = undefined
-            router.push(RouterViewPaths.Registration)
+        } finally {
+            sessionChecked = true
         }
-    })
+    }
 
     const logout = async () => {
-        await authApi.logout()
+        router.push(RouterViewPaths.Registration)
         user.value = undefined
+        sessionChecked = false
+        await authApi.logout()
     }
 
     return {
@@ -39,7 +48,6 @@ export const useAuthStore = defineStore("auth store", () => {
         authenticate,
         isAuthenticating,
         checkSession,
-        isCheckingSession,
         logout
     }
 })

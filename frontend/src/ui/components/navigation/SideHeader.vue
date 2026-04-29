@@ -5,7 +5,7 @@ import { motion, type VariantType } from "motion-v"
 import { RouterViewPaths } from "@/core/router";
 import { IconType, SVG } from "@/assets/svgs/SVGLoader";
 import Icon from "../Icon.vue";
-import { useRouter } from "vue-router";
+import { useRoute, useRouter } from "vue-router";
 
 const s = useCssModule()
 const [isExtended, toggleExtension] = useToggle() 
@@ -40,7 +40,10 @@ const tabs: Tab[] = [
     },
   
 ]
-const selectedTab = ref(tabs[0])
+const route = useRoute()
+const selectedTab = computed(() => 
+    tabs.find(tab => tab.pagePath === route.path)
+)
 
 const containerVariants: Record<string, VariantType> = {
     expanded: { minWidth: '15rem' },
@@ -54,82 +57,81 @@ const tabVariants: Record<string, VariantType> = {
 
 function onTabSelect(tab: Tab) {
     router.push(tab.pagePath)
-    
-    selectedTab.value = tab
 }
 
 onMounted(() => {
-    onTabSelect(tabs[0])
+    // onTabSelect(tabs[0])
 })
 
 </script>
 <template>
-  <motion.div
-    :class="s.container"
-    :variants="containerVariants"
-    :animate="isExtended ? 'expanded' : 'collapsed'"
-  >
-    
+    <motion.div
+        :class="s.container"
+        :variants="containerVariants"
+        :animate="isExtended ? 'expanded' : 'collapsed'"
+    >
+        <ul :class="s.list">
+            <motion.li
+                v-for="(tab, i) in tabs"
+                id="icon"
+                :key="i"  
+                :class="s.tab"
+                :while-press="{ scale: 0.9, transition: { duration: 0.1 } }"
+                @click="onTabSelect(tab); "
+                >
+                <div :class="s.iconWrapper">
+                    <Icon 
+                        :class="[
+                            s.icon, 
+                            selectedTab?.name === tab.name && s.selected
+                        ]" 
+                        :type="IconType.MEDIUM" 
+                        :icon="tab.svg"
+                    />
+                </div>
 
-    <ul :class="s.list">
-        <motion.li
-            v-for="(tab, i) in tabs"
-            id="icon"
-            :key="i"  
-            :class="s.tab"
-            :while-press="{ scale: 0.9, transition: { duration: 0.1 } }"
-            @click="onTabSelect(tab); "
-            >
-            <div :class="s.iconWrapper">
-                <Icon 
-                    :class="[s.icon, selectedTab.name === tab.name && s.selected]" 
-                    :type="IconType.MEDIUM" 
-                    :icon="tab.svg"
-                />
-            </div>
-
-            <motion.label
-                for="icon"
-                :class="[
-                    s.text, 
-                    'button-text',
-                    selectedTab.name === tab.name && s.selected
-                ]"
-                :variants="tabVariants"
-                :initial="'collapsed'"
-                :animate="isExtended ? 'expanded' : 'collapsed'"
-            >
-            {{ tab.name }}
-            </motion.label>
-
-            <motion.div
-            v-if="selectedTab.name === tab.name"
-            :class="s.selectedBookmark"
-            layoutId="selected"
-            :transition="{ duration: 0.4, ease: [0, 0.71, 0.2, 1.01], type: 'spring' }"
-            />
-        </motion.li>
-
-        <button :class="s.extender"  @click="toggleExtension()">
-            <div :class="s.iconWrapper">
-                <Icon 
+                <motion.label
+                    for="icon"
                     :class="[
-                        s.extenderIcon, 
-                        isExtended && s.open
-                    ]" 
-                    :type="IconType.SMALL" 
-                    :icon="SVG.DropdownArrow"
+                        s.text, 
+                        'button-text',
+                        selectedTab?.name === tab.name && s.selected
+                    ]"
+                    :variants="tabVariants"
+                    :initial="'collapsed'"
+                    :animate="isExtended ? 'expanded' : 'collapsed'"
+                >
+                {{ tab.name }}
+                </motion.label>
+
+                <motion.div
+                v-if="selectedTab?.name === tab.name"
+                :class="s.selectedBookmark"
+                layoutId="selected"
+                :transition="{ duration: 0.4, ease: [0, 0.71, 0.2, 1.01], type: 'spring' }"
                 />
-            </div>
-            <p
-                :class="[
-                    s.text,
-                    isExtended && s.open
-                ]"
-            >{{ isExtended ? "Close" : "" }}</p>
-        </button>
-    </ul>
-  </motion.div>
+            </motion.li>
+
+            <button :class="s.extender"  @click="toggleExtension()">
+                <div :class="s.iconWrapper">
+                    <Icon 
+                        :class="[
+                            s.extenderIcon, 
+                            isExtended && s.open
+                        ]" 
+                        :type="IconType.SMALL" 
+                        :icon="SVG.DropdownArrow"
+                    />
+                </div>
+                <p
+                    :class="[
+                        s.text,
+                        isExtended && s.open
+                    ]"
+                >{{ isExtended ? "Close" : "" }}</p>
+            </button>
+        </ul>
+    </motion.div>
 </template>
 
 <style module lang='sass'>

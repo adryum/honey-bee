@@ -1,5 +1,5 @@
 <script setup lang="ts">
-import { computed, onMounted, ref, useCssModule } from "vue";
+import { computed, onMounted, ref, useCssModule, watch } from "vue";
 import Apiary from "../apiary/Apiary.vue";
 import { isValidValue, useFlexibleGrid } from "@/core/utils/others";
 import type { ApiaryModelDB, HiveModelDB } from "@/core/stores/Models";
@@ -7,55 +7,31 @@ import { useProfileQuery } from "@/core/composables/useProfile";
 import { useAdminMutations } from "@/core/composables/useAdmin";
 import { useApiariesQuery, useApiaryQuery } from "@/core/composables/useApiary";
 import Hive from "../hive/Hive.vue";
-import { SVG } from "@/assets/svgs/SVGLoader";
-import IconCubeButton from "../input/buttons/IconCubeButton.vue";
+import ToolBar from "../ToolBar.vue";
 
 const s = useCssModule()
 const props = defineProps<{
     userId: number
 }>()
-const openedApiaryId = ref<number | undefined>(undefined)
 
+const openedApiary = ref<ApiaryModelDB | undefined>(undefined)
 const { user, isLoading, isError } = useProfileQuery(props.userId)
-const { getApiaryAccess, getHiveAccess, updateAccessToApiary, updateAccessToHive } = useAdminMutations()
+const { 
+    grantApiaryAccess,
+    grantHiveAccess,
+    revokeApiaryAccess,
+    revokeHiveAccess,
+    getApiaryAccess,
+    getHiveAccess
+} = useAdminMutations()
 const { apiaries } = useApiariesQuery()
 const { hives } = useApiaryQuery({
-    id: openedApiaryId,
+    id: computed(() => openedApiary.value?.id),
     getApiaryHives: true,
 })
 
 const apiaryAccess = ref<number[]>([])
 const hiveAccess   = ref<number[]>([])
-
-const changingApiaryAccess: Record<number, boolean> = ({})
-const changingHiveAccess:   Record<number, boolean> = ({})
-
-type ApiaryAccessModel = {
-    apiary:           ApiaryModelDB
-    hasAccess:        boolean,
-    isChangingAccess: boolean
-}
-
-type HiveAccessModel = {
-    hive:             HiveModelDB
-    hasAccess:        boolean,
-    isChangingAccess: boolean
-}
-
-const showedApiariesModelUI = computed<ApiaryAccessModel[]>(() => {
-    return apiaries.value?.map(apiary => ({
-        apiary:           apiary,
-        hasAccess:        !!apiaryAccess.value.includes(apiary.id),
-        isChangingAccess: changingApiaryAccess[apiary.id] ?? false
-    })) ?? []
-})
-const showedHivesModelUI = computed<HiveAccessModel[]>(() => {
-    return hives.value?.map(hive => ({
-        hive:             hive,
-        hasAccess:        !!hiveAccess.value.includes(hive.id),
-        isChangingAccess: changingHiveAccess[hive.id] ?? false
-    })) ?? []
-})
 
 const grid1 = ref()
 const { style: gridStyle1} = useFlexibleGrid({ 
@@ -70,132 +46,147 @@ const { style: gridStyle2 } = useFlexibleGrid({
     gapPx:          10
 })
 
-function openApiary(apiaryId: number ) {
-    openedApiaryId.value = apiaryId
+function openApiary(apiary: ApiaryModelDB) {
+    openedApiary.value = apiary
 }
 
 function closeApiary() {
-    openedApiaryId.value = undefined
+    openedApiary.value = undefined
 }
 
-async function toggleApiaryAccess(model: ApiaryAccessModel) {
+async function toggleApiaryAccess(apiary: ApiaryModelDB) {
     const userId = user.value?.id
-    if (!isValidValue(userId) || changingApiaryAccess[model.apiary.id]) return
+    if (!isValidValue(userId)) return
 
-    const { apiary, hasAccess } = model
-    changingApiaryAccess[apiary.id] = true
-
-    updateAccessToApiary({
-        userId:     userId!,
-        apiaryId:   apiary.id,
-        giveAccess: !hasAccess
-    }, {
-        onSuccess: () => {
-            if (!hasAccess) apiaryAccess.value.push(model.apiary.id)
-            else apiaryAccess.value = apiaryAccess.value.filter(id => id !== model.apiary.id)
-        },
-        onSettled: () => {
-            changingApiaryAccess[model.apiary.id] = false
-        }
-    })
+    if (apiaryAccess.value.includes(apiary.id)) {
+        // revoke
+        revokeApiaryAccess({
+            userId:   userId,
+            apiaryId: apiary.id
+        }, {
+            onSuccess: () => {
+                apiaryAccess.value = apiaryAccess.value.filter(id => id !== apiary.id)
+            }
+        })
+    } else {
+        // grant
+        grantApiaryAccess({
+            userId:   userId,
+            apiaryId: apiary.id
+        }, {
+            onSuccess: () => {
+                apiaryAccess.value = [...apiaryAccess.value, apiary.id]
+            }
+        })
+    }
 }
 
-async function toggleHiveAccess(model: HiveAccessModel) {
+async function toggleHiveAccess(hive: HiveModelDB) {
     const userId = user.value?.id
-    if (!isValidValue(userId) || changingHiveAccess[model.hive.id]) return
+    if (!isValidValue(userId)) return
     
-    const { hive, hasAccess } = model
-    changingHiveAccess[hive.id] = true
-
-    updateAccessToHive({
-        userId:     userId!,
-        hiveId:     hive.id,
-        giveAccess: !hasAccess
-    }, {
-        onSuccess: () => {
-            if (!hasAccess) hiveAccess.value.push(model.hive.id)
-            else hiveAccess.value = hiveAccess.value.filter(id => id !== model.hive.id)
-        },
-        onSettled: () => {
-            changingHiveAccess[hive.id] = false
-        }
-    })
+    if (hiveAccess.value.includes(hive.id)) {
+        // revoke
+        revokeHiveAccess({
+            userId: userId,
+            hiveId: hive.id
+        }, {
+            onSuccess: () => {
+                hiveAccess.value = hiveAccess.value.filter(id => id !== hive.id)
+            }
+        })
+    } else {
+        // grant
+        grantHiveAccess({
+            userId: userId,
+            hiveId: hive.id
+        }, {
+            onSuccess: () => {
+                hiveAccess.value = [...hiveAccess.value, hive.id]
+            }
+        })
+    }
 }
 
-onMounted(() => {
+function hasApiaryAccessTo(apiary: ApiaryModelDB) {
+    return apiaryAccess.value.includes(apiary.id)
+}
+
+function hasHiveAccessTo(hive: HiveModelDB) {
+    return hiveAccess.value.includes(hive.id)
+}
+
+watch(() => props.userId, newVal => {
+    if (!isValidValue(newVal)) return 
+
     getApiaryAccess(props.userId, {
         onSuccess(access) {
+            console.log("apiary:", access);
             apiaryAccess.value = access
         }
     })
     getHiveAccess(props.userId, {
         onSuccess(access) {
+            console.log("hive:", access);
+            
             hiveAccess.value = access
         }
     })
-})
+}, { immediate: true })
 </script>
 
 <template>
 <div :class="s.container">
-    <div
-        :class="s.top"
-    >
-        <IconCubeButton
-            v-if="openedApiaryId !== undefined"
-            :icon="SVG.ArrowLeftSmall"
-            @click="closeApiary"
-        />
-        <p
-            :class="s.label"
-        >
-            {{ openedApiaryId === undefined ? 'Apiaries' : 'Hives' }}
-        </p>
-    </div>
+    <ToolBar
+        :label="openedApiary === undefined ? 'Apiaries' : `${openedApiary.name} hives`"
+        :show-back-button="isValidValue(openedApiary)"
+        @back="closeApiary"
+    ></ToolBar>
+    
     <div 
-        v-show="openedApiaryId === undefined"
+        v-show="openedApiary === undefined"
         ref="grid1"
         :style="gridStyle1"
         :class="s.grid"
     >
         <Apiary
-            v-for="showedApiary in showedApiariesModelUI"
-            :key="showedApiary.apiary.id"
-            :apiary="showedApiary.apiary"
-            :is-dimmed="!showedApiary.hasAccess"
+            v-for="apiary in apiaries"
+            :key="apiary.id"
+            :apiary="apiary"
+            :is-dimmed="!hasApiaryAccessTo(apiary)"
             :class="s.item"
-            @click="openApiary(showedApiary.apiary.id)"
+            @click="openApiary(apiary)"
         >
             <button 
                 :class="[
                     s.checkbox,
-                    showedApiary.hasAccess ? s.hasAccess : s.noAccess
+                    hasApiaryAccessTo(apiary) ? s.hasAccess : s.noAccess
                 ]"
-                @click.prevent="toggleApiaryAccess(showedApiary)"
+                @click.prevent="toggleApiaryAccess(apiary)"
             ></button>
         </Apiary>
     </div>
 
     <div 
-        v-show="openedApiaryId !== undefined"
+        v-show="openedApiary !== undefined"
         ref="grid2"
         :style="gridStyle2"
         :class="s.grid"
     >
         <Hive
-            v-for="showedHive in showedHivesModelUI"
-            :key="showedHive.hive.id"
-            :hive="showedHive.hive"
-            :is-dimmed="!showedHive.hasAccess"
+            v-for="hive in hives"
+            :key="hive.id"
+            :hive="hive"
+            :is-dimmed="!hasHiveAccessTo(hive)"
             :class="s.item"
         >
             <template #footer>
                 <button 
                     :class="[
                         s.checkbox,
-                        showedHive.hasAccess ? s.hasAccess : s.noAccess
+                        hasHiveAccessTo(hive) ? s.hasAccess : s.noAccess
                     ]"
-                    @click="toggleHiveAccess(showedHive)"
+                    @click="toggleHiveAccess(hive)"
                 ></button>
             </template>
         </Hive>
@@ -226,18 +217,12 @@ onMounted(() => {
     margin: 1rem 0 
 
 .grid
-
     .item
         height: 15rem
 
 .container
-    height: 100%
-
-    background: var(--white)
-    padding: 0 1rem 1rem 1rem 
-
-.top
     display: flex
-    align-items: center
+    flex-direction: column
+    height: 100%
     gap: 1rem
 </style>

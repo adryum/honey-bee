@@ -1,15 +1,15 @@
 import { Router, type Request, type Response } from "express";
-import { Role } from "../DatabaseEnums";
+import { UserRoles } from "../DatabaseEnums";
 import { eq } from "drizzle-orm";
 import { db } from "../config/Database";
-import { hiveHoneyProduction, hiveInspections } from "../db/schema";
 import { requireRole } from "../Middleware";
+import { hiveHoneyYield } from "../db/schema";
 
 const router = Router()
     
 router.post(
     '/create', 
-    requireRole([Role.ANY]), 
+    requireRole([UserRoles.ANY]), 
     async (
         req: Request<{}, {}, {
             hiveId:       number
@@ -23,9 +23,9 @@ router.post(
     
     try {
         console.log(`creating entrys...`);
-        const [insert] = await db.insert(hiveHoneyProduction).values({ hiveId, inspectionId, amount });
-        const honeyProduction = await db.query.hiveHoneyProduction.findFirst({
-            where: eq(hiveHoneyProduction.id, insert.insertId)
+        const [insert] = await db.insert(hiveHoneyYield).values({ hiveId, inspectionId, amount });
+        const honeyProduction = await db.query.hiveHoneyYield.findFirst({
+            where: eq(hiveHoneyYield.id, insert.insertId)
         });
         console.log("Done!");
         
@@ -38,7 +38,7 @@ router.post(
 
 router.get(
     '/hive/:id', 
-    requireRole([Role.ANY]), 
+    requireRole([UserRoles.ANY]), 
     async (
         req: Request<{ id: string }>, 
         res: Response
@@ -48,8 +48,8 @@ router.get(
     
     try {
         console.log(`Getting entrys...`);
-        const honeyProduction = await db.query.hiveHoneyProduction.findMany({
-            where: eq(hiveHoneyProduction.hiveId, Number.parseInt(id))
+        const honeyProduction = await db.query.hiveHoneyYield.findMany({
+            where: eq(hiveHoneyYield.hiveId, Number.parseInt(id))
         });
         console.log("Done!");
         

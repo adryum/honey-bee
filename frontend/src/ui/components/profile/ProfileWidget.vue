@@ -6,11 +6,11 @@ import IconTextItem from "../input/dropdowns/dropdownItems/bottom/IconTextItem.v
 import type { DropdownModel } from "@/core/models/Models";
 import { storeToRefs } from "pinia";
 import { Role } from "@/core/DatabaseEnums";
-import { RouterViewPaths } from "@/core/router";
 import { useAuthStore } from "@/core/stores/useAuthStore";
-import { ProfileTab } from "@/core/ViewTabEnums";
+import { AdminTab, ProfileTab } from "@/core/ViewTabEnums";
 import { useRouter } from "vue-router";
 import IconCubeButton from "../input/buttons/IconCubeButton.vue";
+import placeholderImage from '@/assets/images/ProfilePlaceholder.jpg'
 
 const s = useCssModule()
 const router = useRouter()
@@ -18,16 +18,15 @@ const authStore = useAuthStore()
 const { logout } = authStore
 const { user } = storeToRefs(authStore)
 
-const placeholderImage = "src/assets/images/ProfilePlaceholder.jpg"
 const settingDestinations = computed(() => {
     var arr = [
-        { name: 'Profile', path: '/profile', svg: SVG.Profile },
+        { name: 'Profile',  path: `/profile/${user.value?.id}/${ProfileTab.GENERAL}`, svg: SVG.Profile },
         { name: 'Settings', path: '/settings', svg: SVG.Cog },
-        { name: 'Logout', path: '/logout', svg: SVG.Logout }
+        { name: 'Logout',   path: '/logout', svg: SVG.Logout }
     ]
 
     if (user.value?.role === Role.ADMINISTRATOR) {
-        arr.unshift({ name: 'Admin Panel', path: '/admin', svg: SVG.Key })
+        arr.unshift({ name: 'Admin Panel', path: `/admin/${AdminTab.Whitelist}`, svg: SVG.Key })
     }
     
     return arr
@@ -52,10 +51,10 @@ function onClick(dropdown: DropdownModel, destination: SettingDestination) {
     dropdown.isShown.value = false
 
     switch (destination.name) {
-        case "Profile":     router.push(`/profile/${user.value?.id}/${ProfileTab.GENERAL}`); break;
+        case "Profile":     router.push(destination.path); break;
         case "Settings":    break;
         case "Logout":      logout(); break;
-        case "Admin Panel": router.push(RouterViewPaths.Admin); break;
+        case "Admin Panel": router.push(destination.path); break;
         default:break;
     }
 }
