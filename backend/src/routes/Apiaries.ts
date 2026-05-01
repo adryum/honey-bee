@@ -325,34 +325,6 @@ router.get(
         )
 
         return res.status(200).json(yieldsGetResult);
-
-
-        // console.log("Getting hives user has access to...");
-
-        // var hivesResult
-        // switch (role) {
-        //     case Role.ADMINISTRATOR:
-        //         hivesResult = await db.query.hives.findMany({
-        //             where: eq(hives.apiaryId, apiaryId)
-        //         });
-        //         break;
-        //     default:
-        //         const hiveAccess = await db.query.userHiveAccess.findMany({
-        //             where: eq(userHiveAccess.userId, userId)
-        //         });
-
-        //         hivesResult = await db.query.hives.findMany({
-        //             where: and(
-        //                 eq(hives.apiaryId, apiaryId), 
-        //                 inArray(hives.id, hiveAccess.map(item => item.hiveId))
-        //             )
-        //         });
-        //         break;
-        // }
-        // console.log("Done!");
-
-
-        return res.status(200).json(hivesResult)
     } catch (err) {
         console.error(err);
         res.status(500).send('Server error');

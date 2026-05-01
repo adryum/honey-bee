@@ -50,7 +50,7 @@ CREATE TABLE IF NOT EXISTS `apiary_action_history` (
   CONSTRAINT `FK_apiary_action_history_history_action_types` FOREIGN KEY (`history_action_type_id`) REFERENCES `history_action_types` (`id`),
   CONSTRAINT `FK_apiary_history_apiaries` FOREIGN KEY (`apiary_id`) REFERENCES `apiaries` (`id`),
   CONSTRAINT `FK_apiary_history_users` FOREIGN KEY (`user_id`) REFERENCES `users` (`id`)
-) ENGINE=InnoDB AUTO_INCREMENT=95 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
+) ENGINE=InnoDB AUTO_INCREMENT=111 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
 
 -- Data exporting was unselected.
 
@@ -67,19 +67,19 @@ CREATE TABLE IF NOT EXISTS `history_action_types` (
 CREATE TABLE IF NOT EXISTS `hives` (
   `id` bigint NOT NULL AUTO_INCREMENT,
   `name` varchar(50) CHARACTER SET utf8mb4 COLLATE utf8mb4_0900_ai_ci NOT NULL,
-  `image` text CHARACTER SET utf8mb4 COLLATE utf8mb4_0900_ai_ci,
+  `image_url` text CHARACTER SET utf8mb4 COLLATE utf8mb4_0900_ai_ci,
   `location` varchar(50) DEFAULT NULL,
   `type` enum('Stationary','Movable','Tower') CHARACTER SET utf8mb4 COLLATE utf8mb4_0900_ai_ci NOT NULL,
   `description` varchar(500) CHARACTER SET utf8mb4 COLLATE utf8mb4_0900_ai_ci DEFAULT NULL,
-  `apiaryId` bigint DEFAULT NULL,
-  `userId` bigint DEFAULT NULL,
-  `creationDate` timestamp NULL DEFAULT (now()),
-  `calendarId` text,
+  `apiary_id` bigint DEFAULT NULL,
+  `user_id` bigint DEFAULT NULL,
+  `creation_timestamp` timestamp NOT NULL DEFAULT (now()),
+  `calendar_id` text CHARACTER SET utf8mb4 COLLATE utf8mb4_0900_ai_ci,
   PRIMARY KEY (`id`),
-  KEY `FK_hives_apiaries` (`apiaryId`) USING BTREE,
-  KEY `FK_hive_user` (`userId`) USING BTREE,
-  CONSTRAINT `FK_hives_apiaries` FOREIGN KEY (`apiaryId`) REFERENCES `apiaries` (`id`) ON DELETE SET NULL,
-  CONSTRAINT `FK_hives_users` FOREIGN KEY (`userId`) REFERENCES `users` (`id`) ON DELETE SET NULL
+  KEY `FK_hives_apiaries` (`apiary_id`) USING BTREE,
+  KEY `FK_hive_user` (`user_id`) USING BTREE,
+  CONSTRAINT `FK_hives_apiaries` FOREIGN KEY (`apiary_id`) REFERENCES `apiaries` (`id`) ON DELETE SET NULL,
+  CONSTRAINT `FK_hives_users` FOREIGN KEY (`user_id`) REFERENCES `users` (`id`) ON DELETE SET NULL
 ) ENGINE=InnoDB AUTO_INCREMENT=95 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
 
 -- Data exporting was unselected.
@@ -99,39 +99,23 @@ CREATE TABLE IF NOT EXISTS `hive_action_history` (
   CONSTRAINT `FK_hive_action_history_history_action_types` FOREIGN KEY (`history_action_type_id`) REFERENCES `history_action_types` (`id`),
   CONSTRAINT `FK_hivehistory_hives` FOREIGN KEY (`hive_id`) REFERENCES `hives` (`id`) ON DELETE CASCADE,
   CONSTRAINT `FK_hivehistory_users` FOREIGN KEY (`user_id`) REFERENCES `users` (`id`) ON DELETE CASCADE
-) ENGINE=InnoDB AUTO_INCREMENT=86 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
+) ENGINE=InnoDB AUTO_INCREMENT=89 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
 
 -- Data exporting was unselected.
 
--- Dumping structure for table honey_bee.hive_honey_production
-CREATE TABLE IF NOT EXISTS `hive_honey_production` (
+-- Dumping structure for table honey_bee.hive_honey_yield
+CREATE TABLE IF NOT EXISTS `hive_honey_yield` (
   `id` bigint NOT NULL AUTO_INCREMENT,
   `amount` float DEFAULT '0',
-  `hiveId` bigint NOT NULL,
-  `inspectionId` bigint NOT NULL,
-  `createdAt` timestamp NULL DEFAULT CURRENT_TIMESTAMP,
-  PRIMARY KEY (`id`),
-  KEY `inspectionId_idx` (`inspectionId`),
-  KEY `hiveId_idx` (`hiveId`),
-  CONSTRAINT `hiveId_FK1` FOREIGN KEY (`hiveId`) REFERENCES `hives` (`id`),
-  CONSTRAINT `inspectionId_FK1` FOREIGN KEY (`inspectionId`) REFERENCES `hive_inspections` (`id`)
-) ENGINE=InnoDB AUTO_INCREMENT=18 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
-
--- Data exporting was unselected.
-
--- Dumping structure for table honey_bee.hive_inspections
-CREATE TABLE IF NOT EXISTS `hive_inspections` (
-  `id` bigint NOT NULL AUTO_INCREMENT,
-  `processed` tinyint(1) NOT NULL DEFAULT '0',
-  `apiary_id` bigint DEFAULT NULL,
-  `user_id_creator` bigint DEFAULT NULL,
+  `hive_id` bigint NOT NULL,
+  `inspection_id` bigint NOT NULL,
   `creation_timestamp` timestamp NOT NULL DEFAULT (now()),
   PRIMARY KEY (`id`),
-  KEY `apiaryId_idx` (`apiary_id`) USING BTREE,
-  KEY `userId_idx` (`user_id_creator`) USING BTREE,
-  CONSTRAINT `apiaryId` FOREIGN KEY (`apiary_id`) REFERENCES `apiaries` (`id`) ON DELETE SET NULL,
-  CONSTRAINT `userId` FOREIGN KEY (`user_id_creator`) REFERENCES `users` (`id`) ON DELETE SET NULL
-) ENGINE=InnoDB AUTO_INCREMENT=111 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
+  KEY `hiveId_idx` (`hive_id`) USING BTREE,
+  KEY `inspectionId_idx` (`inspection_id`) USING BTREE,
+  CONSTRAINT `FK_hive_honey_yield_hives` FOREIGN KEY (`hive_id`) REFERENCES `hives` (`id`) ON DELETE CASCADE,
+  CONSTRAINT `FK_hive_honey_yield_inspections` FOREIGN KEY (`inspection_id`) REFERENCES `inspections` (`id`) ON DELETE CASCADE
+) ENGINE=InnoDB AUTO_INCREMENT=18 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
 
 -- Data exporting was unselected.
 
@@ -162,8 +146,26 @@ CREATE TABLE IF NOT EXISTS `hive_inspection_forms` (
   KEY `inpsectionId_idx` (`inspection_id`) USING BTREE,
   KEY `hiveId_idx` (`hive_id`) USING BTREE,
   CONSTRAINT `hiveId` FOREIGN KEY (`hive_id`) REFERENCES `hives` (`id`) ON DELETE SET NULL,
-  CONSTRAINT `inpsectionId` FOREIGN KEY (`inspection_id`) REFERENCES `hive_inspections` (`id`) ON DELETE CASCADE
+  CONSTRAINT `inpsectionId` FOREIGN KEY (`inspection_id`) REFERENCES `inspections` (`id`) ON DELETE CASCADE
 ) ENGINE=InnoDB AUTO_INCREMENT=198 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
+
+-- Data exporting was unselected.
+
+-- Dumping structure for table honey_bee.hive_notes
+CREATE TABLE IF NOT EXISTS `hive_notes` (
+  `id` bigint NOT NULL AUTO_INCREMENT,
+  `title` varchar(30) CHARACTER SET utf8mb4 COLLATE utf8mb4_0900_ai_ci DEFAULT NULL,
+  `content` varchar(500) DEFAULT NULL,
+  `type` enum('WARNING','INFORMATIONAL') CHARACTER SET utf8mb4 COLLATE utf8mb4_0900_ai_ci DEFAULT NULL,
+  `user_id` bigint DEFAULT NULL,
+  `hive_id` bigint NOT NULL,
+  `creation_timestamp` timestamp NULL DEFAULT NULL,
+  PRIMARY KEY (`id`),
+  KEY `FK_notes_users` (`user_id`) USING BTREE,
+  KEY `FK_notes_hives` (`hive_id`) USING BTREE,
+  CONSTRAINT `FK_notes_hives` FOREIGN KEY (`hive_id`) REFERENCES `hives` (`id`) ON DELETE CASCADE,
+  CONSTRAINT `FK_notes_users` FOREIGN KEY (`user_id`) REFERENCES `users` (`id`) ON DELETE SET NULL
+) ENGINE=InnoDB AUTO_INCREMENT=52 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
 
 -- Data exporting was unselected.
 
@@ -172,55 +174,53 @@ CREATE TABLE IF NOT EXISTS `hive_queen_history` (
   `id` bigint NOT NULL AUTO_INCREMENT,
   `time_spent_in_hive` varchar(50) NOT NULL DEFAULT '0',
   `image_url` text CHARACTER SET utf8mb4 COLLATE utf8mb4_0900_ai_ci,
-  `species_id` bigint NOT NULL DEFAULT '0',
+  `queen_species_id` bigint NOT NULL DEFAULT '0',
   `hive_id` bigint DEFAULT NULL,
   `placed_here_timestamp` timestamp NOT NULL DEFAULT (now()),
   PRIMARY KEY (`id`),
-  KEY `FK_hive_bee_history_bee_species` (`species_id`),
   KEY `FK_hive_bee_history_hives` (`hive_id`),
-  CONSTRAINT `FK_hive_bee_history_bee_species` FOREIGN KEY (`species_id`) REFERENCES `species` (`id`),
+  KEY `FK_hive_bee_history_bee_species` (`queen_species_id`) USING BTREE,
+  CONSTRAINT `FK_hive_bee_history_bee_species` FOREIGN KEY (`queen_species_id`) REFERENCES `queen_species` (`id`),
   CONSTRAINT `FK_hive_bee_history_hives` FOREIGN KEY (`hive_id`) REFERENCES `hives` (`id`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
 
 -- Data exporting was unselected.
 
--- Dumping structure for table honey_bee.notes
-CREATE TABLE IF NOT EXISTS `notes` (
+-- Dumping structure for table honey_bee.inspections
+CREATE TABLE IF NOT EXISTS `inspections` (
   `id` bigint NOT NULL AUTO_INCREMENT,
-  `title` varchar(30) CHARACTER SET utf8mb4 COLLATE utf8mb4_0900_ai_ci DEFAULT NULL,
-  `content` varchar(500) DEFAULT NULL,
-  `creationDate` datetime DEFAULT NULL,
-  `type` enum('WARNING','INFORMATIONAL') CHARACTER SET utf8mb4 COLLATE utf8mb4_0900_ai_ci DEFAULT NULL,
-  `userId` bigint DEFAULT NULL,
-  `hiveId` bigint DEFAULT NULL,
+  `processed` tinyint(1) NOT NULL DEFAULT '0',
+  `apiary_id` bigint DEFAULT NULL,
+  `user_id_creator` bigint DEFAULT NULL,
+  `creation_timestamp` timestamp NOT NULL DEFAULT (now()),
   PRIMARY KEY (`id`),
-  KEY `FK_notes_users` (`userId`) USING BTREE,
-  KEY `FK_notes_hives` (`hiveId`),
-  CONSTRAINT `FK_notes_hives` FOREIGN KEY (`hiveId`) REFERENCES `hives` (`id`) ON DELETE SET NULL,
-  CONSTRAINT `FK_notes_users` FOREIGN KEY (`userId`) REFERENCES `users` (`id`) ON DELETE SET NULL
-) ENGINE=InnoDB AUTO_INCREMENT=51 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
+  KEY `apiaryId_idx` (`apiary_id`) USING BTREE,
+  KEY `userId_idx` (`user_id_creator`) USING BTREE,
+  CONSTRAINT `apiaryId` FOREIGN KEY (`apiary_id`) REFERENCES `apiaries` (`id`) ON DELETE SET NULL,
+  CONSTRAINT `userId` FOREIGN KEY (`user_id_creator`) REFERENCES `users` (`id`) ON DELETE SET NULL
+) ENGINE=InnoDB AUTO_INCREMENT=111 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
 
 -- Data exporting was unselected.
 
 -- Dumping structure for table honey_bee.queens
 CREATE TABLE IF NOT EXISTS `queens` (
   `id` bigint NOT NULL AUTO_INCREMENT,
-  `born_date` datetime NOT NULL,
   `image_url` text CHARACTER SET utf8mb4 COLLATE utf8mb4_0900_ai_ci,
-  `species_id` bigint NOT NULL DEFAULT '0',
+  `born_date` datetime NOT NULL,
+  `added_to_hive_timestamp` timestamp NULL DEFAULT NULL,
+  `queen_species_id` bigint NOT NULL DEFAULT '0',
   `hive_id` bigint NOT NULL,
-  `added_to_hive_date` timestamp NULL DEFAULT (now()),
   PRIMARY KEY (`id`),
-  KEY `FK_bees_bee_species` (`species_id`) USING BTREE,
   KEY `FK_bees_hives` (`hive_id`),
-  CONSTRAINT `FK_bees_bee_species` FOREIGN KEY (`species_id`) REFERENCES `species` (`id`),
+  KEY `FK_bees_bee_species` (`queen_species_id`) USING BTREE,
+  CONSTRAINT `FK_bees_bee_species` FOREIGN KEY (`queen_species_id`) REFERENCES `queen_species` (`id`),
   CONSTRAINT `FK_bees_hives` FOREIGN KEY (`hive_id`) REFERENCES `hives` (`id`)
-) ENGINE=InnoDB AUTO_INCREMENT=7 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
+) ENGINE=InnoDB AUTO_INCREMENT=9 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
 
 -- Data exporting was unselected.
 
--- Dumping structure for table honey_bee.species
-CREATE TABLE IF NOT EXISTS `species` (
+-- Dumping structure for table honey_bee.queen_species
+CREATE TABLE IF NOT EXISTS `queen_species` (
   `id` bigint NOT NULL AUTO_INCREMENT,
   `known_as_name` varchar(100) CHARACTER SET utf8mb4 COLLATE utf8mb4_0900_ai_ci NOT NULL DEFAULT '',
   `scientific_name` varchar(100) CHARACTER SET utf8mb4 COLLATE utf8mb4_0900_ai_ci NOT NULL DEFAULT '',
@@ -238,54 +238,53 @@ CREATE TABLE IF NOT EXISTS `users` (
   `id` bigint NOT NULL AUTO_INCREMENT,
   `username` varchar(20) CHARACTER SET utf8mb4 COLLATE utf8mb4_0900_ai_ci NOT NULL,
   `email` varchar(30) CHARACTER SET utf8mb4 COLLATE utf8mb4_0900_ai_ci NOT NULL DEFAULT '',
-  `password` varchar(30) NOT NULL DEFAULT '',
-  `image` text CHARACTER SET utf8mb4 COLLATE utf8mb4_0900_ai_ci,
+  `image_url` text CHARACTER SET utf8mb4 COLLATE utf8mb4_0900_ai_ci,
   `role` enum('ADMINISTRATOR','APIARY_MAINTAINER','MANAGEMENT','HIVE_WORKER') CHARACTER SET utf8mb4 COLLATE utf8mb4_0900_ai_ci NOT NULL,
   `provider` enum('GOOGLE') DEFAULT NULL,
-  `providerSub` varchar(255) DEFAULT NULL,
-  `googleRefreshToken` text,
-  `isWhitelisted` tinyint(1) NOT NULL DEFAULT '0',
+  `provider_sub` varchar(255) CHARACTER SET utf8mb4 COLLATE utf8mb4_0900_ai_ci DEFAULT NULL,
+  `google_refresh_token` text CHARACTER SET utf8mb4 COLLATE utf8mb4_0900_ai_ci,
   PRIMARY KEY (`id`)
-) ENGINE=InnoDB AUTO_INCREMENT=24 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
+) ENGINE=InnoDB AUTO_INCREMENT=27 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
 
 -- Data exporting was unselected.
 
 -- Dumping structure for table honey_bee.user_apiary_access
 CREATE TABLE IF NOT EXISTS `user_apiary_access` (
-  `id` bigint NOT NULL AUTO_INCREMENT,
   `user_id` bigint NOT NULL,
   `apiary_id` bigint NOT NULL,
-  PRIMARY KEY (`id`),
+  PRIMARY KEY (`user_id`,`apiary_id`) USING BTREE,
   KEY `FK__apiaries` (`apiary_id`) USING BTREE,
   KEY `FK__users` (`user_id`) USING BTREE,
   CONSTRAINT `FK__apiaries` FOREIGN KEY (`apiary_id`) REFERENCES `apiaries` (`id`) ON DELETE CASCADE,
   CONSTRAINT `FK__users` FOREIGN KEY (`user_id`) REFERENCES `users` (`id`) ON DELETE CASCADE
-) ENGINE=InnoDB AUTO_INCREMENT=99 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
 
 -- Data exporting was unselected.
 
 -- Dumping structure for table honey_bee.user_hive_access
 CREATE TABLE IF NOT EXISTS `user_hive_access` (
-  `id` bigint NOT NULL AUTO_INCREMENT,
   `user_id` bigint NOT NULL DEFAULT '0',
   `hive_id` bigint NOT NULL DEFAULT '0',
-  PRIMARY KEY (`id`),
+  PRIMARY KEY (`user_id`,`hive_id`) USING BTREE,
   KEY `FK_userhiveaccess_hives` (`hive_id`) USING BTREE,
   KEY `FK_userhiveaccess_users` (`user_id`) USING BTREE,
   CONSTRAINT `FK_userhiveaccess_hives` FOREIGN KEY (`hive_id`) REFERENCES `hives` (`id`) ON DELETE CASCADE,
   CONSTRAINT `FK_userhiveaccess_users` FOREIGN KEY (`user_id`) REFERENCES `users` (`id`) ON DELETE CASCADE
-) ENGINE=InnoDB AUTO_INCREMENT=94 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
 
 -- Data exporting was unselected.
 
 -- Dumping structure for table honey_bee.whitelist
 CREATE TABLE IF NOT EXISTS `whitelist` (
   `id` bigint NOT NULL AUTO_INCREMENT,
-  `email` varchar(60) DEFAULT NULL,
+  `email` varchar(60) CHARACTER SET utf8mb4 COLLATE utf8mb4_0900_ai_ci NOT NULL,
   `role` enum('ADMINISTRATOR','APIARY_MAINTAINER','MANAGEMENT','HIVE_WORKER') CHARACTER SET utf8mb4 COLLATE utf8mb4_0900_ai_ci NOT NULL,
-  `status` tinyint DEFAULT '0',
-  PRIMARY KEY (`id`)
-) ENGINE=InnoDB AUTO_INCREMENT=21 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
+  `status` tinyint(1) NOT NULL DEFAULT '0',
+  `user_id` bigint DEFAULT NULL,
+  PRIMARY KEY (`id`),
+  KEY `FK_whitelist_users` (`user_id`),
+  CONSTRAINT `FK_whitelist_users` FOREIGN KEY (`user_id`) REFERENCES `users` (`id`) ON DELETE SET NULL
+) ENGINE=InnoDB AUTO_INCREMENT=32 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
 
 -- Data exporting was unselected.
 
