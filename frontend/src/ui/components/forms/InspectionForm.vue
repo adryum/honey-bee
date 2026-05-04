@@ -5,6 +5,7 @@ import { computed, useCssModule } from "vue";
 import { useVModel } from '@vueuse/core'
 import CheckboxWText from "../input/fields/CheckboxWText.vue";
 import IconTextButton from "../input/buttons/IconTextButton.vue";
+import StringMultipleField from "../input/fields/used/StringMultipleField.vue";
 
 const s = useCssModule()
 
@@ -33,14 +34,13 @@ const form = useVModel(props, 'form', emit)
         :style="lockedInteractionStyle"
         v-model:is-true="form.isAbnormalBehavior"
     />
-    <LabeledTextareaField
+    <StringMultipleField
         v-if="form.isAbnormalBehavior"
-        :class="s.indented"
+        label="Description"
         :style="lockedInteractionStyle"
-        :options="{}"
-        v-model:input="form.abnormalBehaviorDescription"
+        :selection="form.abnormalBehaviorDescription"
+        @input="value => form.abnormalBehaviorDescription = value"
     />
-    
     
     <CheckboxWText
         label="Swarming?"
@@ -48,7 +48,7 @@ const form = useVModel(props, 'form', emit)
         v-model:is-true="form.isSwarming"
     />
 
-        <CheckboxWText
+    <CheckboxWText
         label="Need additional feeding?"
         :style="lockedInteractionStyle"
         v-model:is-true="form.needAdditionalFeeding"
@@ -80,12 +80,12 @@ const form = useVModel(props, 'form', emit)
         :style="lockedInteractionStyle"
         v-model:is-true="form.needMoreHoneyFrames"
     />
-    <LabeledTextareaField
+    <StringMultipleField
         v-if="form.needMoreHoneyFrames"
-        :class="s.indented"
-        :options="{}"
+        label="Amount"
         :style="lockedInteractionStyle"
-        v-model:input="form.needMoreHoneyFramesAmount"
+        :selection="form.needMoreHoneyFramesAmount.toString()"
+        @input="value => form.needMoreHoneyFramesAmount = value"
     />
     
     <CheckboxWText
@@ -93,12 +93,12 @@ const form = useVModel(props, 'form', emit)
         :style="lockedInteractionStyle"
         v-model:is-true="form.needMoreBreedingFrames"
     />
-    <LabeledTextareaField
+    <StringMultipleField
         v-if="form.needMoreBreedingFrames"
-        :class="s.indented"
-        :options="{}"
+        label="Amount"
         :style="lockedInteractionStyle"
-        v-model="form.needMoreBreedingFramesAmount"
+        :selection="form.needMoreBreedingFrames.toString()"
+        @input="value => form.needMoreBreedingFrames = value"
     />
 
     <CheckboxWText
@@ -106,21 +106,19 @@ const form = useVModel(props, 'form', emit)
         :style="lockedInteractionStyle"
         v-model:is-true="form.isTakingOutFrames"  
     />
-    <LabeledTextareaField
+    <StringMultipleField
         v-if="form.isTakingOutFrames"
         label="Honey frames"
-        :class="s.indented"
         :style="lockedInteractionStyle"
-        :options="{}"
-        v-model:input="form.takenHoneyFrames"
+        :selection="form.takenHoneyFrames.toString()"
+        @input="value => form.takenHoneyFrames = value"
     />
-    <LabeledTextareaField
+    <StringMultipleField
         v-if="form.isTakingOutFrames"
         label="Breeding frames"
-        :class="s.indented"
         :style="lockedInteractionStyle"
-        :options="{}"
-        v-model:input="form.takenBreedingFrames"
+        :selection="form.takenBreedingFrames.toString()"
+        @input="value => form.takenBreedingFrames = value"
     />
 
     <CheckboxWText
@@ -128,12 +126,12 @@ const form = useVModel(props, 'form', emit)
         :style="lockedInteractionStyle"
         v-model:is-true="form.needMedicalAttention"
     />
-    <LabeledTextareaField
+    <StringMultipleField
         v-if="form.needMedicalAttention"
-        :class="s.indented"
+        label="Description"
         :style="lockedInteractionStyle"
-        :options="{}"
-        v-model:input="form.medicalAttentionDescription"
+        :selection="form.medicalAttentionDescription"
+        @input="value => form.medicalAttentionDescription = value"
     />
 
     <CheckboxWText
@@ -141,12 +139,12 @@ const form = useVModel(props, 'form', emit)
         :style="lockedInteractionStyle"
         v-model:is-true="form.hasHiveDamage"  
     />
-    <LabeledTextareaField
+    <StringMultipleField
         v-if="form.hasHiveDamage"
-        :class="s.indented"
+        label="Description"
         :style="lockedInteractionStyle"
-        :options="{}"
-        v-model:input="form.hiveDamageDescription"
+        :selection="form.hiveDamageDescription"
+        @input="value => form.hiveDamageDescription = value"
     />
 
     <IconTextButton
