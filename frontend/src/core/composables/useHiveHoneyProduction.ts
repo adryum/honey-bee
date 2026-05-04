@@ -1,14 +1,14 @@
 import { useMutation, useQuery, useQueryClient } from "@tanstack/vue-query"
 import { ActionType, useActionsStore } from "../stores/ActionStore"
 import { computed, type Ref } from "vue"
-import { hiveHoneyProductionApi } from "../api/HiveHoneyProductionApi"
+import { hiveHoneyYieldApi } from "../api/HiveHoneyProductionApi"
 
 export const useHiveHoneyProductionQuery = (
     { hiveId }: { hiveId: Ref<number | undefined> }
 ) => {
     const { data: production, isLoading: isGettingProduction, isError: isGettingProductionError } = useQuery({
         queryKey: ["hivesHoneyProduction", hiveId],
-        queryFn:  () => hiveHoneyProductionApi.getHiveHoneyProduction(hiveId.value!),
+        queryFn:  () => hiveHoneyYieldApi.getHiveHoneyProduction(hiveId.value!),
         enabled:  computed(() => hiveId.value !== undefined),
     })
 
@@ -24,7 +24,7 @@ export const useHiveHoneyProductionMutations = () => {
     const queryClient = useQueryClient()
 
     const { mutate: create, isPending: isCreatingProduction } = useMutation({
-        mutationFn: hiveHoneyProductionApi.create,
+        mutationFn: hiveHoneyYieldApi.create,
         onSuccess: (newProduction) => {
             queryClient.invalidateQueries({ queryKey: ['hivesHoneyProduction'] })
 

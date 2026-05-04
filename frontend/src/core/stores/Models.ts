@@ -95,8 +95,8 @@ export type UserModelDB = {
 }
 
 export type InspectionFormUI = {
-    id?:                          number;
-    hiveId:                       number;
+    id:                           number | undefined
+    hiveId:                       number | undefined
     isAbnormalBehavior:           boolean;
     isSwarming:                   boolean;
     needAdditionalFeeding:        boolean;
@@ -132,27 +132,30 @@ export type InspectionDB = {
 }
 
 export type InspectionFormDB = {
-    id:                           number;
-    hiveId:                       number;
-    hiveName:                     string;
-    isAbnormalBehavior:           boolean;
-    isSwarming:                   boolean;
-    needAdditionalFeeding:        boolean;
-    isQueenAlive:                 boolean;
-    isQueenLayingEggs:            boolean;
-    isQueenLayingEggsIncorrectly: boolean;
-    needMoreHoneyFrames:          boolean;
-    needMoreBreedingFrames:       boolean;
-    needMedicalAttention:         boolean;
-    hasHiveDamage:                boolean;
-    isTakingOutFrames:            boolean;
-    abnormalBehaviorDescription:  string;
-    medicalAttentionDescription:  string;
-    hiveDamageDescription:        string;
-    needMoreHoneyFramesAmount:    number;
-    needMoreBreedingFramesAmount: number;
-    takenHoneyFrames:             number;
-    takenBreedingFrames:          number;
+    id:                              number
+    abnormalBehavior:                boolean
+    abnormalBehaviorDescription:     string
+    swarming:                        boolean
+    needFeeding:                     boolean
+    queenAlive:                      boolean
+    queenLayingEggs:                 boolean
+    queenLayingEggsIncorrectly:      boolean
+    needMoreHoneyFrames:             boolean
+    needMoreHoneyFramesAmount:       number
+    needMoreBreedingFrames:          boolean
+    needMoreBreedingFramesAmount:    number
+    needMedicalAttention:            boolean
+    needMedicalAttentionDescription: string
+    hasHiveDamage:                   boolean
+    hasHiveDamageDescription:        string
+    takingFrames:                    boolean
+    takenHoneyFrames:                number
+    takenBreedingFrames:             number
+    inspectionId:                    number
+    hive:                            {
+        id:   number
+        name: string
+    } | undefined
 }
 
 export type InspectionEntryModelDB = {

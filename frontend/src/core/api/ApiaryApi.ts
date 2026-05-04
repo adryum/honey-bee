@@ -1,14 +1,14 @@
 import axios from "axios"
 import { ApiaryCreateResponse_to_ApiaryModelDB, HiveCreateResponse_to_HiveModelDB } from "../Convertors";
-import type { ApiaryGetModel, ApiaryCreateRequestModel, HiveAssignRequestModel, HiveAssignGetModel, HiveGetModel, HiveYieldGetModel } from "./Models";
+import type { ApiaryGetModel, ApiaryCreateRequestModel, HiveAssignRequestModel, HiveAssignGetModel, HiveGetModel, HiveHoneyYieldGetModel } from "./Models";
 import type { ApiaryModelDB, DateRange, HiveModelDB } from "../stores/Models";
 
 export const apiaryApi = {
     getHiveYields: async (
         apiaryId: number,
         range:    DateRange
-    ): Promise<HiveYieldGetModel[]> => {
-        const { data } = await axios.get<HiveYieldGetModel[]>(`/apiary/${apiaryId}/yields`, {
+    ): Promise<HiveHoneyYieldGetModel[]> => {
+        const { data } = await axios.get<HiveHoneyYieldGetModel[]>(`/apiary/${apiaryId}/yields`, {
             params: { 
                 toISO: range.toISO, 
                 fromISO: range.fromISO 

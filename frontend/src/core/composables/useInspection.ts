@@ -71,13 +71,15 @@ export const useInspectionMutation = () => {
                 type:  ActionType.Success
             })
 
-            newInspection.forms.map(form => 
+            newInspection.forms.map(form =>  {
+                if (!form.hive) return
+                
                 createHiveHistory({
-                    hiveId: form.hiveId,
+                    hiveId: form.hive.id,
                     text:   "Created inspection",
                     type:   HistoryActionType.INSPECTION
                 })
-            )
+            })
         },
         onError: (error) => {
             useActionsStore().createPopupAction({

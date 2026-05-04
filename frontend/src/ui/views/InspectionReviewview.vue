@@ -17,7 +17,7 @@ const props = defineProps<{
 }>()
 
 const {  } = useInspectionMutation()
-const { inspection } = useInspectionQuery({ id: props.id })
+const { inspection } = useInspectionQuery({ id: props.id, allowFetching: ref(true) })
 
 const forms            = computed(() => inspection.value?.forms || [])
 const selectedForm     = ref<InspectionFormDB | undefined>()
@@ -35,7 +35,6 @@ function selectForm(id: number) {
 watchOnce(inspection, () => {
     selectForm(forms.value[0]?.id)
     console.log(inspection.value);
-    
 })
 onMounted(() => {
     previousPagePath.value = window.history.state.back
@@ -59,7 +58,7 @@ onMounted(() => {
                 for="apiaryHives"
                 :class="s.label"
             >
-                {{ selectedForm?.hiveName }}
+                {{ selectedForm?.hive?.name ?? "Unknown hive" }}
             </label>
 
             <IconTextButton
@@ -102,17 +101,17 @@ onMounted(() => {
                 :class="[
                     s.hive,
                     s.uncomplete,
-                    selectedForm?.hiveId === form.hiveId && s.selected
+                    selectedForm?.hive?.id === form.hive?.id && s.selected
                 ]"
                 @click="selectForm(form.id)"
             >
                 <p
                     :class="[
                         s.id,
-                        selectedForm?.hiveId === form.hiveId && s.selected
+                        selectedForm?.hive?.id === form.hive?.id && s.selected
                     ]"
                 >
-                    {{ form.hiveId ?? "N/A" }}
+                    {{ form.hive?.id ?? "N/A" }}
                 </p>
                 
             </div>

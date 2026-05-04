@@ -4,10 +4,30 @@ import { db, pool } from "../config/Database";
 import { UserRoles } from "../DatabaseEnums";
 import { requireRole } from "../Middleware";
 import { isValidValue, withStatus } from "../utils";
-import { asc, count, desc, eq } from "drizzle-orm";
+import { asc, count, DBQueryConfig, desc, eq, ExtractTablesWithRelations } from "drizzle-orm";
 import {  apiaries, hiveInspectionForms, inspections, users } from "../db/schema";
 
 const router = Router()
+
+type FindInspectionOptions = Parameters<typeof db.query.inspections.findFirst>[0];
+
+export const inspectionGetStructure = {
+    with: {
+        hiveInspectionForms: {
+            columns: { hiveId: false },
+            with: {
+                hive: {
+                    columns: { 
+                        id: true, 
+                        name: true, 
+                    },
+                },
+            },
+        },
+        apiary: true,
+        user: true,
+    },
+} satisfies FindInspectionOptions;
 
 router.get(
     '/entries', 
@@ -73,25 +93,12 @@ router.get(
     const inspectionId = parseInt(req.params.id)
     
     try {
-        console.log(`Getting inspection...`);
-        const inspectionResult = await db.query.inspections.findFirst({
-            where: eq(inspections.id, inspectionId),
-            with: {
-                hiveInspectionForms: {
-                    with: {
-                        hive: {
-                            columns: {
-                                name: true
-                            }
-                        }
-                    }
-                },
-                apiary: true,
-                user: true
-            }
-        })
-        console.log("Done!");
-        
+        const inspectionResult = await withStatus("Getting inspection", 
+            () => db.query.inspections.findFirst({
+                ...inspectionGetStructure,
+                where: eq(inspections.id, inspectionId),
+            })
+        )
         res.status(200).json(inspectionResult);
     } catch (error) {
         console.error(error);
@@ -140,7 +147,6 @@ router.post(
         }
     })
 
-
     try {
         var inspectionCreateResult: ResultSetHeader
         await db.transaction(async (transaction) => {
@@ -181,21 +187,9 @@ router.post(
 
         const inspectionResult = await withStatus("Getting inspection", 
             () => db.query.inspections.findFirst({
-                where: eq(inspections.id, inspectionCreateResult.insertId),
-                with: {
-                    hiveInspectionForms: {
-                        with: {
-                            hive: {
-                                columns: {
-                                    name: true
-                                }
-                            }
-                        }
-                    },
-                    apiary: true,
-                    user: true
-                }}
-            )
+                ...inspectionGetStructure,
+                where: eq(inspections.id, inspectionCreateResult.insertId)
+            })
         )
         
         res.status(200).json(inspectionResult);
@@ -205,38 +199,31 @@ router.post(
     } 
 });
 
-
-router.get(
-    '/:id/process', 
+router.put(
+    '/:inspectionId/process', 
     requireRole([UserRoles.ANY]), 
     async (
-        req: Request<{ id: string }>, 
+        req: Request<{ inspectionId: string }>, 
         res: Response
 ) => {
     console.log("# Process Inspection");
-    const inspectionId = parseInt(req.params.id)
+    const inspectionId = parseInt(req.params.inspectionId)
     
     try {
-        console.log(`Processing  inspection...`);
-        await db.update(inspections).set({ processed: true }).where(eq(inspections.id, inspectionId))
-        const inspectionResult = await db.query.inspections.findFirst({
-            where: eq(inspections.id, inspectionId),
-            with: {
-                hiveInspectionForms: {
-                    with: {
-                        hive: {
-                            columns: {
-                                name: true
-                            }
-                        }
-                    }
-                },
-                apiary: true,
-                user: true
-            }
-        });
-        console.log("Done!");
-        
+        await withStatus("Updating inspection to processed", 
+            () => db
+                .update(inspections)
+                .set({ processed: true })
+                .where(eq(inspections.id, inspectionId))
+        )
+
+        const inspectionResult = await withStatus("Getting updated inspection", 
+            () => db.query.inspections.findFirst({
+                ...inspectionGetStructure,
+                where: eq(inspections.id, inspectionId),
+            })
+        )
+
         res.status(200).json(inspectionResult);
     } catch (error) {
         console.error(error);

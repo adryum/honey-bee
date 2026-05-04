@@ -32,8 +32,7 @@ const chartOptions = computed(() => ({
     },
     xaxis: {
         type: 'datetime',
-        categories: [null, ...production.value?.map((item) => item.createdAt) ?? []]
-        //                                                        ^ whatever your date field is called
+        categories: [null, ...production.value?.map((item) => item.creationTimestamp) ?? []]
     },
     tooltip: {
         x: { format: 'dd/MM/yy HH:mm' },

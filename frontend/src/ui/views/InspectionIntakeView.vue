@@ -94,7 +94,7 @@ function saveForm(formModel: InspectionFormUI) {
     formModel.isSubmited = true
 
     if (!isLastForm) {
-        selectHive(inspectionForms.value[formIndex + 1].hiveId)
+        selectHive(inspectionForms.value[formIndex + 1].hiveId!)
     } else {
         finishInspection()
     }
@@ -182,7 +182,7 @@ onMounted(() => {
                     form.isSubmited && s.completed,
                     selectedForm?.hiveId === form.hiveId && s.selected
                 ]"
-                @click="selectHive(form.hiveId)"
+                @click="selectHive(form.hiveId!)"
             >
                 <p
                     :class="[

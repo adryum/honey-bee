@@ -15,7 +15,7 @@ import inspectionRoute from "./routes/Inspection"
 import profileRoute from "./routes/Profile"
 import hiveHistoryRoute from "./routes/HiveHistory"
 import apiaryHistoryRoute from "./routes/ApiaryHistory"
-import hiveHoneyProductionRoute from "./routes/HiveHoneyProduction"
+import hiveYieldRoute from "./routes/HiveHoneyYields"
 import speciesRoute from "./routes/Species"
 import queenRoute from "./routes/Queen"
 
@@ -89,7 +89,7 @@ async function startServer() {
     
     app.use("/hive", hiveRoute)
     app.use("/hiveHistory", hiveHistoryRoute)
-    app.use("/hiveHoneyProduction", hiveHoneyProductionRoute)
+    app.use("/hiveHoneyYield", hiveYieldRoute)
     app.use("/note", noteRoute)
 
     app.use("/species", speciesRoute)

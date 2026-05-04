@@ -175,7 +175,7 @@ export type HiveAccessGetModel = {
 export type InspectionCreateRequestModel = {
     apiaryId: number;
     forms:     {
-        hiveId:                       number;
+        hiveId:                       number | undefined
         isAbnormalBehavior:           boolean;
         isSwarming:                   boolean;
         needAdditionalFeeding:        boolean;
@@ -227,27 +227,28 @@ export type InspectionReviewGetModel = {
         name:    string
     } | undefined
     hiveInspectionForms:    {
-        id:                           number
-        hiveId:                       number
-        isAbnormalBehavior:           boolean
-        isSwarming:                   boolean
-        needAdditionalFeeding:        boolean
-        isQueenAlive:                 boolean
-        isQueenLayingEggs:            boolean
-        isQueenLayingEggsIncorrectly: boolean
-        needMoreHoneyFrames:          boolean
-        needMoreBreedingFrames:       boolean
-        needMedicalAttention:         boolean
-        hasHiveDamage:                boolean
-        isTakingOutFrames:            boolean
-        abnormalBehaviorDescription:  string
-        medicalAttentionDescription:  string
-        hiveDamageDescription:        string
-        needMoreHoneyFramesAmount:    number
-        needMoreBreedingFramesAmount: number
-        takenHoneyFrames:             number
-        takenBreedingFrames:          number
-        hive: {
+        id:                              number
+        abnormalBehavior:                boolean
+        abnormalBehaviorDescription:     string
+        swarming:                        boolean
+        needFeeding:                     boolean
+        queenAlive:                      boolean
+        queenLayingEggs:                 boolean
+        queenLayingEggsIncorrectly:      boolean
+        needMoreHoneyFrames:             boolean
+        needMoreHoneyFramesAmount:       number
+        needMoreBreedingFrames:          boolean
+        needMoreBreedingFramesAmount:    number
+        needMedicalAttention:            boolean
+        needMedicalAttentionDescription: string
+        hasHiveDamage:                   boolean
+        hasHiveDamageDescription:        string
+        takingFrames:                    boolean
+        takenHoneyFrames:                number
+        takenBreedingFrames:             number
+        inspectionId:                    number
+        hive:                            {
+            id:   number
             name: string
         } | undefined
     }[] | undefined
@@ -355,13 +356,18 @@ export type SpeciesGetModel = {
     preferences:    string
 }
 
-export type HiveYieldGetModel = {
+export type HiveHoneyYieldGetModel = {
     id: number
     amount: number
-    hiveId: 81,
     inspectionId: 96,
-    createdAt: '2026-04-07 12:42:56',
+    creationTimestamp: '2026-04-07 12:42:56',
     hive: { id: 81, name: 'sad' }
+}
+
+export type HiveHoneyYieldCreateModel = {
+    amount:       number
+    inspectionId: number
+    hiveId:       number
 }
 
 export type HiveAccessModifyModel = {

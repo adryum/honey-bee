@@ -8,7 +8,7 @@ import { hiveHoneyYield } from "../db/schema";
 const router = Router()
     
 router.post(
-    '/create', 
+    '/', 
     requireRole([UserRoles.ANY]), 
     async (
         req: Request<{}, {}, {
@@ -49,6 +49,17 @@ router.get(
     try {
         console.log(`Getting entrys...`);
         const honeyProduction = await db.query.hiveHoneyYield.findMany({
+            columns: {
+                hiveId: false
+            },
+            with: {
+                hive: {
+                    columns: {
+                        id: true,
+                        name: true
+                    }
+                }
+            },
             where: eq(hiveHoneyYield.hiveId, Number.parseInt(id))
         });
         console.log("Done!");

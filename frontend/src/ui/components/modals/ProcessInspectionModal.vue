@@ -42,11 +42,13 @@ async function processInspection() {
         onSuccess: () => {
 
             inspection.value?.forms.forEach(form => {
+                if (!form.hive) return
+
                 const honeyAmount = Number(honeyAveragePerFrame.value) * form.takenHoneyFrames;
                 create({
                     amount:       honeyAmount,
                     inspectionId: props.inspectionId,
-                    hiveId:       form.hiveId
+                    hiveId:       form.hive.id
                 }, {
                     onSuccess: () => {
                         console.log("Success!");

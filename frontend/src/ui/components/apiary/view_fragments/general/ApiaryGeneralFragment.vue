@@ -22,9 +22,13 @@ const { hiveYields } = useApiaryQuery({
     }
 })
 
-const convertedYields = computed(() => hiveYields.value 
+const convertedYields = computed(() => {
+    if (hiveYields.value)
+        console.log(HiveYieldGetModels_To_LineGraphLineModels(hiveYields.value!));
+    return hiveYields.value 
     ? HiveYieldGetModels_To_LineGraphLineModels(hiveYields.value)
-    : []
+    : []  
+} 
 )
 </script>
 

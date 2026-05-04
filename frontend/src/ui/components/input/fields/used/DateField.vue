@@ -20,11 +20,6 @@ type DateFieldEvents = {
 
 const inputRef = ref<HTMLInputElement>()
 defineExpose<DateFieldEvents>({
-    // reset: () => {
-    //     display.value = ''
-    //     emit('update:modelValue', null)
-    // },
-    // focus: () => inputRef.value?.focus(),
     set: (val: string) => {
         const [yyyy, mm, dd] = val.split('-')
         display.value = `${dd} / ${mm} / ${yyyy}`

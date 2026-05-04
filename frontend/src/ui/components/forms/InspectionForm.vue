@@ -1,11 +1,12 @@
 <script setup lang="ts">
 import { SVG } from "@/assets/svgs/SVGLoader";
 import type { InspectionFormUI } from "@/core/stores/Models";
-import { computed, useCssModule } from "vue";
+import { computed, useCssModule, watch } from "vue";
 import { useVModel } from '@vueuse/core'
 import CheckboxWText from "../input/fields/CheckboxWText.vue";
 import IconTextButton from "../input/buttons/IconTextButton.vue";
 import StringMultipleField from "../input/fields/used/StringMultipleField.vue";
+import NumberField from "../input/fields/used/NumberField.vue";
 
 const s = useCssModule()
 
@@ -80,11 +81,11 @@ const form = useVModel(props, 'form', emit)
         :style="lockedInteractionStyle"
         v-model:is-true="form.needMoreHoneyFrames"
     />
-    <StringMultipleField
+    <NumberField
         v-if="form.needMoreHoneyFrames"
         label="Amount"
         :style="lockedInteractionStyle"
-        :selection="form.needMoreHoneyFramesAmount.toString()"
+        :selection="form.needMoreHoneyFramesAmount"
         @input="value => form.needMoreHoneyFramesAmount = value"
     />
     
@@ -93,12 +94,12 @@ const form = useVModel(props, 'form', emit)
         :style="lockedInteractionStyle"
         v-model:is-true="form.needMoreBreedingFrames"
     />
-    <StringMultipleField
+    <NumberField
         v-if="form.needMoreBreedingFrames"
         label="Amount"
         :style="lockedInteractionStyle"
-        :selection="form.needMoreBreedingFrames.toString()"
-        @input="value => form.needMoreBreedingFrames = value"
+        :selection="form.needMoreBreedingFramesAmount"
+        @input="value => form.needMoreBreedingFramesAmount = value"
     />
 
     <CheckboxWText
@@ -106,18 +107,18 @@ const form = useVModel(props, 'form', emit)
         :style="lockedInteractionStyle"
         v-model:is-true="form.isTakingOutFrames"  
     />
-    <StringMultipleField
+    <NumberField
         v-if="form.isTakingOutFrames"
-        label="Honey frames"
+        label="Honey frame amount"
         :style="lockedInteractionStyle"
-        :selection="form.takenHoneyFrames.toString()"
+        :selection="form.takenHoneyFrames"
         @input="value => form.takenHoneyFrames = value"
     />
-    <StringMultipleField
+    <NumberField
         v-if="form.isTakingOutFrames"
-        label="Breeding frames"
+        label="Breeding frame amount"
         :style="lockedInteractionStyle"
-        :selection="form.takenBreedingFrames.toString()"
+        :selection="form.takenBreedingFrames"
         @input="value => form.takenBreedingFrames = value"
     />
 
