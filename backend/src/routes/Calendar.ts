@@ -7,7 +7,7 @@ import { withStatus } from "../utils";
 const router = Router()
 
 router.post(
-    '/create', 
+    '/event', 
     requireRole([UserRoles.ANY]),
     attachCalendarClient,
     async (

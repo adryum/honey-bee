@@ -10,7 +10,7 @@ export function ApiaryCreateResponse_to_ApiaryModelDB(
         id:           convertee.id,
         name:         convertee.name,
         description:  convertee.description,
-        image:        convertee.image,
+        imageUrl:        convertee.imageUrl,
         creationDate: new Date(convertee.creationTimestamp),
         location:     convertee.location,
         hiveCount:    convertee.hiveCount

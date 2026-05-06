@@ -4,7 +4,7 @@ export type ApiaryModelDB = {
     id:           number
     name:         string
     description:  string
-    image:        string
+    imageUrl:     string
     location:     string
     creationDate: Date
     hiveCount:    number

@@ -43,7 +43,7 @@ onMounted(() => {
 <template>
 <div 
     :class="[
-        s.header,
+        s.container,
         isFocused && s.open
     ]"
     @click="input.focus"
@@ -81,11 +81,11 @@ onMounted(() => {
 <style module lang="sass">
 .input
     all: unset
+    flex: 1
 
-.header
+.container
     display: flex
-    min-height: 3rem
-    // background: var(--secondary)
+    min-height: 3.5rem
     font-family: var(--font-family)
 
     border-radius: var(--border-radius-tiny)
@@ -94,14 +94,12 @@ onMounted(() => {
     transition: .1s
     box-shadow: inset 0 0 0 1px var(--secondary)
 
-    padding: .25rem 1rem .25rem 1rem
-    box-sizing: border-box
-
     .column
         display: flex
         flex-direction: column
         width: 100%
-
+        padding: .5rem 1rem .5rem 1rem
+        box-sizing: border-box
 
     &.open
         background: var(--secondary)

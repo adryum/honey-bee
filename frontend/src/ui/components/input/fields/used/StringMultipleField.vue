@@ -42,7 +42,7 @@ onMounted(() => {
 <template>
 <div 
     :class="[
-        s.header,
+        s.container,
     ]"
     @click="input.focus"
 >
@@ -79,7 +79,7 @@ onMounted(() => {
     all: unset
     height: 100%
 
-.header
+.container
     display: flex
     font-family: var(--font-family)
     height: 100%
@@ -91,7 +91,7 @@ onMounted(() => {
     cursor: pointer
     transition: .1s
 
-    padding: .25rem 1rem .25rem 1rem
+    padding: .5rem 1rem .5rem 1rem
     box-sizing: border-box
 
     .column

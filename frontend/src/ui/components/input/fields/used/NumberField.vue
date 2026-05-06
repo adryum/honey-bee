@@ -1,7 +1,7 @@
 <script setup lang="ts">
 import { SVG } from "@/assets/svgs/SVGLoader";
 import type { FieldValidee } from "@/core/composables/useFormValidator";
-import { onMounted, ref, useCssModule } from "vue";
+import { computed, onMounted, ref, useCssModule, watch } from "vue";
 import IconCubeButton from "../../buttons/IconCubeButton.vue";
 
 const s = useCssModule()
@@ -10,7 +10,7 @@ const props = withDefaults(defineProps<{
     placeholder?: string
     selection?: number
     validee?:   FieldValidee
-
+    readonly?:    boolean
 }>(), {
     selection: 0,
     placeholder: "..."
@@ -18,6 +18,7 @@ const props = withDefaults(defineProps<{
 const inputRef = ref<HTMLInputElement | undefined>()
 const displayValue = ref("")
 const isFocused = ref(false)
+const allowInteraction = computed(() => !props.readonly)
 
 const emit = defineEmits<{ 
     input: [value: number]
@@ -48,6 +49,12 @@ function updateValue(value: number) {
     emit('input', value)
 }
 
+watch(() => props.selection, (newVal) => {
+    if (newVal === 0) return
+    // changes display value to match selection value
+    displayValue.value = newVal.toString()
+}, { immediate: true })
+
 onMounted(() => {
     if (!props.validee) return
 
@@ -69,7 +76,8 @@ onMounted(() => {
     <div
         :class="[
             s.column,
-            isFocused && s.open
+            isFocused && s.open,
+            allowInteraction && s.interactive
         ]"
         @click="inputRef?.focus()"
     >
@@ -87,17 +95,20 @@ onMounted(() => {
             :placeholder="placeholder" 
             type="text"
             :value="displayValue"
+            :readonly="readonly"
             @input="handleInput"
             @focus="isFocused = true"
             @blur="isFocused = false"
         >
     </div>
     <IconCubeButton
+        v-if="!readonly"
         :class="s.icon"
         :icon="SVG.Minus"
         @click="updateValue(Number(displayValue) - 1)"
     />
     <IconCubeButton
+        v-if="!readonly"
         :class="s.icon"
         :icon="SVG.Plus"
         @click="updateValue(Number(displayValue) + 1)"
@@ -113,7 +124,6 @@ onMounted(() => {
 .container
     display: flex
     min-height: 3.5rem
-    // background: var(--secondary)
     font-family: var(--font-family)
 
     border-radius: var(--border-radius-tiny)
@@ -123,6 +133,7 @@ onMounted(() => {
     box-shadow: inset 0 0 0 1px var(--secondary)
 
     box-sizing: border-box
+    overflow: hidden
 
     .column
         display: flex
@@ -131,14 +142,12 @@ onMounted(() => {
         padding: .5rem 1rem .5rem 1rem
         box-sizing: border-box
 
-        &:hover
-            background: var(--secondary)
+        &.interactive
+            &:hover
+                background: var(--secondary)
 
-
-    &.open
-        background: var(--secondary)
-        
-    
+            &.open
+                background: var(--secondary)
         
     .label
         display: flex
@@ -154,6 +163,5 @@ onMounted(() => {
         align-self: center
         min-width: 3.5rem
         min-height: 3.5rem
-
-
+        border-radius: 0
 </style>

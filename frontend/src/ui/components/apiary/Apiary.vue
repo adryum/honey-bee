@@ -3,8 +3,9 @@ import { useCssModule } from "vue"
 import { motion } from "motion-v"
 import type { DropdownItem } from "../../../core/Interfaces";
 import CubeDropdown from "../input/dropdowns/CubeDropdown.vue";
-import { SVG } from "@/assets/svgs/SVGLoader";
+import { IconType, SVG } from "@/assets/svgs/SVGLoader";
 import type { ApiaryModelDB } from "@/core/stores/Models";
+import Icon from "../Icon.vue";
 
 const s = useCssModule()
 const props = defineProps<{
@@ -39,12 +40,22 @@ const dropdownActions: DropdownItem[] = [
             isDimmed && s.dimmedOut
         ]"
     >
+        <icon
+            v-if="!apiary.imageUrl"
+            :class="s.icon" 
+            :type="IconType.GIGANTIC"
+            :icon="SVG.Apiary"
+        />
         <img 
-            alt="apiary image"
+            v-if="apiary.imageUrl"
             :class="s.image" 
-            :src="apiary.image || 'src/assets/images/apiary1.jpg'" 
+            :src="apiary.imageUrl || 'src/assets/images/apiary1.jpg'" 
+            alt="apiary image"
         >
-        <hr :class="s.linearDim">
+
+        <hr 
+            :class="s.linearDim"
+        >
         <h1 
             :class="s.label"
         >
@@ -72,6 +83,13 @@ const dropdownActions: DropdownItem[] = [
 </template>
 
 <style module lang="sass">
+.icon
+    position: absolute
+    top: 50%
+    left: 50%
+    transform: translate(-50%, -50%)
+    color:  #71797E
+
 .dimmedOut
     opacity: .5
     filter: brightness(.6)
@@ -93,12 +111,6 @@ const dropdownActions: DropdownItem[] = [
     cursor:          pointer
     flex:            1
     overflow:        hidden
-
-    &::after 
-        content:    ''
-        position:   absolute
-        inset:      0
-        box-shadow: inset 0 0 20px 5px rgba(0,0,0,.1)
 
 .image
     position:   absolute
@@ -122,8 +134,8 @@ const dropdownActions: DropdownItem[] = [
 
     font-family:   var(--font-family)
     border-radius: var(--border-radius-small)
+    background: var(--secondary)
     overflow: hidden
-    // box-shadow:    0 0 0 1px var(--secondary)
 
     &:hover .image
         transform: scale(1.01)

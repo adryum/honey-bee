@@ -93,69 +93,64 @@ router.get(
     }
 })
 
-router.post('/update', requireRole([UserRoles.ADMINISTRATOR, UserRoles.APIARY_MAINTAINER]), upload.single("image"), async (
-    req: Request<{},{},{
-        id:          number
+router.put('/:id', requireRole([UserRoles.ADMINISTRATOR, UserRoles.APIARY_MAINTAINER]), upload.single("image"), async (
+    req: Request<{ id: string },{},{
         name:        string
         description: string
         location:    string
-        type:        string
+        type:        HiveType
         apiaryId:    number
     }>, 
     res: Response
 ) => {
+    const hiveId = parseInt(req.params.id)
     console.log("# Update hive");
-    const { id, name, description, location, type, apiaryId } = req.body
+    const { name, description, location, type, apiaryId } = req.body
     const image = req.file
     
     try {
-        console.log("Updating hive...");
-        const [hiveUpdateReslut] = await pool.query<ResultSetHeader>(`
-            UPDATE hives
-            SET 
-                name = ?,
-                description = ?,
-                location = ?,
-                type = ?,
-                apiaryId = ?
-            WHERE id = ?`, 
-            [name, description, location, type, apiaryId, id]
-        )
-        console.log("Done!");
-
-        // insert image
-        if (image) {
-            console.log("Uplading image...");
-            const imageKey = new PublicIdBuilder(req.session.userId!.toString()).Apiary(hiveUpdateReslut.insertId.toString()).getResource()
-
-            const url = await uploadImage(image, imageKey)
-            console.log(url);
-            console.log("Done!");
-
-            console.log("Updating hive entry with image...");
-            await pool.query<ResultSetHeader>(`
-                UPDATE hives
-                SET image = ?
-                WHERE id = ?`,
-                [url, hiveUpdateReslut.insertId]
+        await db.transaction(async (transaction) => {
+            await withStatus("Updating hive", () =>
+                transaction.update(hives)
+                    .set({ 
+                        name, 
+                        description, 
+                        location, 
+                        type, 
+                        apiaryId 
+                    })
+                    .where(eq(hives.id, hiveId))
             )
-            console.log("Done!");
-        }
 
-        const hive = await withStatus("Getting new row", () => db.query.hives.findFirst({
-            where: eq(hives.id, id)
+            if (image) {
+                // insert image
+                const url = await withStatus("Uploading image", async () => {
+                    const imageKey = new PublicIdBuilder(req.session.userId!.toString()).Apiary(hiveId.toString()).getResource()
+                    return await uploadImage(image, imageKey)
+                })
+
+                await withStatus("Assigning image url to hive...", () =>
+                    transaction.update(hives)
+                    .set({ imageUrl: url })
+                    .where(eq(hives.id, hiveId))
+                )
+            }
+        })
+
+        const hive = await withStatus("Getting updated row", () => db.query.hives.findFirst({
+            where: eq(hives.id, hiveId)
         }))
-        
-        res.status(200).json( hive )
+
+        return res.status(200).json( hive )
     } catch (err) {
         console.error(err);
-        res.status(500).send('Server error');
+        return res.status(500).send('Server error');
     }
 })
 
 // creates hive
 router.post(
-    '/create', 
+    '/', 
     requireRole([UserRoles.ADMINISTRATOR, UserRoles.APIARY_MAINTAINER]), 
     upload.single("image"), 
     async (
@@ -264,59 +259,22 @@ router.post(
 })
 
 // delete hive
-router.post('/delete', requireRole([UserRoles.ANY]), upload.none(), async (req: Request<{},{},{
-    id: string
-}>, res: Response) => {
+router.delete(
+    '/:id', 
+    requireRole([UserRoles.ANY]), 
+    async (
+        req: Request<{ id: string },{},{},{}>, 
+        res: Response
+) => {
     console.log("# Delete hive");
-    const { id } = req.body
+    const hiveId = parseInt(req.params.id)
 
     try {
-        console.log("Deleting hive...");
-        await pool.query(`
-            DELETE FROM hives 
-            WHERE id = ?`, 
-            [id]
-        )
-        console.log("Done!");
+        await withStatus("Deleting hive", () => db.delete(hives).where(eq(hives.id, hiveId)))
         
-        res.status(204).json(id)
+        return res.status(204).json({ id: hiveId })
     } catch (error) {
-        console.error(error);
-        res.status(500).send('Server error');
-    }
-})
-
-router.post('/calendar/create', requireRole([UserRoles.ANY]), attachCalendarClient, async (req: Request<{},{},{
-    hiveId:       number
-    calendarId:   string
-    start:        string
-    end:          string
-    title:        string
-    description:  string
-    creatorEmail: string
-}>, res: Response) => {
-    try {
-        console.log("# Create calendar entry");
-        const { calendarId, start, end, title, description, creatorEmail, hiveId } = req.body
-
-        if (!calendarId) return res.status(400).send("Invalid credentials!")
-
-        const { createEvent } = useCalendar()
-        const result = await createEvent(req.calendarClient!, {
-            calendarId:  calendarId,
-            title:       title,
-            description: description,
-            start:       new Date(start),
-            end:         new Date(end)
-        })
-
-        res.status(200).json({ 
-            ...result, 
-            hiveId: hiveId
-        })
-    } catch (error) {
-        console.error(error);
-        res.status(500).send('Server error');
+        return res.status(500).send(error);
     }
 })
 

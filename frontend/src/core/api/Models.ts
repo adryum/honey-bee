@@ -10,7 +10,7 @@ export type ApiaryCreateRequestModel = {
 export type ApiaryGetModel = {
     id:                number
     name:              string
-    image:             string
+    imageUrl:          string
     location:          string
     description:       string
     creationTimestamp: string

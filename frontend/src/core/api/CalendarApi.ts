@@ -6,7 +6,7 @@ import qs from "qs";
 
 export const calendarApi = {
     createEvent: async (payload: CalendarEventCreateModel) => {
-        const { data } = await axios.post<CalendarEventGetModel>('/calendar/create', payload)
+        const { data } = await axios.post<CalendarEventGetModel>('/calendar/event', payload)
         return CalendarEventGetModel_To_CalendarEventDB(data)
     },
 

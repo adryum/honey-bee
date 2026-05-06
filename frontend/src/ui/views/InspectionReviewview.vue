@@ -58,7 +58,7 @@ onMounted(() => {
                 for="apiaryHives"
                 :class="s.label"
             >
-                {{ selectedForm?.hive?.name ?? "Unknown hive" }}
+                {{ selectedForm?.hive ? `#${selectedForm.hive.id} ${selectedForm.hive.name}` : "Unknown hive" }}
             </label>
 
             <IconTextButton
@@ -69,6 +69,13 @@ onMounted(() => {
             />
         </div>
 
+        <hr :style="{
+            minHeight: '1px',
+            border: 'none',
+            background: 'rgba(0,0,0,.2)',
+            margin: 0
+        }">
+
         <InspectionForm
             v-if="selectedFormUI"
             :class="s.form"
@@ -76,6 +83,9 @@ onMounted(() => {
             v-model:form="selectedFormUI"
         />
     </section>
+
+
+
     <section
         id="apiaryHives"
         :class="s.apiaryHives"
@@ -92,6 +102,13 @@ onMounted(() => {
                 :class="s.label"
             >{{ inspection?.apiaryName || 'Apiary' }} hives</label>
         </div>
+
+        <hr :style="{
+            minHeight: '1px',
+            border: 'none',
+            background: 'rgba(0,0,0,.2)',
+            margin: 0
+        }">
 
         <div
             :class="s.hiveGrid"
@@ -129,13 +146,19 @@ onMounted(() => {
     border-radius: var(--border-radius-small)
     display: flex
     flex-direction: column
+    gap: .25rem
+
+    padding: .25rem
 
     background: var(--white)
     height: calc( 100vh - 5.5rem )
-
+    
 .form
     overflow-y: scroll
+    margin-top: 1rem
     height: 100%
+    padding: 0 1rem 1rem 1rem
+    box-sizing: border-box
 
 .hiveGrid
     display: inline-flex
@@ -146,7 +169,6 @@ onMounted(() => {
     width: 100%
     gap: 1rem
     padding: 1rem
-    padding-top: 0 
     box-sizing: border-box
 
     .hive
@@ -187,20 +209,40 @@ onMounted(() => {
         &.selected
             background: var(--orange)
             color: white
-
 .header
+    position: relative
     display: flex
     align-items: center
-    margin: 1rem
-    height: 2rem
-    min-height: 2rem
-    max-height: 2rem
     gap: .5rem
 
-.label
-    
+    width: 100%
+    min-height: 2.5rem
+    max-height: 2.5rem
+
+    padding-left: .5rem
+    box-sizing: border-box
+    font-family: var(--font-family)
+    letter-spacing: .02em
+
+    .label
+        font-size: var(--font-size-medium)
+        font-weight: 500
+        letter-spacing: .02em
+        text-transform: capitalize
+
+    .buttons
+        display: flex
+        gap: .2rem
+        margin-left: auto
 
 .apiaryHives
+    display: flex
+    flex-direction: column
+
+    gap: .25rem
+    padding: .25rem
+    box-sizing: border-box
+
     width: 100%
     height: 100%
     background: var(--white)

@@ -9,6 +9,7 @@ const s = useCssModule()
 const props = defineProps<{
     label:        string
     disabled?:    boolean
+    readonly?:    boolean
     formOptions?: FormvalidatorAndItsOptionsModel
 }>()
 const id = getRandomId("checkbox")
@@ -23,12 +24,14 @@ const isTrue = defineModel("isTrue", { default: false })
             :id="id"
             type="checkbox"
             :disabled="disabled"
+            :readonly="readonly"
             :class="[
                 s.input,
                 isTrue && s.isTrue,
                 disabled && s.disabled
             ]"
             v-model="isTrue"
+            @click="readonly ? $event.preventDefault() : null"
         />
         <Icon
             v-if="isTrue"

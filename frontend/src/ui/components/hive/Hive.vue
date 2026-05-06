@@ -169,5 +169,4 @@ const props = withDefaults(defineProps<{
             max-height: 100%
             object-fit: cover
             box-sizing: border-box
-
 </style>

@@ -20,8 +20,6 @@ const emit = defineEmits<{
     'update:form': [InspectionFormUI]
     'submit': []
 }>()
-const lockedInteractionStyle = computed(() => props.isReviewing ? { pointerEvents: 'none' } : {})
-
 const form = useVModel(props, 'form', emit)
 </script>
 
@@ -32,118 +30,118 @@ const form = useVModel(props, 'form', emit)
 >
     <CheckboxWText
         label="Abnormal bee behavior?"
-        :style="lockedInteractionStyle"
+        :readonly="isReviewing"
         v-model:is-true="form.isAbnormalBehavior"
     />
     <StringMultipleField
         v-if="form.isAbnormalBehavior"
         label="Description"
-        :style="lockedInteractionStyle"
         :selection="form.abnormalBehaviorDescription"
+        :readonly="isReviewing"
         @input="value => form.abnormalBehaviorDescription = value"
     />
     
     <CheckboxWText
         label="Swarming?"
-        :style="lockedInteractionStyle"
+        :readonly="isReviewing"
         v-model:is-true="form.isSwarming"
     />
 
     <CheckboxWText
         label="Need additional feeding?"
-        :style="lockedInteractionStyle"
+        :readonly="isReviewing"
         v-model:is-true="form.needAdditionalFeeding"
     />
 
 
     <CheckboxWText
         label="Queen alive?"
-        :style="lockedInteractionStyle"
+        :readonly="isReviewing"
         v-model:is-true="form.isQueenAlive"
     />
     <CheckboxWText
         v-if="form.isQueenAlive"
-        label="Is queen laying eggs?"
-        :style="lockedInteractionStyle"
         :class="s.indented"
+        label="Is queen laying eggs?"
+        :readonly="isReviewing"
         v-model:is-true="form.isQueenLayingEggs"
     />
     <CheckboxWText
         v-if="form.isQueenAlive"
-        label="Is queen laying eggs incorrectly?"
-        :style="lockedInteractionStyle"
         :class="s.indented"
+        label="Is queen laying eggs incorrectly?"
+        :readonly="isReviewing"
         v-model:is-true="form.isQueenLayingEggsIncorrectly"
     />
 
     <CheckboxWText
         label="Does hive need more honey frames?"
-        :style="lockedInteractionStyle"
+        :readonly="isReviewing"
         v-model:is-true="form.needMoreHoneyFrames"
     />
     <NumberField
         v-if="form.needMoreHoneyFrames"
         label="Amount"
-        :style="lockedInteractionStyle"
+        :readonly="isReviewing"
         :selection="form.needMoreHoneyFramesAmount"
         @input="value => form.needMoreHoneyFramesAmount = value"
     />
     
     <CheckboxWText
         label="Does hive need more breeding frames?"
-        :style="lockedInteractionStyle"
+        :readonly="isReviewing"
         v-model:is-true="form.needMoreBreedingFrames"
     />
     <NumberField
         v-if="form.needMoreBreedingFrames"
         label="Amount"
-        :style="lockedInteractionStyle"
+        :readonly="isReviewing"
         :selection="form.needMoreBreedingFramesAmount"
         @input="value => form.needMoreBreedingFramesAmount = value"
     />
 
     <CheckboxWText
         label="Taking out frames?"
-        :style="lockedInteractionStyle"
+        :readonly="isReviewing"
         v-model:is-true="form.isTakingOutFrames"  
     />
     <NumberField
         v-if="form.isTakingOutFrames"
         label="Honey frame amount"
-        :style="lockedInteractionStyle"
+        :readonly="isReviewing"
         :selection="form.takenHoneyFrames"
         @input="value => form.takenHoneyFrames = value"
     />
     <NumberField
         v-if="form.isTakingOutFrames"
         label="Breeding frame amount"
-        :style="lockedInteractionStyle"
+        :readonly="isReviewing"
         :selection="form.takenBreedingFrames"
         @input="value => form.takenBreedingFrames = value"
     />
 
     <CheckboxWText
         label="Is medical action needed?"
-        :style="lockedInteractionStyle"
+        :readonly="isReviewing"
         v-model:is-true="form.needMedicalAttention"
     />
     <StringMultipleField
         v-if="form.needMedicalAttention"
         label="Description"
-        :style="lockedInteractionStyle"
         :selection="form.medicalAttentionDescription"
+        :readonly="isReviewing"
         @input="value => form.medicalAttentionDescription = value"
     />
 
     <CheckboxWText
         label="Is there any hive damage?"
-        :style="lockedInteractionStyle"
+        :readonly="isReviewing"
         v-model:is-true="form.hasHiveDamage"  
     />
     <StringMultipleField
         v-if="form.hasHiveDamage"
         label="Description"
-        :style="lockedInteractionStyle"
+        :readonly="isReviewing"
         :selection="form.hiveDamageDescription"
         @input="value => form.hiveDamageDescription = value"
     />
@@ -166,7 +164,6 @@ const form = useVModel(props, 'form', emit)
     display: flex
     flex-direction: column
     gap: 1rem
-    padding: 1rem
     box-sizing: border-box
 
 .indented

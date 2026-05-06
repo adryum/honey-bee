@@ -147,10 +147,10 @@ watch(() => exposed.isOpen(), (val) => {
     display: grid
     grid-template-areas: 'img fields' 
     grid-template-columns: 1fr 1fr
-    grid-template-rows: 250px
     
     gap: 1rem
-    width: 40rem
+    width: 50rem
+    height: 25rem
     padding: 1rem
 
     .fields
