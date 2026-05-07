@@ -131,7 +131,7 @@ onMounted(() => console.log(props.tab))
     max-height: calc(100vh - var(--header-height))
 
 .fragment
-    flex: 1
+    height: 100%
     padding: 1rem
     box-sizing: border-box
 

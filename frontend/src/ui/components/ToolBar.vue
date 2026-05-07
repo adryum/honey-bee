@@ -80,7 +80,7 @@ const hasFooter = computed(() => !!slots.footer?.()?.length)
 .headerSlot
     display: inline-flex
     margin-left: auto
-    margin-right: 1rem
+    margin-right: .25rem
 .header
     display: flex
     align-items: center
@@ -89,8 +89,6 @@ const hasFooter = computed(() => !!slots.footer?.()?.length)
     min-height: 3rem
     max-height: 3rem
     height: 3rem
-    // box-sizing: border-box
-
 
     .label
         margin: 0
@@ -120,15 +118,10 @@ const hasFooter = computed(() => !!slots.footer?.()?.length)
         min-height: 3rem
 
 .container
-    top: 0
-    position: sticky
-    
     display: flex
     flex-direction: column
     align-items: center
     
-    // width: 100%
-
     font-family: var(--font-family)
 
     background: var(--white)

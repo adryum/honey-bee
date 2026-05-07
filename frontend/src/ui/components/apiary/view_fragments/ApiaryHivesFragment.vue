@@ -35,8 +35,7 @@ function openHive(hiveId: number) {
         :style="gridStyle" 
     >
         <Hive 
-            v-for="hive in hives"  
-            class="item" 
+            v-for="hive in hives"
             :hive="hive"
             @click="openHive(hive.id)"
         />
@@ -51,6 +50,8 @@ function openHive(hiveId: number) {
     flex-direction: column
     gap: 1rem
     width: 100%
+    height: 100%
+    overflow-y: auto
 
     padding: 1rem
     box-sizing: border-box

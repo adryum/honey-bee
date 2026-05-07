@@ -21,8 +21,10 @@ const { inspectionTableEntries, nextPage, prevPage } = useInspectionsQuery(filte
 <template>
 <div 
     :class="s.container"
+    :style="{ maxHeight: `calc(100vh - var(--header-height))` }"
 >
     <ToolBar
+        :class="s.navbar"
         label="Inspections"
     />
     <InspectionTable
@@ -50,10 +52,18 @@ const { inspectionTableEntries, nextPage, prevPage } = useInspectionsQuery(filte
 
 <style module lang="sass">
 .container
-    margin: 1rem
+    display: flex
+    flex-direction: column
+
+    box-sizing: border-box
     width: 100%
     height: 100%
+    overflow: hidden
+
+.navbar
+    margin: 1rem
 
 .table
-    margin-top: 1rem
+    margin: 1rem
+    margin-top: 0
 </style>

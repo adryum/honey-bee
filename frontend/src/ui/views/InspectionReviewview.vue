@@ -149,6 +149,7 @@ onMounted(() => {
     gap: .25rem
 
     padding: .25rem
+    box-sizing: border-box
 
     background: var(--white)
     height: calc( 100vh - 5.5rem )

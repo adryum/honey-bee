@@ -149,9 +149,10 @@ onMounted(() => {
     box-sizing: border-box
     border-radius: 5px
     cursor: pointer
-    transition: .3s 
+    transition: .1s ease-out
 
-    background: var(--secondary)
+    &:hover 
+        background: var(--secondary)
 
     .text
         font-family: var(--font-family)
@@ -189,15 +190,13 @@ onMounted(() => {
             scale: 1.2
 
 .container
-    top: 3.5rem
-    position: sticky
     display: flex
     flex-direction: column
     width: 6rem
     height: calc(100vh - var(--header-height))
     // background: var(--black)
 
-    // background: var(--white)
+    background: var(--white)
 
     .tip
         height: 3rem

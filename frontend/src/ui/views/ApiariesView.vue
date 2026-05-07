@@ -38,7 +38,10 @@ onResize(grid, (element) => {
 </script>
 
 <template>
-    <div :class="s.container">
+<div 
+    :class="s.container"
+    :style="{ maxHeight: `calc(100vh - var(--header-height))` }"
+>
         <ToolBar 
             label="Apiaries"
             :tabs="[]"
@@ -71,8 +74,8 @@ onResize(grid, (element) => {
 
         <div 
             ref="grid"
-            :class="s.appiaries" 
-            :style="{ gridTemplateColumns: `repeat(${gridColumns}, 1fr)` }" 
+            :class="s.apiaries" 
+            :style="{ gridTemplateColumns: `repeat(${gridColumns}, 1fr)`}" 
         >
             <Apiary 
                 v-for="apiary in filteredApiaries"
@@ -94,17 +97,21 @@ onResize(grid, (element) => {
     flex-direction: column
     gap: 1rem
     width: 100%
+    height: 100%
+    max-height: 100%
 
     padding: 1rem
     box-sizing: border-box
     isolation: isolate
-
+    
     .toolbar
         z-index: 1
 
-    .appiaries
+    .apiaries
         display: grid
         gap: 20px
+        height: 100%
+        overflow-y: auto
 
         .apiary
             height: 30rem

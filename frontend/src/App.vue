@@ -37,4 +37,6 @@ const store = useAuthStore()
     flex: 1
     display: flex
     flex-direction: row
+
+    // overflow: hidden
 </style>

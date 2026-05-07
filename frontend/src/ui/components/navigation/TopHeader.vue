@@ -21,9 +21,9 @@ const s = useCssModule()
     display: flex
     align-items: center
     width: 100%
-    min-height: 3.5rem
-    box-sizing: border-box
+    min-height: var(--header-height)
     padding: 0 .5rem
+    box-sizing: border-box
     
     background: var(--white)
     // background: var(--black)

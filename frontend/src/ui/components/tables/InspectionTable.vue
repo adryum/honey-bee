@@ -94,6 +94,9 @@ const props = defineProps<{
     flex-direction: column
     gap:            .1rem
 
+    height: 100%
+    overflow: auto
+
     font-family: var(--font-family)
     font-size:   var(--font-size-medium)
 
@@ -112,6 +115,9 @@ const props = defineProps<{
 
 .header
     all:    unset
+    position: sticky
+    top: 0
+    z-index: 1  
     width:  100%
     height: 3rem
 
@@ -123,8 +129,7 @@ const props = defineProps<{
 
 .body
     all: unset
-
-    
+    overflow-y: auto
 
 .footer
     all:    unset

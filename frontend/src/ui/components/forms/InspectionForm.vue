@@ -178,7 +178,6 @@ const form = useVModel(props, 'form', emit)
     display: flex
     flex-direction: column
     gap: 1rem
-    box-sizing: border-box
 
 .indented
     margin-left: 2.5rem

@@ -42,13 +42,7 @@ const { history } = useHiveHistoryQuery( { hiveId: toRef(() => props.hive.id) } 
     grid-template-areas: 'profit profit info' 'profit profit log'
     gap: 1rem
     height: 100%
-
-    .image
-        grid-area: image
-
-        .imageEl
-            width: 100%
-            height: 100%
+    overflow: hidden
 
     .info
         grid-area: info
