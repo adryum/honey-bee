@@ -23,7 +23,7 @@ const emits = defineEmits<{
 const { modal, exposed } = useModalBase()
 defineExpose(exposed)
 
-const { createEvent } = useCalendarMutation()
+const { createEvent, isCreatingEvent } = useCalendarMutation()
 const { getFormValidee, isFormValid, clear } = useFormValidator()
 
 const title   = ref('')
@@ -87,6 +87,7 @@ watch(() => exposed.isOpen(), (val) => {
             :disabled="!isFormValid" 
             :is-aligned-center="true"
             :is-submit="true"
+            :is-loading="isCreatingEvent"
             :icon="SVG.Plus"
             @click="create" 
         />

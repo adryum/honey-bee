@@ -25,7 +25,7 @@ const emits = defineEmits<{
 const { modal, exposed } = useModalBase()
 defineExpose(exposed)
 
-const { create } = useQueenMutations()
+const { create, isCreatingQueen } = useQueenMutations()
 const { species } = useSpeciesQuery()
 
 const { getFormValidee, isFormValid } = useFormValidator()
@@ -107,27 +107,13 @@ async function createQueen() {
             </template>
         </ModularDropdown>
 
-        <!-- <LabeledInputField
-            label="Born date"
-            :class="s.title" 
-            type="date"
-            :validee="getFormValidee(() => !!bornDate)"
-            v-model:input="bornDate"
-        />
-
-        <LabeledInputField
-            label="Species"
-            :class="s.title" 
-            :validee="getFormValidee(() => !!bornDate)"
-            v-model:input="speciesId"
-        /> -->
-
         <IconTextButton 
             text="Add"
             :disabled="!isFormValid" 
             :is-aligned-center="true"
             :is-submit="true"
             :hide-icon="true"
+            :is-loading="isCreatingQueen"
             @click="createQueen" 
         />
     </div>

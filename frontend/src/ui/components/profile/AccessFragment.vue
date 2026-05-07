@@ -8,6 +8,7 @@ import { useAdminMutations } from "@/core/composables/useAdmin";
 import { useApiariesQuery, useApiaryQuery } from "@/core/composables/useApiary";
 import Hive from "../hive/Hive.vue";
 import ToolBar from "../ToolBar.vue";
+import Checkbox from "../input/fields/Checkbox.vue";
 
 const s = useCssModule()
 const props = defineProps<{
@@ -157,13 +158,11 @@ watch(() => props.userId, newVal => {
             :class="s.item"
             @click="openApiary(apiary)"
         >
-            <button 
-                :class="[
-                    s.checkbox,
-                    hasApiaryAccessTo(apiary) ? s.hasAccess : s.noAccess
-                ]"
-                @click.prevent="toggleApiaryAccess(apiary)"
-            ></button>
+            <Checkbox
+                :class="s.checkbox"
+                :value="hasApiaryAccessTo(apiary)"
+                @click="toggleApiaryAccess(apiary)"
+            />
         </Apiary>
     </div>
 
@@ -181,13 +180,11 @@ watch(() => props.userId, newVal => {
             :class="s.item"
         >
             <template #footer>
-                <button 
-                    :class="[
-                        s.checkbox,
-                        hasHiveAccessTo(hive) ? s.hasAccess : s.noAccess
-                    ]"
+                <Checkbox
+                    :style="{ marginLeft: 'auto' }"
+                    :value="hasHiveAccessTo(hive)"
                     @click="toggleHiveAccess(hive)"
-                ></button>
+                />
             </template>
         </Hive>
     </div>
@@ -196,20 +193,7 @@ watch(() => props.userId, newVal => {
 
 <style module lang="sass">
 .checkbox
-    all: unset
-    aspect-ratio: 1
     margin: .5rem
-    width: 2rem
-
-    border-radius: var(--border-radius-tiny)
-    box-shadow: inset 0 0 0 1px var(--dark)
-    cursor: pointer
-
-    &.hasAccess
-        background: var(--white)
-
-    &.noAccess
-        background: var(--secondary)
 
 .label
     

@@ -23,7 +23,7 @@ export const useHiveHoneyProductionMutations = () => {
     const { createPopupAction } = useActionsStore()
     const queryClient = useQueryClient()
 
-    const { mutate: create, isPending: isCreatingProduction } = useMutation({
+    const { mutate: create, isPending: isCreatingYields } = useMutation({
         mutationFn: hiveHoneyYieldApi.create,
         onSuccess: (newProduction) => {
             queryClient.invalidateQueries({ queryKey: ['hivesHoneyProduction'] })
@@ -43,6 +43,6 @@ export const useHiveHoneyProductionMutations = () => {
 
     return {
         create,
-        isCreatingProduction
+        isCreatingYields
     }
 }

@@ -1,5 +1,5 @@
 <script setup lang="ts">
-import { computed, onMounted, reactive, ref, toRef, useCssModule } from "vue";
+import { computed, onMounted, reactive, ref, toRef, useCssModule, watch } from "vue";
 import Icon from "../components/Icon.vue";
 import { IconType, SVG } from "@/assets/svgs/SVGLoader";
 import IconTextButton from "../components/input/buttons/IconTextButton.vue";
@@ -11,24 +11,26 @@ import { RouterViewPaths } from "@/core/router";
 import { useApiaryQuery } from "@/core/composables/useApiary";
 import { useInspectionMutation } from "@/core/composables/useInspection";
 import { useRouter } from "vue-router";
-import { ActionType, useActionsStore } from "@/core/stores/ActionStore";
 
 const s = useCssModule()
+const router = useRouter()
 const props = defineProps<{
     apiaryId: number
 }>()
-const router = useRouter()
 
 const { hives, apiary } = useApiaryQuery({
     id:             toRef(props.apiaryId),
     getApiaryHives: true,
     getApiary:      true
 })
-const { create } = useInspectionMutation()
+const { create, isCreatingInspection } = useInspectionMutation()
 const inspectionForms = ref<InspectionFormUI[]>([])
 
 const selectedForm     = ref<InspectionFormUI | undefined>(undefined)
-const selectedFormHive = computed(() => hives.value?.find(item => item.id === selectedForm.value?.hiveId))
+const selectedFormHive = computed(() => ({ 
+    hive:       hives.value?.find(item => item.id === selectedForm.value?.hiveId),
+    isLastHive: selectedForm.value?.hiveId === hives.value?.[hives.value.length - 1].id
+}))
 
 const emptyForm: InspectionFormUI = {
     id:                           -1,
@@ -71,7 +73,10 @@ function hasMadeAnyChanges(form: InspectionFormUI): boolean {
 }
 
 function initialize() {
-    if (!isValidValue(props.apiaryId) && isValidValue(hives.value)) return
+    console.log("Before init", props.apiaryId, hives.value);
+    
+    if (!isValidValue(props.apiaryId) || !isValidValue(hives.value)) return
+    console.log("After init", props.apiaryId, hives.value);
 
     hives.value!.forEach(hive => {
         inspectionForms.value.push({ ...emptyForm, hiveId: hive.id });
@@ -100,6 +105,7 @@ function saveForm(formModel: InspectionFormUI) {
     }
 }
 
+const isSubmitted = ref(false)
 async function finishInspection() {
     if (!isValidValue(props.apiaryId)) return;
 
@@ -110,14 +116,16 @@ async function finishInspection() {
     create(model, {
         onSuccess: () => {
             router.push(RouterViewPaths.Inspections)
+            isSubmitted.value = true
         }
     })
 }
 
-onMounted(() => {
-    initialize()
-})
-
+watch(hives, (val) => {
+    if (isValidValue(val)) {
+        initialize()
+    }
+}, { immediate: true })
 </script>
 
 <template>
@@ -136,7 +144,7 @@ onMounted(() => {
                 for="apiaryHives"
                 :class="s.label"
             >
-                {{ selectedFormHive?.name }}
+                {{ selectedFormHive?.hive?.name }}
             </label>
 
             <IconTextButton
@@ -156,6 +164,8 @@ onMounted(() => {
         <InspectionForm
             v-if="selectedForm"
             :class="s.form"
+            :submit-button-text="selectedFormHive.isLastHive ? 'Submit inspection' : 'Save and go to the next hive'"
+            :allow-submiting="!isCreatingInspection && !isSubmitted"
             @submit="saveForm(selectedForm)"
             v-model:form="selectedForm"
         />

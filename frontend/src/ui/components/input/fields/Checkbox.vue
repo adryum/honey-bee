@@ -7,34 +7,43 @@ import { getRandomId } from "@/core/utils/Utils";
 
 const s = useCssModule()
 const props = defineProps<{
-    label:        string
-    disabled?:    boolean
+    value?:       boolean
+    label?:       string
     readonly?:    boolean
+    disabled?:    boolean
     formOptions?: FormvalidatorAndItsOptionsModel
 }>()
+const emit = defineEmits(['click'])
 const id = getRandomId("checkbox")
-const isTrue = defineModel("isTrue", { default: false })
+
+function handleClick(event: Event) {
+    if (props.readonly) {
+        event.stopPropagation()
+        return
+    }
+    emit('click', event)
+}
 // const validator = useModularDropdownValidator(props.formOptions)
 </script>
 
 <template>
-<div :class="s.container">
+<div 
+    :id="id"
+    :class="s.container"
+    @click="handleClick"
+>
     <div :class="s.wrapper">
         <input
-            :id="id"
-            type="checkbox"
-            :disabled="disabled"
-            :readonly="readonly"
             :class="[
                 s.input,
-                isTrue && s.isTrue,
+                value && s.isTrue,
                 disabled && s.disabled
             ]"
-            v-model="isTrue"
-            @click="readonly ? $event.preventDefault() : null"
+            type="checkbox"
+            :disabled="disabled"
         />
         <Icon
-            v-if="isTrue"
+            v-if="value"
             :class="s.icon"
             :icon="SVG.Checkmark"
             :type="IconType.SMALL"
@@ -42,6 +51,7 @@ const isTrue = defineModel("isTrue", { default: false })
         />
     </div>
     <label 
+        v-if="label"
         :for="id"
         :class="[
             s.label, 

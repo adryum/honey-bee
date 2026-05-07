@@ -23,7 +23,7 @@ const props = defineProps<{
 const { modal, exposed } = useModalBase()
 defineExpose(exposed)
 
-const { create } = useNoteMutations()
+const { create, isCreatingNote } = useNoteMutations()
 const { getFormValidee, isFormValid, clear } = useFormValidator()
 
 const type    = ref<NoteTypes | undefined>(undefined)
@@ -115,6 +115,7 @@ watch(() => exposed.isOpen(), (val) => {
             :disabled="!isFormValid" 
             :is-aligned-center="true"
             :is-submit="true"
+            :is-loading="isCreatingNote"
             :icon="SVG.Plus"
             @click="createNote" 
         />

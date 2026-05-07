@@ -1,7 +1,7 @@
 <script setup lang="ts">
 import { SVG } from '@/assets/svgs/SVGLoader';
 import { useApiaryMutations } from '@/core/composables/useApiary';
-import { useCssModule, ref, watch } from 'vue';
+import { useCssModule, ref, watch, computed } from 'vue';
 import ImageDropZone from '../input/fields/ImageDropZone.vue';
 import IconTextButton from '../input/buttons/IconTextButton.vue';
 import { useHiveMutations, useHivesQuery } from '@/core/composables/useHive';
@@ -17,6 +17,7 @@ import StringMultipleField from '../input/fields/used/StringMultipleField.vue';
 import StringField from '../input/fields/used/StringField.vue';
 import StringFieldTopPart from '../input/dropdowns/dropdownItems/top/StringFieldTopPart.vue';
 import type { HiveModelDB } from '@/core/stores/Models';
+import ToolBar from '../ToolBar.vue';
 
 const s = useCssModule()
 const props = defineProps<{
@@ -33,6 +34,10 @@ const emits = defineEmits<{
 const { assignHive } = useApiaryMutations()
 const { create, isCreatingHive } = useHiveMutations()
 const { hives } = useHivesQuery({ apiaryId: undefined })
+const hivesInApiary = computed(() => hives.value?.filter(hive => hive.apiaryId === props.apiaryId) ?? [])
+const hivesNotInApiary = computed(() => hives.value?.filter(hive => hive.apiaryId !== props.apiaryId) ?? [])
+
+
 const { getFormValidee, isFormValid, showThatIsRequired, clear } = useFormValidator()
 
 const tabs = ['Create New', 'Move Existing']
@@ -114,23 +119,56 @@ watch(() => exposed.isOpen(), (val) => {
             </div>
 
 
-            <div 
+            <div
                 v-show="selectedTab === tabs[1]"
-                ref="grid"
-                :class="s.existingHiveGrid"
-                :style="gridStyle"
+                :class="s.addExistingHivesPart"
             >
-                <Hive
-                    v-for="hive in hives"
-                    :key="hive.id"
-                    :class="s.hive"
-                    :hive="hive"
-                    :showShadow="true"
-                    @click="assignHive({
-                        hiveId: hive.id,
-                        apiaryId: apiaryId
-                    })"
-                />
+                <!-- <p
+                    :class="s.seperatorText"
+                >
+                    From other apiaries
+                </p> -->
+                <div 
+                    ref="grid"
+                    :style="gridStyle"
+                >
+                    <Hive
+                        v-for="hive in hivesNotInApiary"
+                        :key="hive.id"
+                        :class="s.hive"
+                        :hive="hive"
+                        :showShadow="true"
+                        @click="assignHive({
+                            hiveId: hive.id,
+                            apiaryId: apiaryId
+                        })"
+                    />
+                </div>
+
+                <p
+                    v-if="hivesInApiary.length > 0"
+                    :class="s.seperatorText"
+                >
+                    In this apiary
+                </p>
+                <div 
+                    v-if="hivesInApiary.length > 0"
+                    ref="grid"
+                    :style="gridStyle"
+                    :class="s.uninteractable"
+                >
+                    <Hive
+                        v-for="hive in hivesInApiary"
+                        :key="hive.id"
+                        :class="s.hive"
+                        :hive="hive"
+                        :showShadow="true"
+                        @click="assignHive({
+                            hiveId: hive.id,
+                            apiaryId: apiaryId
+                        })"
+                    />
+                </div>
             </div>
 
 
@@ -213,6 +251,25 @@ watch(() => exposed.isOpen(), (val) => {
 </template>
 
 <style module lang = 'sass'>
+.uninteractable
+    pointer-events: none
+    opacity: 0.6
+
+.seperatorText
+    font-size: var(--font-size-medium)
+    font-family: var(--font-family)
+    font-weight: 500
+    padding: .5rem 0
+    border-bottom: 1px solid rgba(0, 0, 0, .4)
+
+.addExistingHivesPart
+    display: flex
+    flex-direction: column
+    padding-top: 1rem
+    gap: 1rem
+    height: 30rem
+    overflow-y: scroll
+
 .container
     border: none
     padding: 0
@@ -262,11 +319,6 @@ watch(() => exposed.isOpen(), (val) => {
             &:hover
                 opacity: 1
                 background: var(--red)
-
-.existingHiveGrid
-    padding-top: 1rem
-    overflow-y: scroll
-    height: 22rem
 
 .hive
     // width: 20rem

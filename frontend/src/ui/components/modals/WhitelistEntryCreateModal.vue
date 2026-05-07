@@ -20,7 +20,7 @@ const { modal, exposed } = useModalBase()
 defineExpose(exposed)
 
 const { getFormValidee, isFormValid, clear } = useFormValidator()
-const { addWhitelistEntry } = useAdminMutations()
+const { addWhitelistEntry, isAddingWhitelistEntry } = useAdminMutations()
 
 const email = ref('')
 const role = ref<Role | undefined>()
@@ -101,6 +101,7 @@ watch(() => exposed.isOpen(), (val) => {
                 :hide-icon="true"
                 :is-submit="true"
                 :is-aligned-center="true"
+                :is-loading="isAddingWhitelistEntry"
                 @click="add"
             />
         </div>

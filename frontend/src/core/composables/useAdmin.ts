@@ -38,10 +38,10 @@ export const useAdminMutations = () => {
     const { mutate: getApiaryAccess, isPending: isGettingApiaryAccess } = useMutation({
         mutationFn: adminApi.getApiaryAccess,
         onSuccess: (access) => {
-            createPopupAction({
-                label: "Got apiary access!",
-                type:  ActionType.Success
-            })
+            // createPopupAction({
+            //     label: "Got apiary access!",
+            //     type:  ActionType.Success
+            // })
         },
         onError: (error) => {
             createPopupAction({
@@ -54,10 +54,10 @@ export const useAdminMutations = () => {
     const { mutate: getHiveAccess, isPending: isGettingHiveAccess } = useMutation({
         mutationFn: adminApi.getHiveAccess,
         onSuccess: (access) => {
-            createPopupAction({
-                label: "Got hive access!",
-                type:  ActionType.Success
-            })
+            // createPopupAction({
+            //     label: "Got hive access!",
+            //     type:  ActionType.Success
+            // })
         },
         onError: (error) => {
             createPopupAction({

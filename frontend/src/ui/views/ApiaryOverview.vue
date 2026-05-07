@@ -11,7 +11,7 @@ import { SVG } from '@/assets/svgs/SVGLoader';
 import type { ModalBaseModel } from '@/core/composables/useModalBase';
 import StringSearchDropdown from '../components/input/dropdowns/StringSearchDropdown.vue';
 import IconTextButton from '../components/input/buttons/IconTextButton.vue';
-import CreateHiveModal from '../components/modals/CreateHiveModal.vue';
+import HiveCreateModal from '../components/modals/HiveCreateModal.vue';
 
 const s = useCssModule()
 const router = useRouter()
@@ -122,7 +122,7 @@ onMounted(() => console.log(props.tab))
             :hives="filteredHives"
         />
         
-        <CreateHiveModal
+        <HiveCreateModal
             ref="createHiveModal"
             :apiary-id="apiary?.id"
         />

@@ -2,7 +2,7 @@
 import type { SVG } from "@/assets/svgs/SVGLoader";
 import type { FieldValidee } from "@/core/composables/useFormValidator";
 import Icon from "@/ui/components/Icon.vue";
-import { onMounted, ref, useCssModule } from "vue";
+import { computed, onMounted, ref, useCssModule } from "vue";
 
 const s = useCssModule()
 const props = withDefaults(defineProps<{
@@ -11,11 +11,14 @@ const props = withDefaults(defineProps<{
     selection?: string
     validee?:   FieldValidee
     rightIcon?: SVG
+    readonly?: boolean
 }>(), {
     selection: '',
     placeholder: "..."
 })
 const input = ref()
+const isFocused = ref(false)
+const allowInteraction = computed(() => !props.readonly)
 
 const emit = defineEmits<{ 
     input: [value: string]
@@ -43,6 +46,8 @@ onMounted(() => {
 <div 
     :class="[
         s.container,
+        isFocused && s.open,
+        allowInteraction && s.interactive
     ]"
     @click="input.focus"
 >
@@ -60,10 +65,13 @@ onMounted(() => {
         <textarea
             ref="input"
             :class="s.input"
-            :placeholder="placeholder" 
             type="text"
+            :placeholder="placeholder" 
             :value="selection"
+            :readonly="readonly"
             @input="handleInput"
+            @focus="isFocused = true"
+            @blur="isFocused = false"
         ></textarea>
     </div>
     <Icon
@@ -99,13 +107,12 @@ onMounted(() => {
         flex-direction: column
         width: 100%
 
+    &.interactive
+        &:hover
+            background: var(--secondary)
 
-    &.open
-        background: var(--secondary)
-        
-    &:hover
-        background: var(--secondary)
-        
+        &.open
+            background: var(--secondary)
 
     .label
         display: flex

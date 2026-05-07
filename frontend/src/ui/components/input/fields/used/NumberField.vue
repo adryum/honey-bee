@@ -49,8 +49,8 @@ function updateValue(value: number) {
     emit('input', value)
 }
 
-watch(() => props.selection, (newVal) => {
-    if (newVal === 0) return
+watch(() => props.selection, (newVal, oldVal) => {
+    if (newVal === 0 && oldVal) return
     // changes display value to match selection value
     displayValue.value = newVal.toString()
 }, { immediate: true })

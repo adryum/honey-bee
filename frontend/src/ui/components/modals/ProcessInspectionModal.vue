@@ -24,7 +24,7 @@ const { inspection } = useInspectionQuery({
     allowFetching: computed(() => exposed.isOpen()) 
 })
 
-const { create } = useHiveHoneyProductionMutations()
+const { create, isCreatingYields } = useHiveHoneyProductionMutations()
 const { processInspection: process } = useInspectionMutation()
 
 const procesedHoney = ref('')
@@ -168,6 +168,7 @@ async function processInspection() {
                 :is-submit="true"
                 :is-aligned-center="true"
                 :hide-icon="true"
+                :is-loading="isCreatingYields"
                 @click="processInspection"
             />
         </div>
