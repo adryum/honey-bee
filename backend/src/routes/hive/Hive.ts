@@ -10,17 +10,55 @@ import { and, eq, inArray, or } from "drizzle-orm";
 import { hives, userApiaryAccess, userHiveAccess, users } from "../../db/schema";
 import { useCalendar } from "../../config/calendar/GoogleCalendar";
 import { withStatus } from "../../utils";
-import hiveActionHistoryRouter from "./HiveActionHistory";
-import hiveYieldsRouter from "./HiveHoneyYields";
-import hiveQueenHistoryRouter from "./HiveQueenHistory";
-import hiveNotesRouter from "./HiveNotes";
+import z from "zod";
 
 const router = Router()
 
-router.use('/:hiveId/action-history', hiveActionHistoryRouter)
-router.use('/:hiveId/yields',         hiveYieldsRouter)
-router.use('/:hiveId/queen-history',  hiveQueenHistoryRouter)
-router.use('/:hiveId/notes',          hiveNotesRouter)
+
+router.get(
+    "/:id/hives",
+    requireRole([UserRoles.ANY]),
+    async (
+        req: Request<{ id: string }>, 
+        res: Response
+) => {
+    console.log("# Get all apiary hives");
+    const userId   = req.session.userId!
+    const role     = await getSessionUserRole(userId)
+    const apiaryId = parseInt(req.params.id)
+
+    try {
+        console.log("Getting hives user has access to...");
+
+        var hivesResult
+        switch (role) {
+            case UserRoles.ADMINISTRATOR:
+                hivesResult = await db.query.hives.findMany({
+                    where: eq(hives.apiaryId, apiaryId)
+                });
+                break;
+            default:
+                const hiveAccess = await db.query.userHiveAccess.findMany({
+                    where: eq(userHiveAccess.userId, userId)
+                });
+
+                hivesResult = await db.query.hives.findMany({
+                    where: and(
+                        eq(hives.apiaryId, apiaryId), 
+                        inArray(hives.id, hiveAccess.map(item => item.hiveId))
+                    )
+                });
+                break;
+        }
+        console.log("Done!");
+
+        return res.status(200).json(hivesResult)
+    } catch (err) {
+        console.error(err);
+        res.status(500).send('Server error');
+    }
+})
+
 
 router.get(
     "/",
@@ -30,6 +68,10 @@ router.get(
         res: Response
 ) => {
     console.log("# Get all hives");
+
+    const querySchema = z.strictObject({
+        hiveIds: z.array(z.coerce.number()).optional()
+    })
     const userId = req.session.userId!
     const role   = await getSessionUserRole(userId)
 

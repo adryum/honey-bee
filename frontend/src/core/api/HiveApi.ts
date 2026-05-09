@@ -13,12 +13,10 @@ export const hiveApi = {
         })
         return data.map(HiveCreateResponse_to_HiveModelDB)
     },
-
     get: async ( id: number) => {
         const { data } = await axios.get<HiveGetModel>(`/hive/${id}`)
         return HiveCreateResponse_to_HiveModelDB(data)
     },
-
     create: async (model: HiveCreateRequestModel): Promise<HiveModelDB> => {
         const formData = new FormData()
         formData.append("name", model.name)
@@ -31,7 +29,6 @@ export const hiveApi = {
         
         return HiveCreateResponse_to_HiveModelDB(data)
     },
-
     update: async (model: HiveUpdateRequestModel): Promise<HiveModelDB> => {
         const formData = new FormData()
         formData.append("name", model.name)
@@ -44,58 +41,53 @@ export const hiveApi = {
         
         return HiveCreateResponse_to_HiveModelDB(data)
     },
-
     delete: async (id: number): Promise<number> => {
         const { data } = await axios.delete<number>(`/hive/${id}`)
         return data
     },
-
     notes: {
         getFromHive: async (hiveId: number): Promise<NoteModelDB[]> => {
-            const { data } = await axios.get<NoteGetModel[]>(`/hive/${hiveId}/note`)
+            const { data } = await axios.get<NoteGetModel[]>(`/hive-notes/hive/${hiveId}`)
             return data.map(NoteCreateModelResponse_to_NoteModelDB)
         },
-
         create: async (model: NoteCreateModelRequest): Promise<NoteModelDB> => {
-            const { data } = await axios.post<NoteGetModel>("/note", model)
+            const { data } = await axios.post<NoteGetModel>(`/hive-notes`, model)
             return NoteCreateModelResponse_to_NoteModelDB(data)
         },
-
         update: async (model: NoteUpdateRequestModel): Promise<NoteModelDB> => {
-            const { data } = await axios.put<NoteGetModel>("/note", model)
+            const { data } = await axios.put<NoteGetModel>(`/hive-notes`, model)
             return NoteCreateModelResponse_to_NoteModelDB(data)
         },
-
         delete: async (id: number): Promise<number> => {
-            const { data } = await axios.delete<number>(`/note/${id}`)
+            const { data } = await axios.delete<number>(`/hive-notes/${id}`)
             return data
         }
     },
     history: {
         action: {
             create: async (payload: HiveHistoryCreateModel): Promise<HistoryEntryDB> => {
-                const { data } = await axios.post<HiveHistoryGetModel>(`/hiveHistory`, payload)
+                const { data } = await axios.post<HiveHistoryGetModel>(`/hive-action-history`, payload)
                 return HiveHistoryGetModel_To_HistoryEntryDB(data)
             },
             getFromHive: async (hiveId: number): Promise<HistoryEntryDB[]> => {
-                const { data } = await axios.get<HiveHistoryGetModel[]>(`/hiveHistory/hive/${hiveId}`)
+                const { data } = await axios.get<HiveHistoryGetModel[]>(`/hive-action-history/hive/${hiveId}`)
                 return data.map(HiveHistoryGetModel_To_HistoryEntryDB)
             },
         },
         queen: {
             getFromHive: async (hiveId: number): Promise<QueenHistoryModelDB[]> => {
-                const { data } = await axios.get<QueenHistoryGetModel[]>(`/hiveHistory/hive/${hiveId}`)
+                const { data } = await axios.get<QueenHistoryGetModel[]>(`/hive-queen-history/hive/${hiveId}`)
                 return data.map(QueenHistoryGetModel_To_QueenHistoryDB)
             },
         }
     },
     yields: {
         create: async (payload: HiveHoneyYieldCreateModel): Promise<HiveHoneyYieldGetModel> => {
-            const { data } = await axios.post<HiveHoneyYieldGetModel>(`/hiveHoneyYield`, payload)
+            const { data } = await axios.post<HiveHoneyYieldGetModel>(`/hive-yields`, payload)
             return data
         },
         getFromHive: async (hiveId: number): Promise<HiveHoneyYieldGetModel[]> => {
-            const { data } = await axios.get<HiveHoneyYieldGetModel[]>(`/hiveHoneyYield/hive/${hiveId}`)
+            const { data } = await axios.get<HiveHoneyYieldGetModel[]>(`/hive-yields/hive/${hiveId}`)
             return data
         },
     }

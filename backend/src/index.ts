@@ -8,6 +8,10 @@ import { testConnection, withStatus } from "./utils";
 import authentication from "./routes/Authentication"
 import adminRoute from "./routes/Admin"
 import hiveRoute from "./routes/hive/Hive"
+import hiveActionHistoryRouter from "./routes/hive/HiveActionHistory";
+import hiveYieldsRouter from "./routes/hive/HiveHoneyYields";
+import hiveQueenHistoryRouter from "./routes/hive/HiveQueenHistory";
+import hiveNotesRouter from "./routes/hive/HiveNotes";
 import apiaryRoute from "./routes/Apiaries"
 import calendarRoute from "./routes/Calendar"
 import inspectionRoute from "./routes/Inspection"
@@ -85,6 +89,10 @@ async function startServer() {
     app.use("/inspection", inspectionRoute)
     
     app.use("/hive", hiveRoute)
+    app.use('/hive-action-history', hiveActionHistoryRouter)
+    app.use('/hive-yields', hiveYieldsRouter)
+    app.use('/hive-queen-history', hiveQueenHistoryRouter)
+    app.use('/hive-notes', hiveNotesRouter)
 
     app.use("/species", speciesRoute)
     app.use("/queen", queenRoute)
