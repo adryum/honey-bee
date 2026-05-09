@@ -1,5 +1,5 @@
 <script setup lang="ts">
-import { useHiveHoneyProductionQuery } from "@/core/composables/useHiveHoneyProduction";
+import { useHiveHoneyProductionQuery } from "@/core/composables/hive/useHiveHoneyYields";
 import { computed, onMounted, ref, useCssModule } from "vue";
 
 const s = useCssModule()

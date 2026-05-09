@@ -1,18 +1,26 @@
 import { Router, type Request, type Response } from "express";
-import { db, pool } from "../config/Database";
-import type { ResultSetHeader } from "mysql2";
-import { uploadImage } from "../config/image_cloud/Cloudinary";
-import { PublicIdBuilder } from "../config/image_cloud/PublicIdBuilder";
-import { upload } from "../config/Multer";
-import { attachCalendarClient, requireRole } from "../Middleware";
-import { HiveType, UserRoles } from "../DatabaseEnums";
-import { getSessionUserRole } from "../config/RedisClient";
+import { db } from "../../config/Database";
+import { uploadImage } from "../../config/image_cloud/Cloudinary";
+import { PublicIdBuilder } from "../../config/image_cloud/PublicIdBuilder";
+import { upload } from "../../config/Multer";
+import { requireRole } from "../../Middleware";
+import { HiveType, UserRoles } from "../../DatabaseEnums";
+import { getSessionUserRole } from "../../config/RedisClient";
 import { and, eq, inArray, or } from "drizzle-orm";
-import { hives, userApiaryAccess, userHiveAccess, users } from "../db/schema";
-import { useCalendar } from "../config/calendar/GoogleCalendar";
-import { withStatus } from "../utils";
+import { hives, userApiaryAccess, userHiveAccess, users } from "../../db/schema";
+import { useCalendar } from "../../config/calendar/GoogleCalendar";
+import { withStatus } from "../../utils";
+import hiveActionHistoryRouter from "./HiveActionHistory";
+import hiveYieldsRouter from "./HiveHoneyYields";
+import hiveQueenHistoryRouter from "./HiveQueenHistory";
+import hiveNotesRouter from "./HiveNotes";
 
 const router = Router()
+
+router.use('/:hiveId/action-history', hiveActionHistoryRouter)
+router.use('/:hiveId/yields',         hiveYieldsRouter)
+router.use('/:hiveId/queen-history',  hiveQueenHistoryRouter)
+router.use('/:hiveId/notes',          hiveNotesRouter)
 
 router.get(
     "/",

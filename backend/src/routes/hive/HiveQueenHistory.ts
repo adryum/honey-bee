@@ -1,19 +1,19 @@
-import { UserRoles } from "../DatabaseEnums"
-import { requireRole } from "../Middleware"
+import { UserRoles } from "../../DatabaseEnums"
+import { requireRole } from "../../Middleware"
 import { Router, type Request, type Response } from "express";
-import { withStatus } from "../utils";
-import { db } from "../config/Database";
+import { withStatus } from "../../utils";
+import { db } from "../../config/Database";
 import { and, eq, inArray } from "drizzle-orm";
-import { hiveQueenHistory, queens } from "../db/schema";
-import { upload } from "../config/Multer";
-import { uploadImage } from "../config/image_cloud/Cloudinary";
-import { PublicIdBuilder } from "../config/image_cloud/PublicIdBuilder";
+import { hiveQueenHistory, queens } from "../../db/schema";
+import { upload } from "../../config/Multer";
+import { uploadImage } from "../../config/image_cloud/Cloudinary";
+import { PublicIdBuilder } from "../../config/image_cloud/PublicIdBuilder";
 
 const router = Router()
 
-type queenGetOptions = Parameters<typeof db.query.queens.findMany>[0];
+type queenHistoryGetOptions = Parameters<typeof db.query.hiveQueenHistory.findMany>[0];
 
-export const queenGetStructure = {
+export const queenHistoryGetStructure = {
     columns: {
         queenSpeciesId: false,
         hiveId:         false
@@ -34,7 +34,7 @@ export const queenGetStructure = {
             }
         }
     },
-} satisfies queenGetOptions;
+} satisfies queenHistoryGetOptions;
 
 router.get(
     "/",
@@ -51,7 +51,7 @@ router.get(
     try {
         const queenGetResult = await withStatus(`Fetching queens`, () => {
             return db.query.queens.findMany({
-                ...queenGetStructure,
+                ...queenHistoryGetStructure,
                 where: and(
                     queenIds.length ? inArray(queens.id, queenIds) : undefined,
                     hiveIds.length  ? inArray(queens.hiveId, hiveIds) : undefined
@@ -133,7 +133,7 @@ router.post(
 
         const queenResult = await withStatus(`Fetching bee species`, () => 
             db.query.queens.findFirst({
-                ...queenGetStructure,
+                ...queenHistoryGetStructure,
                 where: eq(queens.id, insertResult.insertId),
             })
         )

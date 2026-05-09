@@ -4,7 +4,7 @@ import { useCalendarQuery } from "@/core/composables/useCalendar";
 import { CalendarDate } from "@/core/Calendar";
 import type { HiveModelDB } from "@/core/stores/Models";
 import CalendarGrid from "@/ui/components/calendar/CalendarGrid.vue";
-import { useHiveHistoryMutations } from "@/core/composables/useHiveHistory";
+import { useHiveActionHistoryMutations } from "@/core/composables/hive/useHiveActionHistory";
 import { HistoryActionType } from "@/core/DatabaseEnums";
 
 const s = useCssModule()
@@ -13,7 +13,7 @@ const props = defineProps<{
     selectedDate: Date
 }>()
 
-const { create } = useHiveHistoryMutations()
+const { create } = useHiveActionHistoryMutations()
 const calendarIds = computed(() => {
     console.log(props.hive.calendarId ? [props.hive.calendarId] : []);
     return props.hive.calendarId ? [props.hive.calendarId] : []

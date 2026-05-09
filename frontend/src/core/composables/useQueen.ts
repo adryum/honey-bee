@@ -29,7 +29,7 @@ export const useQueenMutations = () => {
     const { createPopupAction } = useActionsStore()
 
     const { mutate: create, isPending: isCreatingQueen } = useMutation({
-        mutationFn: queenApi.createQueen,
+        mutationFn: queenApi.createQueen, 
         onSuccess: (newQueen) => {
             queryClient.invalidateQueries({ queryKey: ['queens'] })
             createPopupAction({

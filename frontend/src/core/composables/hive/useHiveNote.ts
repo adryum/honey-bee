@@ -1,9 +1,10 @@
-import { useMutation, useQuery, useQueryClient } from "@tanstack/vue-query";
-import { computed, type Ref } from "vue";
-import { noteApi } from "../api/NoteApi";
-import { ActionType, useActionsStore } from "../stores/ActionStore";
-import { useHiveHistoryMutations } from "./useHiveHistory";
-import { HistoryActionType } from "../DatabaseEnums";
+import type { noteApi } from "@/core/api/NoteApi"
+import { HistoryActionType } from "@/core/DatabaseEnums"
+import { useActionsStore, ActionType } from "@/core/stores/ActionStore"
+import { useQuery, useQueryClient, useMutation } from "@tanstack/vue-query"
+import { type Ref, computed } from "vue"
+import { useHiveActionHistoryMutations } from "./useHiveActionHistory"
+
 
 export const useNotes = ({
     hiveId
@@ -27,7 +28,7 @@ export const useNotes = ({
 export const useNoteMutations = () => {
     const queryClient = useQueryClient()
     const { createPopupAction }= useActionsStore()
-    const { create: createHiveHistory } = useHiveHistoryMutations()
+    const { create: createHiveHistory } = useHiveActionHistoryMutations()
 
     const { mutate: create, isPending: isCreatingNote } = useMutation({
         mutationFn: noteApi.create,

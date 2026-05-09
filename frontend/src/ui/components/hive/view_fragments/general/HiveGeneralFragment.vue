@@ -4,14 +4,14 @@ import Info from "@/ui/components/hive/view_fragments/general/Info.vue";
 import HoneyYieldChart from "./HoneyYieldChart.vue";
 import HistoryLog from "./history/HistoryLog.vue";
 import type { HiveModelDB } from "@/core/stores/Models";
-import { useHiveHistoryQuery } from "@/core/composables/useHiveHistory";
+import { useHiveActionHistoryQuery } from "@/core/composables/hive/useHiveActionHistory";
 
 const s = useCssModule()
 const props = defineProps<{
     hive:       HiveModelDB
 }>()
 
-const { history } = useHiveHistoryQuery( { hiveId: toRef(() => props.hive.id) } )
+const { history } = useHiveActionHistoryQuery( { hiveId: toRef(() => props.hive.id) } )
 </script>
 
 <template>

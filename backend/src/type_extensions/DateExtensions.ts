@@ -11,6 +11,7 @@ declare global {
         isToday(): boolean;
         isThisMonth(): boolean;
         isWeekend(): boolean;
+        getDuration(end: Date): { years: number, months: number, days: number };
     }
 }
 
@@ -69,3 +70,20 @@ Date.prototype.isWeekend = function(): boolean {
     const day = this.getDay();
     return day === 0 || day === 6; // Sunday = 0, Saturday = 6
 }
+
+Date.prototype.getDuration = function (end: Date) {
+    let years  = end.getFullYear() - this.getFullYear();
+    let months = end.getMonth()    - this.getMonth();
+    let days   = end.getDate()     - this.getDate();
+
+    if (days < 0) {
+        months--;
+        days += new Date(end.getFullYear(), end.getMonth(), 0).getDate();
+    }
+    if (months < 0) {
+        years--;
+        months += 12;
+    }
+
+    return { years, months, days };
+};

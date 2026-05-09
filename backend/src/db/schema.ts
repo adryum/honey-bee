@@ -162,7 +162,7 @@ export const queens = mysqlTable("queens", {
 	id:                   bigint({ mode: "number" }).autoincrement().notNull(),
 	imageUrl:             text("image_url"),
 	bornDate:             datetime("born_date", { mode: 'string'}).notNull(),
-	addedToHiveTimestamp: timestamp("added_to_hive_timestamp", { mode: 'string' }),
+	addedToHiveTimestamp: timestamp("added_to_hive_timestamp", { mode: 'string' }).notNull().default(sql`(now())`),
 	queenSpeciesId:       bigint("queen_species_id", { mode: "number" }).notNull().references(() => queenSpecies.id),
 	hiveId:               bigint("hive_id", { mode: "number" }).notNull().references(() => hives.id),
 },

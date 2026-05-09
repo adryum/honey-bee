@@ -1,13 +1,11 @@
-import type { HiveModelDB } from "../stores/Models";
+import { QueenHistoryGetModel_To_QueenHistoryDB, HiveCreateResponse_to_HiveModelDB, HiveHistoryGetModel_To_HistoryEntryDB, NoteCreateModelResponse_to_NoteModelDB } from "@/core/Convertors"
+import type { HistoryEntryDB, HiveModelDB, NoteModelDB, QueenHistoryModelDB } from "@/core/stores/Models"
+import { isValidValue } from "@/core/utils/others"
 import axios from "axios"
-import { HiveCreateResponse_to_HiveModelDB } from "../Convertors";
-import { isValidValue } from "../utils/others";
-import type { HiveGetModel, HiveCreateRequestModel, HiveUpdateRequestModel, HiveHistoryCreateModel, HiveHistoryGetModel } from "./Models";
+import type { QueenHistoryGetModel, HiveGetModel, HiveCreateRequestModel, HiveUpdateRequestModel, HiveHistoryCreateModel, HiveHistoryGetModel, HiveHoneyYieldCreateModel, HiveHoneyYieldGetModel, NoteCreateModelRequest, NoteGetModel, NoteUpdateRequestModel } from "./Models"
 
 export const hiveApi = {
-    getHives: async (
-        apiaryId: number | undefined
-    ) => {
+    getFromApiary: async (apiaryId: number | undefined) => {
         const { data } = await axios.get<HiveGetModel[]>("/hive", {
             params: {
                 apiaryId: apiaryId
@@ -16,16 +14,12 @@ export const hiveApi = {
         return data.map(HiveCreateResponse_to_HiveModelDB)
     },
 
-    getHive: async (
-        id: number
-    ) => {
+    get: async ( id: number) => {
         const { data } = await axios.get<HiveGetModel>(`/hive/${id}`)
         return HiveCreateResponse_to_HiveModelDB(data)
     },
 
-    createHive: async (
-        model: HiveCreateRequestModel
-    ): Promise<HiveModelDB> => {
+    create: async (model: HiveCreateRequestModel): Promise<HiveModelDB> => {
         const formData = new FormData()
         formData.append("name", model.name)
         formData.append("description", model.description)
@@ -38,9 +32,7 @@ export const hiveApi = {
         return HiveCreateResponse_to_HiveModelDB(data)
     },
 
-    updateHive: async (
-        model: HiveUpdateRequestModel
-    ): Promise<HiveModelDB> => {
+    update: async (model: HiveUpdateRequestModel): Promise<HiveModelDB> => {
         const formData = new FormData()
         formData.append("name", model.name)
         formData.append("description", model.description) 
@@ -53,10 +45,58 @@ export const hiveApi = {
         return HiveCreateResponse_to_HiveModelDB(data)
     },
 
-    deleteHive: async (
-        id: number
-    ): Promise<number> => {
+    delete: async (id: number): Promise<number> => {
         const { data } = await axios.delete<number>(`/hive/${id}`)
         return data
+    },
+
+    notes: {
+        getFromHive: async (hiveId: number): Promise<NoteModelDB[]> => {
+            const { data } = await axios.get<NoteGetModel[]>(`/hive/${hiveId}/note`)
+            return data.map(NoteCreateModelResponse_to_NoteModelDB)
+        },
+
+        create: async (model: NoteCreateModelRequest): Promise<NoteModelDB> => {
+            const { data } = await axios.post<NoteGetModel>("/note", model)
+            return NoteCreateModelResponse_to_NoteModelDB(data)
+        },
+
+        update: async (model: NoteUpdateRequestModel): Promise<NoteModelDB> => {
+            const { data } = await axios.put<NoteGetModel>("/note", model)
+            return NoteCreateModelResponse_to_NoteModelDB(data)
+        },
+
+        delete: async (id: number): Promise<number> => {
+            const { data } = await axios.delete<number>(`/note/${id}`)
+            return data
+        }
+    },
+    history: {
+        action: {
+            create: async (payload: HiveHistoryCreateModel): Promise<HistoryEntryDB> => {
+                const { data } = await axios.post<HiveHistoryGetModel>(`/hiveHistory`, payload)
+                return HiveHistoryGetModel_To_HistoryEntryDB(data)
+            },
+            getFromHive: async (hiveId: number): Promise<HistoryEntryDB[]> => {
+                const { data } = await axios.get<HiveHistoryGetModel[]>(`/hiveHistory/hive/${hiveId}`)
+                return data.map(HiveHistoryGetModel_To_HistoryEntryDB)
+            },
+        },
+        queen: {
+            getFromHive: async (hiveId: number): Promise<QueenHistoryModelDB[]> => {
+                const { data } = await axios.get<QueenHistoryGetModel[]>(`/hiveHistory/hive/${hiveId}`)
+                return data.map(QueenHistoryGetModel_To_QueenHistoryDB)
+            },
+        }
+    },
+    yields: {
+        create: async (payload: HiveHoneyYieldCreateModel): Promise<HiveHoneyYieldGetModel> => {
+            const { data } = await axios.post<HiveHoneyYieldGetModel>(`/hiveHoneyYield`, payload)
+            return data
+        },
+        getFromHive: async (hiveId: number): Promise<HiveHoneyYieldGetModel[]> => {
+            const { data } = await axios.get<HiveHoneyYieldGetModel[]>(`/hiveHoneyYield/hive/${hiveId}`)
+            return data
+        },
     }
 }

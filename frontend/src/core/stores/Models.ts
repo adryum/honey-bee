@@ -177,7 +177,7 @@ export type InspectionEntryModelDB = {
 export type QueenHistoryModelDB = {
     id:           number
     species:      string
-    placedHereAt: string
+    placedHereAt: Date
     timeInHive:   string
 } 
 

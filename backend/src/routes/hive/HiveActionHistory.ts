@@ -1,13 +1,13 @@
 import { Router, type Request, type Response } from "express";
-import { db } from "../config/Database"
-import { HistoryActionType, UserRoles } from "../DatabaseEnums"
-import { requireRole } from "../Middleware"
-import { withStatus } from "../utils"
+import { db } from "../../config/Database"
+import { HistoryActionType, UserRoles } from "../../DatabaseEnums"
+import { requireRole } from "../../Middleware"
+import { withStatus } from "../../utils"
 import { eq } from "drizzle-orm/sql/expressions/conditions";
-import { hiveActionHistory } from "../db/schema";
+import { hiveActionHistory } from "../../db/schema";
 import { DBQueryConfig, ExtractTablesWithRelations, desc } from "drizzle-orm";
-import { HistoryActionTypeMap } from "../initialization";
-import type * as schemaImport from "../db/schema";
+import { HistoryActionTypeMap } from "../../initialization";
+import type * as schemaImport from "../../db/schema";
 
 const router = Router()
 

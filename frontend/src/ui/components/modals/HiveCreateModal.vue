@@ -4,7 +4,7 @@ import { useApiaryMutations } from '@/core/composables/useApiary';
 import { useCssModule, ref, watch, computed } from 'vue';
 import ImageDropZone from '../input/fields/ImageDropZone.vue';
 import IconTextButton from '../input/buttons/IconTextButton.vue';
-import { useHiveMutations, useHivesQuery } from '@/core/composables/useHive';
+import { useHiveMutations, useHivesQuery } from '@/core/composables/hive/useHive';
 import { HiveType } from '@/core/DatabaseEnums';
 import { useFlexibleGrid } from '@/core/utils/others';
 import ModularDropdown from '../input/dropdowns/ModularDropdown.vue';

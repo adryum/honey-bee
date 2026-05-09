@@ -1,6 +1,6 @@
 <script setup lang="ts">
 import { computed, ref, useCssModule } from "vue";
-import type { QueenHistoryModelDB, QueenModelDB, HiveModelDB, MoreAboutSpeciesModel } from "@/core/stores/Models";
+import type { QueenHistoryModelDB, HiveModelDB } from "@/core/stores/Models";
 import QueenInfo from "./QueenInfo.vue";
 import QueenHistory from "./QueenHistory.vue";
 import MoreAboutSpecies from "./MoreAboutSpecies.vue";

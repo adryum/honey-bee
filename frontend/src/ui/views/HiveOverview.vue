@@ -4,7 +4,7 @@ import HiveGeneralFragment from '@/ui/components/hive/view_fragments/general/Hiv
 import HiveNoteFragment from '@/ui/components/hive/view_fragments/notes/HiveNoteFragment.vue';
 import NoteFragmentToolbarPart from '@/ui/components/hive/view_fragments/notes/NoteFragmentToolbarPart.vue';
 import { HiveTab } from '@/core/ViewTabEnums';
-import { useHiveQuery } from '@/core/composables/useHive';
+import { useHiveQuery } from '@/core/composables/hive/useHive';
 import { useRouter } from 'vue-router';
 import { RouterViewPaths } from '@/core/router';
 import HiveCalendarFragment from '@/ui/components/hive/view_fragments/HiveCalendarFragment.vue';

@@ -2,7 +2,7 @@ import { useMutation, useQuery, useQueryClient } from "@tanstack/vue-query";
 import { computed, type Ref } from "vue";
 import { noteApi } from "../api/NoteApi";
 import { ActionType, useActionsStore } from "../stores/ActionStore";
-import { useHiveHistoryMutations } from "./useHiveHistory";
+import { useHiveActionHistoryMutations } from "./hive/useHiveActionHistory";
 import { HistoryActionType } from "../DatabaseEnums";
 import { speciesApi } from "../api/SpeciesApi";
 

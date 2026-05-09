@@ -1,15 +1,15 @@
 import { useMutation, useQuery, useQueryClient } from "@tanstack/vue-query"
-import { hiveHistoryApi } from "../api/HiveHistoryApi"
-import { ActionType, useActionsStore } from "../stores/ActionStore"
+import { ActionType, useActionsStore } from "../../stores/ActionStore"
 import { computed, type Ref } from "vue"
+import { hiveApi } from "@/core/api/HiveApi"
 
-export const useHiveHistoryQuery = (
-    { hiveId }: { hiveId: Ref<number | undefined> }
-) => {
+export const useHiveActionHistoryQuery = (model: { 
+    hiveId: Ref<number | undefined> 
+}) => {
     const { data: history, isLoading: isGettingHistory, isError: isGettingHistoryError } = useQuery({
-        queryKey: ["hivesHistory", hiveId],
-        queryFn:  () => hiveHistoryApi.getHistory(hiveId.value!),
-        enabled:  computed(() => hiveId.value !== undefined),
+        queryKey: ["hives-action-history", model.hiveId],
+        queryFn:  () => hiveApi.history.action.getFromHive(model.hiveId.value!),
+        enabled:  computed(() => model.hiveId.value !== undefined),
     })
 
     return {
@@ -19,15 +19,14 @@ export const useHiveHistoryQuery = (
     }
 }
 
-export const useHiveHistoryMutations = () => {
+export const useHiveActionHistoryMutations = () => {
     const { createPopupAction } = useActionsStore()
     const queryClient = useQueryClient()
     
-
     const { mutate: create, isPending: isCreatingHistory } = useMutation({
-        mutationFn: hiveHistoryApi.createHistory,
+        mutationFn: hiveApi.history.action.create,
         onSuccess: (newHistory) => {
-            queryClient.invalidateQueries({ queryKey: ['hivesHistory'] })
+            queryClient.invalidateQueries({ queryKey: ['hives-action-history'] })
         },
         onError: (error) => {
             createPopupAction({

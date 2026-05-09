@@ -7,7 +7,7 @@ import { useModalBase } from "@/core/composables/useModalBase";
 import IconTextButton from "../input/buttons/IconTextButton.vue";
 import { useInspectionMutation, useInspectionQuery } from "@/core/composables/useInspection";
 import { formatDateWithOrdinal } from "@/core/utils/Utils";
-import { useHiveHoneyProductionMutations } from "@/core/composables/useHiveHoneyProduction";
+import { useHiveHoneyProductionMutations } from "@/core/composables/hive/useHiveHoneyYields";
 import StringField from "../input/fields/used/StringField.vue";
 
 const s = useCssModule()

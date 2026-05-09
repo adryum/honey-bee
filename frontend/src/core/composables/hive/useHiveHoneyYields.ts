@@ -1,15 +1,15 @@
 import { useMutation, useQuery, useQueryClient } from "@tanstack/vue-query"
-import { ActionType, useActionsStore } from "../stores/ActionStore"
+import { ActionType, useActionsStore } from "../../stores/ActionStore"
 import { computed, type Ref } from "vue"
-import { hiveHoneyYieldApi } from "../api/HiveHoneyProductionApi"
+import { hiveApi } from "@/core/api/HiveApi"
 
-export const useHiveHoneyProductionQuery = (
-    { hiveId }: { hiveId: Ref<number | undefined> }
-) => {
+export const useHiveHoneyProductionQuery = (model: { 
+    hiveId: Ref<number | undefined> 
+}) => {
     const { data: production, isLoading: isGettingProduction, isError: isGettingProductionError } = useQuery({
-        queryKey: ["hivesHoneyProduction", hiveId],
-        queryFn:  () => hiveHoneyYieldApi.getHiveHoneyProduction(hiveId.value!),
-        enabled:  computed(() => hiveId.value !== undefined),
+        queryKey: ["hives-honey-yields", model.hiveId],
+        queryFn:  () => hiveApi.yields.getFromHive(model.hiveId.value!),
+        enabled:  computed(() => model.hiveId.value !== undefined),
     })
 
     return {
@@ -24,10 +24,9 @@ export const useHiveHoneyProductionMutations = () => {
     const queryClient = useQueryClient()
 
     const { mutate: create, isPending: isCreatingYields } = useMutation({
-        mutationFn: hiveHoneyYieldApi.create,
+        mutationFn: hiveApi.yields.create,
         onSuccess: (newProduction) => {
-            queryClient.invalidateQueries({ queryKey: ['hivesHoneyProduction'] })
-
+            queryClient.invalidateQueries({ queryKey: ['hives-honey-yields'] })
             createPopupAction({
                 label: "Created new honey production entry!",
                 type:  ActionType.Success

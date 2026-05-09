@@ -7,15 +7,12 @@ import { testConnection, withStatus } from "./utils";
 
 import authentication from "./routes/Authentication"
 import adminRoute from "./routes/Admin"
-import hiveRoute from "./routes/Hives"
+import hiveRoute from "./routes/hive/Hive"
 import apiaryRoute from "./routes/Apiaries"
-import noteRoute from "./routes/Notes"
 import calendarRoute from "./routes/Calendar"
 import inspectionRoute from "./routes/Inspection"
 import profileRoute from "./routes/Profile"
-import hiveHistoryRoute from "./routes/HiveHistory"
 import apiaryHistoryRoute from "./routes/ApiaryHistory"
-import hiveYieldRoute from "./routes/HiveHoneyYields"
 import speciesRoute from "./routes/Species"
 import queenRoute from "./routes/Queen"
 
@@ -88,9 +85,6 @@ async function startServer() {
     app.use("/inspection", inspectionRoute)
     
     app.use("/hive", hiveRoute)
-    app.use("/hiveHistory", hiveHistoryRoute)
-    app.use("/hiveHoneyYield", hiveYieldRoute)
-    app.use("/note", noteRoute)
 
     app.use("/species", speciesRoute)
     app.use("/queen", queenRoute)

@@ -3,7 +3,7 @@ import { computed, type Ref } from "vue";
 import { inspectionApi } from "../api/InspectionApi";
 import { isValidValue } from "../utils/others";
 import { ActionType, useActionsStore } from "../stores/ActionStore";
-import { useHiveHistoryMutations } from "./useHiveHistory";
+import { useHiveActionHistoryMutations } from "./hive/useHiveActionHistory";
 import { HistoryActionType } from "../DatabaseEnums";
 
 export type InspectionFilters = {
@@ -58,7 +58,7 @@ export const useInspectionQuery = (
 export const useInspectionMutation = () => {
     const queryClient = useQueryClient()
     const { createPopupAction }= useActionsStore()
-    const { create: createHiveHistory } = useHiveHistoryMutations()
+    const { create: createHiveHistory } = useHiveActionHistoryMutations()
 
     const { mutate: create, isPending: isCreatingInspection } = useMutation({
         mutationFn: inspectionApi.create,
