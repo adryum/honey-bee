@@ -26,6 +26,7 @@ import { connectRedis } from "./config/RedisClient";
 import { createServer } from "http";
 import { initializeSocket } from "./config/SocketIo";
 import { setupHistoryActionTypeMap } from "./initialization";
+import { errorHandler } from "./Middleware";
 
 const app = express();
 const httpServer = createServer(app);
@@ -96,6 +97,8 @@ async function startServer() {
 
     app.use("/species", speciesRoute)
     app.use("/queen", queenRoute)
+
+    app.use(errorHandler)
 
     // starts express server
     httpServer.listen(port, () => {

@@ -14,8 +14,8 @@ import { useAuthStore } from './core/stores/useAuthStore'
 
 console.log('window location:', window.location.pathname)
 
-axios.defaults.baseURL = import.meta.env.VITE_API
-axios.defaults.withCredentials = true
+api.defaults.baseURL = import.meta.env.VITE_API
+api.defaults.withCredentials = true
 
 const queryClient = new QueryClient({
     defaultOptions: {

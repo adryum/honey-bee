@@ -156,7 +156,7 @@ router.post(
     //     if (isValidValue(speciesId)) formData.append("speciesId", speciesId.toString())
     //     if (image) formData.append("image", image)
 
-    //     const { data } = await axios.post<QueenGetModel>("/queen/update", formData)
+    //     const { data } = await api.post<QueenGetModel>("/queen/update", formData)
     //     return QueenGetModel_To_QueenModelDB(data)
     // },
 

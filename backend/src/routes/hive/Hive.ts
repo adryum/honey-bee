@@ -69,9 +69,10 @@ router.get(
 ) => {
     console.log("# Get all hives");
 
-    const querySchema = z.strictObject({
-        hiveIds: z.array(z.coerce.number()).optional()
-    })
+    const { hiveIds, apiaryIds } = z.strictObject({
+        hiveIds: z.array(z.coerce.number()).optional(),
+        apiaryIds: z.array(z.coerce.number()).optional()
+    }).parse(req.query)
     const userId = req.session.userId!
     const role   = await getSessionUserRole(userId)
 
@@ -89,7 +90,11 @@ router.get(
                 });
 
                 hivesResult = await db.query.hives.findMany({
-                    where: inArray(hives.id, hiveAccess.map(item => item.hiveId))
+                    where: and(
+                        inArray(hives.id, hiveAccess.map(item => item.hiveId)),
+                        apiaryIds ? inArray(hives.apiaryId, apiaryIds) : undefined,
+                        hiveIds ? inArray(hives.id, hiveIds) : undefined
+                    )
                 });
                 break;
         }

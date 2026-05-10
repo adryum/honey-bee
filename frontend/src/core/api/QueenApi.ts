@@ -4,12 +4,12 @@ import type { QueenGetModel, QueenCreateModel, QueenUpdateModel } from "./Models
 import type { QueenModelDB } from "../stores/Models";
 import qs from "qs";
 import { isValidValue } from "../utils/others";
+import api from "../config/AxiosConfig";
 
 export const queenApi = {
     getQueens: async (queenIds: number[], hiveIds: number[]): Promise<QueenModelDB[]> => {
-        const { data } = await axios.get<QueenGetModel[]>("/queen", {
+        const { data } = await api.get<QueenGetModel[]>("/queen", {
             params: { queenIds: queenIds, hiveIds: hiveIds },
-            paramsSerializer: params => qs.stringify(params, { arrayFormat: 'repeat' })
         })
 
         return data.map(QueenGetModel_To_QueenModelDB)
@@ -24,7 +24,7 @@ export const queenApi = {
         formData.append("speciesId", speciesId.toString())
         if (image) formData.append("image", image)
 
-        const { data } = await axios.post<QueenGetModel>("/queen", formData)
+        const { data } = await api.post<QueenGetModel>("/queen", formData)
         return QueenGetModel_To_QueenModelDB(data)
     },
 
@@ -37,7 +37,7 @@ export const queenApi = {
         if (isValidValue(speciesId)) formData.append("speciesId", speciesId.toString())
         if (image) formData.append("image", image)
 
-        const { data } = await axios.post<QueenGetModel>("/queen/update", formData)
+        const { data } = await api.post<QueenGetModel>("/queen/update", formData)
         return QueenGetModel_To_QueenModelDB(data)
     },
 }
