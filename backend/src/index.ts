@@ -2,8 +2,9 @@ import dotenv from "dotenv";
 dotenv.config()
 
 import "./type_extensions/DateExtensions"
+import "./type_extensions/ObjectExtensions"
 import "./config/image_cloud/Cloudinary"
-import { testConnection, withStatus } from "./utils";
+import { requireEnv, testConnection, withStatus } from "./utils";
 
 import authentication from "./routes/Authentication"
 import adminRoute from "./routes/Admin"
@@ -26,12 +27,10 @@ import { connectRedis } from "./config/RedisClient";
 import { createServer } from "http";
 import { initializeSocket } from "./config/SocketIo";
 import { setupHistoryActionTypeMap } from "./initialization";
-import { errorHandler } from "./Middleware";
 
 const app = express();
 const httpServer = createServer(app);
-const port = process.env.EXPRESS_PORT!
-console.log('RUNNING FILE:', __filename);
+const port = requireEnv("EXPRESS_PORT")
 
 app.use(cors({
     origin:         process.env.WEBSITE_ORIGIN!,   // your SPA origin
@@ -97,8 +96,6 @@ async function startServer() {
 
     app.use("/species", speciesRoute)
     app.use("/queen", queenRoute)
-
-    app.use(errorHandler)
 
     // starts express server
     httpServer.listen(port, () => {

@@ -1,7 +1,7 @@
 import { UserRoles } from "../DatabaseEnums"
 import { requireRole } from "../Middleware"
 import { Router, type Request, type Response } from "express";
-import { withStatus } from "../utils";
+import { toNumberArray, withStatus } from "../utils";
 import { db } from "../config/Database";
 import { and, eq, inArray } from "drizzle-orm";
 import { hiveQueenHistory, queens } from "../db/schema";
@@ -43,9 +43,9 @@ router.get(
         req: Request<{},{},{}, { queenIds: string[], hiveIds: string[] }>, 
         res: Response
 ) => {
-    console.log("# Get queens ");
-    const queenIds = req.query.queenIds ? [].concat(req.query.queenIds as any).map(Number) : []
-    const hiveIds  = req.query.hiveIds  ? [].concat(req.query.hiveIds as any).map(Number)  : []
+    console.log("# Get queens");
+    const queenIds = toNumberArray(req.query.queenIds)
+    const hiveIds  = toNumberArray(req.query.hiveIds)
     console.log({ queenIds, hiveIds })
 
     try {
@@ -53,13 +53,38 @@ router.get(
             return db.query.queens.findMany({
                 ...queenGetStructure,
                 where: and(
-                    queenIds.length ? inArray(queens.id, queenIds) : undefined,
-                    hiveIds.length  ? inArray(queens.hiveId, hiveIds) : undefined
+                    queenIds ? inArray(queens.id, queenIds) : undefined,
+                    hiveIds ? inArray(queens.hiveId, hiveIds) : undefined
                 )
             })
         })
 
-        res.status(200).json(queenGetResult)
+        return res.status(200).json(queenGetResult)
+    } catch (error) {
+        console.error(error);
+        res.status(500).send('Server error');
+    }
+})
+
+router.get(
+    "/:id",
+    requireRole([UserRoles.ANY]),
+    async (
+        req: Request<{ id: string }, {}, {}, {}>, 
+        res: Response
+) => {
+    console.log("# Get queen");
+    const queenId = Number(req.params.id)
+
+    try {
+        const queenGetResult = await withStatus(`Fetching queen`, () => {
+            return db.query.queens.findFirst({
+                ...queenGetStructure,
+                where: eq(queens.id, queenId)
+            })
+        })
+
+        return res.status(200).json(queenGetResult)
     } catch (error) {
         console.error(error);
         res.status(500).send('Server error');
@@ -145,19 +170,26 @@ router.post(
     }
 })
 
+router.delete(
+    "/:id",
+    requireRole([UserRoles.ANY]),
+    async (
+        req: Request<{ id: string }, {}, {}, {}>, 
+        res: Response
+    ) => {
+        console.log("# Delete queen");
+        const queenId = Number(req.params.id)
 
+        try {
+            await withStatus("Deleting queen", () => 
+                db.delete(queens).where(eq(queens.id, queenId))
+            )
 
-    // updateQueen: async (model: QueenUpdateModel): Promise<QueenModelDB> => {
-    //     const { image, bornDate, id, speciesId } = model
-
-    //     const formData = new FormData()
-    //     formData.append("id", id.toString())
-    //     if (isValidValue(bornDate))  formData.append("bornDate",  bornDate.toString())
-    //     if (isValidValue(speciesId)) formData.append("speciesId", speciesId.toString())
-    //     if (image) formData.append("image", image)
-
-    //     const { data } = await api.post<QueenGetModel>("/queen/update", formData)
-    //     return QueenGetModel_To_QueenModelDB(data)
-    // },
+            return res.status(200).json({ id: queenId })
+        } catch (error) {
+            return res.status(500).send(error);
+        }
+    }
+)
 
 export default router

@@ -4,8 +4,9 @@ import type { QueenHistoryModelDB, HiveModelDB } from "@/core/stores/Models";
 import QueenInfo from "./QueenInfo.vue";
 import QueenHistory from "./QueenHistory.vue";
 import MoreAboutSpecies from "./MoreAboutSpecies.vue";
-import { useQueensQuery } from "@/core/composables/useQueen";
+import { useQueenQuery, useQueensQuery } from "@/core/composables/useQueen";
 import { useSpeciesQuery } from "@/core/composables/useSpecies";
+import { useHiveQueenHistoryQuery } from "@/core/composables/hive/useHiveQueenHistory";
 
 const s = useCssModule()
 const props = defineProps<{
@@ -17,19 +18,13 @@ const { queens } = useQueensQuery({
     hiveIds: computed(() => [props.hive.id])
 })
 const queen = computed(() => {
-    console.log(queens.value?.[0]);
-    
     return queens.value?.[0]}
 )
 const { species } = useSpeciesQuery()
 const queenSpecies = computed(() => species.value?.find(item => item.id === queen.value?.species.id))
-
-const beeHistory = ref<QueenHistoryModelDB[]>([{
-    id: -1,
-    species: "Bigus Bitusus III",
-    placedHereAt: "",
-    timeInHive: ""
-}])
+const { history } = useHiveQueenHistoryQuery({
+    hiveId: computed(() => props.hive.id)
+})
 </script>
 
 <template>
@@ -41,7 +36,7 @@ const beeHistory = ref<QueenHistoryModelDB[]>([{
     />
     <QueenHistory 
         :class="s.history"
-        :previous-bees="beeHistory"
+        :previous-bees="history ?? []"
     />
     <MoreAboutSpecies
         :class="s.description"

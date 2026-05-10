@@ -1,6 +1,6 @@
 import { String_to_HiveType, String_to_NoteTypes, String_to_Role } from "./DatabaseEnums";
-import type { ApiaryAccessGetModel, ApiaryGetModel, ApiaryHistoryGetModel, CalendarEventGetModel, HiveAccessGetModel, HiveGetModel, HiveHistoryGetModel, HiveHoneyYieldGetModel, InspectionCreateRequestModel, InspectionEntryGetModel, InspectionReviewGetModel, NoteGetModel, QueenGetModel, QueenHistoryGetModel, SpeciesGetModel, UserEntryGetModel, UserProfileResponseModel, WhitelistEntryGetModel } from "./api/Models";
-import type { ApiaryModelDB, QueenModelDB, CalendarEventDB, HistoryEntryDB, HiveModelDB, InspectionDB, InspectionFormDB, InspectionFormUI, InspectionEntryModelDB, NoteModelDB, UserEntryModelDB, UserModelDB, WhitelistEntryModelDB, SpeciesModelDB, LineGraphLineModel, QueenHistoryModelDB } from "./stores/Models";
+import type { ApiaryAccessGetModel, ApiaryGetModel, ApiaryHistoryGetModel, CalendarEventGetModel, HiveAccessGetModel, HiveGetModel, HiveHistoryGetModel, HiveHoneyYieldGetModel, HiveQueenHistoryCreateModel, HiveQueenHistoryGetModel, InspectionCreateRequestModel, InspectionEntryGetModel, InspectionReviewGetModel, NoteGetModel, QueenGetModel, QueenHistoryGetModel, SpeciesGetModel, UserEntryGetModel, UserProfileResponseModel, WhitelistEntryGetModel } from "./api/Models";
+import type { ApiaryModelDB, QueenModelDB, CalendarEventDB, HistoryEntryDB, HiveModelDB, InspectionDB, InspectionFormDB, InspectionFormUI, InspectionEntryModelDB, NoteModelDB, UserEntryModelDB, UserModelDB, WhitelistEntryModelDB, SpeciesModelDB, LineGraphLineModel, QueenHistoryModelDB, HiveQueenHistoryModelDB } from "./stores/Models";
 import { getAge } from "./utils/Utils";
 
 export function ApiaryCreateResponse_to_ApiaryModelDB(
@@ -316,5 +316,22 @@ export function QueenHistoryGetModel_To_QueenHistoryDB(
         species:      convertee.queenSpecy.scientificName,
         placedHereAt: new Date(convertee.placedHereTimestamp),
         timeInHive:   convertee.timeSpentInHive
+    }
+}
+
+export function HiveQueenHistoryGetModel_To_HiveQueenHistoryModelDB(
+    convertee: HiveQueenHistoryGetModel
+): HiveQueenHistoryModelDB {
+    return {
+        id:              convertee.id,
+        timeSpentInHive: convertee.timeSpentInHive,
+        placedHereDate:  new Date(convertee.placedHereTimestamp),
+        imageUrl:        convertee.imageUrl,
+        specie: {
+            id:             convertee.queenSpecy.id,
+            knownAsName:    convertee.queenSpecy.knownAsName,
+            scientificName: convertee.queenSpecy.scientificName
+        },
+        hiveId: convertee.hiveId
     }
 }

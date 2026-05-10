@@ -1,5 +1,5 @@
 <script setup lang="ts">
-import { computed, onMounted, ref, toRef, useCssModule } from 'vue';
+import { computed, onMounted, ref, toRef, useCssModule, watchEffect } from 'vue';
 import { ApiaryTab } from '@/core/ViewTabEnums';
 import { useRouter } from 'vue-router';
 import { RouterViewPaths } from '@/core/router';
@@ -12,6 +12,7 @@ import type { ModalBaseModel } from '@/core/composables/useModalBase';
 import StringSearchDropdown from '../components/input/dropdowns/StringSearchDropdown.vue';
 import IconTextButton from '../components/input/buttons/IconTextButton.vue';
 import HiveCreateModal from '../components/modals/HiveCreateModal.vue';
+import { useHivesQuery } from '@/core/composables/hive/useHive';
 
 const s = useCssModule()
 const router = useRouter()
@@ -24,8 +25,18 @@ const createHiveModal = ref<ModalBaseModel>()
 const searchWord = ref<string>('')
 const selectedDate = ref(new Date().nextMonth().previousMonth())
 
-const { apiary, hives }   = useApiaryQuery({ 
-    id:      toRef(() => props.id),
+const { apiary }   = useApiaryQuery({ 
+    id: toRef(() => props.id),
+})
+
+const { hives } = useHivesQuery({
+    apiaryIds: computed(() => props.id ? [props.id] : undefined)
+})
+
+watchEffect(() => {
+    console.log("apiaryIds", computed(() => props.id ? [props.id] : undefined).value);
+    console.log("hives", hives.value);
+    
 })
 
 const filteredHives = computed(() => {
@@ -56,8 +67,6 @@ function changeTab(tab: string) {
 function startInspection(apiaryId: number) {
     router.push(`/inspection/conduct/apiary/${apiaryId}`)
 }
-
-onMounted(() => console.log(props.tab))
 </script>
 
 <template>

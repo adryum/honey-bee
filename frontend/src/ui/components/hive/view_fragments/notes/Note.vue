@@ -1,12 +1,12 @@
 <script setup lang="ts">
-import { onMounted, ref, useCssModule } from "vue";
+import { useCssModule } from "vue";
 import { IconType, SVG } from "@/assets/svgs/SVGLoader";
 import Icon from "@/ui/components/Icon.vue";
 import IconDropdown from "@/ui/components/input/dropdowns/IconDropdown.vue";
 import IconTextItem from "@/ui/components/input/dropdowns/dropdownItems/bottom/IconTextItem.vue";
 import type { NoteModelDB } from "@/core/stores/Models";
-import { useNoteMutations } from "@/core/composables/useNote";
 import { formatDateWithOrdinal } from "@/core/utils/Utils";
+import { useNoteMutations } from "@/core/composables/hive/useHiveNote";
 
 const s = useCssModule()
 const props = defineProps<{

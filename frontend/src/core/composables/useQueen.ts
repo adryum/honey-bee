@@ -3,9 +3,23 @@ import { computed, unref, type MaybeRef } from "vue";
 import { ActionType, useActionsStore } from "../stores/ActionStore";
 import { queenApi } from "../api/QueenApi";
 
-export const useQueensQuery = (
-    data
-: {
+export const useQueenQuery = (
+    queenId: MaybeRef<number | undefined>
+) => {
+    const { data: queen, isLoading, isError } = useQuery({
+        queryKey: computed(() => ["queen", unref(queenId)]),
+        queryFn:  () => queenApi.get(unref(queenId)!),
+        enabled:  computed(() => unref(queenId) !== undefined)
+    })
+
+    return {
+        queen,
+        isLoading,
+        isError,
+    }
+}
+
+export const useQueensQuery = (data: {
     queenIds: MaybeRef<number[] | undefined>,
     hiveIds:  MaybeRef<number[] | undefined>,
 }) => {
@@ -14,7 +28,10 @@ export const useQueensQuery = (
             queenIds: unref(data.queenIds),
             hiveIds:  unref(data.hiveIds)
         }]),
-        queryFn:  () => queenApi.getQueens(unref(data.queenIds)!, unref(data.hiveIds)!)
+        queryFn:  () => queenApi.getAll(
+            unref(data.queenIds), 
+            unref(data.hiveIds)
+        )
     })
 
     return {
@@ -29,7 +46,7 @@ export const useQueenMutations = () => {
     const { createPopupAction } = useActionsStore()
 
     const { mutate: create, isPending: isCreatingQueen } = useMutation({
-        mutationFn: queenApi.createQueen, 
+        mutationFn: queenApi.create, 
         onSuccess: (newQueen) => {
             queryClient.invalidateQueries({ queryKey: ['queens'] })
             createPopupAction({
@@ -46,7 +63,7 @@ export const useQueenMutations = () => {
     })
 
     const { mutate: update, isPending: isUpdatingQueen } = useMutation({
-        mutationFn: queenApi.updateQueen,
+        mutationFn: queenApi.update,
         onSuccess: (newQueen) => {
             queryClient.invalidateQueries({ queryKey: ['queens'] })
 
@@ -63,9 +80,17 @@ export const useQueenMutations = () => {
         }
     })
 
+    const { mutate: remove, isPending: isDeletingQueen } = useMutation({
+        mutationFn: queenApi.delete,
+        onSuccess: (id) => {
+            queryClient.invalidateQueries({ queryKey: ['queens'] })
+        }
+    })
+
     return {
         create,
         update,
+        remove,
         isCreatingQueen,
         isUpdatingQueen
     }

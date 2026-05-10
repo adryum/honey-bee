@@ -6,7 +6,7 @@ import { HistoryActionType } from "../../DatabaseEnums";
 import { useHiveActionHistoryMutations } from "./useHiveActionHistory";
 
 export const useHiveQuery = (model: { 
-    id: Ref<number | undefined>
+    id: Ref<number | undefined>,
 }) => {
     const { data: hive, isLoading: isGettingHives, isError: isGettingHivesError } = useQuery({
         queryKey: ["hives", model.id],
@@ -17,16 +17,29 @@ export const useHiveQuery = (model: {
     return {        
         hive,
         isGettingHives,
-        isGettingHivesError,
+        isGettingHivesError
     }
 }
 
 export const useHivesQuery = (model: { 
-    apiaryId: MaybeRef<number | undefined>
+    hiveIds?:   MaybeRef<number[] | undefined>
+    apiaryIds?: MaybeRef<number[] | undefined>
+    fireOnEmptyQuery?: boolean
 }) => {
     const { data: hives, isLoading, isError } = useQuery({
-        queryKey: computed(() => ["hives", { apiaryId: unref(model.apiaryId) }]),
-        queryFn:  () => hiveApi.getFromApiary(unref(model.apiaryId))
+        queryKey: computed(() => ["hives", { 
+            hiveIds: unref(model.hiveIds),
+            apiaryIds: unref(model.apiaryIds) 
+        }]),
+        queryFn:  () => {
+            console.log(unref(model.hiveIds), unref(model.apiaryIds));
+             
+            return hiveApi.getAll({
+                hiveIds: unref(model.hiveIds),
+                apiaryIds: unref(model.apiaryIds)
+            })
+        },
+        enabled: model.fireOnEmptyQuery
     })
 
     return {

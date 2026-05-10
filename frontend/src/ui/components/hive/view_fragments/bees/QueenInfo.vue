@@ -6,6 +6,7 @@ import IconTextButton from "@/ui/components/input/buttons/IconTextButton.vue";
 import { getRandomId } from "@/core/utils/Utils";
 import QueenCreateModal from "@/ui/components/modals/QueenCreateModal.vue";
 import type { ModalBaseModel } from "@/core/composables/useModalBase";
+import { useHiveQueenHistoryMutations } from "@/core/composables/hive/useHiveQueenHistory";
 
 const s = useCssModule()
 const props = defineProps<{
@@ -19,6 +20,31 @@ const placedHereId     = getRandomId("label")
 const ageId            = getRandomId("label")
 
 const queenCreateModal = ref<ModalBaseModel>()
+const { create } = useHiveQueenHistoryMutations()
+
+function removeQueen(queen: QueenModelDB) {
+    
+    // on success
+    create({
+        hiveId:               props.hiveId,
+        imageUrl:             queen.imageUrl,
+        bornDate:             queen.bornDate,
+        queenSpeciesId:       queen.species.id,
+        addedToHiveTimestamp: queen.addedToHiveDate,
+    })
+}
+
+function replaceQueen(queen: QueenModelDB) {
+
+    // on success
+    create({
+        hiveId:               props.hiveId,
+        imageUrl:             queen.imageUrl,
+        bornDate:             queen.bornDate,
+        queenSpeciesId:       queen.species.id,
+        addedToHiveTimestamp: queen.addedToHiveDate,
+    })
+}
 
 </script>
 
@@ -46,6 +72,16 @@ const queenCreateModal = ref<ModalBaseModel>()
                 text="Add"
                 :icon="SVG.Plus"
                 @click="queenCreateModal?.open"
+            />
+            <IconTextButton 
+                v-if="queen"
+                text="Remove"
+                :icon="SVG.Cross"
+            />
+            <IconTextButton 
+                v-if="queen"
+                text="Replace"
+                :icon="SVG.Restart"
             />
             <IconTextButton 
                 v-if="queen"

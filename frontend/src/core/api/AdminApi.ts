@@ -1,4 +1,3 @@
-import axios from "axios";
 import type { ApiaryAccessGetModel, HiveAccessGetModel, WhitelistEntryGetModel, UserEntryGetModel, WhitelistEntryCreateModel, UserEntryUpdateModel, UpdateWhitelistEntryResponseModel, WhitelistEntryUpdateModel, ApiaryAccessModifyModel, HiveAccessModifyModel } from "./Models";
 import { ApiaryAccessResponseModel_To_Number, HiveAccessResponseModel_To_Number, UserEntryGetModel_To_UserEntryModelDB, WhitelistEntryResponseModel_To_WhitelistEntryDB } from "../Convertors";
 import api from "../config/AxiosConfig";

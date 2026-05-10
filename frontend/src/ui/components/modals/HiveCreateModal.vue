@@ -33,7 +33,7 @@ const emits = defineEmits<{
 
 const { assignHive } = useApiaryMutations()
 const { create, isCreatingHive } = useHiveMutations()
-const { hives } = useHivesQuery({ apiaryId: undefined })
+const { hives } = useHivesQuery({ fireOnEmptyQuery: true })
 const hivesInApiary = computed(() => hives.value?.filter(hive => hive.apiaryId === props.apiaryId) ?? [])
 const hivesNotInApiary = computed(() => hives.value?.filter(hive => hive.apiaryId !== props.apiaryId) ?? [])
 

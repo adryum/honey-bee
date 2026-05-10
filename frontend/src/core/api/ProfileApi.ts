@@ -1,4 +1,3 @@
-import axios from "axios";
 import type { UserModelDB } from "../stores/Models";
 import { UserProfileResponseModel_To_UserProfileModelDB } from "../Convertors";
 import type { UserProfileResponseModel } from "./Models";

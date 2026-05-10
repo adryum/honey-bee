@@ -1,4 +1,3 @@
-import axios from 'axios'
 import { InspectionEntryGetModel_To_InspectionTableEntryModel, InspectionReviewResponseModel_To_InspectionFormDB } from '../Convertors';
 import type { InspectionDB, InspectionEntryModelDB } from '../stores/Models';
 import type { InspectionCreateRequestModel, InspectionEntryGetModel, InspectionReviewGetModel } from './Models';

@@ -145,6 +145,7 @@ const props = defineProps<{
         display: flex
         flex-direction: column
         gap: 1rem
+        flex: 1
 
 .container
     display: flex

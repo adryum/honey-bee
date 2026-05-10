@@ -1,4 +1,3 @@
-import axios from "axios";
 import type { CalendarEventCreateModel, CalendarEventGetModel } from "./Models";
 import { CalendarEventGetModel_To_CalendarEventDB } from "../Convertors";
 import type { CalendarEventDB } from "../stores/Models";

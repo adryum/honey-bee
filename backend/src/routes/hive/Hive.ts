@@ -9,8 +9,7 @@ import { getSessionUserRole } from "../../config/RedisClient";
 import { and, eq, inArray, or } from "drizzle-orm";
 import { hives, userApiaryAccess, userHiveAccess, users } from "../../db/schema";
 import { useCalendar } from "../../config/calendar/GoogleCalendar";
-import { withStatus } from "../../utils";
-import z from "zod";
+import { toNumberArray, withStatus } from "../../utils";
 
 const router = Router()
 
@@ -64,17 +63,17 @@ router.get(
     "/",
     requireRole([UserRoles.ANY]),
     async (
-        req: Request, 
+        req: Request<{}, {}, {}, {
+            hiveIds?: string
+            apiaryIds?: string
+        }>,
         res: Response
 ) => {
     console.log("# Get all hives");
-
-    const { hiveIds, apiaryIds } = z.strictObject({
-        hiveIds: z.array(z.coerce.number()).optional(),
-        apiaryIds: z.array(z.coerce.number()).optional()
-    }).parse(req.query)
-    const userId = req.session.userId!
-    const role   = await getSessionUserRole(userId)
+    const hiveIds   = toNumberArray(req.query.hiveIds)
+    const apiaryIds = toNumberArray(req.query.apiaryIds)
+    const userId    = req.session.userId!
+    const role      = await getSessionUserRole(userId)
 
     try {
         console.log("Getting hives user has access to...");
@@ -82,7 +81,12 @@ router.get(
         var hivesResult
         switch (role) {
             case UserRoles.ADMINISTRATOR:
-                hivesResult = await db.query.hives.findMany();
+                hivesResult = await db.query.hives.findMany({
+                    where: and(
+                        hiveIds ? inArray(hives.id, hiveIds) : undefined,
+                        apiaryIds ? inArray(hives.apiaryId, apiaryIds) : undefined
+                    )
+                });
                 break;
             default:
                 const hiveAccess = await db.query.userHiveAccess.findMany({

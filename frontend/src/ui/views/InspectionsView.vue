@@ -1,5 +1,5 @@
 <script setup lang="ts">
-import { ref, useCssModule, watch } from "vue";
+import { ref, useCssModule } from "vue";
 import ToolBar from "../components/ToolBar.vue";
 import InspectionTable from "../components/tables/InspectionTable.vue";
 import { useInspectionsQuery, type InspectionFilters } from "@/core/composables/useInspection";

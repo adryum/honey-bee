@@ -15,7 +15,7 @@ const props = defineProps<{
 
 const { history } = useApiaryHistoryQuery( { apiaryId: toRef(() => props.apiary.id) } )
 const { hiveYields } = useApiaryQuery({
-    id:            computed(() => props.apiary.id),
+    id: computed(() => props.apiary.id),
     getHiveYields: {
         fromISO: new Date().firstDayOfMonth().toISOString(),
         toISO: new Date().lastDayOfMonth().toISOString(),

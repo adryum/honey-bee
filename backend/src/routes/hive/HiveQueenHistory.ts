@@ -40,26 +40,21 @@ router.get(
     "/",
     requireRole([UserRoles.ANY]),
     async (
-        req: Request<{},{},{}, { queenIds: string[], hiveIds: string[] }>, 
+        req: Request<{},{},{}, { hiveId: string }>, 
         res: Response
 ) => {
-    console.log("# Get queens ");
-    const queenIds = req.query.queenIds ? [].concat(req.query.queenIds as any).map(Number) : []
-    const hiveIds  = req.query.hiveIds  ? [].concat(req.query.hiveIds as any).map(Number)  : []
-    console.log({ queenIds, hiveIds })
+    console.log("# Get hive queen history");
+    const hiveId = parseInt(req.query.hiveId)
 
     try {
-        const queenGetResult = await withStatus(`Fetching queens`, () => {
-            return db.query.queens.findMany({
+        const hiveQueenHistoryResult = await withStatus(`Fetching hive queen history for hive ${hiveId}`, () => {
+            return db.query.hiveQueenHistory.findMany({
                 ...queenHistoryGetStructure,
-                where: and(
-                    queenIds.length ? inArray(queens.id, queenIds) : undefined,
-                    hiveIds.length  ? inArray(queens.hiveId, hiveIds) : undefined
-                )
+                where: eq(hiveQueenHistory.hiveId, hiveId)
             })
         })
 
-        res.status(200).json(queenGetResult)
+        return res.status(200).json(hiveQueenHistoryResult)
     } catch (error) {
         console.error(error);
         res.status(500).send('Server error');
@@ -69,95 +64,43 @@ router.get(
 router.post(
     "/",
     requireRole([UserRoles.ANY]),
-    upload.single("image"),
     async (
         req: Request<{},{},{
-            bornDate:  string
-            hiveId:    number
-            speciesId: number
+            hiveId:               number
+            imageUrl:             string
+            bornDate:             Date
+            queenSpeciesId:       number
+            addedToHiveTimestamp: string
         }, {}>, 
         res: Response
 ) => {
-    console.log("# Create queen");
-    const { bornDate, hiveId, speciesId } = req.body
-    const image = req.file
+    console.log("# Create hive queen history");
+    const { hiveId, imageUrl, bornDate, queenSpeciesId, addedToHiveTimestamp } = req.body
 
     try {
-        const existingQueen = await withStatus("Checking if hive already has a queen", () =>
-            db.query.queens.findFirst({
-                where: eq(queens.hiveId, hiveId)
+        const timeSpentInHive = new Date(addedToHiveTimestamp).getDuration(new Date())
+        const [insertResult] = await withStatus("Creating hive queen history entry", () => 
+            db.insert(hiveQueenHistory).values({
+                timeSpentInHive:     `${timeSpentInHive.years} years, ${timeSpentInHive.months} months, ${timeSpentInHive.days} days`,
+                imageUrl:            imageUrl,
+                queenSpeciesId:      queenSpeciesId,
+                placedHereTimestamp: addedToHiveTimestamp,
+                hiveId:              hiveId,
             })
         )
 
-        if (existingQueen) {
-            // making queen history entry
-            const timeSpentInHive = new Date(existingQueen.addedToHiveTimestamp).getDuration(new Date())
-            await withStatus("Creating hive history entry for existing queen", () => 
-                db.insert(hiveQueenHistory).values({
-                    timeSpentInHive:     `${timeSpentInHive.years} years, ${timeSpentInHive.months} months, ${timeSpentInHive.days} days`,
-                    imageUrl:            existingQueen.imageUrl,
-                    // bornDate:            existingQueen.bornDate,
-                    queenSpeciesId:      existingQueen.queenSpeciesId,
-                    placedHereTimestamp: existingQueen.addedToHiveTimestamp,
-                    hiveId:              existingQueen.hiveId,
-                })
-            )
-
-            // delete existing queen
-            await withStatus("Deleting existing queen", () => 
-                db.delete(queens).where(eq(queens.id, existingQueen.id))
-            )
-        }
-
-        const [insertResult] = await withStatus("Creating queen entry", () => 
-            db.insert(queens).values({
-                bornDate:       bornDate,
-                queenSpeciesId: speciesId,
-                hiveId:         hiveId
-            })
-        )
-
-        if (image) {
-            // insert image
-            const url = await withStatus("Uploading image to cloud", async () => {
-                const imageKey = new PublicIdBuilder(req.session.userId!.toString()).Apiary(insertResult.insertId.toString()).getResource()
-                return await uploadImage(image, imageKey)
-            })
-
-            await withStatus("Inserting image url to entry", () =>
-                db.update(queens)
-                .set({ imageUrl: url })
-                .where(eq(queens.id, insertResult.insertId))
-            )
-        }
-
-        const queenResult = await withStatus(`Fetching bee species`, () => 
-            db.query.queens.findFirst({
+        const hiveQueenHistoryGetResult = await withStatus(`Fetching new history entry`, () => {
+            return db.query.hiveQueenHistory.findFirst({
                 ...queenHistoryGetStructure,
-                where: eq(queens.id, insertResult.insertId),
+                where: eq(hiveQueenHistory.id, insertResult.insertId)
             })
-        )
+        })
 
-        res.status(200).json(queenResult)
+        return res.status(200).json(hiveQueenHistoryGetResult)
     } catch (error) {
         console.error(error);
         res.status(500).send('Server error');
     }
 })
-
-
-
-    // updateQueen: async (model: QueenUpdateModel): Promise<QueenModelDB> => {
-    //     const { image, bornDate, id, speciesId } = model
-
-    //     const formData = new FormData()
-    //     formData.append("id", id.toString())
-    //     if (isValidValue(bornDate))  formData.append("bornDate",  bornDate.toString())
-    //     if (isValidValue(speciesId)) formData.append("speciesId", speciesId.toString())
-    //     if (image) formData.append("image", image)
-
-    //     const { data } = await api.post<QueenGetModel>("/queen/update", formData)
-    //     return QueenGetModel_To_QueenModelDB(data)
-    // },
 
 export default router

@@ -1,24 +1,15 @@
-import { QueenHistoryGetModel_To_QueenHistoryDB, HiveCreateResponse_to_HiveModelDB, HiveHistoryGetModel_To_HistoryEntryDB, NoteCreateModelResponse_to_NoteModelDB } from "@/core/Convertors"
-import type { HistoryEntryDB, HiveModelDB, NoteModelDB, QueenHistoryModelDB } from "@/core/stores/Models"
+import { QueenHistoryGetModel_To_QueenHistoryDB, HiveCreateResponse_to_HiveModelDB, HiveHistoryGetModel_To_HistoryEntryDB, NoteCreateModelResponse_to_NoteModelDB, HiveQueenHistoryGetModel_To_HiveQueenHistoryModelDB } from "@/core/Convertors"
+import type { HistoryEntryDB, HiveModelDB, HiveQueenHistoryModelDB, NoteModelDB, QueenHistoryModelDB } from "@/core/stores/Models"
 import { isValidValue } from "@/core/utils/others"
-import axios from "axios"
-import type { QueenHistoryGetModel, HiveGetModel, HiveCreateRequestModel, HiveUpdateRequestModel, HiveHistoryCreateModel, HiveHistoryGetModel, HiveHoneyYieldCreateModel, HiveHoneyYieldGetModel, NoteCreateModelRequest, NoteGetModel, NoteUpdateRequestModel } from "./Models"
+import type { QueenHistoryGetModel, HiveGetModel, HiveCreateRequestModel, HiveUpdateRequestModel, HiveHistoryCreateModel, HiveHistoryGetModel, HiveHoneyYieldCreateModel, HiveHoneyYieldGetModel, NoteCreateModelRequest, NoteGetModel, NoteUpdateRequestModel, HiveQueenHistoryCreateModel, HiveQueenHistoryGetModel } from "./Models"
 import api from "../config/AxiosConfig"
 
 export const hiveApi = {
-    getAll: async (hiveIds?: number[], apiaryIds?: number[]) => {
+    getAll: async (model: { hiveIds?: number[], apiaryIds?: number[] }) => {
         const { data } = await api.get<HiveGetModel[]>("/hive", {
             params: {
-                hiveIds,
-                apiaryIds
-            }
-        })
-        return data.map(HiveCreateResponse_to_HiveModelDB)
-    },
-    getFromApiary: async (apiaryId: number | undefined) => {
-        const { data } = await api.get<HiveGetModel[]>("/hive", {
-            params: {
-                apiaryId: apiaryId
+                hiveIds: model.hiveIds,
+                apiaryIds: model.apiaryIds
             }
         })
         return data.map(HiveCreateResponse_to_HiveModelDB)
@@ -89,6 +80,10 @@ export const hiveApi = {
                 const { data } = await api.get<QueenHistoryGetModel[]>(`/hive-queen-history/hive/${hiveId}`)
                 return data.map(QueenHistoryGetModel_To_QueenHistoryDB)
             },
+            create: async (payload: HiveQueenHistoryCreateModel): Promise<HiveQueenHistoryModelDB> => {
+                const { data } = await api.post<HiveQueenHistoryGetModel>(`/hive-queen-history`, payload)
+                return HiveQueenHistoryGetModel_To_HiveQueenHistoryModelDB(data)
+            }
         }
     },
     yields: {

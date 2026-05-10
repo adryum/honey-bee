@@ -20,14 +20,14 @@ const props = defineProps<{
             Queen History
         </label>
 
-        <div 
+        <!-- <div 
             :class="s.buttons"
         >
             <IconTextButton 
                 text="Edit"
                 :icon="SVG.Pencil"
             />
-        </div>
+        </div> -->
     </div>
 
     <hr :style="{
@@ -42,7 +42,7 @@ const props = defineProps<{
             v-if="previousBees.length === 0"
             :class="s.noHistory"
         >
-            No queens has been in this hive
+            No other queens have been in this hive
         </p>
         <div
             v-for="(bee, i) in previousBees"

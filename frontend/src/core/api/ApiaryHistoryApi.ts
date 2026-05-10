@@ -1,4 +1,3 @@
-import axios from "axios"
 import type { ApiaryHistoryCreateModel, ApiaryHistoryGetModel } from "./Models"
 import { ApiaryHistoryGetModel_To_HistoryEntryDB } from "../Convertors"
 import type { HistoryEntryDB } from "../stores/Models"

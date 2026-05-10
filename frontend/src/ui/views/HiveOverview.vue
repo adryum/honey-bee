@@ -23,7 +23,7 @@ const searchText = ref("")
 const selectedDate = ref(new Date().nextMonth().previousMonth())
 const currentTab = computed<HiveTab>(() => props.tab)
 const { hive }   = useHiveQuery({ 
-    id:      toRef(() => props.id),
+    id: toRef(() => props.id)
 })
 
 const fragmentHeight = computed((): string => {

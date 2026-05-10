@@ -1,5 +1,5 @@
 <script setup lang="ts">
-import { computed, onMounted, ref, useCssModule} from "vue"
+import { computed, ref, useCssModule} from "vue"
 import ToolBar from '../components/ToolBar.vue';
 import IconButton from '../components/input/buttons/IconTextButton.vue';
 import { onResize } from '@/core/utils/Hooks';

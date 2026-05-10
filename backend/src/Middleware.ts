@@ -6,7 +6,6 @@ import { db } from "./config/Database";
 import { users } from "./db/schema";
 import { eq } from "drizzle-orm/sql/expressions/conditions";
 import { getUserCalendarClient } from "./config/calendar/GoogleCalendar";
-import { ZodError } from 'zod'
 
 export function requireRole(requiredRoles: UserRoles[]) {
     return async (req: Request, res: Response, next: NextFunction)  => {
@@ -42,11 +41,4 @@ export async function attachCalendarClient(req: Request, res: Response, next: Ne
 
     req.calendarClient = getUserCalendarClient(user.googleRefreshToken)
     next()
-}
-
-export const errorHandler = (err: any, req: Request, res: Response, next: any) => {
-    if (err instanceof ZodError) {
-        return res.status(400).json({ errors: err.issues })
-    }
-    res.status(500).json({ message: err.message })
 }

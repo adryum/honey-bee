@@ -225,3 +225,16 @@ export type DateRange = {
     fromISO: string
     toISO:   string
 }
+
+export type HiveQueenHistoryModelDB = {
+    id:                  number
+    timeSpentInHive:     string
+    placedHereDate:      Date
+    imageUrl:            string
+    specie: {
+        id: number
+        knownAsName: string
+        scientificName: string
+    }
+    hiveId:              number
+}
