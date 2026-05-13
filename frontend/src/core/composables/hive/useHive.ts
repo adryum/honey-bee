@@ -4,9 +4,11 @@ import { computed, unref, type MaybeRef, type Ref } from "vue";
 import { ActionType, useActionsStore } from "../../stores/ActionStore";
 import { HistoryActionType } from "../../DatabaseEnums";
 import { useHiveActionHistoryMutations } from "./useHiveActionHistory";
+import type { DateRange } from "@/core/stores/Models";
 
 export const useHiveQuery = (model: { 
     id: Ref<number | undefined>,
+    getHiveYields?:  DateRange | false
 }) => {
     const { data: hive, isLoading: isGettingHives, isError: isGettingHivesError } = useQuery({
         queryKey: ["hives", model.id],
@@ -14,10 +16,19 @@ export const useHiveQuery = (model: {
         enabled:  computed(() => model.id.value !== undefined)
     })
 
+    const { data: yields, isLoading: isGettingYields, isError: isGettingYieldError } = useQuery({
+        queryKey: ["hives-yields", { hiveId: model.id }],
+        queryFn:  () => hiveApi.yields.getFromHive(model.id.value!, model.getHiveYields as DateRange),
+        enabled:  computed(() => model.id.value !== undefined && !!model.getHiveYields)
+    })
+
     return {        
         hive,
         isGettingHives,
-        isGettingHivesError
+        isGettingHivesError,
+        yields,
+        isGettingYields,
+        isGettingYieldError
     }
 }
 
@@ -119,10 +130,29 @@ export const useHiveMutations = () => {
         }
     })
 
+    const { mutate: createYield, isPending: isCreatingYields } = useMutation({
+        mutationFn: hiveApi.yields.create,
+        onSuccess: (newProduction) => {
+            queryClient.invalidateQueries({ queryKey: ['hives-honey-yields'] })
+            createPopupAction({
+                label: "Created new honey production entry!",
+                type:  ActionType.Success
+            })
+        },
+        onError: (error) => {
+            createPopupAction({
+                label: "Failed to create honey production entry!",
+                type:  ActionType.Error
+            })
+        }
+    })
+
     return {
         create,
         remove,
         update,
+        createYield,
+        isCreatingYields,
         isCreatingHive,
         isDeletingHive,
         isUpdatingHive

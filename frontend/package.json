@@ -27,6 +27,7 @@
     "vue3-apexcharts": "^1.10.0"
   },
   "devDependencies": {
+    "@types/node": "^25.7.0",
     "@types/qs": "^6.15.0",
     "@types/vue": "^1.0.31",
     "@vitejs/plugin-vue": "^5.2.3",

@@ -7,6 +7,7 @@ import MoreAboutSpecies from "./MoreAboutSpecies.vue";
 import { useQueenQuery, useQueensQuery } from "@/core/composables/useQueen";
 import { useSpeciesQuery } from "@/core/composables/useSpecies";
 import { useHiveQueenHistoryQuery } from "@/core/composables/hive/useHiveQueenHistory";
+import { isValidValue } from "@/core/utils/others";
 
 const s = useCssModule()
 const props = defineProps<{
@@ -23,7 +24,8 @@ const queen = computed(() => {
 const { species } = useSpeciesQuery()
 const queenSpecies = computed(() => species.value?.find(item => item.id === queen.value?.species.id))
 const { history } = useHiveQueenHistoryQuery({
-    hiveId: computed(() => props.hive.id)
+    hiveIds: computed(() => isValidValue(props.hive.id) ? [props.hive.id] : undefined),
+    desc: true
 })
 </script>
 

@@ -49,6 +49,7 @@ export const useQueenMutations = () => {
         mutationFn: queenApi.create, 
         onSuccess: (newQueen) => {
             queryClient.invalidateQueries({ queryKey: ['queens'] })
+            queryClient.invalidateQueries({ queryKey: ['hives-queen-history'] })
             createPopupAction({
                 label: `Created Queen: ${newQueen.species.scientificName}`,
                 type:  ActionType.Success

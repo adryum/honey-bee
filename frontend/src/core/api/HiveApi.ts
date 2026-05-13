@@ -1,5 +1,5 @@
 import { QueenHistoryGetModel_To_QueenHistoryDB, HiveCreateResponse_to_HiveModelDB, HiveHistoryGetModel_To_HistoryEntryDB, NoteCreateModelResponse_to_NoteModelDB, HiveQueenHistoryGetModel_To_HiveQueenHistoryModelDB } from "@/core/Convertors"
-import type { HistoryEntryDB, HiveModelDB, HiveQueenHistoryModelDB, NoteModelDB, QueenHistoryModelDB } from "@/core/stores/Models"
+import type { DateRange, HistoryEntryDB, HiveModelDB, HiveQueenHistoryModelDB, NoteModelDB, QueenHistoryModelDB } from "@/core/stores/Models"
 import { isValidValue } from "@/core/utils/others"
 import type { QueenHistoryGetModel, HiveGetModel, HiveCreateRequestModel, HiveUpdateRequestModel, HiveHistoryCreateModel, HiveHistoryGetModel, HiveHoneyYieldCreateModel, HiveHoneyYieldGetModel, NoteCreateModelRequest, NoteGetModel, NoteUpdateRequestModel, HiveQueenHistoryCreateModel, HiveQueenHistoryGetModel } from "./Models"
 import api from "../config/AxiosConfig"
@@ -76,8 +76,13 @@ export const hiveApi = {
             },
         },
         queen: {
-            getFromHive: async (hiveId: number): Promise<QueenHistoryModelDB[]> => {
-                const { data } = await api.get<QueenHistoryGetModel[]>(`/hive-queen-history/hive/${hiveId}`)
+            getAll: async (hiveIds: number[], desc?: boolean): Promise<QueenHistoryModelDB[]> => {
+                const { data } = await api.get<QueenHistoryGetModel[]>(`/hive-queen-history`, {
+                    params: {
+                        hiveIds: hiveIds,
+                        desc: desc
+                    }
+                })
                 return data.map(QueenHistoryGetModel_To_QueenHistoryDB)
             },
             create: async (payload: HiveQueenHistoryCreateModel): Promise<HiveQueenHistoryModelDB> => {
@@ -91,8 +96,17 @@ export const hiveApi = {
             const { data } = await api.post<HiveHoneyYieldGetModel>(`/hive-yields`, payload)
             return data
         },
-        getFromHive: async (hiveId: number): Promise<HiveHoneyYieldGetModel[]> => {
-            const { data } = await api.get<HiveHoneyYieldGetModel[]>(`/hive-yields/hive/${hiveId}`)
+        getFromHive: async (
+            hiveId:    number,
+            range: DateRange
+        ): Promise<HiveHoneyYieldGetModel[]> => {
+            const { data } = await api.get<HiveHoneyYieldGetModel[]>(`/hive-yields/hive/${hiveId}`, {
+                params: { 
+                    toISO: range.toISO, 
+                    fromISO: range.fromISO 
+                }
+            })
+            
             return data
         },
     }

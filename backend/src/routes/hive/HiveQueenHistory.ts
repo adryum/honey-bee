@@ -1,13 +1,10 @@
 import { UserRoles } from "../../DatabaseEnums"
 import { requireRole } from "../../Middleware"
 import { Router, type Request, type Response } from "express";
-import { withStatus } from "../../utils";
+import { toNumberArray, withStatus } from "../../utils";
 import { db } from "../../config/Database";
-import { and, eq, inArray } from "drizzle-orm";
-import { hiveQueenHistory, queens } from "../../db/schema";
-import { upload } from "../../config/Multer";
-import { uploadImage } from "../../config/image_cloud/Cloudinary";
-import { PublicIdBuilder } from "../../config/image_cloud/PublicIdBuilder";
+import { eq, inArray } from "drizzle-orm";
+import { hiveQueenHistory } from "../../db/schema";
 
 const router = Router()
 
@@ -40,17 +37,24 @@ router.get(
     "/",
     requireRole([UserRoles.ANY]),
     async (
-        req: Request<{},{},{}, { hiveId: string }>, 
+        req: Request<{}, {}, {}, {
+            hiveIds?: string[]
+            desc?: string
+        }>,
         res: Response
 ) => {
     console.log("# Get hive queen history");
-    const hiveId = parseInt(req.query.hiveId)
+    const hiveIds = toNumberArray(req.query.hiveIds)
+    const descendingOrder = req.query.desc === "true"
 
     try {
-        const hiveQueenHistoryResult = await withStatus(`Fetching hive queen history for hive ${hiveId}`, () => {
+        const hiveQueenHistoryResult = await withStatus(`Fetching hive queen history for hives: ${hiveIds}`, () => {
             return db.query.hiveQueenHistory.findMany({
                 ...queenHistoryGetStructure,
-                where: eq(hiveQueenHistory.hiveId, hiveId)
+                where: hiveIds ? inArray(hiveQueenHistory.hiveId, hiveIds) : undefined,
+                orderBy: (table, { desc, asc }) => [
+                    descendingOrder ? desc(table.creationTimestamp) : asc(table.creationTimestamp)
+                ]
             })
         })
 

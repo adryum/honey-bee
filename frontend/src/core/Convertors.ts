@@ -313,6 +313,7 @@ export function QueenHistoryGetModel_To_QueenHistoryDB(
 ): QueenHistoryModelDB {
     return {
         id:           convertee.id,
+        imageUrl:     convertee.imageUrl,
         species:      convertee.queenSpecy.scientificName,
         placedHereAt: new Date(convertee.placedHereTimestamp),
         timeInHive:   convertee.timeSpentInHive
@@ -332,6 +333,6 @@ export function HiveQueenHistoryGetModel_To_HiveQueenHistoryModelDB(
             knownAsName:    convertee.queenSpecy.knownAsName,
             scientificName: convertee.queenSpecy.scientificName
         },
-        hiveId: convertee.hiveId
+        hiveId: convertee.hive.id
     }
 }

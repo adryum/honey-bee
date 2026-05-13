@@ -177,6 +177,7 @@ export type InspectionEntryModelDB = {
 export type QueenHistoryModelDB = {
     id:           number
     species:      string
+    imageUrl:     string
     placedHereAt: Date
     timeInHive:   string
 } 

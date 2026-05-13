@@ -4,12 +4,13 @@ import { hiveApi } from "@/core/api/HiveApi"
 import { ActionType, useActionsStore } from "@/core/stores/ActionStore"
 
 export const useHiveQueenHistoryQuery = (model: { 
-    hiveId: Ref<number | undefined> 
+    hiveIds: Ref<number[] | undefined> 
+    desc?: boolean
 }) => {
     const { data: history, isLoading: isGettingHistory, isError: isGettingHistoryError } = useQuery({
-        queryKey: ["hives-queen-history", model.hiveId],
-        queryFn:  () => hiveApi.history.queen.getFromHive(model.hiveId.value!),
-        enabled:  computed(() => model.hiveId.value !== undefined),
+        queryKey: ["hives-queen-history", model.hiveIds, model.desc],
+        queryFn:  () => hiveApi.history.queen.getAll(model.hiveIds.value!, model.desc),
+        enabled:  computed(() => model.hiveIds.value !== undefined),
     })
 
     return {
@@ -28,7 +29,7 @@ export const useHiveQueenHistoryMutations = () => {
         onSuccess: (newEntry) => {
             queryClient.invalidateQueries({ queryKey: ['hives-queen-history'] })
             createPopupAction({
-                label: `Added new queen history entry for hive ${newEntry.hiveId}`,
+                label: `Added new queen history entry for hive #${newEntry.hiveId}`,
                 type:  ActionType.Success
             })
         },

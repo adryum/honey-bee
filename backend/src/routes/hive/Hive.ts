@@ -13,7 +13,6 @@ import { toNumberArray, withStatus } from "../../utils";
 
 const router = Router()
 
-
 router.get(
     "/:id/hives",
     requireRole([UserRoles.ANY]),

@@ -110,6 +110,7 @@ export const hiveQueenHistory = mysqlTable("hive_queen_history", {
 	queenSpeciesId:      bigint("queen_species_id", { mode: "number" }).notNull().references(() => queenSpecies.id),
 	hiveId:              bigint("hive_id", { mode: "number" }).references(() => hives.id),
 	placedHereTimestamp: timestamp("placed_here_timestamp", { mode: 'string' }).default(sql`(now())`).notNull(),
+	creationTimestamp:   timestamp("creation_timestamp", { mode: 'string' }).default(sql`(now())`).notNull(),
 },
 (table) => [
 	primaryKey({ columns: [table.id], name: "hive_queen_history_id"}),

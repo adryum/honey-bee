@@ -41,7 +41,7 @@ export const queenApi = {
         if (isValidValue(speciesId)) formData.append("speciesId", speciesId.toString())
         if (image) formData.append("image", image)
 
-        const { data } = await api.post<QueenGetModel>("/queen/update", formData)
+        const { data } = await api.put<QueenGetModel>("/queen", formData)
         return QueenGetModel_To_QueenModelDB(data)
     },
     delete: async (id: number): Promise<number> => {

@@ -398,9 +398,9 @@ export type ApiaryAccessModifyModel = {
 export type HiveQueenHistoryCreateModel = {
     hiveId:               number
     imageUrl:             string
-    bornDate:             Date
+    bornDate:             string
     queenSpeciesId:       number
-    addedToHiveTimestamp: Date
+    addedToHiveTimestamp: string
 }
 
 export type HiveQueenHistoryGetModel = {
@@ -413,5 +413,8 @@ export type HiveQueenHistoryGetModel = {
         knownAsName: string
         scientificName: string
     }
-    hiveId:              number
+    hive: {
+        id: number
+        name: string
+    }
 }

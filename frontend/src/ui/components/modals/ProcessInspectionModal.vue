@@ -6,9 +6,8 @@ import { SVG } from "@/assets/svgs/SVGLoader";
 import { useModalBase } from "@/core/composables/useModalBase";
 import IconTextButton from "../input/buttons/IconTextButton.vue";
 import { useInspectionMutation, useInspectionQuery } from "@/core/composables/useInspection";
-import { formatDateWithOrdinal } from "@/core/utils/Utils";
-import { useHiveHoneyProductionMutations } from "@/core/composables/hive/useHiveHoneyYields";
 import StringField from "../input/fields/used/StringField.vue";
+import { useHiveMutations } from "@/core/composables/hive/useHive";
 
 const s = useCssModule()
 const props = defineProps<{
@@ -24,7 +23,7 @@ const { inspection } = useInspectionQuery({
     allowFetching: computed(() => exposed.isOpen()) 
 })
 
-const { create, isCreatingYields } = useHiveHoneyProductionMutations()
+const { createYield, isCreatingYields } = useHiveMutations()
 const { processInspection: process } = useInspectionMutation()
 
 const procesedHoney = ref('')
@@ -45,7 +44,7 @@ async function processInspection() {
                 if (!form.hive) return
 
                 const honeyAmount = Number(honeyAveragePerFrame.value) * form.takenHoneyFrames;
-                create({
+                createYield({
                     amount:       honeyAmount,
                     inspectionId: props.inspectionId,
                     hiveId:       form.hive.id
