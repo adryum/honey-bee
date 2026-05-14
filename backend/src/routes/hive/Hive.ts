@@ -298,7 +298,7 @@ router.post(
         await withStatus("Giving calendar access to each user", () => 
             Promise.all(usersResult.map(async (user) => 
                 await shareCalendar({
-                    userRefreshToken: user.googleRefreshToken!,
+                    userRefreshToken: user.googleRefreshToken,
                     calendarId:       calendarId,
                     userEmail:        user.email,
                     role:             user.role

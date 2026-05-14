@@ -165,19 +165,18 @@ export function useCalendar() {
 
         const calendarId = newCalendar.data.id!
 
-        // TODO: remember to remove this shit when I get main prods refresh token!!! 
         // 2. Give your prod account owner access
         //    (service account owns it by default, but it won't appear
         //    in your prod Google Calendar UI without this step)
-        await withStatus(`Granting dedicated account access to calendar ${calendarId}`, () =>  
-            getAdminCalendarClient().acl.insert({
-                calendarId,
-                requestBody: {
-                    role:  'owner',
-                    scope: { type: 'user', value: MAIN_PROD_EMAIL },
-                },
-            })
-        )
+        // await withStatus(`Granting dedicated account access to calendar ${calendarId}`, () =>  
+        //     getAdminCalendarClient().acl.insert({
+        //         calendarId,
+        //         requestBody: {
+        //             role:  'owner',
+        //             scope: { type: 'user', value: MAIN_PROD_EMAIL },
+        //         },
+        //     })
+        // )
 
         // 3. Return the ID to save in your hive DB record
         return calendarId
@@ -207,7 +206,7 @@ export function useCalendar() {
     async function shareCalendar({ calendarId, userEmail, userRefreshToken, role }: { 
         calendarId:        string,
         userEmail:         string,
-        userRefreshToken:  string,
+        userRefreshToken:  string | undefined | null,
         role:              UserRoles
     }): Promise<void> {
         const googleRole = Role_to_GoogleCalendarRole(role)
@@ -224,12 +223,14 @@ export function useCalendar() {
             })
         )
 
-        // 2. Add it to their calendar list so it appears immediately, no email needed
-        await withStatus(`Adding calendar ${calendarId} to user's list`, () => 
-            getUserCalendarClient(userRefreshToken).calendarList.insert({
-                requestBody: { id: calendarId },
-            })
-        )
+        if (userRefreshToken) {
+            // 2. Add it to their calendar list so it appears immediately, no email needed
+            await withStatus(`Adding calendar ${calendarId} to user's list`, () => 
+                getUserCalendarClient(userRefreshToken).calendarList.insert({
+                    requestBody: { id: calendarId },
+                })
+            )
+        }
     }
 
     async function removeAccesToCalendar({ calendarId, userEmail, userRefreshToken }: { 
