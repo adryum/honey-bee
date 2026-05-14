@@ -4,17 +4,24 @@ import { requireEnv, withStatus } from '../../utils';
 import { CalendarEntryModel, CreateCalendarEventModel, UpdateCalendarEventModel } from './Models';
 import { UserRoles, Role_to_GoogleCalendarRole } from '../../DatabaseEnums';
 
-const GOOGLE_CLIENT_ID     = requireEnv('GOOGLE_CLIENT_ID')
-const GOOGLE_CLIENT_SECRET = requireEnv('GOOGLE_CLIENT_SECRET')
-const MAIN_PROD_EMAIL      = requireEnv('MAIN_PROD_EMAIL')
+const GOOGLE_CLIENT_ID                   = requireEnv('GOOGLE_CLIENT_ID')
+const GOOGLE_CLIENT_SECRET               = requireEnv('GOOGLE_CLIENT_SECRET')
+const MAIN_PROD_EMAIL                    = requireEnv('MAIN_PROD_EMAIL')
+const DEDICATED_GOOGLE_ACC_REFRESH_TOKEN = requireEnv('DEDICATED_GOOGLE_ACC_REFRESH_TOKEN')
 
-const client = new JWT({
-    keyFile: process.env.PATH_TO_SERVICE_ACC!,
-    scopes: ['https://www.googleapis.com/auth/calendar'], // Use the Calendar scope
-});
+const adminClient = new google.auth.OAuth2(
+    GOOGLE_CLIENT_ID,
+    GOOGLE_CLIENT_SECRET,
+) 
+adminClient.setCredentials({ refresh_token: DEDICATED_GOOGLE_ACC_REFRESH_TOKEN })
+
+// = new JWT({
+//     keyFile: process.env.PATH_TO_SERVICE_ACC!,
+//     scopes: ['https://www.googleapis.com/auth/calendar'], // Use the Calendar scope
+// });
 
 // 2. Pass that client into the Google Calendar "Remote Control"
-const calendar = google.calendar({ version: 'v3', auth: client });
+const calendar = google.calendar({ version: 'v3', auth: adminClient });
 
 // For admin ops — creating/deleting hive calendars
 export function getAdminCalendarClient() {
