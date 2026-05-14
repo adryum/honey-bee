@@ -1,7 +1,5 @@
 <script setup lang="ts">
 import { useCssModule } from "vue";
-import { SVG } from "@/assets/svgs/SVGLoader";
-import IconTextButton from "@/ui/components/input/buttons/IconTextButton.vue";
 import type { QueenHistoryModelDB } from "@/core/stores/Models";
 
 const s = useCssModule()
@@ -20,14 +18,14 @@ const props = defineProps<{
             Queen History
         </label>
 
-        <div 
+        <!-- <div 
             :class="s.buttons"
         >
             <IconTextButton 
                 text="Edit"
                 :icon="SVG.Pencil"
             />
-        </div>
+        </div> -->
     </div>
 
     <hr :style="{
@@ -42,33 +40,27 @@ const props = defineProps<{
             v-if="previousBees.length === 0"
             :class="s.noHistory"
         >
-            No queens has been in this hive
+            No other queens have been in this hive
         </p>
         <div
             v-for="(bee, i) in previousBees"
-            :class="s.queenCard"
+            :class="s.item"
         >
             <img
                 :class="s.image" 
-                src="@/assets/images/queen1.jpg" 
+                :src="bee.imageUrl || '@/assets/images/queen1.jpg'" 
                 alt="queen-picture"
             />
+
+            <p
+                :class="s.order"
+            >
+                NR: {{ i + 1}}
+            </p>
 
             <div
                 :class="s.description"
             >
-                <p
-                    :class="s.gridLabels"
-                >
-                    Order
-                </p>
-                <p
-                    :class="s.gridValues"
-                >
-                    {{ i + 1}}
-                </p>
-
-
                 <p
                     :class="s.gridLabels"
                 >
@@ -101,7 +93,7 @@ const props = defineProps<{
                 <p
                     :class="s.gridValues"
                 >
-                    {{ new Date(bee.placedHereAt) }}
+                    {{ new Date(bee.placedHereAt).toDDMMYYYY("-") }}
                 </p>
             </div>
         </div>
@@ -130,35 +122,55 @@ const props = defineProps<{
     color: var(--black)
     letter-spacing: .02em
 
-.queenCard
+.item
+    position: relative
     display: flex
     flex-direction: column
     // align-items: center
 
     min-width: 25rem
+    width: 25rem
+
     height: 100%
 
     // background: var(--secondary)
     // box-shadow: 0 0 0 1px var(--black)
     border-radius: var(--border-radius-small)
+    isolation: isolate
 
     .description
-        margin-top: 1rem
+        // margin-top: .5rem
         display: grid
         grid-template-columns: 1fr 1.5fr 
         row-gap: 1rem
+
+        padding: .5rem
+        box-sizing: border-box
 
     .image
         width: 100%
         height: 100%
         object-fit: cover
-        border-radius: var(--border-radius-small)
+        border-radius: var(--border-radius-small) var(--border-radius-small) 0 0
+        box-shadow: 0 0 0 1px var(--faint-border)
+
+    .order
+        position: absolute
+        top: 0
+        left: 0
+
+        padding: .5rem 1rem
+        background: var(--black)
+        color: var(--white)
+        border-radius: var(--border-radius-small) 0 var(--border-radius-small) 0
+
+        z-index: 1
 
 .body
     flex: 1
     display: flex
 
-    padding: 1rem
+    padding: .25rem
     gap: 1rem
     // gap: .5rem
     box-sizing: border-box

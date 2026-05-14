@@ -2,20 +2,22 @@ import dotenv from "dotenv";
 dotenv.config()
 
 import "./type_extensions/DateExtensions"
+import "./type_extensions/ObjectExtensions"
 import "./config/image_cloud/Cloudinary"
-import { testConnection, withStatus } from "./utils";
+import { requireEnv, testConnection, withStatus } from "./utils";
 
 import authentication from "./routes/Authentication"
 import adminRoute from "./routes/Admin"
-import hiveRoute from "./routes/Hives"
+import hiveRoute from "./routes/hive/Hive"
+import hiveActionHistoryRouter from "./routes/hive/HiveActionHistory";
+import hiveYieldsRouter from "./routes/hive/HiveHoneyYields";
+import hiveQueenHistoryRouter from "./routes/hive/HiveQueenHistory";
+import hiveNotesRouter from "./routes/hive/HiveNotes";
 import apiaryRoute from "./routes/Apiaries"
-import noteRoute from "./routes/Notes"
 import calendarRoute from "./routes/Calendar"
 import inspectionRoute from "./routes/Inspection"
 import profileRoute from "./routes/Profile"
-import hiveHistoryRoute from "./routes/HiveHistory"
 import apiaryHistoryRoute from "./routes/ApiaryHistory"
-import hiveYieldRoute from "./routes/HiveHoneyYields"
 import speciesRoute from "./routes/Species"
 import queenRoute from "./routes/Queen"
 
@@ -28,8 +30,7 @@ import { setupHistoryActionTypeMap } from "./initialization";
 
 const app = express();
 const httpServer = createServer(app);
-const port = process.env.EXPRESS_PORT!
-console.log('RUNNING FILE:', __filename);
+const port = requireEnv("EXPRESS_PORT")
 
 app.use(cors({
     origin:         process.env.WEBSITE_ORIGIN!,   // your SPA origin
@@ -88,9 +89,10 @@ async function startServer() {
     app.use("/inspection", inspectionRoute)
     
     app.use("/hive", hiveRoute)
-    app.use("/hiveHistory", hiveHistoryRoute)
-    app.use("/hiveHoneyYield", hiveYieldRoute)
-    app.use("/note", noteRoute)
+    app.use('/hive-action-history', hiveActionHistoryRouter)
+    app.use('/hive-yields', hiveYieldsRouter)
+    app.use('/hive-queen-history', hiveQueenHistoryRouter)
+    app.use('/hive-notes', hiveNotesRouter)
 
     app.use("/species", speciesRoute)
     app.use("/queen", queenRoute)

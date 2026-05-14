@@ -1,29 +1,29 @@
 import { Router, type Request, type Response } from "express";
-import { db, pool } from "../config/Database";
-import type { ResultSetHeader } from "mysql2";
-import { uploadImage } from "../config/image_cloud/Cloudinary";
-import { PublicIdBuilder } from "../config/image_cloud/PublicIdBuilder";
-import { upload } from "../config/Multer";
-import { attachCalendarClient, requireRole } from "../Middleware";
-import { HiveType, UserRoles } from "../DatabaseEnums";
-import { getSessionUserRole } from "../config/RedisClient";
+import { db } from "../../config/Database";
+import { uploadImage } from "../../config/image_cloud/Cloudinary";
+import { PublicIdBuilder } from "../../config/image_cloud/PublicIdBuilder";
+import { upload } from "../../config/Multer";
+import { requireRole } from "../../Middleware";
+import { HiveType, UserRoles } from "../../DatabaseEnums";
+import { getSessionUserRole } from "../../config/RedisClient";
 import { and, eq, inArray, or } from "drizzle-orm";
-import { hives, userApiaryAccess, userHiveAccess, users } from "../db/schema";
-import { useCalendar } from "../config/calendar/GoogleCalendar";
-import { withStatus } from "../utils";
+import { hives, userApiaryAccess, userHiveAccess, users } from "../../db/schema";
+import { useCalendar } from "../../config/calendar/GoogleCalendar";
+import { toNumberArray, withStatus } from "../../utils";
 
 const router = Router()
 
 router.get(
-    "/",
+    "/:id/hives",
     requireRole([UserRoles.ANY]),
     async (
-        req: Request, 
+        req: Request<{ id: string }>, 
         res: Response
 ) => {
-    console.log("# Get all hives");
-    const userId = req.session.userId!
-    const role   = await getSessionUserRole(userId)
+    console.log("# Get all apiary hives");
+    const userId   = req.session.userId!
+    const role     = await getSessionUserRole(userId)
+    const apiaryId = parseInt(req.params.id)
 
     try {
         console.log("Getting hives user has access to...");
@@ -31,7 +31,9 @@ router.get(
         var hivesResult
         switch (role) {
             case UserRoles.ADMINISTRATOR:
-                hivesResult = await db.query.hives.findMany();
+                hivesResult = await db.query.hives.findMany({
+                    where: eq(hives.apiaryId, apiaryId)
+                });
                 break;
             default:
                 const hiveAccess = await db.query.userHiveAccess.findMany({
@@ -39,7 +41,63 @@ router.get(
                 });
 
                 hivesResult = await db.query.hives.findMany({
-                    where: inArray(hives.id, hiveAccess.map(item => item.hiveId))
+                    where: and(
+                        eq(hives.apiaryId, apiaryId), 
+                        inArray(hives.id, hiveAccess.map(item => item.hiveId))
+                    )
+                });
+                break;
+        }
+        console.log("Done!");
+
+        return res.status(200).json(hivesResult)
+    } catch (err) {
+        console.error(err);
+        res.status(500).send('Server error');
+    }
+})
+
+
+router.get(
+    "/",
+    requireRole([UserRoles.ANY]),
+    async (
+        req: Request<{}, {}, {}, {
+            hiveIds?: string
+            apiaryIds?: string
+        }>,
+        res: Response
+) => {
+    console.log("# Get all hives");
+    const hiveIds   = toNumberArray(req.query.hiveIds)
+    const apiaryIds = toNumberArray(req.query.apiaryIds)
+    const userId    = req.session.userId!
+    const role      = await getSessionUserRole(userId)
+
+    try {
+        console.log("Getting hives user has access to...");
+
+        var hivesResult
+        switch (role) {
+            case UserRoles.ADMINISTRATOR:
+                hivesResult = await db.query.hives.findMany({
+                    where: and(
+                        hiveIds ? inArray(hives.id, hiveIds) : undefined,
+                        apiaryIds ? inArray(hives.apiaryId, apiaryIds) : undefined
+                    )
+                });
+                break;
+            default:
+                const hiveAccess = await db.query.userHiveAccess.findMany({
+                    where: eq(userHiveAccess.userId, userId)
+                });
+
+                hivesResult = await db.query.hives.findMany({
+                    where: and(
+                        inArray(hives.id, hiveAccess.map(item => item.hiveId)),
+                        apiaryIds ? inArray(hives.apiaryId, apiaryIds) : undefined,
+                        hiveIds ? inArray(hives.id, hiveIds) : undefined
+                    )
                 });
                 break;
         }

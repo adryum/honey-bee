@@ -1,12 +1,12 @@
 import { Router, type Request, type Response } from "express";
 import { ResultSetHeader, RowDataPacket } from "mysql2";
-import { getCurrentUTCDateString, isNumber, isValidValue, withStatus } from "../utils";
-import { upload } from "../config/Multer";
-import { db, pool } from "../config/Database";
-import { requireRole } from "../Middleware";
-import { NoteTypes, UserRoles } from "../DatabaseEnums";
+import { getCurrentUTCDateString, isNumber, isValidValue, withStatus } from "../../utils";
+import { upload } from "../../config/Multer";
+import { db, pool } from "../../config/Database";
+import { requireRole } from "../../Middleware";
+import { NoteTypes, UserRoles } from "../../DatabaseEnums";
 import { eq } from "drizzle-orm";
-import { hiveNotes } from "../db/schema";
+import { hiveNotes } from "../../db/schema";
 
 const router = Router()
 

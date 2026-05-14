@@ -35,6 +35,10 @@ export const useFormValidator = () => {
 
         return validee
     }
+
+    function onInitialization(func: () => void) {
+        func()
+    }
     
     onUnmounted(() => {
         validees.value = []
@@ -45,6 +49,7 @@ export const useFormValidator = () => {
         getFormValidee,
         clear,
         showThatIsRequired,
-        initialize
+        initialize,
+        onInitialization
     }
 }

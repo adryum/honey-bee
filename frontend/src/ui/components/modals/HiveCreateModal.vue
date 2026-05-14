@@ -4,7 +4,7 @@ import { useApiaryMutations } from '@/core/composables/useApiary';
 import { useCssModule, ref, watch, computed } from 'vue';
 import ImageDropZone from '../input/fields/ImageDropZone.vue';
 import IconTextButton from '../input/buttons/IconTextButton.vue';
-import { useHiveMutations, useHivesQuery } from '@/core/composables/useHive';
+import { useHiveMutations, useHivesQuery } from '@/core/composables/hive/useHive';
 import { HiveType } from '@/core/DatabaseEnums';
 import { useFlexibleGrid } from '@/core/utils/others';
 import ModularDropdown from '../input/dropdowns/ModularDropdown.vue';
@@ -33,7 +33,7 @@ const emits = defineEmits<{
 
 const { assignHive } = useApiaryMutations()
 const { create, isCreatingHive } = useHiveMutations()
-const { hives } = useHivesQuery({ apiaryId: undefined })
+const { hives } = useHivesQuery({ fireOnEmptyQuery: true })
 const hivesInApiary = computed(() => hives.value?.filter(hive => hive.apiaryId === props.apiaryId) ?? [])
 const hivesNotInApiary = computed(() => hives.value?.filter(hive => hive.apiaryId !== props.apiaryId) ?? [])
 

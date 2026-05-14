@@ -177,7 +177,8 @@ export type InspectionEntryModelDB = {
 export type QueenHistoryModelDB = {
     id:           number
     species:      string
-    placedHereAt: string
+    imageUrl:     string
+    placedHereAt: Date
     timeInHive:   string
 } 
 
@@ -224,4 +225,17 @@ export type LineGraphLineModel = {
 export type DateRange = {
     fromISO: string
     toISO:   string
+}
+
+export type HiveQueenHistoryModelDB = {
+    id:                  number
+    timeSpentInHive:     string
+    placedHereDate:      Date
+    imageUrl:            string
+    specie: {
+        id: number
+        knownAsName: string
+        scientificName: string
+    }
+    hiveId:              number
 }

@@ -1,7 +1,6 @@
 <script setup lang="ts">
 import { SVG } from '@/assets/svgs/SVGLoader';
 import { useCssModule, ref, computed, watch } from 'vue';
-import { useNoteMutations } from '@/core/composables/useNote';
 import type { NoteCreateModelRequest } from '@/core/api/Models';
 import { isValidValue } from '@/core/utils/others';
 import { NoteTypes } from '@/core/DatabaseEnums';
@@ -14,6 +13,7 @@ import { useModalBase } from '@/core/composables/useModalBase';
 import StringField from '../input/fields/used/StringField.vue';
 import StringMultipleField from '../input/fields/used/StringMultipleField.vue';
 import StringFieldTopPart from '../input/dropdowns/dropdownItems/top/StringFieldTopPart.vue';
+import { useNoteMutations } from '@/core/composables/hive/useHiveNote';
 
 const s = useCssModule()
 const props = defineProps<{

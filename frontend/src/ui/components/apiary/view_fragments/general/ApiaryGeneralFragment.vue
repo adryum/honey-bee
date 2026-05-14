@@ -15,7 +15,7 @@ const props = defineProps<{
 
 const { history } = useApiaryHistoryQuery( { apiaryId: toRef(() => props.apiary.id) } )
 const { hiveYields } = useApiaryQuery({
-    id:            computed(() => props.apiary.id),
+    id: computed(() => props.apiary.id),
     getHiveYields: {
         fromISO: new Date().firstDayOfMonth().toISOString(),
         toISO: new Date().lastDayOfMonth().toISOString(),
@@ -23,12 +23,10 @@ const { hiveYields } = useApiaryQuery({
 })
 
 const convertedYields = computed(() => {
-    if (hiveYields.value)
-        console.log(HiveYieldGetModels_To_LineGraphLineModels(hiveYields.value!));
     return hiveYields.value 
-    ? HiveYieldGetModels_To_LineGraphLineModels(hiveYields.value)
-    : []  
-} 
+        ? HiveYieldGetModels_To_LineGraphLineModels(hiveYields.value)
+        : []  
+    } 
 )
 </script>
 

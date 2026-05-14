@@ -2,8 +2,7 @@
 import { computed, ref, toRef, useCssModule } from "vue";
 import Note from './Note.vue'
 import { useFlexibleGrid } from "@/core/utils/others";
-import { useNotes } from "@/core/composables/useNote";
-
+import { useNotes } from "@/core/composables/hive/useHiveNote";
 const s = useCssModule()
 const props = defineProps<{
     hiveId:     number

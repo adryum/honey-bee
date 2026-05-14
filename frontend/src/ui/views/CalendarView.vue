@@ -5,12 +5,10 @@ import ToolBar from "../components/ToolBar.vue";
 import ModularDropdown from "../components/input/dropdowns/ModularDropdown.vue";
 import Icon from "../components/Icon.vue";
 import { SVG } from "@/assets/svgs/SVGLoader";
-import { useApiariesQuery, useApiaryQuery } from "@/core/composables/useApiary";
-import IconCubeButton from "../components/input/buttons/IconCubeButton.vue";
-import IconTextButton from "../components/input/buttons/IconTextButton.vue";
+import { useApiariesQuery } from "@/core/composables/useApiary";
 import { useCalendarQuery } from "@/core/composables/useCalendar";
 import MonthChangerWidget from "../components/calendar/MonthChangerWidget.vue";
-import { HiveTab } from "@/core/ViewTabEnums";
+import { useHivesQuery } from "@/core/composables/hive/useHive";
 
 const s = useCssModule()
 const selectedApiary = ref<{id: number, name: string }>({ id: -1, name: "Selected"})
@@ -18,9 +16,8 @@ const selectedDate = ref(new Date().nextMonth().previousMonth())
 
 const { apiaries } = useApiariesQuery()
 
-const { hives } = useApiaryQuery({
-    id:             computed(() => selectedApiary.value.id),
-    getApiaryHives: true
+const { hives } = useHivesQuery({
+    apiaryIds: computed(() => selectedApiary.value.id !== -1 ? [selectedApiary.value.id] : undefined)
 })
 
 const { events } = useCalendarQuery({

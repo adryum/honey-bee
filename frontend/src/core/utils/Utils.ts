@@ -1,3 +1,6 @@
+import fs from 'fs/promises';
+import path from 'path';
+
 export function formatDateWithOrdinal(
     dateTime: string, 
     showHoursAndMinutes: boolean = false,
@@ -62,4 +65,14 @@ export function getAge(bornTs: string, todayTs: string): string {
     if (parts.length === 0) parts.push('0 months');
 
     return parts.join(' ');
+}
+
+export async function imageUrlToFile(url: string, fileName?: string): Promise<File> {
+  const response = await fetch(url);
+  if (!response.ok) throw new Error(`Failed to fetch image: ${response.statusText}`);
+  
+  const blob = await response.blob();
+  const name = fileName ?? new URL(url).pathname.split('/').pop() ?? 'image';
+  
+  return new File([blob], name, { type: blob.type });
 }

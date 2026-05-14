@@ -35,12 +35,6 @@ export const useApiaryQuery = (model: UseApiaryQueryModel) => {
         enabled:  computed(() => model.id.value !== undefined && getApiary)
     })
 
-    const { data: hives, isLoading: isGettingHives, isError: isGettingHivesError } = useQuery({
-        queryKey: ["hives", { apiaryId: model.id }],
-        queryFn:  () => apiaryApi.getApiaryHives(model.id.value!),
-        enabled:  computed(() => model.id.value !== undefined && getApiaryHives)
-    })
-
     const { data: hiveYields, isLoading: isGettingHiveYields, isError: isGettingHivesYieldsError } = useQuery({
         queryKey: ["hives-yields", { apiaryId: model.id }],
         queryFn:  () => apiaryApi.getHiveYields(model.id.value!, getHiveYields as DateRange),
@@ -51,9 +45,6 @@ export const useApiaryQuery = (model: UseApiaryQueryModel) => {
         apiary,
         isGettingApiary,
         isGettingApiaryError,
-        hives,
-        isGettingHives,
-        isGettingHivesError,
         hiveYields,
         isGettingHiveYields,
         isGettingHivesYieldsError

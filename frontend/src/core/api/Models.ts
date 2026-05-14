@@ -324,12 +324,13 @@ export type QueenCreateModel = {
 }
 
 export type QueenGetModel = {
-    id:              number
-    imageUrl:        string
-    bornDate:        string
-    addedToHiveDate: string
-    species:         {
+    id:                   number
+    imageUrl:             string
+    bornDate:             string
+    addedToHiveTimestamp: string
+    queenSpecy:           {
         id:             number
+        knownAsName:    string
         scientificName: string
         lifeExpectancy: string
     },
@@ -344,6 +345,20 @@ export type QueenUpdateModel = {
     speciesId?: number
     bornDate?:  Date
     image?:     File
+}
+
+export type QueenHistoryGetModel = {
+    id:                  number
+    timeSpentInHive:     string
+    placedHereTimestamp: string
+    imageUrl:            string
+    queenSpecy: {
+        id: number
+        knownAsName: string
+        scientificName: string
+        lifeExpectancy: string
+    } 
+    hiveId:              number
 }
 
 export type SpeciesGetModel = {
@@ -378,4 +393,28 @@ export type HiveAccessModifyModel = {
 export type ApiaryAccessModifyModel = {
     userId:   number
     apiaryId: number
+}
+
+export type HiveQueenHistoryCreateModel = {
+    hiveId:               number
+    imageUrl:             string
+    bornDate:             string
+    queenSpeciesId:       number
+    addedToHiveTimestamp: string
+}
+
+export type HiveQueenHistoryGetModel = {
+    id:                  number
+    timeSpentInHive:     string
+    placedHereTimestamp: string
+    imageUrl:            string
+    queenSpecy: {
+        id: number
+        knownAsName: string
+        scientificName: string
+    }
+    hive: {
+        id: number
+        name: string
+    }
 }

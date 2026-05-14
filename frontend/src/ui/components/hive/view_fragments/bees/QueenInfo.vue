@@ -6,6 +6,10 @@ import IconTextButton from "@/ui/components/input/buttons/IconTextButton.vue";
 import { getRandomId } from "@/core/utils/Utils";
 import QueenCreateModal from "@/ui/components/modals/QueenCreateModal.vue";
 import type { ModalBaseModel } from "@/core/composables/useModalBase";
+import { useHiveQueenHistoryMutations } from "@/core/composables/hive/useHiveQueenHistory";
+import { useQueenMutations } from "@/core/composables/useQueen";
+import { ActionType, useActionsStore } from "@/core/stores/ActionStore";
+import QueenEditModal from "@/ui/components/modals/QueenEditModal.vue";
 
 const s = useCssModule()
 const props = defineProps<{
@@ -18,8 +22,30 @@ const lifeExpectancyId = getRandomId("label")
 const placedHereId     = getRandomId("label")
 const ageId            = getRandomId("label")
 
-const queenCreateModal = ref<ModalBaseModel>()
+const queenCreateModal  = ref<ModalBaseModel>()
+const queenEditModal    = ref<ModalBaseModel>()
+const queenReplaceModal = ref<ModalBaseModel>()
+const { create: createQueenHistory } = useHiveQueenHistoryMutations()
+const { remove: deleteQueen } = useQueenMutations()
+const { createPopupAction } = useActionsStore()
 
+function removeQueen(queen: QueenModelDB) {
+    deleteQueen(queen.id, {
+        onSuccess() {
+            createPopupAction({
+                type: ActionType.Success,
+                label: "Queen removed from hive"
+            })
+            createQueenHistory({
+                hiveId:               props.hiveId,
+                imageUrl:             queen.imageUrl,
+                bornDate:             queen.bornDate.toMySQLTimestamp(),
+                queenSpeciesId:       queen.species.id,
+                addedToHiveTimestamp: queen.addedToHiveDate.toMySQLTimestamp(),
+            })
+        }
+    })
+}
 </script>
 
 <template>
@@ -49,8 +75,21 @@ const queenCreateModal = ref<ModalBaseModel>()
             />
             <IconTextButton 
                 v-if="queen"
+                text="Remove"
+                :icon="SVG.Cross"
+                @click="removeQueen(queen)"
+            />
+            <IconTextButton 
+                v-if="queen"
+                text="Replace"
+                :icon="SVG.Restart"
+                @click="queenReplaceModal?.open"
+            />
+            <IconTextButton 
+                v-if="queen"
                 text="Edit"
                 :icon="SVG.Pencil"
+                @click="queenEditModal?.open"
             />
         </div>
     </div>
@@ -122,6 +161,18 @@ const queenCreateModal = ref<ModalBaseModel>()
     <QueenCreateModal
         ref="queenCreateModal"
         :hive-id="hiveId"
+    />
+    <!-- Reusing same create modal -->
+    <QueenCreateModal
+        ref="queenReplaceModal"
+        :hive-id="hiveId"
+    />
+
+    <QueenEditModal
+        ref="queenEditModal"
+        v-if="queen"
+        :hive-id="hiveId"
+        :queen="queen"
     />
 </div>
 </template>

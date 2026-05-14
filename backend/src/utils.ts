@@ -72,3 +72,8 @@ export class LoggedMap<K, V> extends Map<K, V> {
         return value;
     }
 }
+
+export const toNumberArray = (val: unknown): number[] | undefined => {
+    if (val === undefined || val === null) return undefined
+    return ([] as any[]).concat(val).filter(Boolean).map(Number)
+}

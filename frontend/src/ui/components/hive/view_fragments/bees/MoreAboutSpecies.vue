@@ -1,7 +1,7 @@
 <script setup lang="ts">
 import { useCssModule } from "vue";
 import { useI18n } from "vue-i18n";
-import type { MoreAboutSpeciesModel, SpeciesModelDB } from "@/core/stores/Models";
+import type { SpeciesModelDB } from "@/core/stores/Models";
 
 const s = useCssModule()
 const { t } = useI18n()
@@ -17,11 +17,10 @@ const props = defineProps<{
         <label 
             :class="s.label"    
         >
-            More about:  
+            About  
             <p
-                v-if="species"
                 :class="s.gridLabels"
-            >{{ species.scientificName }}</p>
+            >{{ species?.scientificName || ''}}</p>
         </label>
     </div>
 
@@ -31,6 +30,13 @@ const props = defineProps<{
         background: 'rgba(0,0,0,.2)',
         margin: 0
     }">
+
+    <p
+        v-if="!species"
+        :class="s.noHistory"
+    >
+        No information about this species
+    </p>
 
     <div
         v-if="species"
@@ -86,6 +92,13 @@ const props = defineProps<{
 </template>
 
 <style module lang='sass'>
+.noHistory
+    font-family: var(--font-family)
+    font-size: var(--font-size-large)
+    font-weight: 600
+    opacity: 1
+    color: #71797E
+    margin: auto
 
 .gridLabels
     font-size: var(--font-size-medium)
@@ -132,6 +145,7 @@ const props = defineProps<{
         display: flex
         flex-direction: column
         gap: 1rem
+        flex: 1
 
 .container
     display: flex

@@ -6,7 +6,7 @@ import IconTextButton from '../input/buttons/IconTextButton.vue';
 import { useFormValidator } from '@/core/composables/useFormValidator';
 import ModalBase from './ModalBase.vue';
 import { useModalBase } from '@/core/composables/useModalBase';
-import { useHiveMutations } from '@/core/composables/useHive';
+import { useHiveMutations } from '@/core/composables/hive/useHive';
 import { HiveType } from '@/core/DatabaseEnums';
 import type { HiveModelDB } from '@/core/stores/Models';
 import StringField from '../input/fields/used/StringField.vue';

@@ -1,10 +1,10 @@
 import { Router, type Request, type Response } from "express";
-import { RowDataPacket, ResultSetHeader } from "mysql2";
-import { db, pool } from "../config/Database";
+import { ResultSetHeader } from "mysql2";
+import { db } from "../config/Database";
 import { UserRoles } from "../DatabaseEnums";
 import { requireRole } from "../Middleware";
 import { isValidValue, withStatus } from "../utils";
-import { asc, count, DBQueryConfig, desc, eq, ExtractTablesWithRelations } from "drizzle-orm";
+import { count, desc, eq } from "drizzle-orm";
 import {  apiaries, hiveInspectionForms, inspections, users } from "../db/schema";
 
 const router = Router()

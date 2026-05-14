@@ -1,9 +1,10 @@
-import { useMutation, useQuery, useQueryClient } from "@tanstack/vue-query";
-import { computed, type Ref } from "vue";
-import { noteApi } from "../api/NoteApi";
-import { ActionType, useActionsStore } from "../stores/ActionStore";
-import { useHiveHistoryMutations } from "./useHiveHistory";
-import { HistoryActionType } from "../DatabaseEnums";
+import { HistoryActionType } from "@/core/DatabaseEnums"
+import { useActionsStore, ActionType } from "@/core/stores/ActionStore"
+import { useQuery, useQueryClient, useMutation } from "@tanstack/vue-query"
+import { type Ref, computed } from "vue"
+import { useHiveActionHistoryMutations } from "./useHiveActionHistory"
+import { hiveApi } from "@/core/api/HiveApi"
+
 
 export const useNotes = ({
     hiveId
@@ -13,7 +14,7 @@ export const useNotes = ({
 ) => {
     const { data: notes, isLoading, isError } = useQuery({
         queryKey: ["notes", { id: hiveId.value }],
-        queryFn:  () => noteApi.getHiveNotes(hiveId.value!),
+        queryFn:  () => hiveApi.notes.getFromHive(hiveId.value!),
         enabled:  computed(() => hiveId.value != undefined)
     })
 
@@ -27,10 +28,10 @@ export const useNotes = ({
 export const useNoteMutations = () => {
     const queryClient = useQueryClient()
     const { createPopupAction }= useActionsStore()
-    const { create: createHiveHistory } = useHiveHistoryMutations()
+    const { create: createHiveHistory } = useHiveActionHistoryMutations()
 
     const { mutate: create, isPending: isCreatingNote } = useMutation({
-        mutationFn: noteApi.create,
+        mutationFn: hiveApi.notes.create,
         onSuccess:  (newNote) => {
             queryClient.invalidateQueries({ queryKey: ['notes'] })
 
@@ -56,7 +57,7 @@ export const useNoteMutations = () => {
     })
 
     const { mutate: remove, isPending: isDeletingNote } = useMutation({
-        mutationFn: noteApi.delete,
+        mutationFn: hiveApi.notes.delete,
         onSuccess:  (id) => {
             queryClient.invalidateQueries({ queryKey: ['notes'] })
 
@@ -74,7 +75,7 @@ export const useNoteMutations = () => {
     })
 
     const { mutate: update, isPending: isUpdatingNote } = useMutation({
-        mutationFn: noteApi.update,
+        mutationFn: hiveApi.notes.update,
         onSuccess:  (updatedNote) => {
             queryClient.invalidateQueries({ queryKey: ['notes'] })
 

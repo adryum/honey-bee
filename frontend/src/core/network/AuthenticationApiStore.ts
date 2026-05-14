@@ -7,7 +7,7 @@ import { UserProfileResponseModel_To_UserProfileModelDB } from '../Convertors';
 export const useAuthenticationApiStore = defineStore('authenticationApiStore', () => {
     async function getMyProfile() {
         try {
-            const { data } = await axios.get<UserProfileResponseModel>('/auth/profile/me') 
+            const { data } = await api.get<UserProfileResponseModel>('/auth/profile/me') 
             return UserProfileResponseModel_To_UserProfileModelDB(data)
         } catch (error) {
             console.log(error);
@@ -16,7 +16,7 @@ export const useAuthenticationApiStore = defineStore('authenticationApiStore', (
 
     async function logout(): Promise<void> {
         try {
-            await axios.get('/auth/logout')
+            await api.get('/auth/logout')
             router.push(RouterViewPaths.Registration)
         } catch (error) {
             console.error("Failed to logout", error);
@@ -25,7 +25,7 @@ export const useAuthenticationApiStore = defineStore('authenticationApiStore', (
 
     async function checkSession(): Promise<void> {
         try {
-            await axios.get('/auth/me')
+            await api.get('/auth/me')
 
         } catch (error) {
             console.error("Session expired!", error);
