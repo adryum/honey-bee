@@ -77,3 +77,8 @@ export const toNumberArray = (val: unknown): number[] | undefined => {
     if (val === undefined || val === null) return undefined
     return ([] as any[]).concat(val).filter(Boolean).map(Number)
 }
+
+export const toStringArray = (val: unknown): string[] | undefined => {
+    if (val === undefined || val === null) return undefined
+    return ([] as any[]).concat(val).filter(Boolean).map(String)
+}

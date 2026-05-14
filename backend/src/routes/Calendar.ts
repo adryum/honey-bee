@@ -2,7 +2,7 @@ import { useCalendar } from "../config/calendar/GoogleCalendar";
 import { UserRoles } from "../DatabaseEnums"
 import { attachCalendarClient, requireRole } from "../Middleware"
 import { Router, type Request, type Response } from "express";
-import { withStatus } from "../utils";
+import { toStringArray, withStatus } from "../utils";
 
 const router = Router()
 
@@ -52,17 +52,20 @@ router.get(
         res: Response
 ) => {
     console.log("# Get calendar events");
-    const calendarIds = [].concat(req.query.calendarId as any) as string[];
+    const calendarIds = toStringArray(req.query.calendarId)
     const month       = Number(req.query.month);
     const year        = Number(req.query.year);
 
     console.log(calendarIds, month, year);
+    if (calendarIds?.length === 0) {
+        return res.status(400).send("Missing or invalid query parameters!");
+    }
     const { getEvents } = useCalendar()
     
     try {
-        const events = await withStatus(`Fetching events for ${calendarIds.length} calendars`, () => {
+        const events = await withStatus(`Fetching events for ${calendarIds!.length} calendars`, () => {
             return Promise.all(
-                calendarIds.map((id) => getEvents({
+                calendarIds!.map((id) => getEvents({
                     calendarId: id,
                     month:      month,
                     year:       year
