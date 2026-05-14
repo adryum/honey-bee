@@ -5,14 +5,12 @@ import { requireRole } from "../../Middleware"
 import { withStatus } from "../../utils"
 import { eq } from "drizzle-orm/sql/expressions/conditions";
 import { hiveActionHistory } from "../../db/schema";
-import { DBQueryConfig, ExtractTablesWithRelations, desc } from "drizzle-orm";
+import { desc } from "drizzle-orm";
 import { HistoryActionTypeMap } from "../../initialization";
-import type * as schemaImport from "../../db/schema";
 
 const router = Router()
 
-type Schema = ExtractTablesWithRelations<typeof schemaImport>;
-type HiveHistoryQueryConfig = DBQueryConfig<"many", true, Schema, Schema["hiveActionHistory"]>;
+type HiveHistoryQueryConfig = Parameters<typeof db.query.hiveActionHistory.findMany>[0];
 
 const hiveHistoryGetParts = {
     columns: {
@@ -24,7 +22,7 @@ const hiveHistoryGetParts = {
         user: {
             columns: {
                 id:       true,
-                image:    true,
+                imageUrl: true,
                 username: true,
             }
         }

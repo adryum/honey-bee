@@ -1,13 +1,13 @@
-import axios from 'axios'
 import { defineStore } from 'pinia'
 import router, { RouterViewPaths } from '../router';
-import type { UserProfileResponseModel } from '../api/Models';
+import type { UserProfileGetModel } from '../api/Models';
 import { UserProfileResponseModel_To_UserProfileModelDB } from '../Convertors';
+import api from '../config/AxiosConfig';
 
 export const useAuthenticationApiStore = defineStore('authenticationApiStore', () => {
     async function getMyProfile() {
         try {
-            const { data } = await api.get<UserProfileResponseModel>('/auth/profile/me') 
+            const { data } = await api.get<UserProfileGetModel>('/auth/profile/me') 
             return UserProfileResponseModel_To_UserProfileModelDB(data)
         } catch (error) {
             console.log(error);

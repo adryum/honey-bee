@@ -17,11 +17,14 @@ const router = useRouter()
 const authStore = useAuthStore()
 const { logout } = authStore
 const { user } = storeToRefs(authStore)
+const avatarSrc = computed(() => { 
+    return user.value?.picture || placeholderImage
+})
 
 const settingDestinations = computed(() => {
     var arr = [
         { name: 'Profile',  path: `/profile/${user.value?.id}/${ProfileTab.ACCESS}`, svg: SVG.Profile },
-        { name: 'Settings', path: '/settings', svg: SVG.Cog },
+        // { name: 'Settings', path: '/settings', svg: SVG.Cog },
         { name: 'Logout',   path: '/logout', svg: SVG.Logout }
     ]
 
@@ -52,7 +55,7 @@ function onClick(dropdown: DropdownModel, destination: SettingDestination) {
 
     switch (destination.name) {
         case "Profile":     router.push(destination.path); break;
-        case "Settings":    break;
+        // case "Settings":    break;
         case "Logout":      logout(); break;
         case "Admin Panel": router.push(destination.path); break;
         default:break;
@@ -74,8 +77,9 @@ function onClick(dropdown: DropdownModel, destination: SettingDestination) {
         >
             <img 
                 alt="profile picture"
+                referrerpolicy="no-referrer"
                 :class="s.image" 
-                :src="user?.picture || placeholderImage"
+                :src="avatarSrc"
                 :style="{ 
                     outline: `2px solid ${profileCircleColor}`,
                     outlineOffset: '-2px'

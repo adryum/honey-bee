@@ -85,7 +85,7 @@ function startInspection(apiaryId: number) {
         >
             <template #header>
                 <IconTextButton
-                    v-if="apiary"
+                    v-if="hives?.length !== 0"
                     text="Add inspection"
                     :icon="SVG.Plus"
                     :class="s.button"

@@ -5,14 +5,12 @@ import { requireRole } from "../Middleware"
 import { withStatus } from "../utils"
 import { eq } from "drizzle-orm/sql/expressions/conditions";
 import { apiaryActionHistory } from "../db/schema";
-import { DBQueryConfig, desc, ExtractTablesWithRelations } from "drizzle-orm";
+import { desc } from "drizzle-orm";
 import { HistoryActionTypeMap } from "../initialization";
-import type * as schema from "../db/schema";
 
 const router = Router()
 
-type Schema = ExtractTablesWithRelations<typeof schema>;
-type ApiaryHistoryQueryConfig = DBQueryConfig<"many", true, Schema, Schema["apiaryActionHistory"]>;
+type ApiaryHistoryQueryConfig = Parameters<typeof db.query.apiaryActionHistory.findMany>[0];
 
 const apiaryHistoryGetParts = {
     columns: {
@@ -24,7 +22,7 @@ const apiaryHistoryGetParts = {
         user: {
             columns: {
                 id:       true,
-                image:    true,
+                imageUrl: true,
                 username: true,
             }
         }

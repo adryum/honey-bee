@@ -1,5 +1,5 @@
 import { String_to_HiveType, String_to_NoteTypes, String_to_Role } from "./DatabaseEnums";
-import type { ApiaryAccessGetModel, ApiaryGetModel, ApiaryHistoryGetModel, CalendarEventGetModel, HiveAccessGetModel, HiveGetModel, HiveHistoryGetModel, HiveHoneyYieldGetModel, HiveQueenHistoryCreateModel, HiveQueenHistoryGetModel, InspectionCreateRequestModel, InspectionEntryGetModel, InspectionReviewGetModel, NoteGetModel, QueenGetModel, QueenHistoryGetModel, SpeciesGetModel, UserEntryGetModel, UserProfileResponseModel, WhitelistEntryGetModel } from "./api/Models";
+import type { ApiaryAccessGetModel, ApiaryGetModel, ApiaryHistoryGetModel, CalendarEventGetModel, HiveAccessGetModel, HiveGetModel, HiveHistoryGetModel, HiveHoneyYieldGetModel, HiveQueenHistoryCreateModel, HiveQueenHistoryGetModel, InspectionCreateRequestModel, InspectionEntryGetModel, InspectionReviewGetModel, NoteGetModel, QueenGetModel, QueenHistoryGetModel, SpeciesGetModel, UserEntryGetModel, UserProfileGetModel, WhitelistEntryGetModel } from "./api/Models";
 import type { ApiaryModelDB, QueenModelDB, CalendarEventDB, HistoryEntryDB, HiveModelDB, InspectionDB, InspectionFormDB, InspectionFormUI, InspectionEntryModelDB, NoteModelDB, UserEntryModelDB, UserModelDB, WhitelistEntryModelDB, SpeciesModelDB, LineGraphLineModel, QueenHistoryModelDB, HiveQueenHistoryModelDB } from "./stores/Models";
 import { getAge } from "./utils/Utils";
 
@@ -72,14 +72,14 @@ export function UserEntryGetModel_To_UserEntryModelDB(
 }
 
 export function UserProfileResponseModel_To_UserProfileModelDB(
-    convertee: UserProfileResponseModel
+    convertee: UserProfileGetModel
 ): UserModelDB {
     return {
         id:       convertee.id,
         role:     String_to_Role(convertee.role),
         email:    convertee.email,
         username: convertee.username,
-        picture:  convertee.image
+        picture:  convertee.imageUrl
     }
 }
 
@@ -222,7 +222,7 @@ export function HiveHistoryGetModel_To_HistoryEntryDB(
         type:         convertee.historyActionType.type,
         userId:       convertee.user?.id || -1,
         username:     convertee.user?.username || 'Deleted User',
-        userImage:    convertee.user?.image || '',
+        userImage:    convertee.user?.imageUrl || '',
         creationDate: convertee.creationTimestamp,
     }
 }

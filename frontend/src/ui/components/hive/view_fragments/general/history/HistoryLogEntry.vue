@@ -39,8 +39,9 @@ const svg = computed(() => {
         <div :class="s.userInfo">
             <img
                 alt="user image"
+                referrerpolicy="no-referrer"
                 :class="s.image" 
-                :src="entry.userImage || placeholderImage" 
+                :src="entry.userImage"
             >
             <h1 :class="s.name">{{ entry.username }}</h1>
         </div>

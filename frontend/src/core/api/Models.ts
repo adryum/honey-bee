@@ -71,13 +71,12 @@ export type HiveUpdateRequestModel = {
     apiaryId?:   number
 }
 
-export type UserProfileResponseModel = {
+export type UserProfileGetModel = {
     id:       number
     username: string
-    picture:  string
     email:    string
     role:     string
-    image:    string
+    imageUrl: string
 }
 
 export type NoteCreateModelRequest = {
@@ -272,7 +271,7 @@ export type HiveHistoryGetModel = {
     user:         {
         id:       number
         username: string
-        image:    string
+        imageUrl: string
     } | undefined
 }
 

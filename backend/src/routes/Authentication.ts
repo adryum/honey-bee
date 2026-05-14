@@ -1,10 +1,8 @@
 /// <reference path="../types/index.d.ts" />
 import { Router, type Request, type Response } from "express";
-import { db, pool } from "../config/Database";
-import { ResultSetHeader, RowDataPacket } from "mysql2";
+import { db } from "../config/Database";
 import { createSession } from "../config/RedisClient";
 import { oauth2Client, scopes } from "../config/GoogleAuth";
-import { UserRoles } from "../DatabaseEnums";
 import { isValidValue, requireEnv, withStatus } from "../utils";
 import { eq } from "drizzle-orm";
 import { users, whitelist } from "../db/schema";
@@ -102,9 +100,10 @@ router.get(
                     username:           name,
                     email:              email,
                     providerSub:        sub,
+                    imageUrl:           picture,
                     provider:           "GOOGLE",
                     googleRefreshToken: tokens.refresh_token,
-                    role: whitelistedUserResult.role,
+                    role:               whitelistedUserResult.role,
                 })
             )
 

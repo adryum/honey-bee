@@ -102,6 +102,7 @@ const props = defineProps<{
 
     border-radius: var(--border-radius-small)
     overflow:      hidden
+    isolation: isolate
     // background:    var(--white)
 
 

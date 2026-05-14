@@ -1,6 +1,5 @@
 import { Router, type Request, type Response } from "express";
-import { db, pool } from "../config/Database";
-import { ResultSetHeader, RowDataPacket } from "mysql2";
+import { db } from "../config/Database";
 import { uploadImage } from "../config/image_cloud/Cloudinary";
 import { PublicIdBuilder } from "../config/image_cloud/PublicIdBuilder";
 import { upload } from "../config/Multer";
@@ -8,7 +7,7 @@ import { requireRole } from "../Middleware";
 import { UserRoles } from "../DatabaseEnums";
 import { getSessionUserRole } from "../config/RedisClient";
 import { and, eq, getTableColumns, inArray, gte, lte } from "drizzle-orm";
-import { userHiveAccess, hives, userApiaryAccess, apiaries, hiveHoneyYield } from "../db/schema";
+import { hives, userApiaryAccess, apiaries, hiveHoneyYield } from "../db/schema";
 import { isValidValue, withStatus } from "../utils";
 import { count } from "drizzle-orm";
 
