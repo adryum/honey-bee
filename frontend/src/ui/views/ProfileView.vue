@@ -56,7 +56,7 @@ function changeTab(tab: ProfileTab) {
             :class="s.topLine"
         >
             <img 
-                :src="user.picture || placeholderImage" alt="Profile Picture" 
+                :src="user.picture ? user.picture : placeholderImage" alt="Profile Picture" 
                 :class="s.img"    
             />
             <div 

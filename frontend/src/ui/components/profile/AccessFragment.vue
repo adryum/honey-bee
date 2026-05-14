@@ -9,6 +9,7 @@ import { useApiariesQuery, useApiaryQuery } from "@/core/composables/useApiary";
 import Hive from "../hive/Hive.vue";
 import ToolBar from "../ToolBar.vue";
 import Checkbox from "../input/fields/Checkbox.vue";
+import { useHivesQuery } from "@/core/composables/hive/useHive";
 
 const s = useCssModule()
 const props = defineProps<{
@@ -26,9 +27,8 @@ const {
     getHiveAccess
 } = useAdminMutations()
 const { apiaries } = useApiariesQuery()
-const { hives } = useApiaryQuery({
-    id: computed(() => openedApiary.value?.id),
-    getApiaryHives: true,
+const { hives } = useHivesQuery({
+    apiaryIds: computed(() => isValidValue(openedApiary.value?.id) ? [openedApiary.value!.id] : undefined)
 })
 
 const apiaryAccess = ref<number[]>([])

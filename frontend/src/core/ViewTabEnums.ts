@@ -13,7 +13,7 @@ export enum ApiaryTab {
 }
 
 export enum ProfileTab {
-    GENERAL = "general",
+    // GENERAL = "general",
     ACCESS  = "access"
 }
 

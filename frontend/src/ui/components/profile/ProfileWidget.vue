@@ -20,7 +20,7 @@ const { user } = storeToRefs(authStore)
 
 const settingDestinations = computed(() => {
     var arr = [
-        { name: 'Profile',  path: `/profile/${user.value?.id}/${ProfileTab.GENERAL}`, svg: SVG.Profile },
+        { name: 'Profile',  path: `/profile/${user.value?.id}/${ProfileTab.ACCESS}`, svg: SVG.Profile },
         { name: 'Settings', path: '/settings', svg: SVG.Cog },
         { name: 'Logout',   path: '/logout', svg: SVG.Logout }
     ]

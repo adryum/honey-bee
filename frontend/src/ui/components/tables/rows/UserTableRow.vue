@@ -23,7 +23,7 @@ const editableEntry = reactive<UserEntryModelDB>({ ...props.entry })
 const { updateRegisteredUserEntry } = useAdminMutations()
 
 async function openProfile(userId: number) {
-    router.push(`/profile/${userId}/${ProfileTab.GENERAL}`)
+    router.push(`/profile/${userId}/${ProfileTab.ACCESS}`)
 }
 
 function save() {
