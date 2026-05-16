@@ -10,7 +10,8 @@
     "db:introspect": "drizzle-kit introspect --config=src/config/DrizzleConfig.ts",
     "db:generate": "drizzle-kit generate --config=src/config/DrizzleConfig.ts",
     "db:migrate": "drizzle-kit migrate --config=src/config/DrizzleConfig.ts",
-    "db:studio": "drizzle-kit studio --config=src/config/DrizzleConfig.ts"
+    "db:studio": "drizzle-kit studio --config=src/config/DrizzleConfig.ts",
+    "db:push": "drizzle-kit push --config=src/config/DrizzleConfig.ts"
   },
   "dependencies": {
     "@types/connect-redis": "^0.0.23",
@@ -25,6 +26,8 @@
     "multer": "^2.0.2",
     "mysql2": "^3.20.0",
     "redis-server": "^1.2.2",
+    "drizzle-kit": "^0.31.10",
+    "ts-node": "^10.9.2",
     "socket.io": "^4.8.3"
   },
   "devDependencies": {
@@ -33,9 +36,7 @@
     "@types/express-session": "^1.18.2",
     "@types/multer": "^2.0.0",
     "@types/node": "^24.3.0",
-    "drizzle-kit": "^0.31.10",
     "nodemon": "^3.1.14",
-    "ts-node": "^10.9.2",
     "typescript": "^5.9.2"
   }
 }
