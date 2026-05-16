@@ -17,15 +17,18 @@ export const apiaries = mysqlTable("apiaries", {
 ]);
 
 export const apiaryActionHistory = mysqlTable("apiary_action_history", {
-	id:                  bigint({ mode: "number" }).autoincrement().notNull(),
-	text:                varchar({ length: 100 }).default("").notNull(),
-	userId:              bigint("user_id", { mode: "number" }).references(() => users.id),
-	historyActionTypeId: bigint("history_action_type_id", { mode: "number" }).notNull().references(() => historyActionTypes.id),
-	apiaryId:            bigint("apiary_id", { mode: "number" }).notNull().references(() => apiaries.id),
-	creationTimestamp:   timestamp("creation_timestamp", { mode: 'string' }).default(sql`(now())`).notNull(),
+    id:                  bigint({ mode: "number" }).autoincrement().notNull(),
+    text:                varchar({ length: 100 }).default("").notNull(),
+    userId:              bigint("user_id", { mode: "number" }),
+    historyActionTypeId: bigint("history_action_type_id", { mode: "number" }).notNull(),
+    apiaryId:            bigint("apiary_id", { mode: "number" }).notNull(),
+    creationTimestamp:   timestamp("creation_timestamp", { mode: 'string' }).default(sql`(now())`).notNull(),
 },
 (table) => [
-	primaryKey({ columns: [table.id], name: "apiary_action_history_id"}),
+    primaryKey({ columns: [table.id], name: "apiary_action_history_id"}),
+    foreignKey({ columns: [table.userId],              foreignColumns: [users.id],              name: "aah_user_fk" }),
+    foreignKey({ columns: [table.historyActionTypeId], foreignColumns: [historyActionTypes.id], name: "aah_action_type_fk" }),
+    foreignKey({ columns: [table.apiaryId],            foreignColumns: [apiaries.id],           name: "aah_apiary_fk" }),
 ]);
 
 export const historyActionTypes = mysqlTable("history_action_types", {
@@ -35,17 +38,20 @@ export const historyActionTypes = mysqlTable("history_action_types", {
 (table) => [
 	primaryKey({ columns: [table.id], name: "history_action_types_id"}),
 ]);
-
+    
 export const hiveActionHistory = mysqlTable("hive_action_history", {
-	id:                  bigint({ mode: "number" }).autoincrement().notNull(),
-	text:                varchar({ length: 200 }),
-	userId:              bigint("user_id", { mode: "number" }).references(() => users.id, { onDelete: "cascade" } ),
-	hiveId:              bigint("hive_id", { mode: "number" }).notNull().references(() => hives.id, { onDelete: "cascade" } ),
-	historyActionTypeId: bigint("history_action_type_id", { mode: "number" }).notNull().references(() => historyActionTypes.id),
-	creationTimestamp:   timestamp("creation_timestamp", { mode: 'string' }).default(sql`(now())`).notNull(),
+    id:                  bigint({ mode: "number" }).autoincrement().notNull(),
+    text:                varchar({ length: 200 }),
+    userId:              bigint("user_id", { mode: "number" }),
+    hiveId:              bigint("hive_id", { mode: "number" }).notNull(),
+    historyActionTypeId: bigint("history_action_type_id", { mode: "number" }).notNull(),
+    creationTimestamp:   timestamp("creation_timestamp", { mode: 'string' }).default(sql`(now())`).notNull(),
 },
 (table) => [
-	primaryKey({ columns: [table.id], name: "hive_action_history_id"}),
+    primaryKey({ columns: [table.id], name: "hive_action_history_id"}),
+    foreignKey({ columns: [table.userId],              foreignColumns: [users.id],              name: "hah_user_fk" }).onDelete("cascade"),
+    foreignKey({ columns: [table.hiveId],              foreignColumns: [hives.id],              name: "hah_hive_fk" }).onDelete("cascade"),
+    foreignKey({ columns: [table.historyActionTypeId], foreignColumns: [historyActionTypes.id], name: "hah_action_type_fk" }),
 ]);
 
 export const hiveHoneyYield = mysqlTable("hive_honey_yield", {
