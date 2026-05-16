@@ -8,7 +8,7 @@ import { io, getUserRoom, ClientEvents } from "./SocketIo";
 
 export const redisClient = createClient({ 
     url:      process.env.REDIS_URL!,
-    password: process.env.REDIS_PASSWORD!,
+    // password: process.env.REDIS_PASSWORD!,
 });
 
 const sub: RedisClientType = redisClient.duplicate();
