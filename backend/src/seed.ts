@@ -4,8 +4,8 @@ dotenv.config()
 import { eq, sql } from 'drizzle-orm';
 import { db } from './config/Database';
 import { HistoryActionType, UserRoles } from './DatabaseEnums';
-import { historyActionTypes, queenSpecies, whitelist } from './db/schema';
-import { withStatus } from './utils';
+import { historyActionTypes, queenSpecies, users, whitelist } from './db/schema';
+import { isValidValue, withStatus } from './utils';
 import species from '../species.json';
 import "./type_extensions/DateExtensions"
 import "./type_extensions/ObjectExtensions"
@@ -16,7 +16,7 @@ async function seed() {
     
     const wwhitelists = await withStatus("All whitelists", () => db.query.whitelist.findMany())
     console.table(wwhitelists);
-    
+
     await withStatus("Seeded history_action_types", () => 
         db.insert(historyActionTypes)
             .values(Object.values(HistoryActionType).map(type => ({ type })))
@@ -37,13 +37,16 @@ async function seed() {
             .onDuplicateKeyUpdate({ set: { scientificName: sql`scientific_name` } })
     )
 
+    const adminUser = await db.query.users.findFirst({
+        where: eq(users.email, "adiskir@gmail.com")
+    })
     await withStatus("Seeded admin acc", async () => {
         await db.delete(whitelist).where(eq(whitelist.email, "adiskir@gmail.com"));
         await db.insert(whitelist).values({
             email:  "adiskir@gmail.com",
             role:   UserRoles.ADMINISTRATOR,
             status: true,
-            userId: 0
+            userId: isValidValue(adminUser?.id) ? adminUser!.id : undefined
         });
     })
     process.exit(0);
