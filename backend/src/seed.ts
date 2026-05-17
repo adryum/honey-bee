@@ -32,7 +32,7 @@ async function seed() {
         email:  "adiskir@gmail.com",
         role:   UserRoles.ADMINISTRATOR,
         status: true
-    }).onDuplicateKeyUpdate({ set: { email: sql`email`, status: sql`status` } }))
+    }).onDuplicateKeyUpdate({ set: { email: sql`email`, status: sql`VALUES(status)` } }))
 
     process.exit(0);
 }
