@@ -4,6 +4,8 @@ import { HistoryActionType, UserRoles } from './DatabaseEnums';
 import { historyActionTypes, queenSpecies, whitelist } from './db/schema';
 import { withStatus } from './utils';
 import species from '../species.json';
+import "./type_extensions/DateExtensions"
+import "./type_extensions/ObjectExtensions"
 
 async function seed() {
     await withStatus("Seeded history_action_types", () => 
