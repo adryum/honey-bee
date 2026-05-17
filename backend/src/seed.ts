@@ -1,7 +1,7 @@
 import dotenv from "dotenv";
 dotenv.config()
 
-import { sql } from 'drizzle-orm';
+import { eq, sql } from 'drizzle-orm';
 import { db } from './config/Database';
 import { HistoryActionType, UserRoles } from './DatabaseEnums';
 import { historyActionTypes, queenSpecies, whitelist } from './db/schema';
@@ -39,12 +39,14 @@ async function seed() {
 
     console.log(query.toSQL())
 
-    await withStatus("Seeded admin acc", () => db.insert(whitelist).values({
-        email:  "adiskir@gmail.com",
-        role:   UserRoles.ADMINISTRATOR,
-        status: true
-    }).onDuplicateKeyUpdate({ set: { email: sql`email`, status: sql`VALUES(status)` } }))
-
+    await withStatus("Seeded admin acc", async () => {
+        await db.delete(whitelist).where(eq(whitelist.email, "adiskir@gmail.com"));
+        await db.insert(whitelist).values({
+            email:  "adiskir@gmail.com",
+            role:   UserRoles.ADMINISTRATOR,
+            status: true
+        });
+    })
     process.exit(0);
 }
 
