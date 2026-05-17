@@ -14,7 +14,7 @@ router.get('/google', async (req: Request, res: Response) => {
     
     const authorizeUrl = oauth2Client.generateAuthUrl({
         access_type: 'offline',
-        // prompt:      'consent',
+        prompt:      'select_account',
         scope:       scopes,
     });
 
