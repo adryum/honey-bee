@@ -25,7 +25,7 @@ async function seed() {
                 behavior:       item.behavior,
                 preferences:    item.preferences,
             })))
-            .onDuplicateKeyUpdate({ set: { scientificName: sql`scientificName` } })
+            .onDuplicateKeyUpdate({ set: { scientificName: sql`scientific_name` } })
     )
 
     await withStatus("Seeded admin acc", () => db.insert(whitelist).values({
