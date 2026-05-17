@@ -8,13 +8,14 @@ export enum Language {
 }
 
 const i18n = createI18n({
-  legacy: false, // required to use Composition API
-  locale: Language.En, // default language
-  fallbackLocale: Language.En,
-  messages: {
-    [Language.En] : en,
-    [Language.Lv]: lv
-  }
+    legacy: false, // required to use Composition API
+    locale: Language.En, // default language
+    fallbackLocale: Language.En,
+    globalInjection: true,
+    messages: {
+        [Language.En] : en,
+        [Language.Lv]: lv
+    }
 })
 
 export function changeLang(lang: Language) {

@@ -293,7 +293,7 @@ export type ApiaryHistoryGetModel = {
     user:         {
         id:       number
         username: string
-        image:    string
+        imageUrl: string
     } | undefined
 }
 

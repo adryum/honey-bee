@@ -236,7 +236,7 @@ export function ApiaryHistoryGetModel_To_HistoryEntryDB(
         type:         convertee.historyActionType.type,
         userId:       convertee.user?.id || -1,
         username:     convertee.user?.username || 'Deleted User',
-        userImage:    convertee.user?.image || '',
+        userImage:    convertee.user?.imageUrl || '',
         creationDate: convertee.creationTimestamp,
     }
 }
