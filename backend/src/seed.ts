@@ -1,7 +1,7 @@
 import { sql } from 'drizzle-orm';
 import { db } from './config/Database';
-import { HistoryActionType } from './DatabaseEnums';
-import { historyActionTypes, queenSpecies } from './db/schema';
+import { HistoryActionType, UserRoles } from './DatabaseEnums';
+import { historyActionTypes, queenSpecies, whitelist } from './db/schema';
 import { withStatus } from './utils';
 import species from '../species.json';
 
@@ -25,7 +25,12 @@ async function seed() {
             })))
             .onDuplicateKeyUpdate({ set: { scientificName: sql`scientificName` } })
     )
-    
+
+    await withStatus("Seeded admin acc", () => db.insert(whitelist).values({
+        email: "adiskir@gmail.com",
+        role:  UserRoles.ADMINISTRATOR
+    }).onDuplicateKeyUpdate({ set: { email: sql`email` } }))
+
     process.exit(0);
 }
 
