@@ -99,7 +99,7 @@ async function startServer() {
 
     // starts express server
     httpServer.listen(port, () => {
-        console.log(`Server running on port: ${port}`);
+        console.log(`[Info] Server running on port: ${port}`);
     });
     testConnection()
 }
