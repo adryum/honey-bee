@@ -127,7 +127,7 @@ const hasFooter = computed(() => !!slots.footer?.()?.length)
     background: var(--white)
 
     border-radius: var(--border-radius-small)
-    box-shadow: 0 0 1px 0 var(--faint-border)
+    // box-shadow: 0 0 1px 0 var(--faint-border)
 
     .workComponents
         margin-left: auto

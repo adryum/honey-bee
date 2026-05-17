@@ -14,14 +14,15 @@
 import { google } from 'googleapis';
 import { RowDataPacket } from 'mysql2';
 import { pool } from './Database';
+import { requireEnv } from '../utils';
 
-const CLIENT_ID = process.env.GOOGLE_CLIENT_ID;
-const CLIENT_SECRET = process.env.GOOGLE_CLIENT_SECRET;
-const REDIRECT_URI = process.env.GOOGLE_REDIRECT_URI; // e.g. https://yourdomain.com/auth/google/callback
+const GOOGLE_CLIENT_ID     = requireEnv('GOOGLE_CLIENT_ID')
+const GOOGLE_CLIENT_SECRET = requireEnv('GOOGLE_CLIENT_SECRET')
+const REDIRECT_URI         = requireEnv('GOOGLE_REDIRECT_URI')
 
 export const oauth2Client = new google.auth.OAuth2(
-    CLIENT_ID,
-    CLIENT_SECRET,
+    GOOGLE_CLIENT_ID,
+    GOOGLE_CLIENT_SECRET,
     REDIRECT_URI,
 );
 

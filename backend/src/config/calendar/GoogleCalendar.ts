@@ -1,12 +1,10 @@
 import { calendar_v3, google } from 'googleapis'
-import { JWT } from 'google-auth-library'
 import { requireEnv, withStatus } from '../../utils';
 import { CalendarEntryModel, CreateCalendarEventModel, UpdateCalendarEventModel } from './Models';
 import { UserRoles, Role_to_GoogleCalendarRole } from '../../DatabaseEnums';
 
 const GOOGLE_CLIENT_ID                   = requireEnv('GOOGLE_CLIENT_ID')
 const GOOGLE_CLIENT_SECRET               = requireEnv('GOOGLE_CLIENT_SECRET')
-const MAIN_PROD_EMAIL                    = requireEnv('MAIN_PROD_EMAIL')
 const DEDICATED_GOOGLE_ACC_REFRESH_TOKEN = requireEnv('DEDICATED_GOOGLE_ACC_REFRESH_TOKEN')
 
 const adminClient = new google.auth.OAuth2(
