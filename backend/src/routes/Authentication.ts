@@ -51,7 +51,7 @@ router.get(
 
         const { email, name, picture, sub } = payload
 
-        if (!email || !name || !sub || !tokens.refresh_token) {
+        if (!email || !name) {
             return res.status(400).send("Didnt get required credentials!")
         }
 
@@ -84,12 +84,12 @@ router.get(
 
         // get session data
         if (whitelistedUserResult.user) {
-            await withStatus(
-                "Reseting user refreshtoken BC GOGLE MAKES EM EXPIRE AFTE R 7FUKIN HOURS ON UNVERIFIED APAPPPPPPPP", 
-                () => db.update(users)
-                    .set({ googleRefreshToken: tokens.refresh_token })
-                    .where(eq(users.id, whitelistedUserResult.user!.id))
-            )
+            // await withStatus(
+            //     "Reseting user refreshtoken BC GOGLE MAKES EM EXPIRE AFTE R 7FUKIN HOURS ON UNVERIFIED APAPPPPPPPP", 
+            //     () => db.update(users)
+            //         .set({ googleRefreshToken: tokens.refresh_token })
+            //         .where(eq(users.id, whitelistedUserResult.user!.id))
+            // )
 
             await withStatus("Creating user session", () => createSession({
                 req:  req,
@@ -97,6 +97,10 @@ router.get(
                 role: whitelistedUserResult.user!.role
             }))
         } else {
+            if (!email || !name || !sub || !tokens.refresh_token) {
+                return res.status(400).send("Didnt get required credentials for new user creation!")
+            }
+            
             const [userInsertResult] = await withStatus("Creating user entry", () => 
                 db.insert(users).values({
                     username:           name,
