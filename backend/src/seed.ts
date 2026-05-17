@@ -11,6 +11,12 @@ import "./type_extensions/DateExtensions"
 import "./type_extensions/ObjectExtensions"
 
 async function seed() {
+    const uusers = await withStatus("All users", () => db.query.users.findMany())
+    console.table(uusers);
+    
+    const wwhitelists = await withStatus("All whitelists", () => db.query.whitelist.findMany())
+    console.table(wwhitelists);
+    
     await withStatus("Seeded history_action_types", () => 
         db.insert(historyActionTypes)
             .values(Object.values(HistoryActionType).map(type => ({ type })))

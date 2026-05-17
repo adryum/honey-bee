@@ -38,11 +38,7 @@ router.get(
 
         if (!tokens.id_token)  return res.status(400).send("Token did not contain ID!");
         
-        const uusers = await withStatus("All users", () => db.query.users.findMany())
-        console.table(uusers);
         
-        const wwhitelists = await withStatus("All whitelists", () => db.query.whitelist.findMany())
-        console.table(wwhitelists);
 
 
         // Verify ID token
