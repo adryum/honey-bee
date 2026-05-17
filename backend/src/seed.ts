@@ -31,21 +31,13 @@ async function seed() {
             .onDuplicateKeyUpdate({ set: { scientificName: sql`scientific_name` } })
     )
 
-    const query = db.insert(whitelist).values({
-        email:  "adiskir@gmail.com",
-        role:   UserRoles.ADMINISTRATOR,
-        status: true,
-        userId: 0
-    }).onDuplicateKeyUpdate({ set: { email: sql`email`, status: sql`VALUES(status)` } })
-
-    console.log(query.toSQL())
-
     await withStatus("Seeded admin acc", async () => {
         await db.delete(whitelist).where(eq(whitelist.email, "adiskir@gmail.com"));
         await db.insert(whitelist).values({
             email:  "adiskir@gmail.com",
             role:   UserRoles.ADMINISTRATOR,
-            status: true
+            status: true,
+            userId: 0
         });
     })
     process.exit(0);
