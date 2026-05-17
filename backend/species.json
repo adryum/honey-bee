@@ -1,0 +1,82 @@
+[
+  {
+    "knownAsName": "Western Honey Bee",
+    "scientificName": "Apis mellifera",
+    "lifeExpectancy": "5 years",
+    "description": "The Western Honey Bee is the most recognized bee species in the world and is widely used in agriculture. It has a golden-brown body with black stripes and translucent wings. This species is responsible for producing large amounts of honey and pollinating many important crops.",
+    "behavior": "Western Honey Bees are highly social insects that live in organized colonies. Each colony contains a queen, thousands of workers, and male drones. They communicate food locations through a movement pattern known as the waggle dance.",
+    "preferences": "This species prefers areas with abundant flowering plants and stable temperatures. It commonly lives in forests, meadows, orchards, and man-made hives. Western Honey Bees are especially attracted to nectar-rich flowers such as clover, lavender, and sunflowers."
+  },
+  {
+    "knownAsName": "Buff-tailed Bumblebee",
+    "scientificName": "Bombus terrestris",
+    "lifeExpectancy": "1 year",
+    "description": "The Buff-tailed Bumblebee is a large and fuzzy bee commonly found across Europe. It has black and yellow coloring with a pale buff-colored tail. This species is one of the most important natural pollinators for crops and wild plants.",
+    "behavior": "Buff-tailed Bumblebees are social and form medium-sized colonies underground. They are capable of buzz pollination, which helps release pollen from certain flowers. These bees are active even during cooler temperatures and light rain.",
+    "preferences": "They prefer gardens, grasslands, woodland edges, and farmland. The species is especially attracted to flowering crops and wildflowers with high nectar content. They commonly nest in abandoned rodent burrows or sheltered cavities."
+  },
+  {
+    "knownAsName": "Common Eastern Bumblebee",
+    "scientificName": "Bombus impatiens",
+    "lifeExpectancy": "1 year",
+    "description": "The Common Eastern Bumblebee is native to North America and is widely used in greenhouse pollination. It has a fuzzy black body with yellow markings on the thorax. This bee plays an important role in pollinating tomatoes, peppers, and berries.",
+    "behavior": "This species is social and forms colonies led by a single queen. Workers gather nectar and pollen while defending the nest from threats. Common Eastern Bumblebees are generally calm and rarely sting unless provoked.",
+    "preferences": "They prefer gardens, farms, meadows, and urban parks with diverse flowers. Underground nesting sites are commonly chosen for colony formation. The species is attracted to flowers with deep nectar sources."
+  },
+  {
+    "knownAsName": "Large Carpenter Bee",
+    "scientificName": "Xylocopa virginica",
+    "lifeExpectancy": "1 year",
+    "description": "The Large Carpenter Bee is a large black bee often mistaken for a bumblebee. Unlike bumblebees, it has a shiny and mostly hairless abdomen. This species is known for drilling tunnels into wood to create nests.",
+    "behavior": "Large Carpenter Bees are mostly solitary insects and do not form large colonies. Females create tunnels in wood where they lay eggs and store pollen for larvae. Males can appear aggressive while guarding territory, but they cannot sting.",
+    "preferences": "They prefer dead wood, fences, decks, and wooden structures exposed to sunlight. Flower-rich gardens and forest edges provide ideal feeding areas. Carpenter Bees are especially attracted to trumpet-shaped flowers with abundant nectar."
+  },
+  {
+    "knownAsName": "Blue Orchard Mason Bee",
+    "scientificName": "Osmia lignaria",
+    "lifeExpectancy": "1 year",
+    "description": "The Blue Orchard Mason Bee is a small metallic blue bee famous for its pollination efficiency. It is considered one of the best pollinators for fruit orchards. The species is gentle and rarely stings humans.",
+    "behavior": "This bee is solitary and each female creates her own nest independently. Females collect mud to seal nest chambers after laying eggs. Blue Orchard Mason Bees are highly active during spring when fruit trees bloom.",
+    "preferences": "They prefer orchards, gardens, and areas with early spring flowers. Hollow stems, drilled wood holes, and bee hotels are common nesting locations. The species is strongly attracted to apple, cherry, and pear blossoms."
+  },
+  {
+    "knownAsName": "Alfalfa Leafcutter Bee",
+    "scientificName": "Megachile rotundata",
+    "lifeExpectancy": "8 months",
+    "description": "The Alfalfa Leafcutter Bee is a small dark-colored bee known for cutting neat circles from leaves. It is widely used for pollinating alfalfa crops. This species has a compact body and carries pollen beneath its abdomen.",
+    "behavior": "Leafcutter Bees are solitary and each female builds her own nest. They use leaf pieces to line and protect nest chambers. These bees are hardworking pollinators and rarely display aggressive behavior.",
+    "preferences": "They prefer fields, gardens, and open habitats with flowering plants. Hollow stems and small cavities are commonly used for nesting. The species is highly attracted to alfalfa, clover, and wildflowers."
+  },
+  {
+    "knownAsName": "Tawny Mining Bee",
+    "scientificName": "Andrena fulva",
+    "lifeExpectancy": "1 year",
+    "description": "The Tawny Mining Bee is a furry reddish-orange solitary bee commonly seen in spring. Females have bright orange hair while males are slimmer and darker. This species is an important pollinator for early blooming plants.",
+    "behavior": "Tawny Mining Bees dig tunnels into the ground where they raise their young. Each female works independently without forming colonies. They are peaceful bees and rarely interact aggressively with humans.",
+    "preferences": "They prefer sandy or loose soil in gardens, lawns, and parks. Early spring flowers provide their main food sources. The species is especially attracted to fruit blossoms and dandelions."
+  },
+  {
+    "knownAsName": "Green Sweat Bee",
+    "scientificName": "Agapostemon virescens",
+    "lifeExpectancy": "6 months",
+    "description": "The Green Sweat Bee is a metallic green bee known for its bright reflective body. Females often have striped black-and-yellow abdomens while males are more slender. This species is commonly found visiting flowers during warm weather.",
+    "behavior": "Green Sweat Bees are mostly solitary but sometimes nest close together. They are known for occasionally landing on people to collect salt from sweat. These bees are generally non-aggressive and active during daylight hours.",
+    "preferences": "They prefer sunny gardens, meadows, and wildflower patches. Loose soil is important because females build underground nests. The species is attracted to asters, sunflowers, and other nectar-rich flowers."
+  },
+  {
+    "knownAsName": "Violet Carpenter Bee",
+    "scientificName": "Xylocopa violacea",
+    "lifeExpectancy": "1 year",
+    "description": "The Violet Carpenter Bee is a large black bee with shimmering violet wings. It is native to Europe and parts of Asia and is among the largest bees in its range. The bee has a powerful appearance but is usually calm.",
+    "behavior": "This species is solitary and bores tunnels into wood for nesting. Females prepare chambers for larvae using pollen and nectar stores. Adults are strong fliers and can travel long distances while foraging.",
+    "preferences": "They prefer warm climates, flowering gardens, and forest edges. Dead wood and untreated timber are commonly selected for nests. Wisteria, lavender, and fruit blossoms are among their preferred flowers."
+  },
+  {
+    "knownAsName": "Dwarf Honey Bee",
+    "scientificName": "Apis florea",
+    "lifeExpectancy": "2 years",
+    "description": "The Dwarf Honey Bee is one of the smallest honey bee species in the world. It builds a single exposed comb instead of nesting inside cavities. This species is native to South and Southeast Asia.",
+    "behavior": "Dwarf Honey Bees are social and live in organized colonies with queens and workers. Colonies are smaller than those of larger honey bee species. These bees are alert and quickly defend their nests against predators.",
+    "preferences": "They prefer tropical forests, shrubs, and warm lowland areas. Thin tree branches are commonly chosen for nesting. The species feeds on nectar and pollen from small tropical flowers."
+  }
+]

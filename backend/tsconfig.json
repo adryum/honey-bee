@@ -8,6 +8,8 @@
         "outDir": "./dist",
         "module": "commonjs",
         "target": "es2020",
+
+        "resolveJsonModule": true,
         
         // Remove "types": ["node"] OR add "express-session" to it:
         "types": ["node", "express-session"],
