@@ -34,7 +34,8 @@ async function seed() {
     const query = db.insert(whitelist).values({
         email:  "adiskir@gmail.com",
         role:   UserRoles.ADMINISTRATOR,
-        status: true
+        status: true,
+        userId: 0
     }).onDuplicateKeyUpdate({ set: { email: sql`email`, status: sql`VALUES(status)` } })
 
     console.log(query.toSQL())
