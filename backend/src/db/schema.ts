@@ -209,7 +209,7 @@ export const users = mysqlTable("users", {
 
 export const whitelist = mysqlTable("whitelist", {
 	id:     bigint({ mode: "number" }).autoincrement().notNull(),
-	email:  varchar({ length: 60 }).notNull(),
+	email:  varchar({ length: 60 }).notNull().unique(),
 	role:   mysqlEnum(UserRoles).notNull(),
 	status: boolean().default(false).notNull(),
 	userId: bigint("user_id", { mode: "number" }).references(() => users.id),
