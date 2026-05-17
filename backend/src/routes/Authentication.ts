@@ -38,6 +38,10 @@ router.get(
 
         if (!tokens.id_token)  return res.status(400).send("Token did not contain ID!");
         
+        await withStatus("All users", () => db.query.users.findMany())
+        await withStatus("All whitelists", () => db.query.whitelist.findMany())
+
+
         // Verify ID token
         const ticket = await oauth2Client.verifyIdToken({
             idToken:  tokens.id_token,
