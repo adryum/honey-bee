@@ -11,6 +11,7 @@ import { RouterViewPaths } from "@/core/router";
 import { useApiaryQuery } from "@/core/composables/useApiary";
 import { useInspectionMutation } from "@/core/composables/useInspection";
 import { useRouter } from "vue-router";
+import { useHivesQuery } from "@/core/composables/hive/useHive";
 
 const s = useCssModule()
 const router = useRouter()
@@ -18,11 +19,14 @@ const props = defineProps<{
     apiaryId: number
 }>()
 
-const { hives, apiary } = useApiaryQuery({
+const { apiary } = useApiaryQuery({
     id:             toRef(props.apiaryId),
     getApiaryHives: true,
     getApiary:      true
 })
+const { hives } = useHivesQuery({
+    apiaryIds: computed(() => isValidValue(props.apiaryId) ? [props.apiaryId] : undefined)
+}) 
 const { create, isCreatingInspection } = useInspectionMutation()
 const inspectionForms = ref<InspectionFormUI[]>([])
 
