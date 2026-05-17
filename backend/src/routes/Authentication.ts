@@ -44,6 +44,8 @@ router.get(
             audience: requireEnv("GOOGLE_CLIENT_ID")
         });
         const payload = ticket.getPayload();
+        console.log(`[Info] payload:`,payload);
+        
 
         if (!payload)  return res.status(400).send("Failed to get payload from token!");
 
