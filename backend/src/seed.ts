@@ -29,9 +29,10 @@ async function seed() {
     )
 
     await withStatus("Seeded admin acc", () => db.insert(whitelist).values({
-        email: "adiskir@gmail.com",
-        role:  UserRoles.ADMINISTRATOR
-    }).onDuplicateKeyUpdate({ set: { email: sql`email` } }))
+        email:  "adiskir@gmail.com",
+        role:   UserRoles.ADMINISTRATOR,
+        status: true
+    }).onDuplicateKeyUpdate({ set: { email: sql`email`, status: sql`status` } }))
 
     process.exit(0);
 }
