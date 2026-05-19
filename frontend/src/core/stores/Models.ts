@@ -174,6 +174,12 @@ export type InspectionEntryModelDB = {
     } | undefined
 }
 
+export type InspectionTableEntriesModelDB = {
+    entries:     InspectionEntryModelDB[]
+    total:       number
+    hasNextPage: boolean
+}
+
 export type QueenHistoryModelDB = {
     id:           number
     species:      string

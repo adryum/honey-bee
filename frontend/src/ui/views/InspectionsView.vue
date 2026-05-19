@@ -17,7 +17,7 @@ const filters = ref<InspectionFilters>({
     hiveId: undefined,
     ids:    undefined
 })
-const { inspectionTableEntries, nextPage, prevPage } = useInspectionsQuery(filters)
+const { inspectionEntries, nextPage, prevPage, hasNextPage } = useInspectionsQuery(filters)
 </script>
 
 <template>
@@ -31,7 +31,7 @@ const { inspectionTableEntries, nextPage, prevPage } = useInspectionsQuery(filte
     />
     <InspectionTable
         :class="s.table"
-        :entries="inspectionTableEntries ?? []"
+        :entries="inspectionEntries ?? []"
         :page="filters.page!"
         :limit="filters.limit!"
     >
@@ -45,7 +45,7 @@ const { inspectionTableEntries, nextPage, prevPage } = useInspectionsQuery(filte
             :text="t('pagination.next')"
             :swap-icon-position="true"
             :icon="SVG.ArrowRightSmall"
-            :disabled="!nextPage"
+            :disabled="!hasNextPage"
             @click="nextPage"
         />
     </InspectionTable>

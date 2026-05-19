@@ -73,6 +73,7 @@ onMounted(() => console.log(props.tab))
 
                 <MonthChangerWidget
                     v-if="currentTab === HiveTab.Calendar"
+                    :class="s.noAlignment"
                     :selectedDate="selectedDate"
                     @change="date => selectedDate = date"
                 />
@@ -119,6 +120,9 @@ onMounted(() => console.log(props.tab))
 </template>
 
 <style module lang='sass'>
+.noAlignment
+    align-self: stretch !important
+    min-height: 100%
 
 .navbar
     margin: 1rem

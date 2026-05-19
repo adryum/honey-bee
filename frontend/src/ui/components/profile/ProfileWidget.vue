@@ -67,7 +67,7 @@ function onClick(dropdown: DropdownModel, destination: SettingDestination) {
 
 <template>
 <ModularDropdown
-    :floater-offset="8"
+    :floater-offset="4"
 >
     <template #head="{ dropdown }">
         <div 
@@ -118,12 +118,11 @@ function onClick(dropdown: DropdownModel, destination: SettingDestination) {
 
 .profile
     display:       inline-flex
-    max-width:     15rem
-    min-height:    3rem
+    
+    height: 100%
     gap:           .5rem
     align-items:   center
     padding:       .5rem
-    border-radius: var(--border-radius-tiny)
     box-sizing:    border-box
 
     &:hover

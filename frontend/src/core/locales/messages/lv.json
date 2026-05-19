@@ -40,7 +40,7 @@
     "calendar": {
         "title": "Vispārējais kalendārs",
         "filter_apiary": "Drava",
-        "filter_default": "Atlasīti",
+        "filter_default": "Visas dravas",
         "label_today": "( Šodien )",
         "label_tasks": "uzdevumi"
     },

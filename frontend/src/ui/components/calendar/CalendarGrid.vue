@@ -6,11 +6,11 @@ import type { CalendarDayModel, CalendarEventDB } from "@/core/stores/Models";
 
 const s = useCssModule()
 const props = withDefaults(defineProps<{
-    calendarId:       string
-    otherCalendarIDs: string[]
-    events:           CalendarEventDB[]
-    lookedAtDate:     Date
-    isMacdonalds:     boolean
+    calendarId:         string
+    otherCalendarIDs:   string[]
+    events:             CalendarEventDB[]
+    lookedAtDate:       Date
+    isMacdonalds:       boolean
     allowEventCreation: boolean
 }>(), {
     lookedAtDate: () => new Date()

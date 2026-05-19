@@ -3,8 +3,10 @@ import { useCssModule } from 'vue';
 import ProfileWidget from '@/ui/components/profile/ProfileWidget.vue';
 import IconTextButton from '../input/buttons/IconTextButton.vue';
 import { changeLang, Language } from '@/core/locales/i18n';
+import { useI18n } from 'vue-i18n';
 
 const s = useCssModule()
+const { locale } = useI18n()
 
 </script>
 
@@ -13,16 +15,20 @@ const s = useCssModule()
     <div
         :class="s.rightAligner"
     ></div>
-    <IconTextButton
-        text="Lv"
-        :hide-icon="true"
+    <button
+        :class="[
+            locale === Language.Lv && s.selected,
+            s.langButton
+        ]"
         @click="changeLang(Language.Lv)"
-    />
-    <IconTextButton
-        text="En"
-        :hide-icon="true"
+    >Lv</button>
+    <button
+        :class="[
+            locale === Language.En && s.selected,
+            s.langButton
+        ]"
         @click="changeLang(Language.En)"
-    />
+    >En</button>
     <ProfileWidget
         :class="s.profile"
     />
@@ -30,18 +36,42 @@ const s = useCssModule()
 </template>
 
 <style module lang='sass'>
- 
-@use '@/assets/_colors.sass' as colors
+.langButton
+    border: none
+    background: none
+    display:    inline-flex
+
+    font-weight: 500
+
+    align-items: center
+
+    gap:        .5rem
+    height:     AUTO
+
+    font-family: var(--font-family)
+    font-size:   var(--font-size-small)
+
+    box-sizing:    border-box
+    padding: 0 1rem
+
+    transition: .1s
+    cursor: pointer
+
+    &:hover
+        background: var(--secondary)
+
+    &.selected
+        color: var(--black)
+        font-weight: 900
+
+   
 .container
     display: flex
-    align-items: center
     width: 100%
     min-height: var(--header-height)
-    padding: 0 .5rem
     box-sizing: border-box
     
     background: var(--white)
-    // background: var(--black)
     font-family: var(--font-family)
 
 .rightAligner

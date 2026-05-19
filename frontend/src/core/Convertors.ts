@@ -1,6 +1,6 @@
 import { String_to_HiveType, String_to_NoteTypes, String_to_Role } from "./DatabaseEnums";
-import type { ApiaryAccessGetModel, ApiaryGetModel, ApiaryHistoryGetModel, CalendarEventGetModel, HiveAccessGetModel, HiveGetModel, HiveHistoryGetModel, HiveHoneyYieldGetModel, HiveQueenHistoryCreateModel, HiveQueenHistoryGetModel, InspectionCreateRequestModel, InspectionEntryGetModel, InspectionReviewGetModel, NoteGetModel, QueenGetModel, QueenHistoryGetModel, SpeciesGetModel, UserEntryGetModel, UserProfileGetModel, WhitelistEntryGetModel } from "./api/Models";
-import type { ApiaryModelDB, QueenModelDB, CalendarEventDB, HistoryEntryDB, HiveModelDB, InspectionDB, InspectionFormDB, InspectionFormUI, InspectionEntryModelDB, NoteModelDB, UserEntryModelDB, UserModelDB, WhitelistEntryModelDB, SpeciesModelDB, LineGraphLineModel, QueenHistoryModelDB, HiveQueenHistoryModelDB } from "./stores/Models";
+import type { ApiaryAccessGetModel, ApiaryGetModel, ApiaryHistoryGetModel, CalendarEventGetModel, HiveAccessGetModel, HiveGetModel, HiveHistoryGetModel, HiveHoneyYieldGetModel, HiveQueenHistoryCreateModel, HiveQueenHistoryGetModel, InspectionCreateRequestModel, InspectionEntriesGetModel, InspectionEntryGetModel, InspectionReviewGetModel, NoteGetModel, QueenGetModel, QueenHistoryGetModel, SpeciesGetModel, UserEntryGetModel, UserProfileGetModel, WhitelistEntryGetModel } from "./api/Models";
+import type { ApiaryModelDB, QueenModelDB, CalendarEventDB, HistoryEntryDB, HiveModelDB, InspectionDB, InspectionFormDB, InspectionFormUI, InspectionEntryModelDB, NoteModelDB, UserEntryModelDB, UserModelDB, WhitelistEntryModelDB, SpeciesModelDB, LineGraphLineModel, QueenHistoryModelDB, HiveQueenHistoryModelDB, InspectionTableEntriesModelDB } from "./stores/Models";
 import { getAge } from "./utils/Utils";
 
 export function ApiaryCreateResponse_to_ApiaryModelDB(
@@ -189,6 +189,16 @@ export function InspectionFormDB_To_InspectionFormUI(
         takenBreedingFrames:          convertee.takenBreedingFrames,
         isSubmited:                   false,
         hasMadeChanges:               false
+    }
+}
+
+export function InspectionEntriesGetModel_To_InspectionTableEntriesModelDB(
+    convertee: InspectionEntriesGetModel
+): InspectionTableEntriesModelDB {
+    return {
+        entries:     convertee.data.map(InspectionEntryGetModel_To_InspectionTableEntryModel),
+        total:       convertee.total,
+        hasNextPage: convertee.hasNextPage
     }
 }
 

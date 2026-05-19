@@ -195,7 +195,11 @@ export type InspectionCreateRequestModel = {
         takenBreedingFrames:          number;
     }[] | undefined
 }
-
+export type InspectionEntriesGetModel = {
+    data: InspectionEntryGetModel[]
+    total:       number
+    hasNextPage: boolean
+}
 export type InspectionEntryGetModel = {
     id:                number
     formCount:         number

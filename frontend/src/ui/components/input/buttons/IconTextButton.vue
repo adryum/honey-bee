@@ -5,6 +5,7 @@ import Icon from "../../Icon.vue";
 
 const s = useCssModule()
 const props = withDefaults(defineProps<{
+    fainterHoverColor?: boolean
     icon?:              SVG
     text?:             string
     disabled?:         boolean
@@ -28,6 +29,7 @@ const props = withDefaults(defineProps<{
         isSubmit && s.submit,
         isAlignedCenter && s.alignedCenter,
         disabled || isLoading ? s.disabled : s.enabled,
+        fainterHoverColor ? s.fainterHover : s.normalHover
     ]"
     :disabled="disabled || isLoading"
 >
@@ -95,12 +97,14 @@ const props = withDefaults(defineProps<{
     background: none
     display:    inline-flex
 
+    font-weight: 500
+
     align-items: center
 
     gap:        .5rem
     height:     2rem
     min-height: 2.5rem
-    max-height: 2rem
+    max-height: 2.5rem
 
     font-family: var(--font-family)
     font-size:   var(--font-size-small)
@@ -111,10 +115,15 @@ const props = withDefaults(defineProps<{
 
     transition: .1s
 
-    &:hover
-        background: var(--black)
-        color: white
+    &.fainterHover
+        &:hover
+            background: var(--secondary)
+            color: black
 
+    &.normalHover
+        &:hover
+            background: var(--black)
+            color: white
     &.submit
         height:     2.5rem
         min-height: 2.5rem
@@ -136,7 +145,7 @@ const props = withDefaults(defineProps<{
 .text
     align-self:  center
     margin:      0
-    font-weight: 500
+    
     line-height: 1.5rem
     white-space: nowrap
 </style>

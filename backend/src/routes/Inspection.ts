@@ -4,8 +4,9 @@ import { db } from "../config/Database";
 import { UserRoles } from "../DatabaseEnums";
 import { requireRole } from "../Middleware";
 import { isValidValue, withStatus } from "../utils";
-import { count, desc, eq } from "drizzle-orm";
-import {  apiaries, hiveInspectionForms, inspections, users } from "../db/schema";
+import { count, desc, eq, inArray, sql } from "drizzle-orm";
+import {  apiaries, hiveInspectionForms, inspections, userApiaryAccess, users } from "../db/schema";
+import { getSessionUserRole } from "../config/RedisClient";
 
 const router = Router()
 
@@ -43,8 +44,17 @@ router.get(
     const page   = parseInt(req.query.page as string) || 1;
     const limit  = parseInt(req.query.limit as string) || 20;
     const offset = (page - 1) * limit
+    const userId = req.session.userId!
+    const userRole = await getSessionUserRole(userId)
     
     try {
+        const apiaryAccessResult = await withStatus("Getting apiaries user has access to", 
+            () => db.query.userApiaryAccess.findMany({
+                where: eq(userApiaryAccess.userId, userId)
+            })
+        )
+        const apiaryAccessIds = apiaryAccessResult.map(item => item.apiaryId)
+
         const inspectionResult = await withStatus(
             `Getting Limit: ${limit} Offset: ${offset} inspection table entries`,
             () => db
@@ -66,16 +76,22 @@ router.get(
                         username: users.username,
                         image: users.imageUrl
                     },
+                    total: sql<number>`count(*) over()`
                 })
                 .from(inspections)
                 .leftJoin(apiaries, eq(inspections.apiaryId, apiaries.id))
                 .leftJoin(users, eq(inspections.userIdCreator, users.id))
+                .where(userRole === UserRoles.ADMINISTRATOR ? undefined : inArray(inspections.apiaryId, apiaryAccessIds))
                 .orderBy(desc(inspections.creationTimestamp))
                 .limit(limit)
                 .offset(offset)
         )
         
-        res.status(200).json(inspectionResult);
+        res.status(200).json({
+            data: inspectionResult,
+            total: inspectionResult[0]?.total ?? 0,
+            hasNextPage: page * limit < (inspectionResult[0]?.total ?? 0)
+        });
     } catch (error) {
         console.error(error);
         res.status(500).send('Server error');

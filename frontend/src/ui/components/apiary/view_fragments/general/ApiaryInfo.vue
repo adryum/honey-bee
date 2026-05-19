@@ -5,12 +5,15 @@ import IconTextButton from '@/ui/components/input/buttons/IconTextButton.vue'
 import { SVG } from "@/assets/svgs/SVGLoader";
 import type { ApiaryModelDB, HiveModelDB } from "@/core/stores/Models";
 import type { ModalBaseModel } from "@/core/composables/useModalBase";
+import { useAuthStore } from "@/core/stores/useAuthStore";
+import { UserRoles } from "@/core/DatabaseEnums";
 
 const s = useCssModule()
 const { t } = useI18n()
 const props = defineProps<{
     apiary: ApiaryModelDB
 }>()
+const { requireRole } = useAuthStore()
 const apiaryEditModal = ref<ModalBaseModel>()
 </script>
 
@@ -20,6 +23,7 @@ const apiaryEditModal = ref<ModalBaseModel>()
         <label :class="s.label">Apiary</label>
         <div :class="s.buttons">
             <IconTextButton 
+                v-if="requireRole([UserRoles.ADMINISTRATOR, UserRoles.APIARY_MAINTAINER])"
                 :text="t('edit')"
                 :icon="SVG.Pencil"
                 @click="apiaryEditModal?.open"

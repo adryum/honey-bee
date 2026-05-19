@@ -13,7 +13,7 @@ import { useI18n } from "vue-i18n";
 
 const s = useCssModule()
 const { t } = useI18n()
-const selectedApiary = ref<{id: number, name: string }>({ id: -1, name: "Selected"})
+const selectedApiary = ref<{id: number, name: string }>({ id: -1, name: t('calendar.filter_default') })
 const selectedDate = ref(new Date().nextMonth().previousMonth())
 
 const { apiaries } = useApiariesQuery()
@@ -70,6 +70,12 @@ const { events } = useCalendarQuery({
                         </div>
                     </template>
                     <template #list="{ dropdown }">
+                        <p
+                            :class="s.item"
+                            @click="selectedApiary = { id: -1, name: '' }; dropdown.isShown.value = !dropdown.isShown.value"
+                        >
+                            {{ t('calendar.filter_default')  }}
+                        </p>
                         <p
                             v-for="apiary in apiaries"
                             :class="s.item"
@@ -149,7 +155,7 @@ const { events } = useCalendarQuery({
     width: 15rem
     min-height: 3rem
 
-    border-radius: var(--border-radius-tiny)
+    // border-radius: var(--border-radius-tiny)
 
     cursor: pointer
     transition: .1s

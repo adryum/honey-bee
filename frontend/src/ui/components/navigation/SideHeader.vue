@@ -74,7 +74,6 @@ function onTabSelect(tab: Tab) {
                 id="icon"
                 :key="i"  
                 :class="s.tab"
-                :while-press="{ scale: 0.9, transition: { duration: 0.1 } }"
                 @click="onTabSelect(tab); "
                 >
                 <div :class="s.iconWrapper">
@@ -145,7 +144,6 @@ function onTabSelect(tab: Tab) {
     height: 2.5rem
 
     box-sizing: border-box
-    border-radius: 5px
     cursor: pointer
     transition: .1s ease-out
 
@@ -173,6 +171,8 @@ function onTabSelect(tab: Tab) {
     display: flex
     align-items: center
     justify-content: center
+
+    margin-left: .5rem
     
     min-width: 2.5rem
     min-height: 2.5rem
@@ -206,8 +206,7 @@ function onTabSelect(tab: Tab) {
         all: unset
         display: flex
         flex-direction: column
-        padding: 1rem .5rem 
-        gap: .2rem
+        padding: 1rem 0
         height: 100%
 
         .tab
@@ -221,11 +220,8 @@ function onTabSelect(tab: Tab) {
             width: 100%
             gap: 1rem
             height: 2.5rem
-            // height: 40px
-            // padding: .5rem 
             box-sizing: border-box
             background-color: transparent
-            border-radius: 5px
             cursor: pointer
             transition: .1s ease-out
 
@@ -253,7 +249,7 @@ function onTabSelect(tab: Tab) {
                 height: 100%
                 width: 200%
 
-                border-radius: 3px
+                border-radius: 0 
                 background: var(--orange)
 
     

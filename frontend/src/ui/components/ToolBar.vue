@@ -77,10 +77,14 @@ const hasFooter = computed(() => !!slots.footer?.()?.length)
     height: 100%
     max-height: 100%
     width: 2rem
+    border-radius: var(--border-radius-small) 0 0 var(--border-radius-small)
+
 .headerSlot
-    display: inline-flex
+    display: flex
+    align-items: center
+    height: 100%
     margin-left: auto
-    margin-right: .25rem
+    
 .header
     display: flex
     align-items: center

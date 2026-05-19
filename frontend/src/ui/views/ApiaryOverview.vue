@@ -15,6 +15,7 @@ import HiveCreateModal from '../components/modals/HiveCreateModal.vue';
 import { useHivesQuery } from '@/core/composables/hive/useHive';
 import { useAuthStore } from '@/core/stores/useAuthStore';
 import { useI18n } from 'vue-i18n';
+import { UserRoles } from '@/core/DatabaseEnums';
 
 const s = useCssModule()
 const router = useRouter()
@@ -97,6 +98,7 @@ function startInspection(apiaryId: number) {
                 />
                 
                 <IconTextButton
+                    v-if="requireRole([UserRoles.ADMINISTRATOR, UserRoles.APIARY_MAINTAINER])"
                     :text="t('add-hive')"
                     :icon="SVG.Plus"
                     :class="s.button"

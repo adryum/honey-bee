@@ -5,13 +5,16 @@ import { CalendarDate } from "@/core/Calendar";
 import type { HiveModelDB } from "@/core/stores/Models";
 import CalendarGrid from "@/ui/components/calendar/CalendarGrid.vue";
 import { useHiveActionHistoryMutations } from "@/core/composables/hive/useHiveActionHistory";
-import { HistoryActionType } from "@/core/DatabaseEnums";
+import { HistoryActionType, UserRoles } from "@/core/DatabaseEnums";
+import { useAuthStore } from "@/core/stores/useAuthStore";
 
 const s = useCssModule()
 const props = defineProps<{
     hive: HiveModelDB
     selectedDate: Date
 }>()
+
+const { requireRole } = useAuthStore()
 
 const { create } = useHiveActionHistoryMutations()
 const calendarIds = computed(() => {
@@ -55,7 +58,7 @@ console.log(today);
             :events="events ?? []"
             :looked-at-date="selectedDate"
             :is-macdonalds="false"
-            :allowEventCreation="true"
+            :allowEventCreation="requireRole([UserRoles.ADMINISTRATOR, UserRoles.APIARY_MAINTAINER])"
             @create="onCreateEvent"
         />
     </div>

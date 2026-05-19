@@ -40,7 +40,7 @@
     "calendar": {
         "title": "General calendar",
         "filter_apiary": "Apiary",
-        "filter_default": "Selected",
+        "filter_default": "All apiaries",
         "label_today": "( Today )",
         "label_tasks": "tasks"
     },

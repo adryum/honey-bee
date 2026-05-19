@@ -1,19 +1,19 @@
-import { InspectionEntryGetModel_To_InspectionTableEntryModel, InspectionReviewResponseModel_To_InspectionFormDB } from '../Convertors';
-import type { InspectionDB, InspectionEntryModelDB } from '../stores/Models';
-import type { InspectionCreateRequestModel, InspectionEntryGetModel, InspectionReviewGetModel } from './Models';
+import { InspectionEntriesGetModel_To_InspectionTableEntriesModelDB, InspectionReviewResponseModel_To_InspectionFormDB } from '../Convertors';
+import type { InspectionDB, InspectionTableEntriesModelDB } from '../stores/Models';
+import type { InspectionCreateRequestModel, InspectionEntriesGetModel, InspectionReviewGetModel } from './Models';
 import type { InspectionFilters } from '../composables/useInspection';
 import api from '../config/AxiosConfig';
 
 export const inspectionApi = {
-    getInspectionTableEntries: async (payload: InspectionFilters): Promise<InspectionEntryModelDB[]> => {
-        const { data } = await api.get<InspectionEntryGetModel[]>('/inspection/entries', {
+    getInspectionTableEntries: async (payload: InspectionFilters): Promise<InspectionTableEntriesModelDB> => {
+        const { data } = await api.get<InspectionEntriesGetModel>('/inspection/entries', {
             params: { 
                 page:   payload.page,
                 limit:  payload.limit,
                 hiveId: payload.hiveId,
             }
         })
-        return data.map(InspectionEntryGetModel_To_InspectionTableEntryModel)
+        return InspectionEntriesGetModel_To_InspectionTableEntriesModelDB(data)
     },
 
     getInspection: async (id: number): Promise<InspectionDB> => {

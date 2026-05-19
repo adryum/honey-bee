@@ -38,9 +38,6 @@ router.get(
 
         if (!tokens.id_token)  return res.status(400).send("Token did not contain ID!");
         
-        
-
-
         // Verify ID token
         const ticket = await oauth2Client.verifyIdToken({
             idToken:  tokens.id_token,
@@ -80,9 +77,13 @@ router.get(
 
         console.log("whitelistedUserResult", whitelistedUserResult);
         
-        
-        if (!!!whitelistedUserResult?.status) {
-            return res.status(400).send("User is not in or enabled in whitelist!")
+        if (!whitelistedUserResult) {
+            await oauth2Client.revokeToken(tokens.access_token!);
+            return res.status(403).send("User is not in whitelist!")
+        }
+
+        if (!whitelistedUserResult.status) {
+            return res.status(403).send("User is not enabled in whitelist!")
         }
 
         // get session data

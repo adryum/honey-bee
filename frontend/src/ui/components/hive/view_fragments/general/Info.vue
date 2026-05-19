@@ -7,12 +7,15 @@ import type { HiveModelDB } from "@/core/stores/Models";
 import { useApiaryQuery } from "@/core/composables/useApiary";
 import HiveEditModal from "@/ui/components/modals/HiveEditModal.vue";
 import type { ModalBaseModel } from "@/core/composables/useModalBase";
+import { useAuthStore } from "@/core/stores/useAuthStore";
+import { UserRoles } from "@/core/DatabaseEnums";
 
 const s = useCssModule()
 const { t } = useI18n()
 const props = defineProps<{
     hive: HiveModelDB
 }>()
+const { requireRole } = useAuthStore()
 const hiveEditModal = ref<ModalBaseModel>()
 
 const { apiary } = useApiaryQuery({
@@ -26,6 +29,7 @@ const { apiary } = useApiaryQuery({
         <label :class="s.label">{{ t("hiveOverview.info") }}</label>
         <div :class="s.buttons">
             <IconTextButton 
+                v-if="requireRole([UserRoles.ADMINISTRATOR, UserRoles.APIARY_MAINTAINER])"
                 text="Edit"
                 :icon="SVG.Pencil"
                 @click="hiveEditModal?.open"
