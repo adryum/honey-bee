@@ -242,6 +242,8 @@ router.get(
 ) => {
     console.log("# Get apiary hive yields");
     const apiaryId = parseInt(req.params.id)
+    const reqUserId = req.session.userId!
+    const role      = await getSessionUserRole(reqUserId)
     const { toISO, fromISO } = req.query;
 
     if (!toISO || !fromISO) return res.status(400).send("Invalid credentials!")
@@ -250,6 +252,7 @@ router.get(
     const toDate   = toISO.split('T')[0]!;
 
     try {
+        
         // TODO: need to fech hives user has access to
         const hivesResult = await withStatus("Getting apiary hives", 
             () => db.query.hives.findMany({

@@ -1,8 +1,10 @@
 <script setup lang="ts">
 import { ref, useCssModule } from "vue";
 import { motion } from 'motion-v';
+import { useI18n } from "vue-i18n";
 
 const s = useCssModule()
+const { t } = useI18n()
 const text = ref('')
 const isHoldingAction = ref(false)
 const props = withDefaults(defineProps<{
@@ -11,8 +13,8 @@ const props = withDefaults(defineProps<{
     onClick?: (value: string) => void
 }>(),
 {
-    hint: '...',
-    actionText: 'Search',
+    hint: t('searchbar.hint'),
+    actionText: t('searchbar.button'),
     onClick: () => {}
 })
 </script>

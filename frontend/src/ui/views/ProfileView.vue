@@ -9,10 +9,12 @@ import { RouterViewPaths } from "@/core/router";
 import { useProfileQuery } from "@/core/composables/useProfile";
 import { useAuthStore } from "@/core/stores/useAuthStore";
 import { storeToRefs } from "pinia";
-import { Role } from "@/core/DatabaseEnums";
+import { UserRoles } from "@/core/DatabaseEnums";
 import placeholderImage from '@/assets/images/ProfilePlaceholder.jpg'
+import { useI18n } from "vue-i18n";
 
 const s = useCssModule()
+const { t } = useI18n()
 const router = useRouter()
 const props = defineProps<{
     userId: number
@@ -26,7 +28,7 @@ const isTHEUser = computed(() => user.value?.id === THEUser.value?.id)
 const showedTabs = computed(() => {
     var tabs = Object.values(ProfileTab)
 
-    if (THEUser.value?.role !== Role.ADMINISTRATOR) {
+    if (THEUser.value?.role !== UserRoles.ADMINISTRATOR) {
         tabs = tabs.filter(tab => tab !== ProfileTab.ACCESS)
     }
 
@@ -90,7 +92,7 @@ function changeTab(tab: ProfileTab) {
                             :type="IconType.SMALL"
                         />
                         <p>
-                            Rīga
+                            {{ t('profile.location_placeholder') }}
                         </p>
                     </div>
                 </div>

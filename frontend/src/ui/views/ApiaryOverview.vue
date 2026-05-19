@@ -13,14 +13,18 @@ import StringSearchDropdown from '../components/input/dropdowns/StringSearchDrop
 import IconTextButton from '../components/input/buttons/IconTextButton.vue';
 import HiveCreateModal from '../components/modals/HiveCreateModal.vue';
 import { useHivesQuery } from '@/core/composables/hive/useHive';
+import { useAuthStore } from '@/core/stores/useAuthStore';
+import { useI18n } from 'vue-i18n';
 
 const s = useCssModule()
 const router = useRouter()
+const { t } = useI18n()
 const props = defineProps<{
     id:  number,
     tab: ApiaryTab
 }>()
 
+const { requireRole } = useAuthStore()
 const createHiveModal = ref<ModalBaseModel>()
 const searchWord = ref<string>('')
 const selectedDate = ref(new Date().nextMonth().previousMonth())
@@ -86,14 +90,14 @@ function startInspection(apiaryId: number) {
             <template #header>
                 <IconTextButton
                     v-if="hives?.length !== 0"
-                    text="Add inspection"
+                    :text="t('create-inspection')"
                     :icon="SVG.Plus"
                     :class="s.button"
                     @click="startInspection(apiary.id)"
                 />
                 
                 <IconTextButton
-                    text="Add hive"
+                    :text="t('add-hive')"
                     :icon="SVG.Plus"
                     :class="s.button"
                     @click="createHiveModal?.open"
@@ -102,7 +106,7 @@ function startInspection(apiaryId: number) {
                     v-if="currentTab === ApiaryTab.Hives"
                     :options="{
                         initialValue: '',
-                        placeholder: 'Search by name...',
+                        placeholder: t('search-hives'),
                         showIcon: true,
                         onHoverEffects: true,
                         onInputChange(value: string) {

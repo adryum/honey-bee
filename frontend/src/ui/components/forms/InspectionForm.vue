@@ -7,8 +7,10 @@ import Checkbox from "../input/fields/Checkbox.vue";
 import IconTextButton from "../input/buttons/IconTextButton.vue";
 import StringMultipleField from "../input/fields/used/StringMultipleField.vue";
 import NumberField from "../input/fields/used/NumberField.vue";
+import { useI18n } from "vue-i18n";
 
 const s = useCssModule()
+const { t } = useI18n()
 
 const props = withDefaults(defineProps<{ 
     form :        InspectionFormUI
@@ -31,28 +33,28 @@ const form = useVModel(props, 'form', emit)
     @submit.prevent=""
 >
     <Checkbox
-        label="Abnormal bee behavior?"
+        :label="t('form.inspect_abnormal_behavior')"
         :readonly="isReviewing"
         :value="form.isAbnormalBehavior"
         @click="form.isAbnormalBehavior = !form.isAbnormalBehavior"
     />
     <StringMultipleField
         v-if="form.isAbnormalBehavior"
-        label="Description"
+        :label="t('form.label_description')"
         :selection="form.abnormalBehaviorDescription"
         :readonly="isReviewing"
         @input="value => form.abnormalBehaviorDescription = value"
     />
     
     <Checkbox
-        label="Swarming?"
+        :label="t('form.inspect_swarming')"
         :readonly="isReviewing"
         :value="form.isSwarming"
         @click="form.isSwarming = !form.isSwarming"
     />
 
     <Checkbox
-        label="Need additional feeding?"
+        :label="t('form.inspect_additional_feeding')"
         :readonly="isReviewing"
         :value="form.needAdditionalFeeding"
         @click="form.needAdditionalFeeding = !form.needAdditionalFeeding"
@@ -60,7 +62,7 @@ const form = useVModel(props, 'form', emit)
 
 
     <Checkbox
-        label="Queen alive?"
+        :label="t('form.inspect_queen_alive')"
         :readonly="isReviewing"
         :value="form.isQueenAlive"
         @click="form.isQueenAlive = !form.isQueenAlive"
@@ -68,7 +70,7 @@ const form = useVModel(props, 'form', emit)
     <Checkbox
         v-if="form.isQueenAlive"
         :class="s.indented"
-        label="Is queen laying eggs?"
+        :label="t('form.inspect_queen_laying')"
         :readonly="isReviewing"
         :value="form.isQueenLayingEggs"
         @click="form.isQueenLayingEggs = !form.isQueenLayingEggs"
@@ -76,84 +78,84 @@ const form = useVModel(props, 'form', emit)
     <Checkbox
         v-if="form.isQueenAlive"
         :class="s.indented"
-        label="Is queen laying eggs incorrectly?"
+        :label="t('form.inspect_queen_laying_incorrect')"
         :readonly="isReviewing"
         :value="form.isQueenLayingEggsIncorrectly"
         @click="form.isQueenLayingEggsIncorrectly = !form.isQueenLayingEggsIncorrectly"
     />
 
     <Checkbox
-        label="Does hive need more honey frames?"
+        :label="t('form.inspect_honey_frames_needed')"
         :readonly="isReviewing"
         :value="form.needMoreHoneyFrames"
         @click="form.needMoreHoneyFrames = !form.needMoreHoneyFrames"
     />
     <NumberField
         v-if="form.needMoreHoneyFrames"
-        label="Amount"
+        :label="t('form.label_amount')"
         :readonly="isReviewing"
         :selection="form.needMoreHoneyFramesAmount"
         @input="value => form.needMoreHoneyFramesAmount = value"
     />
     
     <Checkbox
-        label="Does hive need more breeding frames?"
+        :label="t('form.inspect_breeding_frames_needed')"
         :readonly="isReviewing"
         :value="form.needMoreBreedingFrames"
         @click="form.needMoreBreedingFrames = !form.needMoreBreedingFrames"
     />
     <NumberField
         v-if="form.needMoreBreedingFrames"
-        label="Amount"
+        :label="t('form.label_amount')"
         :readonly="isReviewing"
         :selection="form.needMoreBreedingFramesAmount"
         @input="value => form.needMoreBreedingFramesAmount = value"
     />
 
     <Checkbox
-        label="Taking out frames?"
+        :label="t('form.inspect_taking_frames')"
         :readonly="isReviewing"
         :value="form.isTakingOutFrames"
         @click="form.isTakingOutFrames = !form.isTakingOutFrames"
     />
     <NumberField
         v-if="form.isTakingOutFrames"
-        label="Honey frame amount"
+        :label="t('form.inspect_honey_frames_amount')"
         :readonly="isReviewing"
         :selection="form.takenHoneyFrames"
         @input="value => form.takenHoneyFrames = value"
     />
     <NumberField
         v-if="form.isTakingOutFrames"
-        label="Breeding frame amount"
+        :label="t('form.inspect_breeding_frames_amount')"
         :readonly="isReviewing"
         :selection="form.takenBreedingFrames"
         @input="value => form.takenBreedingFrames = value"
     />
 
     <Checkbox
-        label="Is medical action needed?"
+        :label="t('form.inspect_medical_needed')"
         :readonly="isReviewing"
         :value="form.needMedicalAttention"
         @click="form.needMedicalAttention = !form.needMedicalAttention"
     />
     <StringMultipleField
         v-if="form.needMedicalAttention"
-        label="Description"
+        :label="t('form.label_description')"
         :selection="form.medicalAttentionDescription"
         :readonly="isReviewing"
         @input="value => form.medicalAttentionDescription = value"
     />
 
     <Checkbox
-        label="Is there any hive damage?"
+        :label="t('form.inspect_hive_damage')"
         :readonly="isReviewing"
         :value="form.hasHiveDamage"
         @click="form.hasHiveDamage = !form.hasHiveDamage"
     />
     <StringMultipleField
         v-if="form.hasHiveDamage"
-        label="Description"
+        :label="t('form.label_description')"
         :readonly="isReviewing"
         :selection="form.hiveDamageDescription"
         @input="value => form.hiveDamageDescription = value"
@@ -167,7 +169,7 @@ const form = useVModel(props, 'form', emit)
         :is-aligned-center="true"
         :style="{marginTop: 'auto'}"
         :disabled="!allowSubmiting"
-        :text="submitButtonText || 'Submit'"
+        :text="submitButtonText || t('button.submit')"
         @click="emit('submit')"
     />
 </form>

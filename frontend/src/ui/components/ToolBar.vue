@@ -95,7 +95,7 @@ const hasFooter = computed(() => !!slots.footer?.()?.length)
         padding: 0 1rem
         box-sizing: border-box
 
-        max-width: 15rem
+        max-width: 20rem
         min-width: 15rem
         
         font-size: var(--font-size-large)

@@ -5,14 +5,16 @@ import ModularDropdown from "../input/dropdowns/ModularDropdown.vue";
 import IconTextItem from "../input/dropdowns/dropdownItems/bottom/IconTextItem.vue";
 import type { DropdownModel } from "@/core/models/Models";
 import { storeToRefs } from "pinia";
-import { Role } from "@/core/DatabaseEnums";
+import { UserRoles } from "@/core/DatabaseEnums";
 import { useAuthStore } from "@/core/stores/useAuthStore";
 import { AdminTab, ProfileTab } from "@/core/ViewTabEnums";
 import { useRouter } from "vue-router";
 import IconCubeButton from "../input/buttons/IconCubeButton.vue";
 import placeholderImage from '@/assets/images/ProfilePlaceholder.jpg'
+import { useI18n } from "vue-i18n";
 
 const s = useCssModule()
+const { t } = useI18n()
 const router = useRouter()
 const authStore = useAuthStore()
 const { logout } = authStore
@@ -23,13 +25,13 @@ const avatarSrc = computed(() => {
 
 const settingDestinations = computed(() => {
     var arr = [
-        { name: 'Profile',  path: `/profile/${user.value?.id}/${ProfileTab.ACCESS}`, svg: SVG.Profile },
-        // { name: 'Settings', path: '/settings', svg: SVG.Cog },
-        { name: 'Logout',   path: '/logout', svg: SVG.Logout }
+        { id: 'profile_widget.menu_profile',  path: `/profile/${user.value?.id}/${ProfileTab.ACCESS}`, svg: SVG.Profile },
+        // { id: 'profile_widget.menu_settings', path: '/settings', svg: SVG.Cog },
+        { id: 'profile_widget.menu_logout',   path: '/logout', svg: SVG.Logout }
     ]
 
-    if (user.value?.role === Role.ADMINISTRATOR) {
-        arr.unshift({ name: 'Admin Panel', path: `/admin/${AdminTab.Whitelist}`, svg: SVG.Key })
+    if (user.value?.role === UserRoles.ADMINISTRATOR) {
+        arr.unshift({ id: 'profile_widget.menu_admin', path: `/admin/${AdminTab.Whitelist}`, svg: SVG.Key })
     }
     
     return arr
@@ -37,15 +39,15 @@ const settingDestinations = computed(() => {
 const profileCircleColor = computed(() => {
     const role = user.value?.role
     switch (role) {
-        case Role.ADMINISTRATOR:     return "var(--orange)"
-        case Role.MANAGEMENT:        return "var(--red)"
-        case Role.APIARY_MAINTAINER: return "var(--secondary)"
-        case Role.HIVE_WORKER:       return "lime-green"
+        case UserRoles.ADMINISTRATOR:     return "var(--orange)"
+        case UserRoles.MANAGEMENT:        return "var(--red)"
+        case UserRoles.APIARY_MAINTAINER: return "var(--secondary)"
+        case UserRoles.HIVE_WORKER:       return "lime-green"
         default:                     return "var(--black)"
     }
 })
 type SettingDestination = {
-    name: string
+    id: string
     path: string
     svg:  SVG
 }
@@ -53,11 +55,11 @@ type SettingDestination = {
 function onClick(dropdown: DropdownModel, destination: SettingDestination) {
     dropdown.isShown.value = false
 
-    switch (destination.name) {
-        case "Profile":     router.push(destination.path); break;
-        // case "Settings":    break;
-        case "Logout":      logout(); break;
-        case "Admin Panel": router.push(destination.path); break;
+    switch (destination.id) {
+        case "profile_widget.menu_profile":     router.push(destination.path); break;
+        // case "profile_widget.menu_settings":    break;
+        case "profile_widget.menu_logout":      logout(); break;
+        case "profile_widget.menu_admin": router.push(destination.path); break;
         default:break;
     }
 }
@@ -98,10 +100,10 @@ function onClick(dropdown: DropdownModel, destination: SettingDestination) {
     <template #list="{ dropdown }">
         <IconTextItem
             v-for="item in settingDestinations"
-            :key="item.name"
+            :key="item.id"
             :options="{
                 svg: item.svg,
-                text: item.name
+                text: t(item.id)
             }"
             @click="onClick(dropdown, item)"
         />

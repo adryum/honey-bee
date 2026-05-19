@@ -5,10 +5,7 @@ import HistoryLogEntry from './HistoryLogEntry.vue';
 import type { HistoryEntryDB } from '@/core/stores/Models';
 
 const s = useCssModule()
-const { t, locale, messages } = useI18n({ useScope: 'global' })
-console.log('locale:', locale.value)
-console.log('test:', t('hiveOverview.info'))
-console.log('messages:', JSON.stringify(messages.value))
+const { t } = useI18n()
 const props = defineProps<{
     entries: HistoryEntryDB[]
 }>()

@@ -5,8 +5,10 @@ import { motion } from 'motion-v';
 import { IconType, SVG } from "@/assets/svgs/SVGLoader";
 import Icon from "../../Icon.vue";
 import IconTextButton from "../buttons/IconTextButton.vue";
+import { useI18n } from "vue-i18n";
 
 const s = useCssModule()
+const { t } = useI18n()
 const dropZoneRef = ref()
 const { isOverDropZone, files } = useDropZone(dropZoneRef,
     {
@@ -72,7 +74,7 @@ function handleFiles(event: Event) {
             <h1 
                 :class="s.dropHint"
             >
-                Click or drop image here!
+                {{ t('image.dropzone_hint') }}
             </h1>
         </div>
     </motion.div>
@@ -87,7 +89,7 @@ function handleFiles(event: Event) {
         :class="s.choseFileButton"
         :is-submit="true"
         :icon="SVG.Cross"
-        text="Clear"
+        :text="t('image.button_clear')"
         @click="imageSrc = ''"
     />
     <!-- <div :class="s.buttons">

@@ -7,6 +7,7 @@ import { useMutation } from "@tanstack/vue-query";
 import { profileApi } from "../api/ProfileApi";
 import { useRouter } from "vue-router";
 import { RouterViewPaths } from "../router";
+import { UserRoles } from "../DatabaseEnums";
 
 export const useAuthStore = defineStore("auth store", () => {
     const router = useRouter()
@@ -43,11 +44,22 @@ export const useAuthStore = defineStore("auth store", () => {
         await authApi.logout()
     }
 
+    function requireRole(requiredRoles: UserRoles[]): boolean {
+        const role = user.value?.role
+
+        if (!role) {
+            return false
+        }
+
+        return requiredRoles.includes(role)
+    }
+
     return {
         user,
         authenticate,
         isAuthenticating,
         checkSession,
-        logout
+        logout,
+        requireRole
     }
 })

@@ -14,8 +14,10 @@ import StringMultipleField from '../input/fields/used/StringMultipleField.vue';
 import ModularDropdown from '../input/dropdowns/ModularDropdown.vue';
 import StringFieldTopPart from '../input/dropdowns/dropdownItems/top/StringFieldTopPart.vue';
 import IconTextItem from '../input/dropdowns/dropdownItems/bottom/IconTextItem.vue';
+import { useI18n } from "vue-i18n";
 
 const s = useCssModule()
+const { t } = useI18n()
 const props = defineProps<{
     hive: HiveModelDB
 }>()
@@ -60,7 +62,7 @@ watch(() => exposed.isOpen(), (val) => {
 <template>
 <ModalBase
     ref="modal"
-    label="Edit hive"
+    :label="t('modal.edit_hive_title')"
 >
     <template #body>
     <div :class="s.grid">
@@ -70,7 +72,7 @@ watch(() => exposed.isOpen(), (val) => {
         />
         <div :class="s.fields">
             <StringField
-                label="Name"
+                :label="t('form.label_name')"
                 :selection="name"
                 :validee="getFormValidee({
                     isValid: () => !!name,
@@ -85,7 +87,7 @@ watch(() => exposed.isOpen(), (val) => {
             >
                 <template #head="{ dropdown }">
                     <StringFieldTopPart
-                        label="Type"
+                        :label="t('form.label_type')"
                         :dropdown="dropdown"
                         :selection="type"
                         :validee="getFormValidee({
@@ -110,7 +112,7 @@ watch(() => exposed.isOpen(), (val) => {
             </ModularDropdown>
 
             <StringMultipleField
-                label="Description"
+                :label="t('form.label_description')"
                 :selection="description"
                 :validee="getFormValidee({
                     isValid: () => true,
@@ -129,7 +131,7 @@ watch(() => exposed.isOpen(), (val) => {
                 :is-loading="isUpdatingHive"
                 :disabled="!isFormValid"
                 :hide-icon="true"
-                text="Update"
+                :text="t('button.update')"
                 @click="createHive" 
             />
         </div>

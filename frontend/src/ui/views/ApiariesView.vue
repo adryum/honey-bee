@@ -10,9 +10,15 @@ import { useApiariesQuery } from "@/core/composables/useApiary";
 import ApiaryCreateModal from "../components/modals/ApiaryCreateModal.vue";
 import { useRouter } from "vue-router";
 import type { ModalBaseModel } from "@/core/composables/useModalBase";
+import { useAuthStore } from "@/core/stores/useAuthStore";
+import { UserRoles } from "@/core/DatabaseEnums";
+import { useI18n } from "vue-i18n";
 
 const s = useCssModule()
 const router = useRouter()
+const { t } = useI18n()
+
+const { requireRole } = useAuthStore()
 const createApiaryModal = ref<ModalBaseModel>()
 const { apiaries } = useApiariesQuery()
 const searchWord = ref<string>('')
@@ -43,14 +49,15 @@ onResize(grid, (element) => {
     :style="{ maxHeight: `calc(100vh - var(--header-height))` }"
 >
         <ToolBar 
-            label="Apiaries"
+            :label="t('apiaries')"
             :tabs="[]"
             :selected-tab="[]"
             :class="s.toolbar"
         >
             <template #header>
                 <IconButton
-                    text="Add apiary"
+                    v-if="requireRole([UserRoles.ADMINISTRATOR])"
+                    :text="t('create-apiary')"
                     :icon="SVG.Plus"
                     :class="s.button"
                     @click="createApiaryModal?.open()"
@@ -58,7 +65,7 @@ onResize(grid, (element) => {
                 <StringSearchDropdown
                     :options="{
                         initialValue: '',
-                        placeholder: 'Search by name...',
+                        placeholder: t('search-apiaries'),
                         showIcon: true,
                         onHoverEffects: true,
                         onInputChange(value: string) {

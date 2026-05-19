@@ -20,7 +20,7 @@ const apiaryEditModal = ref<ModalBaseModel>()
         <label :class="s.label">Apiary</label>
         <div :class="s.buttons">
             <IconTextButton 
-                text="Edit"
+                :text="t('edit')"
                 :icon="SVG.Pencil"
                 @click="apiaryEditModal?.open"
             />
@@ -52,7 +52,7 @@ const apiaryEditModal = ref<ModalBaseModel>()
             <label 
                 for="created"
                 :class="s.gridLabels"
-            >Created at</label>
+            >{{ t('created-at') }}</label>
             <p 
                 id="created"
                 :class="s.gridValues"    
@@ -61,7 +61,7 @@ const apiaryEditModal = ref<ModalBaseModel>()
             <label 
                 for="loacaion"
                 :class="s.gridLabels"
-            >Location</label>
+            >{{ t('location') }}</label>
             <p 
                 id="loacaion"
                 :class="s.gridValues"

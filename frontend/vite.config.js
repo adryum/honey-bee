@@ -4,7 +4,6 @@ import vue from '@vitejs/plugin-vue'
 import vueDevTools from 'vite-plugin-vue-devtools'
 import svgLoader from 'vite-svg-loader'
 import VueI18nPlugin from '@intlify/unplugin-vue-i18n/vite'
-import { fileURLToPath, URL } from 'node:url'
 import { resolve, dirname } from 'node:path'
 
 // https://vite.dev/config/
@@ -16,7 +15,7 @@ export default defineConfig({
         vue(),
         vueDevTools(),
         VueI18nPlugin({
-            include: resolve(dirname(fileURLToPath(import.meta.url)), './src/core/locales/**'),
+            include: resolve(dirname(fileURLToPath(import.meta.url)), './src/core/locales/messages/**'),
         }),
         svgLoader({
             // Optional options:
@@ -27,7 +26,7 @@ export default defineConfig({
     ],
     resolve: {
         alias: {
-        '@': fileURLToPath(new URL('./src', import.meta.url))
+            '@': fileURLToPath(new URL('./src', import.meta.url)),
         },
     },
     css: {

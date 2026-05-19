@@ -1,0 +1,162 @@
+{
+    "hiveOverview": {
+        "info":           "Informācija",
+        "calendarEvents": "Kalendāra ieraksti",
+        "actionHistory":  "Darbību vēsture",
+        "medicine":       "Zāles",
+        "notes":          "Piezīmes",
+        "queen":          "Karaliene",
+        "suppers":        "Magazīnes",
+        "yield":          "Ienesums"
+    },
+    "apiaries": "Dravas",
+    "create-apiary": "Izveidot dravu",
+    "search-apiaries": "Meklēt dravas...",
+    "name": "Nosaukums",
+    "location": "Atrašanās vieta",
+    "hives": "Stropi",
+    "create-inspection": "Izveidot inspekciju",
+    "create-hive": "Izveidot stropu",
+    "search-hives": "Meklēt stropus...",
+    "created-at": "Izveidots",
+    "edit": "Rediģēt",
+    "delete": "Dzēst",
+    "add-hive": "Pievienot stropu",
+    "login": {
+        "title": "HoneyBee",
+        "button_login": "Pierakstīties ar Google",
+        "link_support": "Sazinieties ar atbalstu"
+    },
+    "inspections": {
+        "page_title": "Inspekcijas"
+    },
+    "pagination": {
+        "previous": "Iepriekšējais",
+        "next": "Nākamais"
+    },
+    "profile": {
+        "location_placeholder": "Rīga"
+    },
+    "calendar": {
+        "title": "Vispārējais kalendārs",
+        "filter_apiary": "Drava",
+        "filter_default": "Atlasīti",
+        "label_today": "( Šodien )",
+        "label_tasks": "uzdevumi"
+    },
+    "admin": {
+        "page_title": "Administratora panelis",
+        "button_add_entry": "Pievienot ierakstu"
+    },
+    "navigation": {
+        "home": "Sākums",
+        "apiaries": "Dravas",
+        "inspections": "Inspekcijas",
+        "sidebar_close": "Aizvērt"
+    },
+    "profile_widget": {
+        "menu_profile": "Profils",
+        "menu_logout": "Izrakstīties",
+        "menu_admin": "Administratora panelis"
+    },
+    "form": {
+        "inspect_abnormal_behavior": "Neparasts bišu uzvedums?",
+        "label_description": "Apraksts",
+        "inspect_swarming": "Rojošana?",
+        "inspect_additional_feeding": "Nepieciešama papildu barošana?",
+        "inspect_queen_alive": "Karaliene ir dzīva?",
+        "inspect_queen_laying": "Vai karaliene lāj olas?",
+        "inspect_queen_laying_incorrect": "Vai karaliene lāj olas nepareizi?",
+        "inspect_honey_frames_needed": "Vai stropam nepieciešami vairāk medus kadri?",
+        "label_amount": "Apjoms",
+        "inspect_breeding_frames_needed": "Vai stropam nepieciešami vairāk dēšanas kadri?",
+        "inspect_taking_frames": "Izņem kadrus?",
+        "inspect_honey_frames_amount": "Medus kadru daudzums",
+        "inspect_breeding_frames_amount": "Dēšanas kadru daudzums",
+        "inspect_medical_needed": "Vai nepieciešama medicīniska rīcība?",
+        "inspect_hive_damage": "Vai ir kāds stropu bojājums?",
+        "label_name": "Nosaukums",
+        "label_type": "Tips",
+        "label_born": "Dzimis",
+        "label_specie": "Suga",
+        "label_title": "Virsraksts",
+        "label_content": "Saturs",
+        "label_honey_kg": "Apstrādāt medu kilogramos",
+        "label_email": "E-pasts"
+    },
+    "button": {
+        "submit": "Iesniegt",
+        "create": "Izveidot",
+        "update": "Atjaunināt",
+        "add": "Pievienot",
+        "process": "Apstrādāt",
+        "remove": "Noņemt",
+        "replace": "Aizvietot",
+        "edit": "Rediģēt",
+        "search": "Meklēt",
+        "clear": "Notīrīt",
+        "today": "Šodien"
+    },
+    "searchbar": {
+        "hint": "...",
+        "button": "Meklēt"
+    },
+    "image": {
+        "dropzone_hint": "Noklikšķiniet vai nometiet attēlu šeit!",
+        "button_clear": "Notīrīt"
+    },
+    "modal": {
+        "add_hive_title": "Pievienot stropu",
+        "hive_tab_create": "Izveidot jaunu",
+        "hive_tab_existing": "Pievienot esošu",
+        "hive_section_current": "Šajā dravā",
+        "edit_hive_title": "Rediģēt stropu",
+        "add_apiary_title": "Pievienot dravu",
+        "add_queen_title": "Pievienot bišu karalieni",
+        "edit_queen_title": "Rediģēt karalieni",
+        "add_note_title": "Pievienot piezīmi",
+        "process_inspection_title": "Apstrādāt inspekciju",
+        "whitelist_entry_title": "Pievienot baltās saraksta ierakstu"
+    },
+    "inspection": {
+        "label_id": "Inspekcijas ID:",
+        "label_apiary": "Drava:",
+        "label_created": "Izveidots:",
+        "label_hive_count": "Stropu skaits:",
+        "label_honey_frames": "Paņemtie medus kadri:",
+        "label_honey_average": "Vidējais medus daudzums uz kadra:"
+    },
+    "table": {
+        "header_nr": "Nr.",
+        "header_email": "E-pasts",
+        "header_role": "Loma",
+        "header_status": "Statuss",
+        "header_actions": "Darbības",
+        "header_apiary": "Drava",
+        "header_hive_count": "Stropu skaits",
+        "header_processed": "Ir apstrādāta",
+        "header_creator": "Veidotājs",
+        "header_creation_date": "Izveides datums",
+        "header_is_whitelisted": "Ir baltajā sarakstā"
+    },
+    "queen": {
+        "section_title": "Karaliene",
+        "message_no_queen": "Šajā stropā nav karalieni",
+        "label_born": "Dzimis",
+        "label_life_expectancy": "Dzīves ilgums",
+        "label_placed_here": "Ievietota šeit",
+        "label_age": "Vecums"
+    },
+    "message": {
+        "no_species": "Nav atbilstošas sugas!"
+    },
+    "card": {
+        "label_in_storage": "Noliktavā:",
+        "label_total_registered": "Kopumā reģistrēti:",
+        "placeholder_noname": "BEZ NOSAUKUMA",
+        "placeholder_nan": "nav"
+    },
+    "apiary": {
+        "label_hives": "Stropi"
+    }
+}

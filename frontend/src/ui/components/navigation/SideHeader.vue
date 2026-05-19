@@ -6,35 +6,37 @@ import { RouterViewPaths } from "@/core/router";
 import { IconType, SVG } from "@/assets/svgs/SVGLoader";
 import Icon from "../Icon.vue";
 import { useRoute, useRouter } from "vue-router";
+import { useI18n } from "vue-i18n";
 
 const s = useCssModule()
+const { t } = useI18n()
 const [isExtended, toggleExtension] = useToggle() 
 const router = useRouter()
 
 interface Tab {
-    name: string,
+    id: string,
     pagePath: string,
     svg: SVG
 }
 
 const tabs: Tab[] = [
     {
-        name: 'Home',
+        id: 'navigation.home',
         pagePath: '/',
         svg: SVG.Home
     },
     {
-        name: 'Apiaries',
+        id: 'navigation.apiaries',
         pagePath: '/apiaries',
         svg: SVG.Apiary
     },
     // {
-    //     name: 'Calendar',
+    //     id: 'navigation.calendar',
     //     pagePath: '/calendar',
     //     svg: SVG.Calendar
     // },
     {
-        name: 'Inspections',
+        id: 'navigation.inspections',
         pagePath: RouterViewPaths.Inspections,
         svg: SVG.Clipboard
     },
@@ -59,10 +61,6 @@ function onTabSelect(tab: Tab) {
     router.push(tab.pagePath)
 }
 
-onMounted(() => {
-    // onTabSelect(tabs[0])
-})
-
 </script>
 <template>
     <motion.div
@@ -83,7 +81,7 @@ onMounted(() => {
                     <Icon 
                         :class="[
                             s.icon, 
-                            selectedTab?.name === tab.name && s.selected
+                            selectedTab?.id === tab.id && s.selected
                         ]" 
                         :type="IconType.MEDIUM" 
                         :icon="tab.svg"
@@ -95,17 +93,17 @@ onMounted(() => {
                     :class="[
                         s.text, 
                         'button-text',
-                        selectedTab?.name === tab.name && s.selected
+                        selectedTab?.id === tab.id && s.selected
                     ]"
                     :variants="tabVariants"
                     :initial="'collapsed'"
                     :animate="isExtended ? 'expanded' : 'collapsed'"
                 >
-                {{ tab.name }}
+                {{ t(tab.id) }}
                 </motion.label>
 
                 <motion.div
-                v-if="selectedTab?.name === tab.name"
+                v-if="selectedTab?.id === tab.id"
                 :class="s.selectedBookmark"
                 layoutId="selected"
                 :transition="{ duration: 0.4, ease: [0, 0.71, 0.2, 1.01], type: 'spring' }"
@@ -128,7 +126,7 @@ onMounted(() => {
                         s.text,
                         isExtended && s.open
                     ]"
-                >{{ isExtended ? "Close" : "" }}</p>
+                >{{ isExtended ? t('navigation.sidebar_close') : "" }}</p>
             </button>
         </ul>
     </motion.div>
@@ -152,7 +150,7 @@ onMounted(() => {
     transition: .1s ease-out
 
     &:hover 
-        background: var(--secondary)
+        background: var(--white)
 
     .text
         font-family: var(--font-family)
@@ -232,9 +230,7 @@ onMounted(() => {
             transition: .1s ease-out
 
             &:hover
-                background: var(--secondary)
-
-            
+                background: var(--white)
 
             .text
                 z-index: 2

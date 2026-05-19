@@ -2,81 +2,129 @@
   {
     "knownAsName": "Western Honey Bee",
     "scientificName": "Apis mellifera",
-    "lifeExpectancy": "5 years",
-    "description": "The Western Honey Bee is the most recognized bee species in the world and is widely used in agriculture. It has a golden-brown body with black stripes and translucent wings. This species is responsible for producing large amounts of honey and pollinating many important crops.",
-    "behavior": "Western Honey Bees are highly social insects that live in organized colonies. Each colony contains a queen, thousands of workers, and male drones. They communicate food locations through a movement pattern known as the waggle dance.",
-    "preferences": "This species prefers areas with abundant flowering plants and stable temperatures. It commonly lives in forests, meadows, orchards, and man-made hives. Western Honey Bees are especially attracted to nectar-rich flowers such as clover, lavender, and sunflowers."
+    "lifeExpectancy": "3 - 5 years",
+    "description": "The Western Honey Bee is the most widely managed honey-producing bee species in the world. It has a golden-brown body with dark stripes and is valued for its high honey yields and strong pollination abilities. This species plays a major role in agriculture and commercial beekeeping.",
+    "behavior": "Western Honey Bees live in highly organized colonies with a single queen, thousands of workers, and seasonal drones. They communicate food sources through the waggle dance and defend their hive collectively. Colonies can grow very large during productive nectar seasons.",
+    "preferences": "This species prefers temperate climates with abundant flowering plants throughout the season. It thrives in orchards, meadows, forests, and managed apiaries. Western Honey Bees are especially attracted to clover, lavender, sunflower, and wildflower blooms."
   },
   {
-    "knownAsName": "Buff-tailed Bumblebee",
-    "scientificName": "Bombus terrestris",
-    "lifeExpectancy": "1 year",
-    "description": "The Buff-tailed Bumblebee is a large and fuzzy bee commonly found across Europe. It has black and yellow coloring with a pale buff-colored tail. This species is one of the most important natural pollinators for crops and wild plants.",
-    "behavior": "Buff-tailed Bumblebees are social and form medium-sized colonies underground. They are capable of buzz pollination, which helps release pollen from certain flowers. These bees are active even during cooler temperatures and light rain.",
-    "preferences": "They prefer gardens, grasslands, woodland edges, and farmland. The species is especially attracted to flowering crops and wildflowers with high nectar content. They commonly nest in abandoned rodent burrows or sheltered cavities."
+    "knownAsName": "Italian Honey Bee",
+    "scientificName": "Apis mellifera ligustica",
+    "lifeExpectancy": "3 - 4 years",
+    "description": "The Italian Honey Bee is one of the most popular honey bee subspecies among beekeepers due to its gentle temperament and strong honey production. It is recognized by its bright yellow and golden coloration. This bee adapts well to managed hives and is commonly used in commercial apiaries.",
+    "behavior": "Italian Honey Bees are calm, productive, and relatively easy to manage. They maintain large brood populations during warm seasons and actively forage for nectar over long distances. Colonies are less defensive than many other honey bee varieties.",
+    "preferences": "This subspecies prefers warm climates and regions with long flowering seasons. It performs best in areas rich with nectar-producing plants and reliable water sources. Italian Honey Bees commonly forage on citrus blossoms, clover, eucalyptus, and fruit trees."
   },
   {
-    "knownAsName": "Common Eastern Bumblebee",
-    "scientificName": "Bombus impatiens",
-    "lifeExpectancy": "1 year",
-    "description": "The Common Eastern Bumblebee is native to North America and is widely used in greenhouse pollination. It has a fuzzy black body with yellow markings on the thorax. This bee plays an important role in pollinating tomatoes, peppers, and berries.",
-    "behavior": "This species is social and forms colonies led by a single queen. Workers gather nectar and pollen while defending the nest from threats. Common Eastern Bumblebees are generally calm and rarely sting unless provoked.",
-    "preferences": "They prefer gardens, farms, meadows, and urban parks with diverse flowers. Underground nesting sites are commonly chosen for colony formation. The species is attracted to flowers with deep nectar sources."
+    "knownAsName": "Carniolan Honey Bee",
+    "scientificName": "Apis mellifera carnica",
+    "lifeExpectancy": "3 - 5 years",
+    "description": "The Carniolan Honey Bee is a dark-colored honey bee subspecies prized for its calm nature and rapid spring population growth. It is native to parts of Central and Eastern Europe. Beekeepers value this bee for its efficient honey gathering and winter survival abilities.",
+    "behavior": "Carniolan Honey Bees are known for being gentle and easy to handle. They quickly adjust colony size based on food availability and are efficient foragers in cooler weather. These bees are also recognized for their strong homing instincts.",
+    "preferences": "This bee prefers temperate and cooler climates with seasonal flowering cycles. It thrives in forested regions, mountain valleys, and agricultural landscapes. Carniolan Honey Bees are attracted to wildflowers, fruit blossoms, and flowering herbs."
   },
   {
-    "knownAsName": "Large Carpenter Bee",
-    "scientificName": "Xylocopa virginica",
-    "lifeExpectancy": "1 year",
-    "description": "The Large Carpenter Bee is a large black bee often mistaken for a bumblebee. Unlike bumblebees, it has a shiny and mostly hairless abdomen. This species is known for drilling tunnels into wood to create nests.",
-    "behavior": "Large Carpenter Bees are mostly solitary insects and do not form large colonies. Females create tunnels in wood where they lay eggs and store pollen for larvae. Males can appear aggressive while guarding territory, but they cannot sting.",
-    "preferences": "They prefer dead wood, fences, decks, and wooden structures exposed to sunlight. Flower-rich gardens and forest edges provide ideal feeding areas. Carpenter Bees are especially attracted to trumpet-shaped flowers with abundant nectar."
+    "knownAsName": "Buckfast Bee",
+    "scientificName": "Apis mellifera buckfast",
+    "lifeExpectancy": "3 - 5 years",
+    "description": "The Buckfast Bee is a hybrid honey bee developed by selective breeding for productivity and disease resistance. It is widely appreciated by beekeepers for its calm temperament and reliable honey yields. This bee adapts well to different climates and hive conditions.",
+    "behavior": "Buckfast Bees are active foragers with strong colony organization and low aggression levels. They are less likely to swarm compared to many other honey bee strains. Colonies remain productive throughout long nectar seasons.",
+    "preferences": "This hybrid species prefers stable hive environments with consistent nectar availability. It performs well in both mild and cooler climates. Buckfast Bees commonly forage on heather, clover, wildflowers, and flowering crops."
   },
   {
-    "knownAsName": "Blue Orchard Mason Bee",
-    "scientificName": "Osmia lignaria",
-    "lifeExpectancy": "1 year",
-    "description": "The Blue Orchard Mason Bee is a small metallic blue bee famous for its pollination efficiency. It is considered one of the best pollinators for fruit orchards. The species is gentle and rarely stings humans.",
-    "behavior": "This bee is solitary and each female creates her own nest independently. Females collect mud to seal nest chambers after laying eggs. Blue Orchard Mason Bees are highly active during spring when fruit trees bloom.",
-    "preferences": "They prefer orchards, gardens, and areas with early spring flowers. Hollow stems, drilled wood holes, and bee hotels are common nesting locations. The species is strongly attracted to apple, cherry, and pear blossoms."
+    "knownAsName": "Caucasian Honey Bee",
+    "scientificName": "Apis mellifera caucasia",
+    "lifeExpectancy": "3 - 5 years",
+    "description": "The Caucasian Honey Bee is known for its long tongue, which allows it to gather nectar from deep flowers. It has a dark gray appearance and produces high-quality honey under suitable conditions. This subspecies is valued for its gentle behavior and strong propolis production.",
+    "behavior": "Caucasian Honey Bees are calm and relatively non-aggressive toward beekeepers. They forage efficiently in cool and damp weather conditions and can work during light rain or fog. Colonies tend to use large amounts of propolis inside the hive.",
+    "preferences": "This bee prefers mountainous and cooler regions with diverse flowering plants. It thrives in environments with long nectar flows and moderate humidity. Caucasian Honey Bees are especially attracted to red clover, berry blossoms, and forest flowers."
   },
   {
-    "knownAsName": "Alfalfa Leafcutter Bee",
-    "scientificName": "Megachile rotundata",
-    "lifeExpectancy": "8 months",
-    "description": "The Alfalfa Leafcutter Bee is a small dark-colored bee known for cutting neat circles from leaves. It is widely used for pollinating alfalfa crops. This species has a compact body and carries pollen beneath its abdomen.",
-    "behavior": "Leafcutter Bees are solitary and each female builds her own nest. They use leaf pieces to line and protect nest chambers. These bees are hardworking pollinators and rarely display aggressive behavior.",
-    "preferences": "They prefer fields, gardens, and open habitats with flowering plants. Hollow stems and small cavities are commonly used for nesting. The species is highly attracted to alfalfa, clover, and wildflowers."
+    "knownAsName": "Russian Honey Bee",
+    "scientificName": "Apis mellifera",
+    "lifeExpectancy": "3 - 5 years",
+    "description": "The Russian Honey Bee is a hardy honey bee strain known for its resistance to pests and harsh winter conditions. It was introduced into commercial beekeeping for its natural tolerance to varroa mites. This bee produces moderate to high honey yields when conditions are favorable.",
+    "behavior": "Russian Honey Bees are active and adaptable foragers that respond quickly to environmental changes. They maintain smaller winter colonies and expand rapidly when nectar becomes available. Colonies can be more defensive than Italian bees but are highly resilient.",
+    "preferences": "This bee prefers cooler climates with distinct seasonal changes and diverse flowering sources. It performs well in rural farmlands, forests, and managed apiaries. Russian Honey Bees commonly forage on clover, buckwheat, wildflowers, and flowering shrubs."
   },
   {
-    "knownAsName": "Tawny Mining Bee",
-    "scientificName": "Andrena fulva",
-    "lifeExpectancy": "1 year",
-    "description": "The Tawny Mining Bee is a furry reddish-orange solitary bee commonly seen in spring. Females have bright orange hair while males are slimmer and darker. This species is an important pollinator for early blooming plants.",
-    "behavior": "Tawny Mining Bees dig tunnels into the ground where they raise their young. Each female works independently without forming colonies. They are peaceful bees and rarely interact aggressively with humans.",
-    "preferences": "They prefer sandy or loose soil in gardens, lawns, and parks. Early spring flowers provide their main food sources. The species is especially attracted to fruit blossoms and dandelions."
+    "knownAsName": "German Black Bee",
+    "scientificName": "Apis mellifera mellifera",
+    "lifeExpectancy": "4 - 5 years",
+    "description": "The German Black Bee is one of the oldest honey bee subspecies in Europe and is recognized for its dark body coloration and strong winter endurance. It has historically been important in northern European beekeeping. This bee is valued for its ability to survive in harsh climates.",
+    "behavior": "German Black Bees are defensive but highly resilient and efficient at conserving resources during winter. They forage steadily even in cooler temperatures and maintain compact colonies. Colonies can become protective when disturbed frequently.",
+    "preferences": "This subspecies prefers northern and temperate climates with long winters and short flowering seasons. It thrives in forests, rural meadows, and traditional apiaries. German Black Bees are attracted to heather, wild berries, and native woodland flowers."
   },
   {
-    "knownAsName": "Green Sweat Bee",
-    "scientificName": "Agapostemon virescens",
-    "lifeExpectancy": "6 months",
-    "description": "The Green Sweat Bee is a metallic green bee known for its bright reflective body. Females often have striped black-and-yellow abdomens while males are more slender. This species is commonly found visiting flowers during warm weather.",
-    "behavior": "Green Sweat Bees are mostly solitary but sometimes nest close together. They are known for occasionally landing on people to collect salt from sweat. These bees are generally non-aggressive and active during daylight hours.",
-    "preferences": "They prefer sunny gardens, meadows, and wildflower patches. Loose soil is important because females build underground nests. The species is attracted to asters, sunflowers, and other nectar-rich flowers."
+    "knownAsName": "Cordovan Honey Bee",
+    "scientificName": "Apis mellifera cordovan",
+    "lifeExpectancy": "3 - 4 years",
+    "description": "The Cordovan Honey Bee is a selectively bred honey bee strain known for its bright golden coloration and gentle temperament. It is closely related to Italian honey bees and is commonly kept by hobbyist beekeepers. This bee is appreciated for its calm handling characteristics.",
+    "behavior": "Cordovan Honey Bees are peaceful and easy to inspect within managed hives. They are active nectar collectors and maintain strong colony populations during productive seasons. Colonies generally show low aggression toward humans.",
+    "preferences": "This strain prefers warm environments with long flowering periods and consistent nectar availability. It thrives in suburban gardens, orchards, and managed apiaries. Cordovan Honey Bees frequently forage on clover, citrus blossoms, and flowering herbs."
   },
   {
-    "knownAsName": "Violet Carpenter Bee",
-    "scientificName": "Xylocopa violacea",
-    "lifeExpectancy": "1 year",
-    "description": "The Violet Carpenter Bee is a large black bee with shimmering violet wings. It is native to Europe and parts of Asia and is among the largest bees in its range. The bee has a powerful appearance but is usually calm.",
-    "behavior": "This species is solitary and bores tunnels into wood for nesting. Females prepare chambers for larvae using pollen and nectar stores. Adults are strong fliers and can travel long distances while foraging.",
-    "preferences": "They prefer warm climates, flowering gardens, and forest edges. Dead wood and untreated timber are commonly selected for nests. Wisteria, lavender, and fruit blossoms are among their preferred flowers."
+    "knownAsName": "African Honey Bee",
+    "scientificName": "Apis mellifera scutellata",
+    "lifeExpectancy": "2 - 3 years",
+    "description": "The African Honey Bee is a highly adaptable honey bee subspecies native to sub-Saharan Africa. It is recognized for its resilience, rapid colony growth, and strong survival instincts. This bee contributes significantly to honey production in tropical regions.",
+    "behavior": "African Honey Bees are extremely active and highly defensive when protecting their hive. They swarm frequently and quickly establish new colonies in suitable environments. Colonies respond rapidly to threats and environmental changes.",
+    "preferences": "This bee prefers tropical and subtropical climates with year-round flowering plants. It thrives in savannas, forests, and agricultural regions with abundant nectar sources. African Honey Bees commonly forage on acacia flowers, wild shrubs, and tropical blossoms."
   },
   {
-    "knownAsName": "Dwarf Honey Bee",
-    "scientificName": "Apis florea",
-    "lifeExpectancy": "2 years",
-    "description": "The Dwarf Honey Bee is one of the smallest honey bee species in the world. It builds a single exposed comb instead of nesting inside cavities. This species is native to South and Southeast Asia.",
-    "behavior": "Dwarf Honey Bees are social and live in organized colonies with queens and workers. Colonies are smaller than those of larger honey bee species. These bees are alert and quickly defend their nests against predators.",
-    "preferences": "They prefer tropical forests, shrubs, and warm lowland areas. Thin tree branches are commonly chosen for nesting. The species feeds on nectar and pollen from small tropical flowers."
+    "knownAsName": "Cape Honey Bee",
+    "scientificName": "Apis mellifera capensis",
+    "lifeExpectancy": "3 - 5 years",
+    "description": "The Cape Honey Bee is a unique honey bee subspecies native to South Africa and known for its unusual reproductive traits. It produces quality honey and adapts well to coastal climates. This bee is studied extensively for its genetic characteristics.",
+    "behavior": "Cape Honey Bees are intelligent foragers and highly adaptive colony builders. Workers are capable of producing female offspring under certain conditions, which is rare among honey bees. Colonies can become competitive when resources are limited.",
+    "preferences": "This subspecies prefers Mediterranean-style climates with mild winters and seasonal blooms. It thrives in coastal vegetation, shrublands, and flowering agricultural regions. Cape Honey Bees commonly forage on fynbos flowers and flowering fruit crops."
+  },
+  {
+    "knownAsName": "Syrian Honey Bee",
+    "scientificName": "Apis mellifera syriaca",
+    "lifeExpectancy": "2 - 4 years",
+    "description": "The Syrian Honey Bee is a heat-tolerant honey bee subspecies native to the Middle East. It is well adapted to dry climates and scarce floral conditions. Beekeepers value this bee for its persistence and ability to forage during hot weather.",
+    "behavior": "Syrian Honey Bees are active foragers that begin collecting nectar early in the morning to avoid extreme midday heat. Colonies are energetic and capable of surviving difficult environmental conditions. They can become defensive when hive resources are threatened.",
+    "preferences": "This bee prefers hot and arid climates with drought-resistant flowering plants. It thrives in rocky landscapes, dry valleys, and cultivated farmlands. Syrian Honey Bees commonly forage on thyme, citrus blossoms, and desert wildflowers."
+  },
+  {
+    "knownAsName": "Anatolian Honey Bee",
+    "scientificName": "Apis mellifera anatoliaca",
+    "lifeExpectancy": "3 - 5 years",
+    "description": "The Anatolian Honey Bee is a hardy subspecies native to Turkey and surrounding regions. It is valued for its strong adaptability, disease resistance, and consistent honey production. This bee performs well across varied environmental conditions.",
+    "behavior": "Anatolian Honey Bees are energetic foragers and capable of surviving sudden weather changes. Colonies are productive and maintain balanced brood populations throughout the season. They can defend the hive effectively against predators and pests.",
+    "preferences": "This bee prefers mountainous and temperate climates with diverse plant life. It thrives in highlands, agricultural valleys, and forested regions. Anatolian Honey Bees frequently forage on chestnut blossoms, thyme, and wild meadow flowers."
+  },
+  {
+    "knownAsName": "Cyprian Honey Bee",
+    "scientificName": "Apis mellifera cypria",
+    "lifeExpectancy": "3 - 4 years",
+    "description": "The Cyprian Honey Bee is a Mediterranean honey bee subspecies known for its excellent honey production and resistance to some local pests. It has a slender body and strong flight ability. This bee has adapted well to island climates and dry summers.",
+    "behavior": "Cyprian Honey Bees are energetic and highly alert while foraging and guarding the hive. Colonies grow rapidly during strong nectar flows and respond quickly to environmental disturbances. They are more defensive than many European honey bee strains.",
+    "preferences": "This subspecies prefers warm Mediterranean climates with long dry summers and mild winters. It thrives in coastal regions, olive groves, and flowering hillsides. Cyprian Honey Bees are attracted to citrus blossoms, thyme, and native Mediterranean herbs."
+  },
+  {
+    "knownAsName": "Yemeni Honey Bee",
+    "scientificName": "Apis mellifera jemenitica",
+    "lifeExpectancy": "2 - 4 years",
+    "description": "The Yemeni Honey Bee is a small but highly resilient honey bee subspecies adapted to desert and semi-desert environments. It is capable of surviving extreme heat and limited food resources. This bee is important for traditional honey production in the Arabian Peninsula.",
+    "behavior": "Yemeni Honey Bees are fast-moving and highly active during cooler parts of the day. Colonies adjust quickly to changing environmental conditions and conserve resources during drought periods. They are efficient at locating sparse nectar sources.",
+    "preferences": "This bee prefers hot desert climates with seasonal flowering shrubs and trees. It thrives in oasis regions, dry mountain valleys, and arid farmlands. Yemeni Honey Bees commonly forage on sidr trees, acacia flowers, and desert herbs."
+  },
+  {
+    "knownAsName": "Giant Honey Bee",
+    "scientificName": "Apis dorsata",
+    "lifeExpectancy": "2 - 3 years",
+    "description": "The Giant Honey Bee is one of the largest honey-producing bee species in the world and is native to South and Southeast Asia. It builds massive open-air combs that can contain large quantities of honey. This species is important in wild honey harvesting traditions.",
+    "behavior": "Giant Honey Bees are highly defensive and protect their exposed nests aggressively. Colonies migrate seasonally to follow flowering cycles and favorable weather conditions. These bees are powerful long-distance foragers.",
+    "preferences": "This species prefers tropical forests, cliffs, and tall tree canopies with abundant seasonal blooms. It thrives in warm environments with rich biodiversity. Giant Honey Bees commonly forage on tropical fruit blossoms and forest wildflowers."
+  },
+  {
+    "knownAsName": "Asian Honey Bee",
+    "scientificName": "Apis cerana",
+    "lifeExpectancy": "2 - 4 years",
+    "description": "The Asian Honey Bee is a smaller honey-producing bee species widely kept across Asia for traditional beekeeping. It is naturally resistant to several pests and adapts well to local environmental conditions. This species produces moderate amounts of honey while providing effective pollination.",
+    "behavior": "Asian Honey Bees are agile foragers with strong defensive behaviors against predators such as hornets. Colonies are smaller than those of Western Honey Bees but are highly efficient in resource management. They swarm readily during favorable seasons.",
+    "preferences": "This species prefers tropical and subtropical regions with diverse native vegetation. It thrives in forests, rural villages, and mountainous agricultural areas. Asian Honey Bees frequently forage on fruit blossoms, tea flowers, and tropical wild plants."
   }
 ]

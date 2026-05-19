@@ -9,8 +9,10 @@ import { useApiariesQuery } from "@/core/composables/useApiary";
 import { useCalendarQuery } from "@/core/composables/useCalendar";
 import MonthChangerWidget from "../components/calendar/MonthChangerWidget.vue";
 import { useHivesQuery } from "@/core/composables/hive/useHive";
+import { useI18n } from "vue-i18n";
 
 const s = useCssModule()
+const { t } = useI18n()
 const selectedApiary = ref<{id: number, name: string }>({ id: -1, name: "Selected"})
 const selectedDate = ref(new Date().nextMonth().previousMonth())
 
@@ -32,7 +34,7 @@ const { events } = useCalendarQuery({
         :class="s.container"
     >
         <ToolBar 
-            label="General calendar"
+            :label="t('calendar.title')"
         >
             <template #header>
                 <MonthChangerWidget
@@ -56,10 +58,10 @@ const { events } = useCalendarQuery({
                                 >
                                     <p
                                     >
-                                        Apiary
+                                        {{ t('calendar.filter_apiary') }}
                                     </p>
                                 </div>
-                                <p>{{ selectedApiary.name === "" ? "Selected" : selectedApiary.name }}</p>
+                                <p>{{ selectedApiary.name === "" ? t('calendar.filter_default') : selectedApiary.name }}</p>
                             </div>
                             <Icon
                                 :class="s.icon"

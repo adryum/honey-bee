@@ -18,8 +18,10 @@ import StringField from '../input/fields/used/StringField.vue';
 import StringFieldTopPart from '../input/dropdowns/dropdownItems/top/StringFieldTopPart.vue';
 import type { HiveModelDB } from '@/core/stores/Models';
 import ToolBar from '../ToolBar.vue';
+import { useI18n } from "vue-i18n";
 
 const s = useCssModule()
+const { t } = useI18n()
 const props = defineProps<{
     apiaryId: number
 }>()
@@ -40,7 +42,7 @@ const hivesNotInApiary = computed(() => hives.value?.filter(hive => hive.apiaryI
 
 const { getFormValidee, isFormValid, showThatIsRequired, clear } = useFormValidator()
 
-const tabs = ['Create New', 'Move Existing']
+const tabs = [t('modal.hive_tab_create'), t('modal.hive_tab_existing')]
 const selectedTab = ref(tabs[0])
 
 const name = ref('')
@@ -93,7 +95,7 @@ watch(() => exposed.isOpen(), (val) => {
 <template>
 <ModalBase
     ref="modal"
-    label="Add Hive"
+    :label="t('modal.add_hive_title')"
 >
     <template #body>
     <div :class="s.body">
@@ -105,7 +107,7 @@ watch(() => exposed.isOpen(), (val) => {
                     ]"
                     @click="switchTab(tabs[0])"
                 >
-                    Create new
+                    {{ tabs[0] }}
                 </p>
                 <p 
                     :class="[
@@ -114,7 +116,7 @@ watch(() => exposed.isOpen(), (val) => {
                     ]"
                     @click="switchTab(tabs[1])"
                 >
-                    Add existing
+                    {{ tabs[1] }}
                 </p>
             </div>
 
@@ -149,7 +151,7 @@ watch(() => exposed.isOpen(), (val) => {
                     v-if="hivesInApiary.length > 0"
                     :class="s.seperatorText"
                 >
-                    In this apiary
+                    {{ t('modal.hive_section_current') }}
                 </p>
                 <div 
                     v-if="hivesInApiary.length > 0"
@@ -183,7 +185,7 @@ watch(() => exposed.isOpen(), (val) => {
                 />
                 <div :class="s.list">
                     <StringField
-                        label="Name"
+                        :label="t('form.label_name')"
                         :selection="name"
                         :validee="getFormValidee({
                             isValid: () => !!name,
@@ -194,7 +196,7 @@ watch(() => exposed.isOpen(), (val) => {
                     />
 
                     <StringMultipleField
-                        label="Description"
+                        :label="t('form.label_description')"
                         :selection="description"
                         :validee="getFormValidee({
                             isValid: () => !!description,
@@ -209,7 +211,7 @@ watch(() => exposed.isOpen(), (val) => {
                     >
                         <template #head="{ dropdown }">
                             <StringFieldTopPart
-                                label="Type"
+                                :label="t('form.label_type')"
                                 :dropdown="dropdown"
                                 :selection="type"
                                 :validee="getFormValidee({
@@ -235,7 +237,7 @@ watch(() => exposed.isOpen(), (val) => {
                     </ModularDropdown>
 
                     <IconTextButton
-                        text="Create"
+                        :text="t('button.create')"
                         :disabled="!isFormValid"
                         :is-submit="true"
                         :hide-icon="true"

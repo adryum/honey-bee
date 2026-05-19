@@ -9,8 +9,10 @@ import ModalBase from './ModalBase.vue';
 import { useModalBase } from '@/core/composables/useModalBase';
 import StringField from '../input/fields/used/StringField.vue';
 import StringMultipleField from '../input/fields/used/StringMultipleField.vue';
+import { useI18n } from "vue-i18n";
 
 const s = useCssModule()
+const { t } = useI18n()
 const props = defineProps<{
 }>()
 
@@ -46,7 +48,7 @@ watch(() => exposed.isOpen(), (val) => {
 <template>
 <ModalBase
     ref="modal"
-    label="Add Apiary"
+    :label="t('modal.add_apiary_title')"
 >
     <template #body>
     <div :class="s.grid">
@@ -56,7 +58,7 @@ watch(() => exposed.isOpen(), (val) => {
         />
         <div :class="s.fields">
             <StringField
-                label="Name"
+                :label="t('form.label_name')"
                 :selection="name"
                 :validee="getFormValidee({
                     isValid: () => !!name,
@@ -67,7 +69,7 @@ watch(() => exposed.isOpen(), (val) => {
             />
 
             <StringMultipleField
-                label="Description"
+                :label="t('form.label_description')"
                 :selection="description"
                 :validee="getFormValidee({
                     isValid: () => !!description,
@@ -85,7 +87,7 @@ watch(() => exposed.isOpen(), (val) => {
                 :is-loading="isCreatingApiary"
                 :disabled="!isFormValid"
                 :hide-icon="true"
-                text="Create"
+                :text="t('button.create')"
                 @click="createApiary" 
             />
         </div>

@@ -1,0 +1,162 @@
+{
+    "hiveOverview": {
+        "yield":          "Yield",
+        "info":           "Info",
+        "calendarEvents": "Calendar events",
+        "actionHistory":  "Action history",
+        "medicine":       "Medicine",
+        "notes":          "Notes",
+        "queen":          "Queen",
+        "suppers":        "Suppers"
+    },
+    "apiaries": "Apiaries",
+    "create-apiary": "Create apiary",
+    "search-apiaries": "Search apiaries...",
+    "search-hives": "Search hives...",
+    "name": "Name",
+    "location": "Location",
+    "hives": "Hives",
+    "create-inspection": "Create inspection",
+    "create-hive": "Create hive",
+    "add-hive": "Add hive",
+    "edit": "Edit",
+    "delete": "Delete",
+    "created-at": "Created at",
+    "login": {
+        "title": "HoneyBee",
+        "button_login": "Login with Google",
+        "link_support": "Contact support"
+    },
+    "inspections": {
+        "page_title": "Inspections"
+    },
+    "pagination": {
+        "previous": "Previous",
+        "next": "Next"
+    },
+    "profile": {
+        "location_placeholder": "Rīga"
+    },
+    "calendar": {
+        "title": "General calendar",
+        "filter_apiary": "Apiary",
+        "filter_default": "Selected",
+        "label_today": "( Today )",
+        "label_tasks": "tasks"
+    },
+    "admin": {
+        "page_title": "Admin panel",
+        "button_add_entry": "Add entry"
+    },
+    "navigation": {
+        "home": "Home",
+        "apiaries": "Apiaries",
+        "inspections": "Inspections",
+        "sidebar_close": "Close"
+    },
+    "profile_widget": {
+        "menu_profile": "Profile",
+        "menu_logout": "Logout",
+        "menu_admin": "Admin Panel"
+    },
+    "form": {
+        "inspect_abnormal_behavior": "Abnormal bee behavior?",
+        "label_description": "Description",
+        "inspect_swarming": "Swarming?",
+        "inspect_additional_feeding": "Need additional feeding?",
+        "inspect_queen_alive": "Queen alive?",
+        "inspect_queen_laying": "Is queen laying eggs?",
+        "inspect_queen_laying_incorrect": "Is queen laying eggs incorrectly?",
+        "inspect_honey_frames_needed": "Does hive need more honey frames?",
+        "label_amount": "Amount",
+        "inspect_breeding_frames_needed": "Does hive need more breeding frames?",
+        "inspect_taking_frames": "Taking out frames?",
+        "inspect_honey_frames_amount": "Honey frame amount",
+        "inspect_breeding_frames_amount": "Breeding frame amount",
+        "inspect_medical_needed": "Is medical action needed?",
+        "inspect_hive_damage": "Is there any hive damage?",
+        "label_name": "Name",
+        "label_type": "Type",
+        "label_born": "Born",
+        "label_specie": "Specie",
+        "label_title": "Title",
+        "label_content": "Content",
+        "label_honey_kg": "Process honey in KG",
+        "label_email": "Email"
+    },
+    "button": {
+        "submit": "Submit",
+        "create": "Create",
+        "update": "Update",
+        "add": "Add",
+        "process": "Process",
+        "remove": "Remove",
+        "replace": "Replace",
+        "edit": "Edit",
+        "search": "Search",
+        "clear": "Clear",
+        "today": "Today"
+    },
+    "searchbar": {
+        "hint": "...",
+        "button": "Search"
+    },
+    "image": {
+        "dropzone_hint": "Click or drop image here!",
+        "button_clear": "Clear"
+    },
+    "modal": {
+        "add_hive_title": "Add Hive",
+        "hive_tab_create": "Create new",
+        "hive_tab_existing": "Add existing",
+        "hive_section_current": "In this apiary",
+        "edit_hive_title": "Edit hive",
+        "add_apiary_title": "Add Apiary",
+        "add_queen_title": "Add bee",
+        "edit_queen_title": "Edit queen",
+        "add_note_title": "Add Note",
+        "process_inspection_title": "Process Inspection",
+        "whitelist_entry_title": "Add Whitelist entry"
+    },
+    "inspection": {
+        "label_id": "Inspection ID:",
+        "label_apiary": "Apiary:",
+        "label_created": "Created at:",
+        "label_hive_count": "Hive count:",
+        "label_honey_frames": "Taken honey frames:",
+        "label_honey_average": "Honey average per frame:"
+    },
+    "table": {
+        "header_nr": "Nr.",
+        "header_email": "Email",
+        "header_role": "Role",
+        "header_status": "Status",
+        "header_actions": "Actions",
+        "header_apiary": "Apiary",
+        "header_hive_count": "Hive count",
+        "header_processed": "Has been Processed",
+        "header_creator": "Creator",
+        "header_creation_date": "Creation date",
+        "header_is_whitelisted": "Is whitelisted"
+    },
+    "queen": {
+        "section_title": "Queen",
+        "message_no_queen": "No queen in this hive",
+        "label_born": "Born",
+        "label_life_expectancy": "Life expectancy",
+        "label_placed_here": "Placed here at",
+        "label_age": "Age"
+    },
+    "message": {
+        "no_species": "No matching species!"
+    },
+    "card": {
+        "label_in_storage": "In storage:",
+        "label_total_registered": "Total registered:",
+        "placeholder_noname": "NONAME",
+        "placeholder_nan": "nan"
+    },
+    "apiary": {
+        "label_hives": "Hives"
+    }
+}

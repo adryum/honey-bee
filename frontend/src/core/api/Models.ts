@@ -1,4 +1,4 @@
-import type { HistoryActionType, HiveType, NoteTypes, Role } from "../DatabaseEnums"
+import type { HistoryActionType, HiveType, NoteTypes, UserRoles } from "../DatabaseEnums"
 import type { HistoryEntryDB } from "../stores/Models"
 
 export type ApiaryCreateRequestModel = {
@@ -135,7 +135,7 @@ export type WhitelistEntryGetModel = {
 export type WhitelistEntryUpdateModel = {
     id:        number
     email:     string
-    role:      Role
+    role:      UserRoles
     isEnabled: boolean
 }
 
@@ -147,13 +147,13 @@ export type WhitelistEntryCreateModel = {
 export type UserEntryUpdateModel = {
     id:            number
     email:         string
-    role:          Role
+    role:          UserRoles
     isWhitelisted: boolean
 }
 export type UserEntryGetModel = {
     id:              number
     email:           string
-    role:            Role
+    role:            UserRoles
     whitelistStatus: boolean | null
 }
 

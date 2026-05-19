@@ -1,5 +1,4 @@
-import fs from 'fs/promises';
-import path from 'path';
+import type { UserRoles } from "../DatabaseEnums";
 
 export function formatDateWithOrdinal(
     dateTime: string, 
@@ -68,11 +67,12 @@ export function getAge(bornTs: string, todayTs: string): string {
 }
 
 export async function imageUrlToFile(url: string, fileName?: string): Promise<File> {
-  const response = await fetch(url);
-  if (!response.ok) throw new Error(`Failed to fetch image: ${response.statusText}`);
-  
-  const blob = await response.blob();
-  const name = fileName ?? new URL(url).pathname.split('/').pop() ?? 'image';
-  
-  return new File([blob], name, { type: blob.type });
+    const response = await fetch(url);
+    if (!response.ok) throw new Error(`Failed to fetch image: ${response.statusText}`);
+    
+    const blob = await response.blob();
+    const name = fileName ?? new URL(url).pathname.split('/').pop() ?? 'image';
+    
+    return new File([blob], name, { type: blob.type });
 }
+

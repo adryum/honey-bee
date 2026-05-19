@@ -1,4 +1,4 @@
-import type { HistoryActionType, HiveType, NoteTypes, Role } from "../DatabaseEnums"
+import type { HistoryActionType, HiveType, NoteTypes, UserRoles } from "../DatabaseEnums"
 
 export type ApiaryModelDB = {
     id:           number
@@ -74,7 +74,7 @@ export type CalendarDayModel = {
 export type WhitelistEntryModelDB = {
     id:           number
     email:        string
-    role:         Role
+    role:         UserRoles
     isEnabled:    boolean
     isRegistered: boolean
 }
@@ -82,13 +82,13 @@ export type WhitelistEntryModelDB = {
 export type UserEntryModelDB = {
     id:            number
     email:         string
-    role:          Role
+    role:          UserRoles
     isWhitelisted: boolean
 }
 
 export type UserModelDB = {
     id:       number
-    role:     Role
+    role:     UserRoles
     email:    string
     username: string
     picture:  string

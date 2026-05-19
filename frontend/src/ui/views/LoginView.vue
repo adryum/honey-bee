@@ -4,8 +4,10 @@ import {ref} from "vue";
 import IconTextButton from "@/ui/components/input/buttons/IconTextButton.vue";
 import { SVG } from "@/assets/svgs/SVGLoader";
 import { useAuthStore } from "@/core/stores/useAuthStore";
+import { useI18n } from "vue-i18n";
 
 const s = useCssModule()
+const { t } = useI18n()
 const authStore = useAuthStore()
 const email = ref('')
 const password = ref('') 
@@ -33,13 +35,13 @@ onMounted(async () => {
         @submit.prevent="login" 
     >
         <img :class="s.logo" src="@/assets/images/happybee.png" alt="logo">
-        <h1 :class="s.title">HoneyBee</h1>
+        <h1 :class="s.title">{{ t('login.title') }}</h1>
         
         <IconTextButton
             :class="[s.signIn]"
             :icon="SVG.Checkmark"
             :is-submit="true"
-            text="Login with Google"
+            :text="t('login.button_login')"
             @click="login"
         >
             <img :class="s.icon" src="@/assets/images/GoogleIcon.png" alt="logo">
@@ -48,7 +50,7 @@ onMounted(async () => {
         <a 
             :class="s.helpText"
             href="/fuck-you"
-        >Contact support</a>
+        >{{ t('login.link_support') }}</a>
     </form>
 </div>
 </template>

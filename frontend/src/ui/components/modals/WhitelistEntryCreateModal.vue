@@ -1,7 +1,7 @@
 <script setup lang="ts">
 import { ref, useCssModule, watch } from "vue";
 import ModalBase from "./ModalBase.vue";
-import { Role } from "@/core/DatabaseEnums";
+import { UserRoles } from "@/core/DatabaseEnums";
 import type { WhitelistEntryCreateModel } from "@/core/api/Models";
 import { useAdminMutations } from "@/core/composables/useAdmin";
 import { useFormValidator } from "@/core/composables/useFormValidator";
@@ -23,7 +23,7 @@ const { getFormValidee, isFormValid, clear } = useFormValidator()
 const { addWhitelistEntry, isAddingWhitelistEntry } = useAdminMutations()
 
 const email = ref('')
-const role = ref<Role | undefined>()
+const role = ref<UserRoles | undefined>()
 const isEnabled = ref<boolean>(true)
         
 async function add() {
@@ -78,13 +78,13 @@ watch(() => exposed.isOpen(), (val) => {
                                 onClear: () => role = undefined,
                                 onInitialize: () => role = undefined
                             })"
-                            @input="value => role = value as Role"
+                            @input="value => role = value as UserRoles"
                             @click="dropdown.isShown.value = true"
                         />
                     </template>
                     <template #list="{ dropdown }">
                         <IconTextItem
-                            v-for="item in Object.values(Role).filter(type => type !== Role.NOT_A_ROLE)"
+                            v-for="item in Object.values(UserRoles).filter(type => type !== UserRoles.NOT_A_ROLE)"
                             :key="item"
                             :options="{
                                 svg:  SVG.Apiaries,

@@ -10,8 +10,10 @@ import ToolBar from "../components/ToolBar.vue";
 import { useRouter } from "vue-router";
 import { RouterViewPaths } from "@/core/router";
 import IconTextButton from "../components/input/buttons/IconTextButton.vue";
+import { useI18n } from "vue-i18n";
 
 const s = useCssModule()
+const { t } = useI18n()
 const props = defineProps<{
     tab: AdminTab
 }>()
@@ -33,7 +35,7 @@ function changeTab(tab: AdminTab) {
 <template>
 <div :class="s.container">
     <ToolBar 
-        label="Admin panel"
+        :label="t('admin.page_title')"
         :tabs="Object.values(AdminTab)" 
         :selectedTab="tab" 
         @changeTab="changeTab"
@@ -41,7 +43,7 @@ function changeTab(tab: AdminTab) {
         <template #header>
             <IconTextButton
                 v-if="tab === AdminTab.Whitelist"
-                text="Add entry"
+                :text="t('admin.button_add_entry')"
                 :icon="SVG.Plus"
                 @click="createWhitelistEntry?.open()"
             />

@@ -5,8 +5,10 @@ import InspectionTable from "../components/tables/InspectionTable.vue";
 import { useInspectionsQuery, type InspectionFilters } from "@/core/composables/useInspection";
 import IconTextButton from "../components/input/buttons/IconTextButton.vue";
 import { SVG } from "@/assets/svgs/SVGLoader";
+import { useI18n } from "vue-i18n";
 
 const s = useCssModule()
+const { t } = useI18n()
 const props = defineProps<{}>()
 
 const filters = ref<InspectionFilters>({
@@ -25,7 +27,7 @@ const { inspectionTableEntries, nextPage, prevPage } = useInspectionsQuery(filte
 >
     <ToolBar
         :class="s.navbar"
-        label="Inspections"
+        :label="t('inspections.page_title')"
     />
     <InspectionTable
         :class="s.table"
@@ -34,13 +36,13 @@ const { inspectionTableEntries, nextPage, prevPage } = useInspectionsQuery(filte
         :limit="filters.limit!"
     >
         <IconTextButton 
-            text="Previous"
+            :text="t('pagination.previous')"
             :icon="SVG.ArrowLeftSmall"
             :disabled="(filters?.page) === 1"
             @click="prevPage"
         />
         <IconTextButton 
-            text="Next"
+            :text="t('pagination.next')"
             :swap-icon-position="true"
             :icon="SVG.ArrowRightSmall"
             :disabled="!nextPage"
