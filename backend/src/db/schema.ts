@@ -155,7 +155,7 @@ export const inspections = mysqlTable("inspections", {
 export const queenSpecies = mysqlTable("queen_species", {
 	id:             bigint({ mode: "number" }).autoincrement().notNull(),
 	knownAsName:    varchar("known_as_name", { length: 100 }).default("").notNull(),
-	scientificName: varchar("scientific_name", { length: 100 }).default("").notNull(),
+	scientificName: varchar("scientific_name", { length: 100 }).default("").notNull().unique(),
 	lifeExpectancy: varchar("life_expectancy", { length: 50 }).notNull(),
 	description:    text().notNull(),
 	behavior:       text().notNull(),

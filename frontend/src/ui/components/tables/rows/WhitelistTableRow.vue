@@ -95,7 +95,7 @@ function cancel() {
             </template>
             <template #list="{dropdown}">
                 <TextDropdownBottomPart
-                    v-for="role in Object.values(UserRoles).filter(role => role !== UserRoles.NOT_A_ROLE)"
+                    v-for="role in Object.values(UserRoles).filter(role => role !== UserRoles.NOT_A_ROLE && role !== UserRoles.ANY)"
                     :class="s.text"
                     :dropdown="dropdown" 
                     :text="role"
