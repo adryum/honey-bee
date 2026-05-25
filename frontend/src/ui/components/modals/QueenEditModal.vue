@@ -13,8 +13,10 @@ import type { QueenModelDB, SpeciesModelDB } from '@/core/stores/Models';
 import ImageDropZone from '../input/fields/ImageDropZone.vue';
 import StringFieldTopPart from '../input/dropdowns/dropdownItems/top/StringFieldTopPart.vue';
 import { imageUrlToFile } from '@/core/utils/Utils';
+import { useI18n } from 'vue-i18n';
 
 const s = useCssModule()
+const { t } = useI18n()
 const props = defineProps<{
     hiveId: number,
     queen:  QueenModelDB
@@ -62,7 +64,7 @@ async function updateQueen() {
 <template>
 <ModalBase
     ref="modal"
-    label="Edit queen"
+    :label="t('modal.edit_queen_title')"
 >
     <template #body>
     <div :class="s.grid">
@@ -71,7 +73,7 @@ async function updateQueen() {
             v-model:imageFile="image"
         />
         <DateField
-            label="Born"
+            :label="t('form.label_born')"
             :formValidee="getFormValidee({
                 isValid: () => !!bornDate,
                 onClear: () => bornDate = '',
@@ -85,7 +87,7 @@ async function updateQueen() {
         >
             <template #head="{ dropdown }">
                 <StringFieldTopPart
-                    label="Specie"
+                    :label="t('form.label_specie')"
                     :selection="specieSearchName"
                     :dropdown="dropdown"
                     :validee="getFormValidee({
@@ -101,7 +103,7 @@ async function updateQueen() {
                     v-if="!species?.length"
                     :class="s.item"
                     @click="dropdown.isShown.value = false"
-                >No matching species!</p>
+                >{{ t('message.no_species') }}</p>
 
                 <p
                     v-for="loopSpecie in species"
@@ -114,7 +116,7 @@ async function updateQueen() {
         </ModularDropdown>
 
         <IconTextButton 
-            text="Add"
+            :text="t('button.add')"
             :disabled="!isFormValid" 
             :is-aligned-center="true"
             :is-submit="true"

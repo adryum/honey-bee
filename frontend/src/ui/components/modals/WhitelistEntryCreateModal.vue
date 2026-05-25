@@ -12,8 +12,10 @@ import IconTextItem from "../input/dropdowns/dropdownItems/bottom/IconTextItem.v
 import IconTextButton from "../input/buttons/IconTextButton.vue";
 import StringField from "../input/fields/used/StringField.vue";
 import StringFieldTopPart from "../input/dropdowns/dropdownItems/top/StringFieldTopPart.vue";
+import { useI18n } from "vue-i18n";
 
 const s = useCssModule()
+const { t } = useI18n()
 const props = defineProps<{}>()
 
 const { modal, exposed } = useModalBase()
@@ -47,14 +49,14 @@ watch(() => exposed.isOpen(), (val) => {
 <template>
 <ModalBase
     ref="modal"
-    label="Add Whitelist entry"
+    :label="t('modal.whitelist_entry_title')"
 >
     <template #body>
         <div :class="s.body">
             <div :class="s.fields">
                 <StringField
                     :class="s.email"
-                    label="Email"
+                    :label="t('form.label_email')"
                     :selection="email"
                     :validee="getFormValidee({
                         isValid: () => !!email,
@@ -70,7 +72,7 @@ watch(() => exposed.isOpen(), (val) => {
                 >
                     <template #head="{ dropdown }">
                         <StringFieldTopPart
-                            label="Type"
+                            :label="t('form.label_type')"
                             :dropdown="dropdown"
                             :selection="role"
                             :validee="getFormValidee({
@@ -96,7 +98,7 @@ watch(() => exposed.isOpen(), (val) => {
                 </ModularDropdown>
             </div>
             <IconTextButton 
-                text="Add"
+                :text="t('button.add')"
                 :disabled="!isFormValid" 
                 :hide-icon="true"
                 :is-submit="true"

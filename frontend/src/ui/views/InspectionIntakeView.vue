@@ -12,9 +12,11 @@ import { useApiaryQuery } from "@/core/composables/useApiary";
 import { useInspectionMutation } from "@/core/composables/useInspection";
 import { useRouter } from "vue-router";
 import { useHivesQuery } from "@/core/composables/hive/useHive";
+import { useI18n } from "vue-i18n";
 
 const s = useCssModule()
 const router = useRouter()
+const { t } = useI18n()
 const props = defineProps<{
     apiaryId: number
 }>()
@@ -168,7 +170,7 @@ watch(hives, (val) => {
         <InspectionForm
             v-if="selectedForm"
             :class="s.form"
-            :submit-button-text="selectedFormHive.isLastHive ? 'Submit inspection' : 'Save and go to the next hive'"
+            :submit-button-text="selectedFormHive.isLastHive ? t('inspection.submit_last') : t('inspection.submit_next')"
             :allow-submiting="!isCreatingInspection && !isSubmitted"
             @submit="saveForm(selectedForm)"
             v-model:form="selectedForm"
@@ -189,7 +191,7 @@ watch(hives, (val) => {
             <label 
                 for="apiaryHives"
                 :class="s.label"
-            >{{ apiary?.name || 'Apiary' }} hives</label>
+            >{{ apiary?.name || t('status.no_apiary') }} {{ t('hives') }}</label>
         </div>
 
         <hr :style="{

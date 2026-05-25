@@ -145,7 +145,16 @@
         "label_born": "Dzimis",
         "label_life_expectancy": "Dzīves ilgums",
         "label_placed_here": "Ievietota šeit",
-        "label_age": "Vecums"
+        "label_age": "Vecums",
+        "nr": "NR:",
+        "species": "Suga",
+        "time_in_hive": "Laiks stropā",
+        "placed_here_at": "Ievietota šeit",
+        "about": "Par",
+        "no_info": "Nav informācijas par šo sugu",
+        "description": "Apraksts",
+        "behavior": "Uzvedība",
+        "preferences": "Preferences"
     },
     "message": {
         "no_species": "Nav atbilstošas sugas!"
@@ -157,6 +166,65 @@
         "placeholder_nan": "nav"
     },
     "apiary": {
-        "label_hives": "Stropi"
-    }
+        "label_hives": "Stropi",
+        "menu_overview": "Pārskats",
+        "menu_delete": "Dzēst"
+    },
+    "status": {
+        "yes": "Jā",
+        "no": "Nē",
+        "allowed": "Atļauts",
+        "denied": "Liegts",
+        "deleted_apiary": "Dzēsta drava",
+        "deleted_user": "Dzēsts lietotājs",
+        "unknown_hive": "Nezināms strops",
+        "not_set": "Nav noteikts",
+        "no_apiary": "Nav dravas"
+    },
+    "fallback": {
+        "no_title": "Bez virsraksta",
+        "no_type": "Nav tipa",
+        "unknown": "Nezināms",
+        "no_description": "Nav apraksta",
+        "empty": "Tukšs",
+        "noname": "BEZ NOSAUKUMA",
+        "nan": "nav",
+        "selection": "atlase"
+    },
+    "action": {
+        "open": "Atvērt",
+        "exit": "Iziet",
+        "go": "Aiziet",
+        "overview": "Pārskats"
+    },
+    "calendar": {
+        "title": "Vispārējais kalendārs",
+        "filter_apiary": "Drava",
+        "filter_default": "Visas dravas",
+        "label_today": "( Šodien )",
+        "label_tasks": "uzdevumi",
+        "create_event": "Izveidot notikumu",
+        "create_task": "Izveidot uzdevumu",
+        "search_task": "Meklēt uzdevumu",
+        "day": "diena",
+        "month": "mēnesis",
+        "year": "gads"
+    },
+    "hive": {
+        "created_at": "Izveidots",
+        "location": "Atrašanās vieta",
+        "type": "Tips"
+    },
+    "inspection": {
+        "label_id": "Inspekcijas ID:",
+        "label_apiary": "Drava:",
+        "label_created": "Izveidots:",
+        "label_hive_count": "Stropu skaits:",
+        "label_honey_frames": "Paņemtie medus kadri:",
+        "label_honey_average": "Vidējais medus daudzums uz kadra:",
+        "submit_last": "Iesniegt inspekciju",
+        "submit_next": "Saglabāt un pāriet uz nākamo stropu",
+        "review_exit": "Iziet"
+    },
+    "remove": "Noņemt"
 }

@@ -2,8 +2,10 @@
 import { useCssModule } from "vue";
 import InspectionTableRow from "./rows/InspectionTableRow.vue";
 import type { InspectionEntryModelDB } from "@/core/stores/Models";
+import { useI18n } from "vue-i18n";
 
 const s = useCssModule()
+const { t } = useI18n()
 const props = defineProps<{
     entries: InspectionEntryModelDB[]
     page: number
@@ -25,37 +27,37 @@ const props = defineProps<{
             <td 
                 :class="s.nr"
             >
-                <p :class="s.columnText">Nr.</p>
+                <p :class="s.columnText">{{ t('table.header_nr') }}</p>
             </td>
             <td 
                 :class="s.email"
             >
-                <p :class="s.columnText">Apiary</p>
+                <p :class="s.columnText">{{ t('table.header_apiary') }}</p>
             </td>
             <td
                 :class="s.inspectedHiveCount"
             >
-                <p :class="s.columnText">Hive count</p>
+                <p :class="s.columnText">{{ t('table.header_hive_count') }}</p>
             </td>
             <td
                 :class="s.hasBeenProcessed"
             >
-                <p :class="s.columnText">Has been Processed</p>
+                <p :class="s.columnText">{{ t('table.header_processed') }}</p>
             </td>
             <td 
                 :class="s.creator"
             >
-                <p :class="s.columnText">Creator</p>
+                <p :class="s.columnText">{{ t('table.header_creator') }}</p>
             </td>
             <td 
                 :class="s.creationDate"
             >
-                <p :class="s.columnText">Creation date</p>
+                <p :class="s.columnText">{{ t('table.header_creation_date') }}</p>
             </td>
             <td 
                 :class="s.actions"
             >
-                <p :class="s.columnText">Actions</p>
+                <p :class="s.columnText">{{ t('table.header_actions') }}</p>
             </td>
         </tr>
     </thead>

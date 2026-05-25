@@ -62,15 +62,15 @@ const { apiary } = useApiaryQuery({
             <label 
                 for="apiary"
                 :class="s.gridLabels"
-            >Apiary</label>
+            >{{ t('hiveOverview.info') }}</label>
             <p 
                 id="apiary"
                 :class="s.gridValues"    
-            >{{ apiary?.name ?? "No apiary" }}</p>
+            >{{ apiary?.name ?? t('status.no_apiary') }}</p>
             <label 
                 for="created"
                 :class="s.gridLabels"
-            >Created at</label>
+            >{{ t('hive.created_at') }}</label>
             <p 
                 id="created"
                 :class="s.gridValues"    
@@ -78,7 +78,7 @@ const { apiary } = useApiaryQuery({
             <label 
                 for="type"
                 :class="s.gridLabels"
-            >Type</label>
+            >{{ t('hive.type') }}</label>
             <p 
                 id="type"
                 :class="s.gridValues"    
@@ -87,11 +87,11 @@ const { apiary } = useApiaryQuery({
             <label 
                 for="loacaion"
                 :class="s.gridLabels"
-            >Location</label>
+            >{{ t('hive.location') }}</label>
             <p 
                 id="loacaion"
                 :class="s.gridValues"
-            >{{ hive.location ?? "Not set"}}</p>
+            >{{ hive.location ?? t('status.not_set')}}</p>
 
         </div>
     </div>

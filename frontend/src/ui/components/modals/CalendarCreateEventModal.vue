@@ -8,8 +8,10 @@ import { useModalBase } from '@/core/composables/useModalBase';
 import { useCalendarMutation } from '@/core/composables/useCalendar';
 import StringField from '../input/fields/used/StringField.vue';
 import StringMultipleField from '../input/fields/used/StringMultipleField.vue';
+import { useI18n } from 'vue-i18n';
 
 const s = useCssModule()
+const { t } = useI18n()
 const props = defineProps<{
     calendarId :       string
     otherCalendarIds : string[]
@@ -55,12 +57,12 @@ watch(() => exposed.isOpen(), (val) => {
 <template>
 <ModalBase
     ref="modal"
-    label="Create event"
+    :label="t('calendar.create_event')"
 >
     <template #body>
     <div :class="s.grid">
         <StringField
-            label="Title"
+            :label="t('form.label_title')"
             :class="s.title" 
             :selection="title"
             :validee="getFormValidee({
@@ -72,7 +74,7 @@ watch(() => exposed.isOpen(), (val) => {
         />
 
         <StringMultipleField
-            label="Content"
+            :label="t('form.label_content')"
             :selection="content"
             :validee="getFormValidee({
                 isValid: () => !!content,
@@ -83,7 +85,7 @@ watch(() => exposed.isOpen(), (val) => {
         />
        
         <IconTextButton 
-            text="Create"
+            :text="t('button.create')"
             :disabled="!isFormValid" 
             :is-aligned-center="true"
             :is-submit="true"

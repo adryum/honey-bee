@@ -1,6 +1,7 @@
 <script setup lang="ts">
 import {ref, useCssModule } from "vue";
 import { SVG } from "@/assets/svgs/SVGLoader";
+import { useI18n } from "vue-i18n";
 import type { QueenModelDB } from "@/core/stores/Models";
 import IconTextButton from "@/ui/components/input/buttons/IconTextButton.vue";
 import { getRandomId } from "@/core/utils/Utils";
@@ -12,6 +13,7 @@ import { ActionType, useActionsStore } from "@/core/stores/ActionStore";
 import QueenEditModal from "@/ui/components/modals/QueenEditModal.vue";
 
 const s = useCssModule()
+const { t } = useI18n()
 const props = defineProps<{
     hiveId: number
     queen?: QueenModelDB
@@ -124,7 +126,7 @@ function removeQueen(queen: QueenModelDB) {
             <label 
                 :for="bornId"
                 :class="s.gridLabels"
-            >Born</label>
+            >{{ t('queen.label_born') }}</label>
             <p 
                 :id="bornId"
                 :class="s.gridValues"    
@@ -133,7 +135,7 @@ function removeQueen(queen: QueenModelDB) {
             <label 
                 :for="lifeExpectancyId"
                 :class="s.gridLabels"
-            >Life expectancy</label>
+            >{{ t('queen.label_life_expectancy') }}</label>
             <p 
                 :id="lifeExpectancyId"
                 :class="s.gridValues"    
@@ -141,7 +143,7 @@ function removeQueen(queen: QueenModelDB) {
              <label 
                 :for="placedHereId"
                 :class="s.gridLabels"
-            >Placed here at</label>
+            >{{ t('queen.label_placed_here') }}</label>
             <p 
                 :id="placedHereId"
                 :class="s.gridValues"

@@ -145,7 +145,16 @@
         "label_born": "Born",
         "label_life_expectancy": "Life expectancy",
         "label_placed_here": "Placed here at",
-        "label_age": "Age"
+        "label_age": "Age",
+        "nr": "NR:",
+        "species": "Species",
+        "time_in_hive": "Time in hive",
+        "placed_here_at": "Placed here at",
+        "about": "About",
+        "no_info": "No information about this species",
+        "description": "Description",
+        "behavior": "Behavior",
+        "preferences": "Preferences"
     },
     "message": {
         "no_species": "No matching species!"
@@ -157,6 +166,65 @@
         "placeholder_nan": "nan"
     },
     "apiary": {
-        "label_hives": "Hives"
-    }
+        "label_hives": "Hives",
+        "menu_overview": "Overview",
+        "menu_delete": "Delete"
+    },
+    "status": {
+        "yes": "Yes",
+        "no": "No",
+        "allowed": "Allowed",
+        "denied": "Denied",
+        "deleted_apiary": "Deleted apiary",
+        "deleted_user": "Deleted user",
+        "unknown_hive": "Unknown hive",
+        "not_set": "Not set",
+        "no_apiary": "No apiary"
+    },
+    "fallback": {
+        "no_title": "No title",
+        "no_type": "No type",
+        "unknown": "Unknown",
+        "no_description": "No description",
+        "empty": "Empty",
+        "noname": "NONAME",
+        "nan": "nan",
+        "selection": "selection"
+    },
+    "action": {
+        "open": "Open",
+        "exit": "Exit",
+        "go": "Go",
+        "overview": "Overview"
+    },
+    "calendar": {
+        "title": "General calendar",
+        "filter_apiary": "Apiary",
+        "filter_default": "All apiaries",
+        "label_today": "( Today )",
+        "label_tasks": "tasks",
+        "create_event": "Create event",
+        "create_task": "Create task",
+        "search_task": "Search task",
+        "day": "day",
+        "month": "month",
+        "year": "year"
+    },
+    "hive": {
+        "created_at": "Created at",
+        "location": "Location",
+        "type": "Type"
+    },
+    "inspection": {
+        "label_id": "Inspection ID:",
+        "label_apiary": "Apiary:",
+        "label_created": "Created at:",
+        "label_hive_count": "Hive count:",
+        "label_honey_frames": "Taken honey frames:",
+        "label_honey_average": "Honey average per frame:",
+        "submit_last": "Submit inspection",
+        "submit_next": "Save and go to the next hive",
+        "review_exit": "Exit"
+    },
+    "remove": "Remove"
 }

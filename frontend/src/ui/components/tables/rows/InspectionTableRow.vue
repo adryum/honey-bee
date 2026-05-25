@@ -6,9 +6,11 @@ import IconTextButton from "../../input/buttons/IconTextButton.vue";
 import { useRouter } from "vue-router";
 import type { ModalBaseModel } from "@/core/composables/useModalBase";
 import ProcessInspectionModal from "../../modals/ProcessInspectionModal.vue";
+import { useI18n } from "vue-i18n";
 
 const s = useCssModule()
 const router = useRouter()
+const { t } = useI18n()
 const props = defineProps<{
     entry:       InspectionEntryModelDB
     orderNumber: number
@@ -47,7 +49,7 @@ function openInspection(id: number) {
                 height: '100%',
             }"
         >
-            {{ entry.apiary ? `#${entry.apiary.id} ${entry.apiary.name} ` : "Deleted apiary" }} 
+            {{ entry.apiary ? `#${entry.apiary.id} ${entry.apiary.name} ` : t('status.deleted_apiary') }} 
         </p>
     </td>
     <td
@@ -78,7 +80,7 @@ function openInspection(id: number) {
                 alignItems: 'center',
             }"
         >
-            {{ entry.processed ? "Yes" : "No" }} 
+            {{ entry.processed ? t('status.yes') : t('status.no') }} 
         </p>
     </td>
     <td 
@@ -92,7 +94,7 @@ function openInspection(id: number) {
                 height: '100%',
             }"
         >
-            {{ entry.user ? entry.user.username : "Deleted user" }} 
+            {{ entry.user ? entry.user.username : t('status.deleted_user') }} 
         </p>
     </td>
     <td 
@@ -115,13 +117,13 @@ function openInspection(id: number) {
         <IconTextButton
             :icon="SVG.Logout"
             :type="IconType.SMALL"
-            text="Open"
+            :text="t('action.open')"
             @click="openInspection(entry.id)"
         />
         <IconTextButton
             :icon="SVG.Cog"
             :type="IconType.SMALL"
-            text="Process"
+            :text="t('button.process')"
             @click="processInspectionModal?.open()"
         />
     </td>

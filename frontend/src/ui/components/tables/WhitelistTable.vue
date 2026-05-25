@@ -2,8 +2,10 @@
 import { useCssModule } from "vue";
 import WhitelistTableRow from "./rows/WhitelistTableRow.vue";
 import { useAdminQuery } from "@/core/composables/useAdmin";
+import { useI18n } from "vue-i18n";
 
 const s = useCssModule()
+const { t } = useI18n()
 const { whitelistEntries } = useAdminQuery()
 </script>
 
@@ -20,27 +22,27 @@ const { whitelistEntries } = useAdminQuery()
             <td 
                 :class="s.nr"
             >
-                <p :class="s.columnText">Nr.</p>
+                <p :class="s.columnText">{{ t('table.header_nr') }}</p>
             </td>
             <td 
                 :class="s.email"
             >
-                <p :class="s.columnText">Email</p>
+                <p :class="s.columnText">{{ t('table.header_email') }}</p>
             </td>
             <td 
                 :class="s.role"
             >
-                <p :class="s.columnText">Role</p>
+                <p :class="s.columnText">{{ t('table.header_role') }}</p>
             </td>
             <td 
                 :class="s.status"
             >
-                <p :class="s.columnText">Status</p>
+                <p :class="s.columnText">{{ t('table.header_status') }}</p>
             </td>
             <td 
                 :class="s.actions"
             >
-                <p :class="s.columnText">Actions</p>
+                <p :class="s.columnText">{{ t('table.header_actions') }}</p>
             </td>
         </tr>
     </thead>

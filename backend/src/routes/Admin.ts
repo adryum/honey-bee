@@ -372,8 +372,17 @@ router.put(
             return res.status(400).send("Entry doesnt exist!")
         }
 
-        if (existingEntry.userId === null) {
-            // no user link
+        if (existingEntry.email !== email) {
+            const whitelistEntryWithNewEmail = await withStatus("Getting whitelist entry with new email", 
+                () => db.query.whitelist.findFirst({
+                    where: eq(whitelist.email, email)
+                })
+            )
+
+            if (whitelistEntryWithNewEmail) {
+                return res.status(400).send("Entry with that email already exists!")
+            }
+
             const sameEmailUser = await withStatus("Getting user with new email", 
                 () => db.query.users.findFirst({
                     where: eq(users.email, email)
@@ -384,24 +393,6 @@ router.put(
                 return res.status(400).send("Email is used by a registered user!")
             }
 
-            const [updateResult] = await withStatus("Updating entry", 
-                () => db.update(whitelist).set({
-                    email:  email,
-                    role:   role,
-                    status: isEnabled
-                }).where(eq(whitelist.id, id))
-            )
-
-            const whitelistGetResult = await withStatus("Getting existing entry", 
-                () => db.query.whitelist.findFirst({
-                    where: eq(whitelist.id, updateResult.insertId)
-                })
-            )
-
-            return res.status(200).json(whitelistGetResult)
-        }
-
-        if (existingEntry.email !== email) {
             // remove user link
             const [updateResult] = await withStatus("Updating entry", 
                 () => db.update(whitelist).set({
@@ -417,7 +408,28 @@ router.put(
                     where: eq(whitelist.id, updateResult.insertId)
                 })
             )
-            await updateUserSession({ id: existingEntry.userId }, ClientEvents.LOGOUT)
+
+            if (existingEntry.userId) {
+                await updateUserSession({ id: existingEntry.userId }, ClientEvents.LOGOUT)
+            }
+
+            return res.status(200).json(whitelistGetResult)
+        }
+
+        if (existingEntry.userId === null) {
+            // no user link
+            const [updateResult] = await withStatus("Updating entry", 
+                () => db.update(whitelist).set({
+                    role:   role,
+                    status: isEnabled
+                }).where(eq(whitelist.id, id))
+            )
+
+            const whitelistGetResult = await withStatus("Getting existing entry", 
+                () => db.query.whitelist.findFirst({
+                    where: eq(whitelist.id, updateResult.insertId)
+                })
+            )
 
             return res.status(200).json(whitelistGetResult)
         }
@@ -436,9 +448,15 @@ router.put(
             }).where(eq(users.id, existingEntry.userId!))
         )
 
+        const whitelistGetResult = await withStatus("Getting existing entry", 
+            () => db.query.whitelist.findFirst({
+                where: eq(whitelist.id, whitelistUpdateResult.insertId)
+            })
+        )
+
         await updateUserSession({ id: existingEntry.userId, role: role }, ClientEvents.LOGOUT)
 
-        return res.status(200).send("Success")
+        return res.status(200).json(whitelistGetResult)
     } catch (err) {
         console.error(err);
         res.status(500).send('Whitelist entry update failed!');

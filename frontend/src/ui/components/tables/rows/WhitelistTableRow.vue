@@ -8,8 +8,10 @@ import IconCubeButton from "../../input/buttons/IconCubeButton.vue";
 import { SVG } from "@/assets/svgs/SVGLoader";
 import TableRowSelectionDropdownTopPart from "../../input/dropdowns/dropdownItems/top/TableRowSelectionDropdownTopPart.vue";
 import { useAdminMutations } from "@/core/composables/useAdmin";
+import { useI18n } from "vue-i18n";
 
 const s = useCssModule()
+const { t } = useI18n()
 const props = defineProps<{
     entry:       WhitelistEntryModelDB
     orderNumber: number
@@ -117,7 +119,7 @@ function cancel() {
                 <TableRowSelectionDropdownTopPart
                     :class="s.text"
                     :dropdown="dropdown"
-                    :selectedValue="editableEntry.isEnabled ? 'Allowed' : 'Denied'"
+                    :selectedValue="editableEntry.isEnabled ? t('status.allowed') : t('status.denied')"
                     :showIcon="isEditingRow"
                     :allowToggling="isEditingRow"
                 />
@@ -126,13 +128,13 @@ function cancel() {
                 <TextDropdownBottomPart
                     :class="s.text"
                     :dropdown="dropdown" 
-                    text="Allowed"
+                    :text="t('status.allowed')"
                     @click="editableEntry.isEnabled = true"
                 />
                 <TextDropdownBottomPart 
                     :class="s.text"
                     :dropdown="dropdown" 
-                    text="Denied"
+                    :text="t('status.denied')"
                     @click="editableEntry.isEnabled = false"
                 />
             </template>

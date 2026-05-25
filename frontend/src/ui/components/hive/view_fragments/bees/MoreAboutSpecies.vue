@@ -17,7 +17,7 @@ const props = defineProps<{
         <label 
             :class="s.label"    
         >
-            About  
+            {{ t('queen.about') }}  
             <p
                 :class="s.gridLabels"
             >{{ species?.scientificName || ''}}</p>
@@ -35,7 +35,7 @@ const props = defineProps<{
         v-if="!species"
         :class="s.noHistory"
     >
-        No information about this species
+        {{ t('queen.no_info') }}
     </p>
 
     <div
@@ -49,7 +49,7 @@ const props = defineProps<{
                 :class="[
                     s.gridLabels,
                 ]"
-            >Description</p> 
+            >{{ t('queen.description') }}</p> 
             <p
                 :class="[
                     s.gridValues,
@@ -64,7 +64,7 @@ const props = defineProps<{
                 :class="[
                     s.gridLabels,
                 ]"
-            >Behavior</p> 
+            >{{ t('queen.behavior') }}</p> 
             <p
                 :class="[
                     s.gridValues
@@ -79,7 +79,7 @@ const props = defineProps<{
                 :class="[
                     s.gridLabels,
                 ]"
-            >Preferences</p> 
+            >{{ t('queen.preferences') }}</p> 
             <p
                 :class="[
                     s.gridValues,

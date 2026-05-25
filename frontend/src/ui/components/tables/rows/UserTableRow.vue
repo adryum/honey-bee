@@ -10,9 +10,11 @@ import TableRowSelectionDropdownTopPart from "../../input/dropdowns/dropdownItem
 import { useAdminMutations } from "@/core/composables/useAdmin";
 import { useRouter } from "vue-router";
 import { ProfileTab } from "@/core/ViewTabEnums";
+import { useI18n } from "vue-i18n";
 
 const s = useCssModule()
 const router = useRouter()
+const { t } = useI18n()
 const props = defineProps<{
     entry:       UserEntryModelDB
     orderNumber: number
@@ -122,7 +124,7 @@ function cancel() {
                 <TableRowSelectionDropdownTopPart
                     :class="s.text"
                     :dropdown="dropdown"
-                    :selectedValue="editableEntry.isWhitelisted ? 'Yes' : 'No'"
+                    :selectedValue="editableEntry.isWhitelisted ? t('status.allowed') : t('status.denied')"
                     :showIcon="isEditingRow"
                     :allowToggling="isEditingRow"
                 />
@@ -131,13 +133,13 @@ function cancel() {
                 <TextDropdownBottomPart
                     :class="s.text"
                     :dropdown="dropdown" 
-                    text="Allowed"
+                    :text="t('status.allowed')"
                     @click="editableEntry.isWhitelisted = true"
                 />
                 <TextDropdownBottomPart 
                     :class="s.text"
                     :dropdown="dropdown" 
-                    text="Denied"
+                    :text="t('status.denied')"
                     @click="editableEntry.isWhitelisted = false"
                 />
             </template>

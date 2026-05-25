@@ -11,7 +11,7 @@ export enum Language {
 
 const i18n = createI18n<[MessageSchema], Language>({
     legacy: false,
-    locale: Language.Lv,
+    locale: Language.En,
     fallbackLocale: Language.En,
     globalInjection: true,
     messages: {

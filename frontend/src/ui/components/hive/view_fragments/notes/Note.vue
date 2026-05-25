@@ -7,8 +7,10 @@ import IconTextItem from "@/ui/components/input/dropdowns/dropdownItems/bottom/I
 import type { NoteModelDB } from "@/core/stores/Models";
 import { formatDateWithOrdinal } from "@/core/utils/Utils";
 import { useNoteMutations } from "@/core/composables/hive/useHiveNote";
+import { useI18n } from "vue-i18n";
 
 const s = useCssModule()
+const { t } = useI18n()
 const props = defineProps<{
     note: NoteModelDB
 }>()
@@ -38,7 +40,7 @@ const { remove } = useNoteMutations()
             <IconTextItem
                 :options="{
                     svg: SVG.Trash,
-                    text: 'Remove'
+                    text: t('remove')
                 }"
                 @click="remove(note.id)"
             />
@@ -55,7 +57,7 @@ const { remove } = useNoteMutations()
         <p 
             :class="s.content"
         >
-            {{ note.content || "Empty" }}
+            {{ note.content || t('fallback.empty') }}
         </p>
     </div>
 

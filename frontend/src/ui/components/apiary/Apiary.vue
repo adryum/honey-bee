@@ -1,33 +1,35 @@
 <script setup lang="ts">
-import { useCssModule } from "vue"
+import { useCssModule, computed } from "vue"
 import { motion } from "motion-v"
 import type { DropdownItem } from "../../../core/Interfaces";
 import CubeDropdown from "../input/dropdowns/CubeDropdown.vue";
 import { IconType, SVG } from "@/assets/svgs/SVGLoader";
 import type { ApiaryModelDB } from "@/core/stores/Models";
 import Icon from "../Icon.vue";
+import { useI18n } from "vue-i18n";
 
 const s = useCssModule()
+const { t } = useI18n()
 const props = defineProps<{
     apiary:    ApiaryModelDB,
     isDimmed?: boolean
 }>()
 
 const MotionIconCubeDropdown = motion.create(CubeDropdown)
-const dropdownActions: DropdownItem[] = [
+const dropdownActions = computed(() => [
     {
-        text: 'Overview',
+        text: t('action.overview'),
         svg: SVG.Info,
         onClick: () => { },
         color: ""
     },
     {
-        text: 'Delete',
+        text: t('apiary.menu_delete'),
         svg: SVG.Cross,
         onClick: () => { },
         color: "#963B28"
     },
-]
+] as DropdownItem[])
 
 </script>
 <template>

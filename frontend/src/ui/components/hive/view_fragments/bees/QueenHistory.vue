@@ -1,8 +1,10 @@
 <script setup lang="ts">
 import { useCssModule } from "vue";
+import { useI18n } from "vue-i18n";
 import type { QueenHistoryModelDB } from "@/core/stores/Models";
 
 const s = useCssModule()
+const { t } = useI18n()
 const props = defineProps<{
     previousBees: QueenHistoryModelDB[]
 }>()
@@ -55,7 +57,7 @@ const props = defineProps<{
             <p
                 :class="s.order"
             >
-                NR: {{ i + 1}}
+                {{ t('queen.nr') }} {{ i + 1}}
             </p>
 
             <div
@@ -64,7 +66,7 @@ const props = defineProps<{
                 <p
                     :class="s.gridLabels"
                 >
-                    Species
+                    {{ t('queen.species') }}
                 </p>
                 <p
                     :class="s.gridValues"
@@ -76,7 +78,7 @@ const props = defineProps<{
                 <p
                     :class="s.gridLabels"
                 >
-                    Time in hive
+                    {{ t('queen.time_in_hive') }}
                 </p>
                 <p
                     :class="s.gridValues"
@@ -88,7 +90,7 @@ const props = defineProps<{
                 <p
                     :class="s.gridLabels"
                 >
-                    Placed here at
+                    {{ t('queen.placed_here_at') }}
                 </p>
                 <p
                     :class="s.gridValues"

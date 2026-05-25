@@ -8,8 +8,10 @@ import IconTextButton from "../input/buttons/IconTextButton.vue";
 import { useInspectionMutation, useInspectionQuery } from "@/core/composables/useInspection";
 import StringField from "../input/fields/used/StringField.vue";
 import { useHiveMutations } from "@/core/composables/hive/useHive";
+import { useI18n } from "vue-i18n";
 
 const s = useCssModule()
+const { t } = useI18n()
 const props = defineProps<{
     inspectionId: number
 }>()
@@ -68,7 +70,7 @@ async function processInspection() {
 <template>
 <ModalBase
     ref="modal"
-    label="Process Inspection"
+    :label="t('modal.process_inspection_title')"
 >
     <template #body>
         <div :class="s.body">
@@ -79,7 +81,7 @@ async function processInspection() {
                     for="apiary"
                     :class="s.gridLabels"
                 >
-                    Inspection ID: 
+                    {{ t('inspection.label_id') }}
                 </label>
                 <p 
                     id="apiary"
@@ -93,7 +95,7 @@ async function processInspection() {
                     for="created"
                     :class="s.gridLabels"
                 >
-                    Apiary: 
+                    {{ t('inspection.label_apiary') }}
                 </label>
                 <p 
                     id="created"
@@ -104,7 +106,7 @@ async function processInspection() {
                 <label 
                     for="type"
                     :class="s.gridLabels"
-                >Created at: </label>
+                >{{ t('inspection.label_created') }}</label>
                 <p 
                     id="type"
                     :class="s.gridValues"    
@@ -114,7 +116,7 @@ async function processInspection() {
                 <label 
                     for="loacaion"
                     :class="s.gridLabels"
-                >Hive count: </label>
+                >{{ t('inspection.label_hive_count') }}</label>
                 <p 
                     id="loacaion"
                     :class="s.gridValues"
@@ -123,7 +125,7 @@ async function processInspection() {
                 <label 
                     for="loacaion"
                     :class="s.gridLabels"
-                >Taken honey frames:  </label>
+                >{{ t('inspection.label_honey_frames') }}</label>
                 <p 
                     id="loacaion"
                     :class="s.gridValues"
@@ -133,7 +135,7 @@ async function processInspection() {
                 <label 
                     for="loacaion"
                     :class="s.gridLabels"
-                >Honey average per frame:  </label>
+                >{{ t('inspection.label_honey_average') }}</label>
                 <p 
                     id="loacaion"
                     :class="s.gridValues"
@@ -144,7 +146,7 @@ async function processInspection() {
 
             <div :class="s.fields">
                 <StringField
-                    label="Process honey in KG"
+                    :label="t('form.label_honey_kg')"
                     :class="s.field"
                     :selection="procesedHoney"
                     :style="!!!takenHoneyFrames && {
@@ -161,7 +163,7 @@ async function processInspection() {
                 
             </div>
             <IconTextButton 
-                text="Process"
+                :text="t('button.process')"
                 :disabled="!isFormValid" 
                 :icon="SVG.Plus"
                 :is-submit="true"
