@@ -32,19 +32,17 @@ export const DEFAULT_PLACEHOLDER = "https://blocks.astratic.com/img/general-img-
  * @returns UploadApiResponse or undefined if upload fails
  */
 export async function uploadImage(
-    file: Express.Multer.File,
-    publicId: string
-): Promise<string | undefined> {
+    file: Express.Multer.File
+): Promise<{ pubId: string, url: string } | undefined> {
     try {
         const base64 = `data:${file.mimetype};base64,${file.buffer.toString("base64")}`;
 
         // Upload to Cloudinary
         const result: UploadApiResponse = await cloudinary.uploader.upload(base64, {
-            public_id: publicId,
             folder: "apiaries", // optional folder
         });
         
-        return result.secure_url;
+        return { pubId: result.public_id, url: result.url };
     } catch (error) {
         const typedError = error as UploadApiErrorResponse;
         console.error("Cloudinary upload failed:", typedError.message);

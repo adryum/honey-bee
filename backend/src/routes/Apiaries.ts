@@ -128,14 +128,13 @@ router.post('/', upload.single("image"), async (req: Request<{},{},{
     
         if (image) {
             // insert image
-            const url = await withStatus("Uploading image", async () => {
-                const imageKey = new PublicIdBuilder(req.session.userId!.toString()).Apiary(result.insertId.toString()).getResource()
-                return await uploadImage(image, imageKey)
+            const imageResult = await withStatus("Uploading image", async () => {
+                return await uploadImage(image)
             })
 
             await withStatus("Assigning image url to DB entry", () =>
                 db.update(apiaries)
-                .set({ imageUrl: url })
+                .set({ imageUrl: imageResult?.url })
                 .where(eq(apiaries.id, result.insertId))
             )
         }

@@ -182,14 +182,13 @@ router.put('/:id', requireRole([UserRoles.ADMINISTRATOR, UserRoles.APIARY_MAINTA
 
             if (image) {
                 // insert image
-                const url = await withStatus("Uploading image", async () => {
-                    const imageKey = new PublicIdBuilder(req.session.userId!.toString()).Apiary(hiveId.toString()).getResource()
-                    return await uploadImage(image, imageKey)
+                const imageResult = await withStatus("Uploading image", async () => {
+                    return await uploadImage(image)
                 })
 
                 await withStatus("Assigning image url to hive...", () =>
                     transaction.update(hives)
-                    .set({ imageUrl: url })
+                    .set({ imageUrl: imageResult?.url })
                     .where(eq(hives.id, hiveId))
                 )
             }
@@ -239,14 +238,13 @@ router.post(
         
         if (image) {
             // insert image
-            const url = await withStatus("Uploading image", async () => {
-                const imageKey = new PublicIdBuilder(req.session.userId!.toString()).Apiary(createdHive.insertId.toString()).getResource()
-                return await uploadImage(image, imageKey)
+            const imageResult = await withStatus("Uploading image", async () => {
+                return await uploadImage(image)
             })
 
             await withStatus("Assigning image url to hive...", () =>
                 db.update(hives)
-                .set({ imageUrl: url })
+                .set({ imageUrl: imageResult?.url })
                 .where(eq(hives.id, createdHive.insertId))
             )
         }

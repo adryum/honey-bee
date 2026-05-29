@@ -144,14 +144,13 @@ router.post(
 
         if (image) {
             // insert image
-            const url = await withStatus("Uploading image to cloud", async () => {
-                const imageKey = new PublicIdBuilder(req.session.userId!.toString()).Apiary(insertResult.insertId.toString()).getResource()
-                return await uploadImage(image, imageKey)
+            const imageResult = await withStatus("Uploading image to cloud", async () => {
+                return await uploadImage(image)
             })
 
             await withStatus("Inserting image url to entry", () =>
                 db.update(queens)
-                .set({ imageUrl: url })
+                .set({ imageUrl: imageResult?.url })
                 .where(eq(queens.id, insertResult.insertId))
             )
         }
