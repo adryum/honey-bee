@@ -62,7 +62,7 @@ const { apiary } = useApiaryQuery({
             <label 
                 for="apiary"
                 :class="s.gridLabels"
-            >{{ t('hiveOverview.info') }}</label>
+            >{{ t('hive.apiary') }}</label>
             <p 
                 id="apiary"
                 :class="s.gridValues"    

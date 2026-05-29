@@ -1,12 +1,15 @@
 <script setup lang="ts">
 import type { LineGraphLineModel } from "@/core/stores/Models";
+import { getRandomId } from "@/core/utils/Utils";
 import { computed, onMounted, ref, useCssModule } from "vue";
 
 const s = useCssModule()
 const props = defineProps<{
+    label: string
     entries: LineGraphLineModel[]
 }>()
 
+const id = getRandomId("graph");
 const chart = ref<any>(null)
     
 const allDates = computed(() =>
@@ -61,12 +64,12 @@ onMounted(() => {
 
 <template>
 <div 
-    id="inenesums" 
+    :id="id" 
     :class="s.container"
 >
     <div :class="s.header">
-        <label :class="s.label" for="inenesums">
-            Iensesums
+        <label :class="s.label" :for="id">
+            {{ label }}
         </label>
     </div>
     <hr :style="{

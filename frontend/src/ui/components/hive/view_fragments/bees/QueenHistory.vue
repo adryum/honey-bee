@@ -17,7 +17,7 @@ const props = defineProps<{
         <label 
             :class="s.label"    
         >
-            Queen History
+            {{ t('queen.queen_history_title') }}
         </label>
 
         <!-- <div 

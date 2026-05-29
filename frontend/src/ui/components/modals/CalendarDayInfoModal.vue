@@ -9,8 +9,10 @@ import { useModalBase, type ModalBaseModel } from "@/core/composables/useModalBa
 import CalendarCreateEventModal from "./CalendarCreateEventModal.vue";
 import IconTextButton from "../input/buttons/IconTextButton.vue";
 import Icon from "../Icon.vue";
+import { useI18n } from "vue-i18n";
 
 const s = useCssModule()
+const { t } = useI18n()
 const props = defineProps<{
     calendarId:       string
     otherCalendarIds: string[]
@@ -33,7 +35,7 @@ const createEventModal = ref<ModalBaseModel>()
 <template>
 <ModalPlate
     ref="modal"
-    label="Add Apiary"
+    :label="t('modal.add_apiary_title')"
     :style="{ backdropFilter: 'brightness(.6)'}"
     @clickOutside="$emit('clickOutside')"
 >
@@ -67,7 +69,7 @@ const createEventModal = ref<ModalBaseModel>()
                 for="tasks"
                 :class="s.label"
             >
-                Actions
+                {{ t('action.open') }}
             </label>
 
             <div 
@@ -75,7 +77,7 @@ const createEventModal = ref<ModalBaseModel>()
                 :class="s.titleWrapper"
             >
                 <IconTextButton
-                    text="Create task"
+                    :text="t('calendar.create_event')"
                     :icon="SVG.Plus"
                     :isSubmit="true"
                     @click="createEventModal?.open"
@@ -86,7 +88,7 @@ const createEventModal = ref<ModalBaseModel>()
                 for="tasks"
                 :class="s.label"
             >
-                Tasks
+                {{ t('modal.events') }}
             </label>
 
             <div :class="s.taskList">

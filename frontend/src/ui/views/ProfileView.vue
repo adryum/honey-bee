@@ -3,7 +3,7 @@ import { computed, ref, useCssModule } from "vue";
 import Icon from "../components/Icon.vue";
 import { IconType, SVG } from "@/assets/svgs/SVGLoader";
 import AccessFragment from "../components/profile/AccessFragment.vue";
-import { ProfileTab } from "@/core/ViewTabEnums";
+import { AdminTab, ProfileTab } from "@/core/ViewTabEnums";
 import { useRouter } from "vue-router";
 import { RouterViewPaths } from "@/core/router";
 import { useProfileQuery } from "@/core/composables/useProfile";
@@ -104,15 +104,12 @@ function changeTab(tab: ProfileTab) {
             :class="s.navigation"
         >
             <button
-                v-for="loopTab in showedTabs"
-                :key="loopTab"
                 :class="[
                     s.button,
-                    loopTab === tab && s.selected,
                 ]"
-                @click="changeTab(loopTab)"
+                @click="changeTab(ProfileTab.ACCESS)"
             >
-                {{ loopTab.toSentenceCase() }}
+                {{ t('profile.access') }}
             </button>
         </div>
 

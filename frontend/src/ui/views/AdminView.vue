@@ -1,5 +1,5 @@
 <script setup lang="ts">
-import { ref, useCssModule } from "vue";
+import { computed, ref, useCssModule } from "vue";
 import WhitelistFragment from "@/ui/components/admin/WhitelistFragment.vue";
 import UserlistFragment from "../components/admin/UserlistFragment.vue";
 import { AdminTab } from "@/core/ViewTabEnums";
@@ -11,9 +11,18 @@ import { useRouter } from "vue-router";
 import { RouterViewPaths } from "@/core/router";
 import IconTextButton from "../components/input/buttons/IconTextButton.vue";
 import { useI18n } from "vue-i18n";
+import { useEnumTranslation } from "@/core/locales/i18n.ts";
 
 const s = useCssModule()
 const { t } = useI18n()
+const { tEnum } = useEnumTranslation()
+
+const translatedTabs = computed(() =>
+    Object.values(AdminTab).map(tab => ({
+        value: tab,
+        label: tEnum('adminTab', tab)
+    }))
+)
 const props = defineProps<{
     tab: AdminTab
 }>()
@@ -36,7 +45,7 @@ function changeTab(tab: AdminTab) {
 <div :class="s.container">
     <ToolBar 
         :label="t('admin.page_title')"
-        :tabs="Object.values(AdminTab)" 
+        :tabs="translatedTabs" 
         :selectedTab="tab" 
         @changeTab="changeTab"
     >

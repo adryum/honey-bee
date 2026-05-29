@@ -1,5 +1,6 @@
 <script setup lang="ts">
 import { ref, useCssModule } from "vue";
+import { useI18n } from "vue-i18n";
 import IconTextButton from "@/ui/components/input/buttons/IconTextButton.vue";
 import { SVG } from "@/assets/svgs/SVGLoader";
 import StringSearchDropdown from "@/ui/components/input/dropdowns/StringSearchDropdown.vue";
@@ -7,6 +8,7 @@ import CreateNoteModal from "@/ui/components/modals/CreateNoteModal.vue";
 import type { ModalBaseModel } from "@/core/composables/useModalBase";
 
 const s = useCssModule()
+const { t } = useI18n()
 const props = defineProps<{
     hiveId: number
 }>()
@@ -17,7 +19,7 @@ const createNoteModal = ref<ModalBaseModel>()
 <template>
 <div :class="s.container">
     <IconTextButton
-        text="Create note" 
+        :text="t('button.create')" 
         :class="s.create"
         :icon="SVG.Pencil"
         @click="createNoteModal?.open()"
@@ -25,7 +27,7 @@ const createNoteModal = ref<ModalBaseModel>()
     <StringSearchDropdown
         :class="s.search"
         :options="{
-            placeholder: 'Search by anything...',
+            placeholder: t('searchbar.button'),
             showIcon: true,
             onHoverEffects: true,
             onInputChange(value) {

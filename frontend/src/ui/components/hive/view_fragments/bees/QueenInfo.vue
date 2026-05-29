@@ -56,7 +56,7 @@ function removeQueen(queen: QueenModelDB) {
         <label 
             :class="s.label"    
         >
-            Queen
+            {{ t('queen.section_title') }}
         </label>
 
         <p
@@ -71,25 +71,25 @@ function removeQueen(queen: QueenModelDB) {
         >   
             <IconTextButton 
                 v-if="!queen"
-                text="Add"
+                :text="t('button.add')"
                 :icon="SVG.Plus"
                 @click="queenCreateModal?.open"
             />
             <IconTextButton 
                 v-if="queen"
-                text="Remove"
+                :text="t('button.remove')"
                 :icon="SVG.Cross"
                 @click="removeQueen(queen)"
             />
             <IconTextButton 
                 v-if="queen"
-                text="Replace"
+                :text="t('button.replace')"
                 :icon="SVG.Restart"
                 @click="queenReplaceModal?.open"
             />
             <IconTextButton 
                 v-if="queen"
-                text="Edit"
+                :text="t('button.edit')"
                 :icon="SVG.Pencil"
                 @click="queenEditModal?.open"
             />
@@ -107,7 +107,7 @@ function removeQueen(queen: QueenModelDB) {
         v-if="!queen"
         :class="s.noHistory"
     >
-        No queen in this hive
+        {{ t('queen.message_no_queen') }}
     </p>
 
     <div 
@@ -152,7 +152,7 @@ function removeQueen(queen: QueenModelDB) {
             <label 
                 :for="ageId"
                 :class="s.gridLabels"
-            >Age</label>
+            >{{ t('queen.label_age') }}</label>
             <p 
                 :id="ageId"
                 :class="s.gridValues"    

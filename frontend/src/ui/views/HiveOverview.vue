@@ -11,6 +11,7 @@ import HiveCalendarFragment from '@/ui/components/hive/view_fragments/HiveCalend
 import MonthChangerWidget from '@/ui/components/calendar/MonthChangerWidget.vue';
 import HiveBeesFragment from '@/ui/components/hive/view_fragments/bees/HiveBeesFragment.vue';
 import ToolBar from '../components/ToolBar.vue';
+import { useEnumTranslation } from '@/core/locales/i18n.ts';
 
 const s = useCssModule()
 const router = useRouter()
@@ -25,6 +26,15 @@ const currentTab = computed<HiveTab>(() => props.tab)
 const { hive }   = useHiveQuery({ 
     id: toRef(() => props.id)
 })
+
+const { tEnum } = useEnumTranslation()
+
+const translatedTabs = computed(() =>
+    Object.values(HiveTab).map(tab => ({
+        value: tab,
+        label: tEnum('hiveTab', tab)
+    }))
+)
 
 const fragmentHeight = computed((): string => {
     switch (currentTab.value) {
@@ -59,7 +69,7 @@ onMounted(() => console.log(props.tab))
             :class="s.navbar"
             :label="hive.name"
             :show-back-button="true"
-            :tabs="Object.values(HiveTab)" 
+            :tabs="translatedTabs" 
             :selectedTab="currentTab" 
             @changeTab="changeTab"
             @back="router.back()"

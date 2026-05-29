@@ -4,6 +4,7 @@ import IconCubeButton from "../input/buttons/IconCubeButton.vue";
 import TitledField from "../input/fields/TitledField.vue";
 import Button from "../input/buttons/Button.vue";
 import { type CalendarDate } from "../../../core/Calendar";
+import { useI18n } from "vue-i18n";
 
 const s = useCssModule()
 const goToDay = ref<string>()

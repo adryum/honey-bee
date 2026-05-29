@@ -16,10 +16,12 @@ import { useHivesQuery } from '@/core/composables/hive/useHive';
 import { useAuthStore } from '@/core/stores/useAuthStore';
 import { useI18n } from 'vue-i18n';
 import { UserRoles } from '@/core/DatabaseEnums';
+import { useEnumTranslation } from '@/core/locales/i18n.ts';
 
 const s = useCssModule()
 const router = useRouter()
 const { t } = useI18n()
+const { tEnum } = useEnumTranslation()
 const props = defineProps<{
     id:  number,
     tab: ApiaryTab
@@ -43,6 +45,13 @@ watchEffect(() => {
     console.log("hives", hives.value);
     
 })
+
+const translatedTabs = computed(() =>
+    Object.values(ApiaryTab).map(tab => ({
+        value: tab,
+        label: tEnum('apiaryTab', tab)
+    }))
+)
 
 const filteredHives = computed(() => {
     return hives.value?.filter(hive => 
@@ -83,7 +92,7 @@ function startInspection(apiaryId: number) {
             :class="s.navbar"
             :label="apiary.name"
             :show-back-button="true"
-            :tabs="Object.values(ApiaryTab)" 
+            :tabs="translatedTabs" 
             :selectedTab="currentTab" 
             @changeTab="changeTab"
             @back="router.back()"

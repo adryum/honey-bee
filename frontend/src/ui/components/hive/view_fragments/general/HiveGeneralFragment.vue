@@ -7,8 +7,10 @@ import { useHiveActionHistoryQuery } from "@/core/composables/hive/useHiveAction
 import { HiveYieldGetModels_To_LineGraphLineModels } from "@/core/Convertors";
 import { useHiveQuery } from "@/core/composables/hive/useHive";
 import LineGraph from "@/ui/components/charts/LineGraph.vue";
+import { useI18n } from "vue-i18n";
 
 const s = useCssModule()
+const { t } = useI18n();
 const props = defineProps<{
     hive:       HiveModelDB
 }>()
@@ -39,6 +41,7 @@ const convertedYields = computed(() => {
     />
     <LineGraph
         :class="s.profit"
+        :label="t('hive.yield')"
         :entries="convertedYields"
     />
     <!-- <HoneyYieldChart 

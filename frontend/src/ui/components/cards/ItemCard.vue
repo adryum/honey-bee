@@ -1,6 +1,7 @@
 <script setup>
 import {ref, useTemplateRef} from "vue";
 import ModalItemCard from "@/ui/components/cards/ModalItemCard.vue";
+import { useI18n } from "vue-i18n";
 
 defineProps({
   name: String,
@@ -8,6 +9,8 @@ defineProps({
   storedCount: String,
   registeredCount: String
 })
+
+const { t } = useI18n()
 
 const isCardOpened = ref(false)
 const cardModal = {
@@ -61,16 +64,16 @@ function leanTowardsMouse(e) {
       </div>
       <hr class="splitter">
       <div class="information">
-        <h2>{{ (name !== undefined) ? name : "NONAME" }}</h2>
+        <h2>{{ (name !== undefined) ? name : t('card.placeholder_noname') }}</h2>
         <hr>
         <div class="bottom-info">
-          <p>In storage:</p>
+          <p>{{ t('card.label_in_storage') }}</p>
           <div>
-            <p>{{ (storedCount !== undefined) ? storedCount : "nan" }}</p>
+            <p>{{ (storedCount !== undefined) ? storedCount : t('card.placeholder_nan') }}</p>
           </div>
-          <p>Total registered:</p>
+          <p>{{ t('card.label_total_registered') }}</p>
           <div>
-            <p>{{ (registeredCount !== undefined) ? registeredCount : "nan" }}</p>
+            <p>{{ (registeredCount !== undefined) ? registeredCount : t('card.placeholder_nan') }}</p>
           </div>
         </div>
       </div>

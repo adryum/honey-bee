@@ -141,6 +141,7 @@ watch(() => props.userId, newVal => {
     <ToolBar
         :label="openedApiary === undefined ? 'Apiaries' : `${openedApiary.name} hives`"
         :show-back-button="isValidValue(openedApiary)"
+        :tabs="[]"
         @back="closeApiary"
     ></ToolBar>
     

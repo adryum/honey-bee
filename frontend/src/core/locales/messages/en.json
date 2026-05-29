@@ -35,7 +35,8 @@
         "next": "Next"
     },
     "profile": {
-        "location_placeholder": "Rīga"
+        "location_placeholder": "Rīga",
+        "access": "Access"
     },
     "calendar": {
         "title": "General calendar",
@@ -82,7 +83,8 @@
         "label_title": "Title",
         "label_content": "Content",
         "label_honey_kg": "Process honey in KG",
-        "label_email": "Email"
+        "label_email": "Email",
+        "date_placeholder": "dd / mm / yyyy"
     },
     "button": {
         "submit": "Submit",
@@ -95,7 +97,8 @@
         "edit": "Edit",
         "search": "Search",
         "clear": "Clear",
-        "today": "Today"
+        "today": "Today",
+        "go": "Go"
     },
     "searchbar": {
         "hint": "...",
@@ -116,7 +119,8 @@
         "edit_queen_title": "Edit queen",
         "add_note_title": "Add Note",
         "process_inspection_title": "Process Inspection",
-        "whitelist_entry_title": "Add Whitelist entry"
+        "whitelist_entry_title": "Add Whitelist entry",
+        "events": "Events"
     },
     "inspection": {
         "label_id": "Inspection ID:",
@@ -141,6 +145,7 @@
     },
     "queen": {
         "section_title": "Queen",
+        "queen_history_title": "Queen History",
         "message_no_queen": "No queen in this hive",
         "label_born": "Born",
         "label_life_expectancy": "Life expectancy",
@@ -201,19 +206,20 @@
         "title": "General calendar",
         "filter_apiary": "Apiary",
         "filter_default": "All apiaries",
-        "label_today": "( Today )",
+        "label_today": "Today",
         "label_tasks": "tasks",
         "create_event": "Create event",
-        "create_task": "Create task",
         "search_task": "Search task",
         "day": "day",
         "month": "month",
         "year": "year"
     },
     "hive": {
+        "apiary": "Apiary",
         "created_at": "Created at",
         "location": "Location",
-        "type": "Type"
+        "type": "Type",
+        "yield": "Yield"
     },
     "inspection": {
         "label_id": "Inspection ID:",
@@ -224,7 +230,54 @@
         "label_honey_average": "Honey average per frame:",
         "submit_last": "Submit inspection",
         "submit_next": "Save and go to the next hive",
-        "review_exit": "Exit"
+        "review_exit": "Exit",
+        "add_note": "Add note",
+        "na_value": "N/A"
     },
-    "remove": "Remove"
+    "remove": "Remove",
+    "task": {
+        "type_label": "Type:",
+        "created_by_label": "Created by:"
+    },
+    "accessibility": {
+        "hive_image_alt": "hive image",
+        "apiary_image_alt": "apiary image",
+        "profile_picture_alt": "profile picture",
+        "user_image_alt": "user image",
+        "logo_alt": "logo"
+    },
+    "language": {
+        "lv": "Lv",
+        "en": "En"
+    },
+    "action": {
+        "open": "Open",
+        "exit": "Exit",
+        "go": "Go",
+        "overview": "Overview"
+    },
+    "hiveTab": {
+        "general": "General",
+        "notes": "Notes",
+        "calendar": "Calendar",
+        "inspections": "Inspections",
+        "bees": "Bees"
+    },
+    "apiaryTab": {
+        "general": "Overview",
+        "hives": "Hives"
+    },
+    "adminTab": {
+        "whitelist": "Whitelist",
+        "users": "Users"
+    },
+    "dayOfWeek": {
+        "sunday": "Sunday",
+        "monday": "Monday",
+        "tuesday": "Tuesday",
+        "wednesday": "Wednesday",
+        "thursday": "Thursday",
+        "friday": "Friday",
+        "saturday": "Saturday"
+  }
 }

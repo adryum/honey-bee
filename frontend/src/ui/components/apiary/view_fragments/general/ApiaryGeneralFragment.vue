@@ -7,8 +7,10 @@ import HistoryLog from "@/ui/components/hive/view_fragments/general/history/Hist
 import LineGraph from "@/ui/components/charts/LineGraph.vue";
 import { useApiaryQuery } from "@/core/composables/useApiary";
 import { HiveYieldGetModels_To_LineGraphLineModels } from "@/core/Convertors";
+import { useI18n } from "vue-i18n";
 
 const s = useCssModule()
+const { t } = useI18n() 
 const props = defineProps<{
     apiary: ApiaryModelDB
 }>()
@@ -40,6 +42,7 @@ const convertedYields = computed(() => {
     />
     <LineGraph
         :class="s.profit"
+        :label="t('hive.yield')"
         :entries="convertedYields"
     />
     <HistoryLog 

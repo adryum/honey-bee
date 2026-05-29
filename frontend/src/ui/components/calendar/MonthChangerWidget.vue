@@ -2,8 +2,10 @@
 import { SVG } from "@/assets/svgs/SVGLoader";
 import { useCssModule } from "vue";
 import Icon from "../Icon.vue";
+import { useI18n } from "vue-i18n";
 
 const s = useCssModule()
+const { t } = useI18n() 
 const props = defineProps<{
     selectedDate: Date
 }>()
@@ -20,7 +22,7 @@ const emits = defineEmits<{
             s.button
         ]"
         @click="emits('change', new Date())"
-    >Today</button>
+    >{{ t("button.today") }}</button>
     <button
         :class="[
             s.button

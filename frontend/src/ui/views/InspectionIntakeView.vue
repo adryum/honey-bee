@@ -153,11 +153,11 @@ watch(hives, (val) => {
                 {{ selectedFormHive?.hive?.name }}
             </label>
 
-            <IconTextButton
+            <!-- <IconTextButton
                 :class="s.marginLeft"
                 :icon="SVG.Plus"
                 text="Add note"
-            />
+            /> -->
         </div>
 
         <hr :style="{

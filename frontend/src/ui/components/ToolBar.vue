@@ -7,7 +7,7 @@ const s = useCssModule()
 const props = withDefaults(defineProps<{
     label?: string,
     showBackButton?: boolean
-    tabs?:        T[]
+    tabs: { value: T; label: string }[]
     selectedTab?: T
 }>(), {
     label: "{ PAGE }",
@@ -38,6 +38,18 @@ const hasFooter = computed(() => !!slots.footer?.()?.length)
         />
         <h1 :class="[s.label]">{{ label }}</h1>
 
+        <button
+            v-for="tab in tabs"
+            :key="tab.label"
+            :class="[
+                s.button, 
+                tab.value === selectedTab && s.selected
+            ]"
+            @click="$emit('changeTab', tab.value)"
+        >
+            {{ tab.label }}
+        </button>
+<!-- 
         <button 
             v-for="loopTab in tabs" 
             :class="[
@@ -47,7 +59,7 @@ const hasFooter = computed(() => !!slots.footer?.()?.length)
             @click="emits('changeTab', loopTab)"
         >
             {{ String(loopTab).toSentenceCase() }}
-        </button>
+        </button> -->
 
         <div
             :class="s.headerSlot"

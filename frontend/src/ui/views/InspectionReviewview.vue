@@ -9,9 +9,11 @@ import { InspectionFormDB_To_InspectionFormUI } from "@/core/Convertors";
 import { useInspectionQuery, useInspectionMutation } from "@/core/composables/useInspection";
 import { watchOnce } from "@vueuse/core";
 import { useRouter } from "vue-router";
+import { useI18n } from "vue-i18n";
 
 const s = useCssModule()
 const router = useRouter()
+const { t } = useI18n()
 const props = defineProps<{
     id: number
 }>()
@@ -58,13 +60,13 @@ onMounted(() => {
                 for="apiaryHives"
                 :class="s.label"
             >
-                {{ selectedForm?.hive ? `#${selectedForm.hive.id} ${selectedForm.hive.name}` : "Unknown hive" }}
+                {{ selectedForm?.hive ? `#${selectedForm.hive.id} ${selectedForm.hive.name}` : t('status.unknown_hive') }}
             </label>
 
             <IconTextButton
                 :class="s.marginLeft"
                 :icon="SVG.Logout"
-                text="Exit"
+                :text="t('action.exit')"
                 @click="router.push(previousPagePath || '/')"
             />
         </div>
@@ -100,7 +102,7 @@ onMounted(() => {
             <label 
                 for="apiaryHives"
                 :class="s.label"
-            >{{ inspection?.apiaryName || 'Apiary' }} hives</label>
+            >{{ inspection?.apiaryName || t('navigation.apiaries') }} {{ t('hives') }}</label>
         </div>
 
         <hr :style="{
@@ -128,7 +130,7 @@ onMounted(() => {
                         selectedForm?.hive?.id === form.hive?.id && s.selected
                     ]"
                 >
-                    {{ form.hive?.id ?? "N/A" }}
+                    {{ form.hive?.id ?? t('inspection.na_value') }}
                 </p>
                 
             </div>

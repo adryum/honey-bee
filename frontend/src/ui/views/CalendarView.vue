@@ -35,6 +35,7 @@ const { events } = useCalendarQuery({
     >
         <ToolBar 
             :label="t('calendar.title')"
+            :tabs="[]"
         >
             <template #header>
                 <MonthChangerWidget

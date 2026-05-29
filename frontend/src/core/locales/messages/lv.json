@@ -35,7 +35,8 @@
         "next": "Nākamais"
     },
     "profile": {
-        "location_placeholder": "Rīga"
+        "location_placeholder": "Rīga",
+        "access": "Piekļuves"
     },
     "calendar": {
         "title": "Vispārējais kalendārs",
@@ -60,42 +61,44 @@
         "menu_admin": "Administratora panelis"
     },
     "form": {
-        "inspect_abnormal_behavior": "Neparasts bišu uzvedums?",
+        "inspect_abnormal_behavior": "Dīvaina bišu uzvedība?",
         "label_description": "Apraksts",
-        "inspect_swarming": "Rojošana?",
+        "inspect_swarming": "Spieto?",
         "inspect_additional_feeding": "Nepieciešama papildu barošana?",
         "inspect_queen_alive": "Karaliene ir dzīva?",
-        "inspect_queen_laying": "Vai karaliene lāj olas?",
-        "inspect_queen_laying_incorrect": "Vai karaliene lāj olas nepareizi?",
-        "inspect_honey_frames_needed": "Vai stropam nepieciešami vairāk medus kadri?",
-        "label_amount": "Apjoms",
-        "inspect_breeding_frames_needed": "Vai stropam nepieciešami vairāk dēšanas kadri?",
-        "inspect_taking_frames": "Izņem kadrus?",
-        "inspect_honey_frames_amount": "Medus kadru daudzums",
-        "inspect_breeding_frames_amount": "Dēšanas kadru daudzums",
-        "inspect_medical_needed": "Vai nepieciešama medicīniska rīcība?",
-        "inspect_hive_damage": "Vai ir kāds stropu bojājums?",
+        "inspect_queen_laying": "Karaliene dēj olas?",
+        "inspect_queen_laying_incorrect": "Karaliene dēj olas nepareizi?",
+        "inspect_honey_frames_needed": "Vajag papildus medus kāru?",
+        "label_amount": "Daudzums",
+        "inspect_breeding_frames_needed": "Vajag papildu peru kāras?",
+        "inspect_taking_frames": "Ņem ārā kāras?",
+        "inspect_honey_frames_amount": "Medus kāru daudzums",
+        "inspect_breeding_frames_amount": "Peru kāru daudzums",
+        "inspect_medical_needed": "Nepieciešama mediciniskā aprūpe?",
+        "inspect_hive_damage": "Ir stropa bojājumi?",
         "label_name": "Nosaukums",
         "label_type": "Tips",
         "label_born": "Dzimis",
         "label_specie": "Suga",
         "label_title": "Virsraksts",
         "label_content": "Saturs",
-        "label_honey_kg": "Apstrādāt medu kilogramos",
-        "label_email": "E-pasts"
+        "label_honey_kg": "Apstrādātais medus kilogramos",
+        "label_email": "E-pasts",
+        "date_placeholder": "dd / mm / yyyy"
     },
     "button": {
         "submit": "Iesniegt",
         "create": "Izveidot",
         "update": "Atjaunināt",
         "add": "Pievienot",
-        "process": "Apstrādāt",
+        "process": "Izsviest",
         "remove": "Noņemt",
         "replace": "Aizvietot",
         "edit": "Rediģēt",
         "search": "Meklēt",
         "clear": "Notīrīt",
-        "today": "Šodien"
+        "today": "Šodien",
+        "go": "Aiziet"
     },
     "searchbar": {
         "hint": "...",
@@ -116,15 +119,16 @@
         "edit_queen_title": "Rediģēt karalieni",
         "add_note_title": "Pievienot piezīmi",
         "process_inspection_title": "Apstrādāt inspekciju",
-        "whitelist_entry_title": "Pievienot baltās saraksta ierakstu"
+        "whitelist_entry_title": "Pievienot baltās saraksta ierakstu",
+        "events": "Notikumi"
     },
     "inspection": {
         "label_id": "Inspekcijas ID:",
         "label_apiary": "Drava:",
         "label_created": "Izveidots:",
         "label_hive_count": "Stropu skaits:",
-        "label_honey_frames": "Paņemtie medus kadri:",
-        "label_honey_average": "Vidējais medus daudzums uz kadra:"
+        "label_honey_frames": "Izņemtās medu kāras:",
+        "label_honey_average": "Vidējais kāras medus daudzums:"
     },
     "table": {
         "header_nr": "Nr.",
@@ -134,14 +138,15 @@
         "header_actions": "Darbības",
         "header_apiary": "Drava",
         "header_hive_count": "Stropu skaits",
-        "header_processed": "Ir apstrādāta",
+        "header_processed": "Ir apstrādāts",
         "header_creator": "Veidotājs",
         "header_creation_date": "Izveides datums",
         "header_is_whitelisted": "Ir baltajā sarakstā"
     },
     "queen": {
-        "section_title": "Karaliene",
-        "message_no_queen": "Šajā stropā nav karalieni",
+        "section_title": "Bišu māte",
+        "queen_history_title": "Bišu māšu vēsture",
+        "message_no_queen": "Nav bišu mātes",
         "label_born": "Dzimis",
         "label_life_expectancy": "Dzīves ilgums",
         "label_placed_here": "Ievietota šeit",
@@ -204,27 +209,75 @@
         "label_today": "( Šodien )",
         "label_tasks": "uzdevumi",
         "create_event": "Izveidot notikumu",
-        "create_task": "Izveidot uzdevumu",
         "search_task": "Meklēt uzdevumu",
         "day": "diena",
         "month": "mēnesis",
         "year": "gads"
     },
     "hive": {
+        "apiary": "Drava",
         "created_at": "Izveidots",
         "location": "Atrašanās vieta",
-        "type": "Tips"
+        "type": "Tips",
+        "yield": "Ienesums"
     },
     "inspection": {
         "label_id": "Inspekcijas ID:",
         "label_apiary": "Drava:",
         "label_created": "Izveidots:",
         "label_hive_count": "Stropu skaits:",
-        "label_honey_frames": "Paņemtie medus kadri:",
-        "label_honey_average": "Vidējais medus daudzums uz kadra:",
+        "label_honey_frames": "Izņemtas medus kāras:",
+        "label_honey_average": "Vidējais medus daudzums uz kāru:",
         "submit_last": "Iesniegt inspekciju",
         "submit_next": "Saglabāt un pāriet uz nākamo stropu",
-        "review_exit": "Iziet"
+        "review_exit": "Iziet",
+        "add_note": "Pievienot piezīmi",
+        "na_value": "N/A"
     },
-    "remove": "Noņemt"
+    "remove": "Noņemt",
+    "task": {
+        "type_label": "Tips:",
+        "created_by_label": "Izveidojis:"
+    },
+    "accessibility": {
+        "hive_image_alt": "stropu attēls",
+        "apiary_image_alt": "dravas attēls",
+        "profile_picture_alt": "profila attēls",
+        "user_image_alt": "lietotāja attēls",
+        "logo_alt": "logotips"
+    },
+    "language": {
+        "lv": "Lv",
+        "en": "En"
+    },
+    "action": {
+        "open": "Atvērt",
+        "exit": "Iziet",
+        "go": "Aiziet",
+        "overview": "Pārskats"
+    },
+    "hiveTab": {
+        "general": "Pārskats",
+        "notes": "Piezīmes",
+        "calendar": "Kalendārs",
+        "inspections": "Inspekcijas",
+        "bees": "Bites"
+    },
+    "apiaryTab": {
+        "general": "Pārskats",
+        "hives": "Stropi"
+    },
+    "adminTab": {
+        "whitelist": "Baltais saraksts",
+        "users": "Reģistrētie lietotāji"
+    },
+    "dayOfWeek": {
+        "sunday": "Svētdiena",
+        "monday": "Pirmdiena",
+        "tuesday": "Otrdiena",
+        "wednesday": "Trešdiena",
+        "thursday": "Ceturtdiena",
+        "friday": "Piektdiena",
+        "saturday": "Sestdiena"
+  }
 }

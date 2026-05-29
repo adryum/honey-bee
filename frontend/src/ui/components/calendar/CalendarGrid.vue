@@ -3,8 +3,10 @@ import { computed, ref, useCssModule } from "vue";
 import { Days } from "../../../core/Calendar";
 import CalendarDayComponent from "./CalendarDayComponent.vue";
 import type { CalendarDayModel, CalendarEventDB } from "@/core/stores/Models";
+import { useI18n } from "vue-i18n";
 
 const s = useCssModule()
+const { t } = useI18n() 
 const props = withDefaults(defineProps<{
     calendarId:         string
     otherCalendarIDs:   string[]
@@ -29,17 +31,17 @@ const macdonadsWeekDays = [
     Days.Friday,
     Days.Saturday,
 ]
-const normalWeekDays = [
-    Days.Monday,
-    Days.Tuesday,
-    Days.Wednesday,
-    Days.Thursday,
-    Days.Friday,
-    Days.Saturday,
-    Days.Sunday,
-]
+const normalWeekDays = computed(()=> [
+    t("dayOfWeek.monday"),
+    t("dayOfWeek.tuesday"),
+    t("dayOfWeek.wednesday"),
+    t("dayOfWeek.thursday"),
+    t("dayOfWeek.friday"),
+    t("dayOfWeek.saturday"),
+    t("dayOfWeek.sunday"),
+])
 const weekDays = computed(() => {
-    return props.isMacdonalds ? macdonadsWeekDays : normalWeekDays
+    return props.isMacdonalds ? macdonadsWeekDays : normalWeekDays.value
 })
 
 const currentMonthDays = computed((): CalendarDayModel[] => {
@@ -117,7 +119,7 @@ function getCalendarMonthWithDayPadding(
         <p 
             v-for="day in weekDays"
             :class="s.day"
-            :style="day === 'Saturday' || day === 'Sunday' ? { background: 'var(--secondary)' } : { background: 'var(--white)' }"
+            :style="day === t('dayOfWeek.saturday') || day === t('dayOfWeek.sunday') ? { background: 'var(--secondary)' } : { background: 'var(--white)' }"
         >
             {{ day }}
         </p>
