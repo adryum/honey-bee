@@ -4,8 +4,10 @@ import { SVG } from "@/assets/svgs/SVGLoader";
 import { getRandomId } from "@/core/utils/Utils";
 import Icon from "@/ui/components/Icon.vue";
 import type { FieldValidee } from "@/core/composables/useFormValidator";
+import { useI18n } from "vue-i18n";
 
 const s = useCssModule()
+const { t } = useI18n()
 const props = withDefaults(defineProps<{
     label:      string,
     modelValue: string | undefined
@@ -116,7 +118,7 @@ onMounted(() => {
             ref="inputRef"
             :class="s.input"
             :value="display"
-            placeholder="dd / mm / yyyy"
+            :placeholder="t('form.date_placeholder')"
             maxlength="14"
             @input="onInput"
             @blur="onBlur"

@@ -10,8 +10,10 @@ import Hive from "../hive/Hive.vue";
 import ToolBar from "../ToolBar.vue";
 import Checkbox from "../input/fields/Checkbox.vue";
 import { useHivesQuery } from "@/core/composables/hive/useHive";
+import { useI18n } from "vue-i18n";
 
 const s = useCssModule()
+const { t } = useI18n()
 const props = defineProps<{
     userId: number
 }>()
@@ -139,7 +141,7 @@ watch(() => props.userId, newVal => {
 <template>
 <div :class="s.container">
     <ToolBar
-        :label="openedApiary === undefined ? 'Apiaries' : `${openedApiary.name} hives`"
+        :label="openedApiary === undefined ? t('apiaries') : `${openedApiary.name} ${t('hives')}`"
         :show-back-button="isValidValue(openedApiary)"
         :tabs="[]"
         @back="closeApiary"

@@ -3,8 +3,10 @@ import { useCssModule } from 'vue';
 import type { HiveModelDB } from '@/core/stores/Models';
 import Icon from '../Icon.vue';
 import { IconType, SVG } from '@/assets/svgs/SVGLoader';
+import { useI18n } from 'vue-i18n';
 
 const s = useCssModule()
+const { t } = useI18n()
 const props = withDefaults(defineProps<{
     hive: HiveModelDB,
     showApiary?: boolean
@@ -49,7 +51,7 @@ const props = withDefaults(defineProps<{
             v-if="hive.imageUrl"
             :class="s.hiveImage" 
             :src="hive.imageUrl || 'src/assets/images/hive1.jpg'" 
-            alt="hive image"
+            :alt="t('accessibility.hive_image_alt')"
         >
     </div>
     <div :class="s.footer">

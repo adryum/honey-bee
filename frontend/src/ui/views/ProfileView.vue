@@ -58,7 +58,8 @@ function changeTab(tab: ProfileTab) {
             :class="s.topLine"
         >
             <img 
-                :src="user.picture ? user.picture : placeholderImage" alt="Profile Picture" 
+                :src="user.picture ? user.picture : placeholderImage" 
+                :alt="t('accessibility.profile_picture_alt')"
                 :class="s.img"    
             />
             <div 

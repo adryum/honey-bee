@@ -29,12 +29,12 @@ onMounted(async () => {
 
 <template>
 <div :class="s.view">
-    <img :class="s.background" src="@/assets/images/sunflowers.webp" alt="logo">
+    <img :class="s.background" src="@/assets/images/sunflowers.webp" :alt="t('accessibility.logo_alt')">
     <form 
         :class="s.form"
         @submit.prevent="login" 
     >
-        <img :class="s.logo" src="@/assets/images/happybee.png" alt="logo">
+        <img :class="s.logo" src="@/assets/images/happybee.png" :alt="t('accessibility.logo_alt')">
         <h1 :class="s.title">{{ t('login.title') }}</h1>
         
         <IconTextButton
@@ -44,12 +44,12 @@ onMounted(async () => {
             :text="t('login.button_login')"
             @click="login"
         >
-            <img :class="s.icon" src="@/assets/images/GoogleIcon.png" alt="logo">
+            <img :class="s.icon" src="@/assets/images/GoogleIcon.png" :alt="t('accessibility.logo_alt')">
 
         </IconTextButton>
         <a 
             :class="s.helpText"
-            href="/fuck-you"
+            href="/contact"
         >{{ t('login.link_support') }}</a>
     </form>
 </div>

@@ -52,7 +52,7 @@ const dropdownActions = computed(() => [
             v-if="apiary.imageUrl"
             :class="s.image" 
             :src="apiary.imageUrl || 'src/assets/images/apiary1.jpg'" 
-            alt="apiary image"
+            :alt="t('accessibility.apiary_image_alt')"
         >
 
         <hr 
@@ -69,7 +69,7 @@ const dropdownActions = computed(() => [
             <div :class="s.entry">
                 <p :class="s.value">{{ apiary.hiveCount }}</p>
                 <hr :class="s.HRhorizontal">
-                <p :class="s.title">Hives</p>
+                <p :class="s.title">{{ t('hives') }}</p>
             </div>
         </ul>
     </div>

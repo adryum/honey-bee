@@ -3,8 +3,10 @@ import type { CalendarEventDB } from "@/core/stores/Models";
 import { ref, useCssModule } from "vue";
 import IconDropdown from "../input/dropdowns/IconDropdown.vue";
 import { SVG } from "@/assets/svgs/SVGLoader";
+import { useI18n } from "vue-i18n";
 
 const s = useCssModule()
+const { t } = useI18n()
 const props = defineProps<{
     task: CalendarEventDB
 }>()
@@ -27,13 +29,12 @@ const isTaskOpen = ref(false)
             ]"
         >
             <p>
-                {{ task.title || "No title" }}
+                {{ task.title || t('fallback.no_title') }}
             </p>
             <IconDropdown
                 :icon="SVG.MoreDots"
                 :class="s.editButton"
             >
-                <p>apple</p>
             </IconDropdown>
 
         </div>
@@ -51,13 +52,13 @@ const isTaskOpen = ref(false)
                     for="type"
                     :class="s.label"
                 >
-                    Type: 
+                    {{ t('task.type_label') }}
                 </label>
                 <p
                     id="type"
                     :class="s.value"
                 >
-                    {{ task.type || "No type" }}
+                    {{ task.type || t('fallback.no_type') }}
                 </p>
                 <!-- <label 
                     for="days-left"
@@ -75,13 +76,13 @@ const isTaskOpen = ref(false)
                     for="created-by"
                     :class="s.label"
                 >
-                    Created by: 
+                    {{ t('task.created_by_label') }}
                 </label>
                 <p 
                     id="created-by"
                     :class="s.value"
                 >
-                    {{ task.creatorEmail || "Unknown" }}
+                    {{ task.creatorEmail || t('fallback.unknown') }}
                 </p>
             </div>
 
@@ -89,7 +90,7 @@ const isTaskOpen = ref(false)
             <p 
                 :class="s.description"
             >
-                {{ task.description || "No description" }}
+                {{ task.description || t('fallback.no_description') }}
                 <!-- Realllly long descripton Realllly long descripton Realllly long descripton Realllly long descripton Realllly long descripton Realllly long descripton Realllly long descripton Realllly long descripton Realllly long descripton Realllly long descripton Realllly long descripton Realllly long descripton Realllly long descripton Realllly long descripton Realllly long descripton Realllly long descripton Realllly long descripton Realllly long descripton Realllly long descripton Realllly long descripton Realllly long descripton Realllly long descripton Realllly long descripton Realllly long descripton Realllly long descripton Realllly long descripton Realllly long descripton Realllly long descripton Realllly long descripton Realllly long descripton Realllly long descripton Realllly long descripton Realllly long descripton Realllly long descripton -->
             </p>
         </div>

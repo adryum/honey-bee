@@ -20,7 +20,7 @@ const apiaryEditModal = ref<ModalBaseModel>()
 <template>
 <div :class="s.container">
     <div :class="s.header">
-        <label :class="s.label">Apiary</label>
+        <label :class="s.label">{{ t('navigation.apiaries') }}</label>
         <div :class="s.buttons">
             <IconTextButton 
                 v-if="requireRole([UserRoles.ADMINISTRATOR, UserRoles.APIARY_MAINTAINER])"
@@ -69,7 +69,7 @@ const apiaryEditModal = ref<ModalBaseModel>()
             <p 
                 id="loacaion"
                 :class="s.gridValues"
-            >{{ apiary.location ?? "Not set"}}</p>
+            >{{ apiary.location ?? t('status.not_set')}}</p>
 
         </div>
     </div>

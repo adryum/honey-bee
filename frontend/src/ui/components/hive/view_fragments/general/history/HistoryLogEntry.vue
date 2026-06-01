@@ -6,8 +6,10 @@ import type { HistoryEntryDB } from "@/core/stores/Models";
 import { formatDateWithOrdinal } from "@/core/utils/Utils";
 import { HistoryActionType } from "@/core/DatabaseEnums";
 import placeholderImage from '@/assets/images/ProfilePlaceholder.jpg'
+import { useI18n } from "vue-i18n";
 
 const s = useCssModule()
+const { t } = useI18n()
 const props = defineProps<{
     entry: HistoryEntryDB
 }>()
@@ -39,7 +41,7 @@ const svg = computed(() => {
         <div :class="s.userInfo">
             <img
                 :class="s.image" 
-                alt="user image"
+                :alt="t('accessibility.user_image_alt')"
                 referrerpolicy="no-referrer"
                 :src="entry.userImage || placeholderImage"
             >

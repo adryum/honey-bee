@@ -78,7 +78,7 @@ function onClick(dropdown: DropdownModel, destination: SettingDestination) {
             @click="dropdown.isShown.value = !dropdown.isShown.value"
         >
             <img 
-                alt="profile picture"
+                :alt="t('accessibility.profile_picture_alt')"
                 referrerpolicy="no-referrer"
                 :class="s.image" 
                 :src="avatarSrc"

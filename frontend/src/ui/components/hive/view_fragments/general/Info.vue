@@ -30,7 +30,7 @@ const { apiary } = useApiaryQuery({
         <div :class="s.buttons">
             <IconTextButton 
                 v-if="requireRole([UserRoles.ADMINISTRATOR, UserRoles.APIARY_MAINTAINER])"
-                text="Edit"
+                :text="t('button.edit')"
                 :icon="SVG.Pencil"
                 @click="hiveEditModal?.open"
             />

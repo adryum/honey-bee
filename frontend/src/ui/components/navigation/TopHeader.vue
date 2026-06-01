@@ -6,7 +6,7 @@ import { changeLang, Language } from '@/core/locales/i18n';
 import { useI18n } from 'vue-i18n';
 
 const s = useCssModule()
-const { locale } = useI18n()
+const { locale, t } = useI18n()
 
 </script>
 
@@ -21,14 +21,14 @@ const { locale } = useI18n()
             s.langButton
         ]"
         @click="changeLang(Language.Lv)"
-    >Lv</button>
+    >{{ t('language.lv') }}</button>
     <button
         :class="[
             locale === Language.En && s.selected,
             s.langButton
         ]"
         @click="changeLang(Language.En)"
-    >En</button>
+    >{{ t('language.en') }}</button>
     <ProfileWidget
         :class="s.profile"
     />
