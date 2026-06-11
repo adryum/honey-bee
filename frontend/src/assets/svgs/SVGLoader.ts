@@ -35,7 +35,8 @@ export enum SVG {
     ArrowLeftSmall  = "ArrowLeftSmall",
     ArrowRightSmall = "ArrowRightSmall",
     FailedToFind    = "FailedToFind",
-    Minus           = "Minus"
+    Minus           = "Minus",
+    Light           = "Light",
 }
 
 export enum IconType {

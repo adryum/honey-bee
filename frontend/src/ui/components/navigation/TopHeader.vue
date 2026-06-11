@@ -4,9 +4,13 @@ import ProfileWidget from '@/ui/components/profile/ProfileWidget.vue';
 import IconTextButton from '../input/buttons/IconTextButton.vue';
 import { changeLang, Language } from '@/core/locales/i18n';
 import { useI18n } from 'vue-i18n';
+import Icon from '../Icon.vue';
+import { IconType, SVG } from '@/assets/svgs/SVGLoader.ts';
+import { useTheme } from '@/core/Themes.ts';
 
 const s = useCssModule()
 const { locale, t } = useI18n()
+const { cycleTheme } = useTheme();
 
 </script>
 
@@ -15,6 +19,18 @@ const { locale, t } = useI18n()
     <div
         :class="s.rightAligner"
     ></div>
+
+    <button
+        :class="[
+            s.langButton
+        ]"
+        @click="cycleTheme()"
+    >
+        <Icon
+            :icon="SVG.Light"
+            :type="IconType.MEDIUM"
+        />
+    </button>
     <button
         :class="[
             locale === Language.Lv && s.selected,
